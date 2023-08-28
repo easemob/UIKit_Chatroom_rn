@@ -14,3 +14,8 @@ commit-msg:
   commands:
     commitlint:
       run: npx commitlint --edit
+post-commit:
+  parallel: true
+  commands:
+    gitleaks:
+      run: gitleaks detect -c '.gitleaksconfig.toml' -s . -r gitleaks.log
