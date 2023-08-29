@@ -1,0 +1,5 @@
+# create project
+$ npx create-react-native-library --react-native-version 0.71.11 react-native-chat-room
+# add expo with example
+# add gitleaks with config
+# update commitlint

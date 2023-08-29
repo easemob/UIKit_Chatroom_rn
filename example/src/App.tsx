@@ -1,9 +1,10 @@
 import * as React from 'react';
-
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import { multiply } from 'react-native-chat-room';
 
-export default function App() {
+import { AppDev } from './__dev__/AppDev';
+
+export function App() {
   const [result, setResult] = React.useState<number | undefined>();
 
   React.useEffect(() => {
@@ -29,3 +30,15 @@ const styles = StyleSheet.create({
     marginVertical: 20,
   },
 });
+
+let AppWrapper = App;
+try {
+  const isDev = require('./env').test;
+  if (isDev === true) {
+    AppWrapper = AppDev;
+  }
+} catch (error) {
+  console.warn(error);
+}
+
+export default AppWrapper;
