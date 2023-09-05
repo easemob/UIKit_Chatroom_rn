@@ -20,3 +20,5 @@ const ChatRoom = NativeModules.ChatRoom
 export function multiply(a: number, b: number): Promise<number> {
   return ChatRoom.multiply(a, b);
 }
+
+export * from './util';

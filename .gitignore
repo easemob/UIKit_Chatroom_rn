@@ -71,3 +71,4 @@ lib/
 
 version.ts
 env.ts
+*.log
