@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Text, View } from 'react-native';
 
-import { default as Test } from './test_color';
+import { default as Test } from './test_theme';
 
 export function AppDev(): JSX.Element {
   return (

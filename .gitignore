@@ -72,3 +72,4 @@ lib/
 version.ts
 env.ts
 *.log
+example/dist
