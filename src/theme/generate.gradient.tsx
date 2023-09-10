@@ -27,7 +27,8 @@ export function generateLineGradientPoint(
 
     default:
       throw new UIKitError({
-        code: ErrorCode.common,
+        code: ErrorCode.enum,
+        extra: `ColorLineGradientDirection: ${direction}`,
       });
   }
 }

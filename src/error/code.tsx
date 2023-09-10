@@ -1,6 +1,7 @@
 export enum ErrorCode {
   none = 0,
   common = 1,
+  enum = 10,
   // protocol error 1000 start
 
   // network error 2000 start

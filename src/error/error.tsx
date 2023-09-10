@@ -23,7 +23,18 @@ export class UIKitError extends Error {
       case ErrorCode.common:
         ret = ErrorDescription.common;
         break;
+      case ErrorCode.enum:
+        ret = ErrorDescription.enum;
+        break;
+      default:
+        break;
     }
     return ret;
+  }
+
+  public toString(): string {
+    return `code: ${this.code}\n
+    desc: ${this.desc}\n
+    extra: ${this.message}`;
   }
 }

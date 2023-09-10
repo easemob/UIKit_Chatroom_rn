@@ -31,7 +31,8 @@ export function createTheme(params: createThemeParams): Theme {
       return createLightTheme(palette);
     default:
       throw new UIKitError({
-        code: ErrorCode.common,
+        code: ErrorCode.enum,
+        extra: `ThemeType: ${themeType}`,
       });
   }
 }

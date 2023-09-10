@@ -23,4 +23,6 @@ export function multiply(a: number, b: number): Promise<number> {
 
 export * from './error';
 export * from './theme';
+export * from './ui/Button';
+export * from './ui/Text';
 export * from './utils';

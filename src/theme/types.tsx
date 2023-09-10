@@ -33,12 +33,20 @@ export type FontProps = Pick<
   'fontFamily' | 'fontSize' | 'fontWeight' | 'lineHeight'
 >;
 
+export type IconProps = {
+  size?: number | string | undefined;
+};
+
+export type FontsType = Keyof<Fonts>;
+
 export type Fonts = {
   large: FontProps;
   medium: FontProps;
   small: FontProps;
   extraSmall?: FontProps;
 };
+
+export type FontsPaletteType = Keyof<FontsPalette>;
 
 export type FontsPalette = {
   headline: Fonts;
@@ -90,7 +98,7 @@ export type CornerRadiusPalette = {
   extraSmall: number;
   small: number;
   medium: number;
-  large?: number;
+  large: number;
 };
 
 export interface Palette {
@@ -119,20 +127,27 @@ export type ButtonSize = Pick<
   | 'width'
 >;
 
+export type ButtonSizesType = Keyof<ButtonSizes>;
+
 export type ButtonSizes = {
   small: {
     button: ButtonSize;
     text: FontProps;
+    icon: IconProps;
   };
   middle: {
     button: ButtonSize;
     text: FontProps;
+    icon: IconProps;
   };
   large: {
     button: ButtonSize;
     text: FontProps;
+    icon: IconProps;
   };
 };
+
+export type ButtonStateColorType = Keyof<ButtonStateColor>;
 
 export type ButtonStateColor = {
   enabled: ButtonColors;
@@ -146,20 +161,23 @@ export type ButtonStyleType = Keyof<ButtonStyle>;
 export type ButtonStyle = {
   commonButton: {
     state: ButtonStateColor;
-    sizes: ButtonSizes;
   };
-  textButton: {
+  textButton1: {
     state: ButtonStateColor;
-    sizes: ButtonSizes;
+  };
+  textButton2: {
+    state: ButtonStateColor;
   };
   borderButton: {
     state: ButtonStateColor;
-    sizes: ButtonSizes;
   };
 };
 
 export interface Theme {
-  button: ButtonStyle;
+  button: {
+    style: ButtonStyle;
+    size: ButtonSizes;
+  };
 }
 
 export type createShadowParams = {

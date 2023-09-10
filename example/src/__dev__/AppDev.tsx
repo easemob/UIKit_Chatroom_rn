@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { Text, View } from 'react-native';
 
-import { default as Test } from './test_theme';
+import { default as Test } from './test_button';
 
 export function AppDev(): JSX.Element {
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, backgroundColor: 'red' }}>
       <Text style={{ color: 'blue', fontSize: 100 }}>dev ...</Text>
       <Test />
     </View>
