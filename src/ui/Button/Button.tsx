@@ -1,12 +1,16 @@
 import * as React from 'react';
-import type {
+import {
   GestureResponderEvent,
-  TouchableOpacityProps,
+  PressableProps,
+  StyleProp,
+  View,
+  ViewStyle,
 } from 'react-native';
 import { Pressable, PressableStateCallbackType } from 'react-native';
+import type { IconNameType } from 'src/assets';
 
 import { ErrorCode, UIKitError } from '../../error';
-import { FontProps, IconProps, useThemeContext } from '../../theme';
+import { FontStyles, IconStyles, useThemeContext } from '../../theme';
 import {
   ButtonColors,
   ButtonSize,
@@ -17,11 +21,13 @@ import {
   CornerRadiusPaletteType,
   usePaletteContext,
 } from '../../theme';
+import { Icon } from '../Image';
 import { Text } from '../Text';
 
 const MAX_TIMEOUT = 500;
 
-export type ButtonProps = TouchableOpacityProps & {
+export type ButtonProps = Omit<PressableProps, 'style'> & {
+  style?: StyleProp<ViewStyle> | undefined;
   buttonStyle: ButtonStyleType;
   sizesType: ButtonSizesType;
   radiusType: CornerRadiusPaletteType;
@@ -32,7 +38,7 @@ export type ButtonProps = TouchableOpacityProps & {
     | 'text-icon'
     | 'loading';
   text?: string;
-  icon?: string;
+  icon?: IconNameType;
   preventHighFrequencyClicks?: boolean;
   frequencyInterval?: number;
 };
@@ -73,7 +79,7 @@ export function Button(props: ButtonProps) {
     <Pressable
       disabled={disabled}
       onPress={onPressInternal}
-      style={(state: PressableStateCallbackType) => {
+      style={(state: PressableStateCallbackType): StyleProp<ViewStyle> => {
         let buttonColors: ButtonColors;
         if (state.pressed === true) {
           buttonColors = buttonState.pressed;
@@ -108,14 +114,44 @@ export function Button(props: ButtonProps) {
 }
 
 const ButtonContent = (props: ButtonProps): React.JSX.Element => {
-  const { contentType, text } = props;
+  const { contentType, text, icon } = props;
   const buttonSize = useGetButtonSizeStyle(props);
   const buttonState = useGetButtonStateStyle(props);
   switch (contentType) {
     case 'icon-text':
-      break;
+      return (
+        <View style={{ flexDirection: 'row' }}>
+          <Icon
+            style={[
+              {
+                width: buttonSize.icon.size,
+                height: buttonSize.icon.size,
+                tintColor: buttonState.color,
+                // backgroundColor: buttonState.backgroundColor,
+              },
+            ]}
+            name={icon ?? 'default'}
+          />
+          <View style={{ width: 4 }} />
+          <Text style={[buttonSize.text, { color: buttonState.color }]}>
+            {text}
+          </Text>
+        </View>
+      );
     case 'only-icon':
-      break;
+      return (
+        <Icon
+          style={[
+            {
+              width: buttonSize.icon.size,
+              height: buttonSize.icon.size,
+              tintColor: buttonState.color,
+              // backgroundColor: buttonState.backgroundColor,
+            },
+          ]}
+          name={icon ?? 'default'}
+        />
+      );
     case 'only-text':
       return (
         <Text style={[buttonSize.text, { color: buttonState.color }]}>
@@ -123,7 +159,24 @@ const ButtonContent = (props: ButtonProps): React.JSX.Element => {
         </Text>
       );
     case 'text-icon':
-      break;
+      return (
+        <View style={{ flexDirection: 'row' }}>
+          <Text style={[buttonSize.text, { color: buttonState.color }]}>
+            {text}
+          </Text>
+          <Icon
+            style={[
+              {
+                width: buttonSize.icon.size,
+                height: buttonSize.icon.size,
+                tintColor: buttonState.color,
+                // backgroundColor: buttonState.backgroundColor,
+              },
+            ]}
+            name={icon ?? 'default'}
+          />
+        </View>
+      );
 
     default:
       break;
@@ -138,19 +191,37 @@ const useGetButtonSizeStyle = (
   props: ButtonProps
 ): {
   button: ButtonSize;
-  text: FontProps;
-  icon: IconProps;
+  text: FontStyles;
+  icon: IconStyles;
 } => {
   const { button } = useThemeContext();
-  const { sizesType } = props;
+  const { sizesType, contentType } = props;
   type RetType = ReturnType<typeof useGetButtonSizeStyle>;
+
+  const trimming = (params: RetType) => {
+    const ret = params;
+    switch (contentType) {
+      case 'only-icon':
+        ret.button.paddingHorizontal = ret.button.paddingVertical;
+        break;
+      case 'icon-text':
+      case 'only-text':
+      case 'text-icon':
+        break;
+
+      default:
+        break;
+    }
+    return ret;
+  };
+
   switch (sizesType) {
     case 'small':
       return button.size.small as RetType;
     case 'middle':
       return button.size.middle as RetType;
     case 'large':
-      return button.size.large as RetType;
+      return trimming(button.size.large as RetType);
 
     default:
       break;

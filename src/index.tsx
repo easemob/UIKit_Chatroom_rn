@@ -21,8 +21,10 @@ export function multiply(a: number, b: number): Promise<number> {
   return ChatRoom.multiply(a, b);
 }
 
+export * from './assets';
 export * from './error';
 export * from './theme';
 export * from './ui/Button';
+export * from './ui/Image';
 export * from './ui/Text';
 export * from './utils';

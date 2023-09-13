@@ -5,7 +5,7 @@ import { default as Test } from './test_button';
 
 export function AppDev(): JSX.Element {
   return (
-    <View style={{ flex: 1, backgroundColor: 'red' }}>
+    <View style={{ flex: 1 }}>
       <Text style={{ color: 'blue', fontSize: 100 }}>dev ...</Text>
       <Test />
     </View>

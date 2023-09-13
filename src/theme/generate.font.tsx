@@ -1,6 +1,6 @@
-import type { FontProps, Fonts } from './types';
+import type { Fonts, FontStyles } from './types';
 
-function generateFont(props: FontProps): FontProps {
+function generateFont(props: FontStyles): FontStyles {
   const { fontFamily, fontSize, fontWeight, lineHeight } = props;
   return {
     fontFamily,

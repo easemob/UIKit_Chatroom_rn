@@ -13,11 +13,12 @@ function ButtonComponent(): React.JSX.Element {
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <Button
-        buttonStyle={'textButton2'}
+        buttonStyle={'commonButton'}
         sizesType={'large'}
         radiusType={'large'}
-        contentType={'only-text'}
-        text={'sdf'}
+        contentType={'icon-text'}
+        text={'Enabled'}
+        icon={'emojiKeyboard'}
         onPress={() => {
           console.log('test:ButtonComponent:onPress:');
         }}

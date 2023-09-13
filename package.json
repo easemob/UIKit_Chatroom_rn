@@ -37,7 +37,10 @@
     "clean": "del-cli android/build example/android/build example/android/app/build example/ios/build",
     "version": "node scripts/generate-version.js",
     "env": "node scripts/generate-env.js",
-    "prepare": "yarn run version && yarn run prepack"
+    "prepare": "yarn run version && yarn run prepack",
+    "change-icons-name": "node scripts/change-icons-name.js",
+    "gen-face-name": "node scripts/generate-faces-name.js",
+    "bundle-icons": "node scripts/bundle-icons.js"
   },
   "keywords": [
     "react-native",

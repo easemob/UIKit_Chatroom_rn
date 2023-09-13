@@ -258,7 +258,7 @@ function generateSizeButton(params: { palette: Palette }): ButtonSizes {
     },
     text: palette.fonts.label.medium,
     icon: {
-      size: 20,
+      size: 18,
     },
   };
   ret.middle = {
@@ -274,7 +274,7 @@ function generateSizeButton(params: { palette: Palette }): ButtonSizes {
     },
     text: palette.fonts.label.medium,
     icon: {
-      size: 20,
+      size: 18,
     },
   };
   ret.large = {
@@ -290,7 +290,7 @@ function generateSizeButton(params: { palette: Palette }): ButtonSizes {
     },
     text: palette.fonts.headline.small,
     icon: {
-      size: 24,
+      size: 22,
     },
   };
   return ret;

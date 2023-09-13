@@ -2,8 +2,8 @@ import * as React from 'react';
 import { Text as RNText, TextProps as RNTextProps } from 'react-native';
 
 import {
-  FontProps,
   FontsPaletteType,
+  FontStyles,
   FontsType,
   usePaletteContext,
 } from '../../theme';
@@ -25,7 +25,7 @@ export function Text(props: TextProps) {
   );
 }
 
-const useGetTextStyle = (props: TextProps): Undefinable<FontProps> => {
+const useGetTextStyle = (props: TextProps): Undefinable<FontStyles> => {
   const { textType, paletteType } = props;
   const { fonts } = usePaletteContext();
   switch (textType) {

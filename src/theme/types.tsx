@@ -28,22 +28,22 @@ export type ColorsPalette = {
   barrage: Colors;
 };
 
-export type FontProps = Pick<
+export type FontStyles = Pick<
   TextStyle,
   'fontFamily' | 'fontSize' | 'fontWeight' | 'lineHeight'
 >;
 
-export type IconProps = {
+export type IconStyles = {
   size?: number | string | undefined;
 };
 
 export type FontsType = Keyof<Fonts>;
 
 export type Fonts = {
-  large: FontProps;
-  medium: FontProps;
-  small: FontProps;
-  extraSmall?: FontProps;
+  large: FontStyles;
+  medium: FontStyles;
+  small: FontStyles;
+  extraSmall?: FontStyles;
 };
 
 export type FontsPaletteType = Keyof<FontsPalette>;
@@ -132,18 +132,18 @@ export type ButtonSizesType = Keyof<ButtonSizes>;
 export type ButtonSizes = {
   small: {
     button: ButtonSize;
-    text: FontProps;
-    icon: IconProps;
+    text: FontStyles;
+    icon: IconStyles;
   };
   middle: {
     button: ButtonSize;
-    text: FontProps;
-    icon: IconProps;
+    text: FontStyles;
+    icon: IconStyles;
   };
   large: {
     button: ButtonSize;
-    text: FontProps;
-    icon: IconProps;
+    text: FontStyles;
+    icon: IconStyles;
   };
 };
 
