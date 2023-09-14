@@ -29,7 +29,9 @@
   "scripts": {
     "test": "jest",
     "typecheck": "tsc --noEmit",
-    "lint": "eslint \"**/*.{js,ts,tsx}\"",
+    "lint": "yarn run lint-lib && yarn run lint-example",
+    "lint-example": "eslint \"example/src/**/*.{ts,tsx}\"",
+    "lint-lib": "eslint \"src/**/*.{ts,tsx}\"",
     "prepack": "bob build",
     "release": "release-it",
     "example": "yarn --cwd example",
