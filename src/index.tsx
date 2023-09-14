@@ -22,6 +22,7 @@ export function multiply(a: number, b: number): Promise<number> {
 }
 
 export * from './assets';
+export * from './dispatch';
 export * from './error';
 export * from './i18n';
 export * from './theme';

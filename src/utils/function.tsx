@@ -1,11 +1,11 @@
+import type { Callback } from './types';
+
 /* eslint-disable no-bitwise */
 export const wait = (timeout: number) => {
   return new Promise((resolve) => setTimeout(resolve, timeout));
 };
 
-// type Function = (...args: any[]) => any;
-
-export const asyncTask = (f: Function, ...args: any[]) => {
+export const asyncTask = (f: Callback, ...args: any[]) => {
   try {
     setImmediate(f, args);
   } catch (error) {
@@ -15,7 +15,7 @@ export const asyncTask = (f: Function, ...args: any[]) => {
 
 // export const useAsyncTask = (
 //   immediate: React.MutableRefObject<NodeJS.Immediate>,
-//   f: Function,
+//   f: Callback,
 //   ...args: any[]
 // ) => {
 //   try {
@@ -25,7 +25,7 @@ export const asyncTask = (f: Function, ...args: any[]) => {
 //   }
 // };
 
-export const queueTask = (f: Function, ...args: any[]) => {
+export const queueTask = (f: Callback, ...args: any[]) => {
   try {
     queueMicrotask(() => f(args));
   } catch (error) {
@@ -33,7 +33,7 @@ export const queueTask = (f: Function, ...args: any[]) => {
   }
 };
 
-export const timeoutTask = (f: Function, ...args: any[]) => {
+export const timeoutTask = (f: Callback, ...args: any[]) => {
   try {
     setTimeout(() => f(args), 0);
   } catch (error) {
@@ -51,9 +51,6 @@ export const arraySort = <T extends { key: string }>(list: T[]) => {
     return 0;
   });
 };
-
-type Function = (...args: any[]) => any;
-type Callback = Function;
 
 // from: https://www.cnblogs.com/Wayou/p/typescript_infer.html
 // type PromiseType<T> = (...args: any[]) => Promise<T>;
@@ -85,7 +82,7 @@ type Callback = Function;
  * @param args It can be any parameter, including callback parameters.
  * @returns callback result.
  */
-export const callbackToAsync = (f: Function, cb: Callback, ...args: any[]) => {
+export const callbackToAsync = (f: Callback, cb: Callback, ...args: any[]) => {
   const r = new Promise((success, fail) => {
     try {
       console.log('test:callbackToAsync:', f, cb, ...args);
@@ -130,7 +127,7 @@ export const versionToArray = (version: string): number[] => {
  * @param args any arguments
  * @returns Returns the result of the function call.
  */
-export function once(fn: Function, ...args: any[]) {
+export function once(fn: Callback, ...args: any[]) {
   let f: any = function () {
     if (f.called) return f.value;
     f.called = true;
@@ -139,7 +136,7 @@ export function once(fn: Function, ...args: any[]) {
   f.called = false;
   return f;
 }
-export function onceEx(fn: Function) {
+export function onceEx(fn: Callback) {
   let f: any = function (...args: any[]) {
     if (f.called) return f.value;
     f.called = true;

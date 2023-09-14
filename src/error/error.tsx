@@ -26,6 +26,9 @@ export class UIKitError extends Error {
       case ErrorCode.enum:
         ret = ErrorDescription.enum;
         break;
+      case ErrorCode.existed:
+        ret = ErrorDescription.existed;
+        break;
       default:
         break;
     }
