@@ -12,6 +12,7 @@ class ClassFunction {
 }
 
 function DispatchComponent(): React.JSX.Element {
+  console.log('test:DispatchComponent');
   const { addListener, removeListener } = useDispatchContext();
 
   // React.useEffect(() => {
@@ -32,6 +33,7 @@ function DispatchComponent(): React.JSX.Element {
       removeListener('test', l);
     };
   }, [addListener, removeListener]);
+
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <Pressable style={{ height: 100 }} onPress={() => {}}>
@@ -43,6 +45,7 @@ function DispatchComponent(): React.JSX.Element {
 }
 
 function DispatchComponent2(): React.JSX.Element {
+  console.log('test:DispatchComponent2');
   const { emitSync } = useDispatchContext();
   return (
     <Pressable

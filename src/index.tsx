@@ -28,5 +28,6 @@ export * from './i18n';
 export * from './theme';
 export * from './ui/Button';
 export * from './ui/Image';
+export * from './ui/Modal';
 export * from './ui/Text';
 export * from './utils';

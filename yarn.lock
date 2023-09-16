@@ -8359,6 +8359,11 @@ react-native-gradle-plugin@^0.71.19:
   resolved "https://registry.npmjs.org/react-native-gradle-plugin/-/react-native-gradle-plugin-0.71.19.tgz#3379e28341fcd189bc1f4691cefc84c1a4d7d232"
   integrity sha512-1dVk9NwhoyKHCSxcrM6vY6cxmojeATsBobDicX0ZKr7DgUF2cBQRTKsimQFvzH8XhOVXyH8p4HyDSZNIFI8OlQ==
 
+react-native-safe-area-context@~4.5.0:
+  version "4.5.5"
+  resolved "https://registry.npmjs.org/react-native-safe-area-context/-/react-native-safe-area-context-4.5.5.tgz#3735bd7bf02f858f6138cfd70da6b323a9daa2e5"
+  integrity sha512-HKcnOCXZ7RsoRKwJB1C9aVvWH+aBAY9TNBE+bq3iI7stcBE8r2lqLxaAU7MwuxJNGScLa8GxrmAUwC8a1Me8NA==
+
 react-native@0.71.11:
   version "0.71.11"
   resolved "https://registry.npmjs.org/react-native/-/react-native-0.71.11.tgz#c459f2b9ae775307c88a12b6dcee3cc4680a1dae"
