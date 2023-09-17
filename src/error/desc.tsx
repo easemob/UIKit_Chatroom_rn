@@ -3,4 +3,5 @@ export enum ErrorDescription {
   common = 'common error',
   enum = 'type not support',
   existed = 'object has existed.',
+  params = 'input parameters are invalid.',
 }

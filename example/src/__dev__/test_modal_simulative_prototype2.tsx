@@ -76,7 +76,6 @@ export function SimulativeModal(props: SimulativeModalProps) {
     >
       <TouchableWithoutFeedback
         onPress={() => {
-          console.log('test:zuoyu:');
           if (disableBackgroundClose !== true) {
             startHide(() => setModalVisible(false));
           }

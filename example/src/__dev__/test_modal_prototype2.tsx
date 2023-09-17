@@ -33,7 +33,6 @@ const useModalPanResponder = (
   show: () => void,
   hide: () => void
 ): PanResponderInstance => {
-  console.log('test:zuoyu:useModalPanResponder:');
   const isHideGesture = React.useCallback(
     (distanceY: number, velocityY: number) => {
       return distanceY > 125 || (distanceY > 0 && velocityY > 0.1);
@@ -67,7 +66,6 @@ const useModalPanResponder = (
  * @returns animate object
  */
 const useModalAnimation = (type: 'slide' | 'fade') => {
-  console.log('test:zuoyu:useModalAnimation:');
   const initialY = type === 'slide' ? Dimensions.get('window').height : 0;
   const baseAnimBackground = React.useRef(new Animated.Value(0)).current;
   const baseAnimContent = React.useRef(new Animated.Value(initialY)).current;
@@ -143,7 +141,6 @@ export function Modal({
   transparent,
   ...props
 }: ModalProps): JSX.Element {
-  console.log('test:zuoyu:Modal');
   const colors = {
     backdrop: 'rgba(1, 1, 1, 0.5)',
   };
@@ -186,7 +183,6 @@ export function Modal({
     >
       <TouchableWithoutFeedback
         onPress={() => {
-          console.log('test:zuoyu:onPress:2');
           disableBackgroundClose ? undefined : onRequestClose();
         }}
       >
@@ -227,9 +223,7 @@ export function Modal({
           <Pressable
             // NOTE: https://github.com/facebook/react-native/issues/14295
             //  Due to 'Pressable', the width of the children must be explicitly specified as a number.
-            onPress={() => {
-              console.log('test:zuoyu:onPress:3');
-            }}
+            onPress={() => {}}
           >
             {children}
           </Pressable>
@@ -255,7 +249,6 @@ export function TestModalPrototype(): React.JSX.Element {
     >
       <Pressable
         onPress={() => {
-          console.log('test:zuoyu:onPress');
           setVisible(true);
         }}
       >
@@ -276,7 +269,6 @@ export function TestModalPrototype(): React.JSX.Element {
         <Pressable
           style={{ height: 500, width: 100, backgroundColor: 'yellow' }}
           onPress={() => {
-            console.log('test:zuoyu:onPress:4');
             setVisible(false);
           }}
         />
