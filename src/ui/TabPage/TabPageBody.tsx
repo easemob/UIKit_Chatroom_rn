@@ -10,8 +10,7 @@ export type TabPageBodyItemProps = ScrollViewProps;
 export function TabPageBodyItem(props: TabPageBodyItemProps) {
   const { style, children, ...others } = props;
   // const { width } = useWindowDimensions();
-  // const { width } = Dimensions.get('window');
-  // console.log('test:zuoyu:2:', width, width2);
+  // const { width: width2 } = Dimensions.get('window');
   // return <>{children}</>;
   return (
     <ScrollView style={[style]} {...others}>
@@ -37,7 +36,6 @@ export type TabPageBodyProps = Omit<
   width?: number;
 };
 export function TabPageBody(props: TabPageBodyProps) {
-  console.log('test:zuoyu:TabPageBody:');
   const {
     style,
     children,
@@ -64,27 +62,13 @@ export function TabPageBody(props: TabPageBodyProps) {
           viewRef.current = ref;
         }
       }}
-      onLayout={(e) => {
-        console.log('test:zuoyu:', e.nativeEvent);
+      onLayout={() => {
         if (viewRef.current) {
-          viewRef.current.measureInWindow((x, y, width, height) => {
-            console.log('View的左上角坐标：', x, y, width, height);
-            // setHeight(height);
-          });
-          viewRef.current.measure((x, y, width, height, pageX, pageY) => {
+          viewRef.current.measureInWindow((_, __, ___, ____) => {});
+          viewRef.current.measure((_, __, ___, ____, _____, pageY) => {
             if (initHeight === undefined) {
               setPageY(pageY);
             }
-
-            console.log(
-              'View的左上角坐标2：',
-              x,
-              y,
-              width,
-              height,
-              pageX,
-              pageY
-            );
           });
         }
       }}
