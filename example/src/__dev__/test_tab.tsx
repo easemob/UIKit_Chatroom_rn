@@ -29,9 +29,11 @@ export function TestTab() {
     <View style={{ top: 100 }}>
       <TabPage
         header={{
+          // Header: TabPage.DefaultHeader,
           titles: ['1', '2', '3'],
         }}
         body={{
+          // Body: TabPage.DefaultBody,
           BodyPages: BodyPages(),
         }}
         // height={300}

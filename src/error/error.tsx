@@ -12,6 +12,13 @@ export class UIKitError extends Error {
     super(params.extra, params.options);
     this.code = params.code;
     this.desc = this._desc(this.code);
+
+    // if (Error.captureStackTrace) {
+    //   Error.captureStackTrace(this, UIKitError);
+    // } else {
+    //   this.stack = new Error(this.toString()).stack;
+    // }
+    // console.log(this.stack);
   }
 
   private _desc(code: ErrorCode): ErrorDescription {
