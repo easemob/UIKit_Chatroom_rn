@@ -167,6 +167,7 @@ PODS:
     - FlipperKit/FlipperKitNetworkPlugin
   - fmt (6.2.1)
   - glog (0.3.5)
+  - HyphenateChat (4.1.1)
   - libevent (2.1.12)
   - OpenSSL-Universal (1.1.1100)
   - RCT-Folly (2021.07.22.00):
@@ -393,6 +394,9 @@ PODS:
     - glog
   - react-native-chat-room (0.1.0):
     - React-Core
+  - react-native-chat-sdk (1.2.1):
+    - HyphenateChat (= 4.1.1)
+    - React-Core
   - react-native-safe-area-context (4.5.5):
     - RCT-Folly
     - RCTRequired
@@ -545,6 +549,7 @@ DEPENDENCIES:
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
   - react-native-chat-room (from `../..`)
+  - react-native-chat-sdk (from `../node_modules/react-native-chat-sdk`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
@@ -574,6 +579,7 @@ SPEC REPOS:
     - Flipper-RSocket
     - FlipperKit
     - fmt
+    - HyphenateChat
     - libevent
     - OpenSSL-Universal
     - SocketRocket
@@ -650,6 +656,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/logger"
   react-native-chat-room:
     :path: "../.."
+  react-native-chat-sdk:
+    :path: "../node_modules/react-native-chat-sdk"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
   React-perflogger:
@@ -713,6 +721,7 @@ SPEC CHECKSUMS:
   FlipperKit: 2efad7007d6745a3f95e4034d547be637f89d3f6
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
   glog: 04b94705f318337d7ead9e6d17c019bd9b1f6b1b
+  HyphenateChat: 95aa4abbad0e763f513acbe21ff9543f50b886cd
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   OpenSSL-Universal: ebc357f1e6bc71fa463ccb2fe676756aff50e88c
   RCT-Folly: 424b8c9a7a0b9ab2886ffe9c3b041ef628fd4fb1
@@ -730,6 +739,7 @@ SPEC CHECKSUMS:
   React-jsinspector: b6ed4cb3ffa27a041cd440300503dc512b761450
   React-logger: 186dd536128ae5924bc38ed70932c00aa740cd5b
   react-native-chat-room: c0faadcdaa8741e9c56a5e36907426b208927c7e
+  react-native-chat-sdk: 1cc24157f5a168f294404d86cf71d4e4f280a3f3
   react-native-safe-area-context: 33e71d7408dffe148b08968d97a524009634ccc8
   React-perflogger: e706562ab7eb8eb590aa83a224d26fa13963d7f2
   React-RCTActionSheet: 57d4bd98122f557479a3359ad5dad8e109e20c5a
