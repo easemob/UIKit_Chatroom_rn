@@ -18,13 +18,13 @@ const useAnimation = () => {
         toValue: type === 'show' ? -336 : 0,
         useNativeDriver: false,
         duration: 250,
-        easing: Easing.linear,
+        easing: Easing.ease,
       }),
       Animated.timing(emoji, {
         toValue: type === 'show' ? 0 : -336,
         useNativeDriver: false,
         duration: 250,
-        easing: Easing.linear,
+        easing: Easing.ease,
       }),
     ]).start;
   };
@@ -38,44 +38,37 @@ const useAnimation = () => {
 };
 
 export function TestKeyboard() {
-  // const [enabled, setEnabled] = React.useState(true);
   const { translateY, emojiBottom, show, hide } = useAnimation();
   const noMove = React.useRef(false);
 
   React.useEffect(() => {
-    // Keyboard.addListener('keyboardDidShow', (e) => {
-    //   console.log('test:keyboardDidShow:', e);
-    // });
-    // Keyboard.addListener('keyboardWillShow', (e) => {
-    //   console.log('test:keyboardWillShow:', e);
-    // });
-    // Keyboard.addListener('keyboardDidHide', (e) => {
-    //   console.log('test:keyboardDidHide:', e);
-    // });
-    // Keyboard.addListener('keyboardWillHide', (e) => {
-    //   console.log('test:keyboardWillHide:', e);
-    // });
-    // Keyboard.addListener('keyboardDidChangeFrame', (e) => {
-    //   console.log('test:keyboardDidChangeFrame:', e);
-    // });
-    // Keyboard.addListener('keyboardWillChangeFrame', (e) => {
-    //   console.log('test:keyboardWillChangeFrame:', e);
-    // });
+    const s1 = Keyboard.addListener('keyboardDidShow', (e) => {
+      console.log('test:keyboardDidShow:', e);
+    });
+    const s2 = Keyboard.addListener('keyboardWillShow', (e) => {
+      console.log('test:keyboardWillShow:', e);
+    });
+    const s3 = Keyboard.addListener('keyboardDidHide', (e) => {
+      console.log('test:keyboardDidHide:', e);
+    });
+    const s4 = Keyboard.addListener('keyboardWillHide', (e) => {
+      console.log('test:keyboardWillHide:', e);
+    });
+    const s5 = Keyboard.addListener('keyboardDidChangeFrame', (e) => {
+      console.log('test:keyboardDidChangeFrame:', e);
+    });
+    const s6 = Keyboard.addListener('keyboardWillChangeFrame', (e) => {
+      console.log('test:keyboardWillChangeFrame:', e);
+    });
+    return () => {
+      s1.remove();
+      s2.remove();
+      s3.remove();
+      s4.remove();
+      s5.remove();
+      s6.remove();
+    };
   }, []);
-
-  // return (
-  //   <View style={{ flex: 1, backgroundColor: 'green' }}>
-  //     <View
-  //       style={{
-  //         position: 'absolute',
-  //         height: 100,
-  //         width: '100%',
-  //         bottom: 100,
-  //         backgroundColor: 'orange',
-  //       }}
-  //     ></View>
-  //   </View>
-  // );
 
   return (
     <View
@@ -86,21 +79,8 @@ export function TestKeyboard() {
         alignItems: 'center',
       }}
     >
-      <KeyboardAvoidingView
-        style={{ flex: 1 }}
-        // behavior={Platform.OS === 'ios' ? 'position' : 'height'}
-        // contentContainerStyle={{ height: 500, bottom: 100, flex: 1 }}
-        // onLayout={(e) => {
-        //   if (e.nativeEvent) console.log('test:onLayout:', e.nativeEvent);
-        // }}
-        // enabled={enabled}
-      >
-        <View
-          onLayout={() => {
-            // if (e.nativeEvent) console.log('test:onLayout:', e.nativeEvent);
-          }}
-          // style={{ height: 700 }}
-        >
+      <KeyboardAvoidingView style={{ flex: 1 }}>
+        <View>
           <View style={{ flexDirection: 'row', flex: 1, width: 300 }}>
             <View
               style={{ width: 100, flexGrow: 1, backgroundColor: 'blue' }}
@@ -114,6 +94,13 @@ export function TestKeyboard() {
               onTouchEnd={() => {
                 noMove.current = false;
                 Keyboard.dismiss();
+              }}
+            />
+            <View
+              style={{ width: 100, backgroundColor: 'orange' }}
+              onTouchEnd={() => {
+                noMove.current = false;
+                hide();
               }}
             />
           </View>

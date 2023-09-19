@@ -1,7 +1,14 @@
 import * as React from 'react';
 import { View } from 'react-native';
 
-import { default as Test } from './test_keyboard';
+import { default as Test } from './test_keyboard_rn4';
+
+// if (
+//   Platform.OS === 'android' &&
+//   UIManager.setLayoutAnimationEnabledExperimental
+// ) {
+//   UIManager.setLayoutAnimationEnabledExperimental(true);
+// }
 
 export function AppDev(): JSX.Element {
   return (
