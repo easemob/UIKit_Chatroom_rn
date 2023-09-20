@@ -174,6 +174,7 @@ export type ButtonStyle = {
 };
 
 export interface Theme {
+  style: ThemeType;
   button: {
     style: ButtonStyle;
     size: ButtonSizes;

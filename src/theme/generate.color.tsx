@@ -91,18 +91,18 @@ export function generateNeutralSpecialColor(hue: number): Colors {
  */
 export function generateBarrageColor(): Colors {
   return {
-    0: generateColor({ h: 0, s: '0%', l: '0%', a: '0.0' }),
-    1: generateColor({ h: 0, s: '0%', l: '0%', a: '0.1' }),
-    2: generateColor({ h: 0, s: '0%', l: '0%', a: '0.2' }),
-    3: generateColor({ h: 0, s: '0%', l: '0%', a: '0.3' }),
-    4: generateColor({ h: 0, s: '0%', l: '0%', a: '0.4' }),
-    5: generateColor({ h: 0, s: '0%', l: '0%', a: '0.5' }),
-    6: generateColor({ h: 0, s: '0%', l: '0%', a: '0.6' }),
-    7: generateColor({ h: 0, s: '0%', l: '0%', a: '0.7' }),
-    8: generateColor({ h: 0, s: '0%', l: '0%', a: '0.8' }),
-    9: generateColor({ h: 0, s: '0%', l: '0%', a: '0.9' }),
-    95: generateColor({ h: 0, s: '0%', l: '0%', a: '0.95' }),
-    98: generateColor({ h: 0, s: '0%', l: '0%', a: '0.98' }),
-    100: generateColor({ h: 0, s: '0%', l: '0%', a: '1.0' }),
+    0: generateColor({ h: 0, s: '0%', l: '100%', a: '0.0' }),
+    1: generateColor({ h: 0, s: '0%', l: '100%', a: '0.1' }),
+    2: generateColor({ h: 0, s: '0%', l: '100%', a: '0.2' }),
+    3: generateColor({ h: 0, s: '0%', l: '100%', a: '0.3' }),
+    4: generateColor({ h: 0, s: '0%', l: '100%', a: '0.4' }),
+    5: generateColor({ h: 0, s: '0%', l: '100%', a: '0.5' }),
+    6: generateColor({ h: 0, s: '0%', l: '100%', a: '0.6' }),
+    7: generateColor({ h: 0, s: '0%', l: '100%', a: '0.7' }),
+    8: generateColor({ h: 0, s: '0%', l: '100%', a: '0.8' }),
+    9: generateColor({ h: 0, s: '0%', l: '100%', a: '0.9' }),
+    95: generateColor({ h: 0, s: '0%', l: '100%', a: '0.95' }),
+    98: generateColor({ h: 0, s: '0%', l: '100%', a: '0.98' }),
+    100: generateColor({ h: 0, s: '0%', l: '100%', a: '1.0' }),
   };
 }

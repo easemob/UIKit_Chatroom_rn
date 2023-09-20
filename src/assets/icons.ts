@@ -73,6 +73,15 @@ export const ICON_ASSETS = {
       return require('./icons/sendgift_2x.png');
     }
   },
+  spkeaker_n_vertical_bar: (size: string) => {
+    if (size === '3x') {
+      return require('./icons/spkeaker_n_vertical_bar_3x.png');
+    } else if (size === '2x') {
+      return require('./icons/spkeaker_n_vertical_bar_3x.png');
+    } else {
+      return require('./icons/spkeaker_n_vertical_bar_2x.png');
+    }
+  },
   textKeyboard: (size: string) => {
     if (size === '3x') {
       return require('./icons/textKeyboard_3x.png');
