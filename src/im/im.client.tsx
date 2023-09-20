@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import type { ChatClient } from 'react-native-chat-sdk';
 
 import type { ClientService, ClientServiceListener } from './types';
@@ -7,16 +6,16 @@ export class ClientServiceImpl implements ClientService {
   currentUser(): string | undefined {
     throw new Error('Method not implemented.');
   }
-  addListener(listener: ClientServiceListener): void {
+  addListener(_listener: ClientServiceListener): void {
     throw new Error('Method not implemented.');
   }
-  removeListener(listener: ClientServiceListener): void {
+  removeListener(_listener: ClientServiceListener): void {
     throw new Error('Method not implemented.');
   }
   clearListener(): void {
     throw new Error('Method not implemented.');
   }
-  login(params: {
+  login(_params: {
     userId: string;
     userToken: string;
     userNickname?: string | undefined;

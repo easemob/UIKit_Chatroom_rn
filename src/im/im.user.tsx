@@ -1,35 +1,34 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import type { UserInfo, UserService, UserServiceListener } from './types';
 
 export class UserServiceImpl implements UserService {
-  addListener(listener: UserServiceListener): void {
+  addListener(_listener: UserServiceListener): void {
     throw new Error('Method not implemented.');
   }
-  removeListener(listener: UserServiceListener): void {
+  removeListener(_listener: UserServiceListener): void {
     throw new Error('Method not implemented.');
   }
   clearListener(): void {
     throw new Error('Method not implemented.');
   }
-  addUserInfo(users: UserInfo[]): void {
+  addUserInfo(_users: UserInfo[]): void {
     throw new Error('Method not implemented.');
   }
-  getUserInfo(userId: string): UserInfo | undefined {
+  getUserInfo(_userId: string): UserInfo | undefined {
     throw new Error('Method not implemented.');
   }
-  getUserInfos(userIds: string[]): UserInfo[] {
+  getUserInfos(_userIds: string[]): UserInfo[] {
     throw new Error('Method not implemented.');
   }
-  fetchUserInfosFromServer(userIds: string[]): Promise<UserInfo[]> {
+  fetchUserInfosFromServer(_userIds: string[]): Promise<UserInfo[]> {
     throw new Error('Method not implemented.');
   }
-  removeUserInfo(userId: string): void {
+  removeUserInfo(_userId: string): void {
     throw new Error('Method not implemented.');
   }
-  updateUserInfo(user: UserInfo): void {
+  updateUserInfo(_user: UserInfo): void {
     throw new Error('Method not implemented.');
   }
-  uploadMyselfUserInfoToServer(user: UserInfo): Promise<void> {
+  uploadMyselfUserInfoToServer(_user: UserInfo): Promise<void> {
     throw new Error('Method not implemented.');
   }
 }
