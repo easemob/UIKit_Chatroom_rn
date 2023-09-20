@@ -30,7 +30,7 @@ export function CalcTextWidth() {
               if (textRef.current) {
                 textRef.current.measure((x, y, width, height, px, py) => {
                   console.log(
-                    'test:zuoyu:onLayout:measure:',
+                    'test:onLayout:measure:',
                     x,
                     y,
                     width,

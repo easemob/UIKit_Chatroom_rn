@@ -125,7 +125,6 @@ export function Marquee(props: MarqueeProps) {
 }
 
 export function TestMarquee() {
-  console.log('test:zuoyu:TestMarquee:');
   const ref = React.useRef<MarqueeRef>({} as any);
 
   return (
@@ -133,7 +132,6 @@ export function TestMarquee() {
       <Button
         title="start rolling"
         onPress={() => {
-          console.log('test:zuoyu:TestMarquee:onPress:', count);
           // ref.current.startScrolling();
           ref.current.pushTask({ id: count.toString() });
           ++count;

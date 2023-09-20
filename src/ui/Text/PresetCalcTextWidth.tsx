@@ -33,9 +33,6 @@ export function PresetCalcTextWidth(props: PresetCalcTextWidthProps) {
             onWidth(e.nativeEvent.layout.width);
             onLayout?.(e);
           }}
-          onTextLayout={(e) => {
-            console.log('test:zuoyu:onTextLayout:', e.nativeEvent.lines);
-          }}
           {...others}
         >
           {content}

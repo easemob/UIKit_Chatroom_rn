@@ -18,7 +18,6 @@ export type Task = {
 };
 
 export function TestMarquee() {
-  console.log('test:zuoyu:TestMarquee:');
   const ref = React.useRef<MarqueeRef>({} as any);
   const pal = createPresetPalette();
   const light = createDarkTheme(pal);

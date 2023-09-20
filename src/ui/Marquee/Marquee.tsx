@@ -104,7 +104,6 @@ export function Marquee(props: MarqueeProps) {
         content={content}
         textProps={{ textType: 'small', paletteType: 'body' }}
         onWidth={function (width: number): void {
-          console.log('test:zuoyu:onWidth:', width);
           contentState.current = 1;
           setContentWidth(width);
         }}
@@ -124,7 +123,6 @@ export function Marquee(props: MarqueeProps) {
           contentContainerStyle,
         ]}
         onLayout={() => {
-          console.log('test:zuoyu:onLayout:');
           if (contentState.current === 1) {
             contentState.current = 0;
             if (curTask.current === undefined) {

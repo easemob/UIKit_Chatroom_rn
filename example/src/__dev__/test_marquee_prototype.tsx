@@ -44,9 +44,7 @@ export function TestMarquee2() {
             [{ nativeEvent: { contentOffset: { x: scrollX } } }],
             {
               useNativeDriver: true,
-              listener: (event) => {
-                console.log('test:zuoyu:onScroll', event.nativeEvent);
-              },
+              listener: (_) => {},
             }
           )}
           decelerationRate={decelerationRate}
@@ -61,15 +59,12 @@ export function TestMarquee2() {
 }
 
 export function TestMarquee() {
-  console.log('test:zuoyu:TestMarquee:');
   const content =
     'jskdfjsdkjfksdjflsdfkjsldfkjsldfkjsdlfkjsdlfkjsdflksdjflksdjflskdfjlsdkfjsldkfjsldfkjsdlfkj';
   const scrollX = React.useRef(new Animated.Value(0)).current;
 
   const createAnimation = (params: { length: number }) => {
     scrollX.setValue(0);
-    // @ts-ignore
-    console.log('test:zuoyu:', scrollX.__getValue(), params.length);
 
     return {
       startRolling: Animated.timing(scrollX, {
@@ -82,9 +77,7 @@ export function TestMarquee() {
   const animate = React.useRef<ReturnType<typeof createAnimation>>({} as any);
 
   React.useEffect(() => {
-    scrollX.addListener((e) => {
-      console.log('test:zuoyu:scrollX:', e);
-    });
+    scrollX.addListener(() => {});
     return () => {
       scrollX.removeAllListeners();
     };
@@ -95,10 +88,7 @@ export function TestMarquee() {
         title="start rolling"
         onPress={() => {
           animate.current = createAnimation({ length: 1000 });
-          animate.current.startRolling(() => {
-            // @ts-ignore
-            console.log('test:zuoyu:end:', scrollX.__getValue());
-          });
+          animate.current.startRolling(() => {});
         }}
       />
       <Button title="reset rolling" onPress={() => {}} />
@@ -110,9 +100,6 @@ export function TestMarquee() {
             [{ nativeEvent: { contentOffset: { x: scrollX } } }],
             {
               useNativeDriver: true,
-              // listener: (event) => {
-              //   console.log('test:zuoyu:onScroll', event.nativeEvent);
-              // },
             }
           )}
         >

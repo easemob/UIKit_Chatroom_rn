@@ -21,13 +21,6 @@ export const createCompose = (params: {
     return { compose: Animated.sequence([start]).start };
   } else {
     const ms = (contentWidth / (letterWidth * 10)) * 1000;
-    console.log(
-      'test:zuoyu:ms:',
-      ms,
-      params,
-      letterWidth,
-      contentWidth / (letterWidth * 10)
-    );
     const start = Animated.timing(x, {
       toValue: startX,
       useNativeDriver: true,
