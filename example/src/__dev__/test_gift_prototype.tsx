@@ -28,58 +28,67 @@ type ItemT = {
   content: string;
   height: number;
   width: number;
-  isNewAdded: boolean;
+  isUseAnimation: boolean;
   idState: '1' | '2' | '3'; // 新生代、中生代、老生代
 };
 
 export const AnimatedFlatListItem = ({ item }: { item: ItemT }) => {
-  console.log('test:AnimatedFlatListItem:');
+  console.log('test:AnimatedFlatListItem:', item);
   const opacity = React.useRef(new Animated.Value(1)).current;
   const iHeight = React.useRef(new Animated.Value(item.height)).current;
   const ix = React.useRef(new Animated.Value(0)).current;
 
   React.useEffect(() => {
-    if (item.idState === '1') {
-      ix.setValue(40);
-      Animated.timing(ix, {
-        toValue: 0,
-        useNativeDriver: false,
-        duration: animateDuration,
-        easing: Easing.linear,
-      }).start();
-    } else if (item.idState === '2') {
-      ix.setValue(20);
-      Animated.sequence([
+    if (item.isUseAnimation === true) {
+      if (item.idState === '1') {
+        ix.setValue(40);
+        Animated.timing(ix, {
+          toValue: 0,
+          useNativeDriver: false,
+          duration: animateDuration,
+          easing: Easing.linear,
+        }).start();
+      } else if (item.idState === '2') {
+        ix.setValue(20);
+        Animated.sequence([
+          Animated.timing(ix, {
+            toValue: 0,
+            useNativeDriver: false,
+            duration: animateDuration / 2,
+            delay: animateDuration * 0.4,
+            easing: Easing.linear,
+          }),
+          Animated.timing(iHeight, {
+            toValue: itemSmallHeight,
+            useNativeDriver: false,
+            duration: animateDuration / 2,
+            easing: Easing.linear,
+          }),
+        ]).start();
+      } else if (item.idState === '3') {
+        ix.setValue(20);
         Animated.timing(ix, {
           toValue: 0,
           useNativeDriver: false,
           duration: animateDuration / 2,
           delay: animateDuration * 0.4,
           easing: Easing.linear,
-        }),
-        Animated.timing(iHeight, {
-          toValue: itemSmallHeight,
-          useNativeDriver: false,
-          duration: animateDuration / 2,
-          easing: Easing.linear,
-        }),
-      ]).start();
-    } else if (item.idState === '3') {
-      ix.setValue(20);
-      Animated.timing(ix, {
-        toValue: 0,
-        useNativeDriver: false,
-        duration: animateDuration / 2,
-        delay: animateDuration * 0.4,
-        easing: Easing.linear,
-      }).start();
+        }).start();
+      }
+    } else {
+      if (item.idState === '1') {
+      } else if (item.idState === '2') {
+        iHeight.setValue(itemSmallHeight);
+      } else if (item.idState === '3') {
+      }
     }
+
     return () => {
       console.log('test:AnimatedFlatListItem:end:');
       iHeight.stopAnimation();
       ix.stopAnimation();
     };
-  }, [iHeight, item.idState, ix]);
+  }, [iHeight, item.idState, item.isUseAnimation, ix]);
 
   if (item.idState === '1') {
   } else if (item.idState === '2') {
@@ -119,7 +128,7 @@ export const AnimatedFlatListItemMemo = React.memo(
       pre.item.id === next.item.id &&
       pre.item.content === next.item.content &&
       pre.item.height === next.item.height &&
-      pre.item.isNewAdded === next.item.isNewAdded &&
+      pre.item.isUseAnimation === next.item.isUseAnimation &&
       pre.item.width === next.item.width &&
       pre.item.idState === next.item.idState
     );
@@ -137,7 +146,7 @@ export const initList = () => {
       height: 1,
       width: 1,
       idState: '1',
-      isNewAdded: false,
+      isUseAnimation: false,
     });
     ++count;
   }
@@ -152,12 +161,27 @@ export function TestGiftShowView() {
   const ref = React.useRef<FlatList<ItemT>>({} as any);
   const { width: winWidth } = useWindowDimensions();
   const scrollY = React.useRef(new Animated.Value(0)).current;
+  const preTaskTs = React.useRef(0);
 
   return (
     <View style={{ flex: 1, top: 100, backgroundColor: 'green' }}>
       <TouchableOpacity
         style={{ height: 30, margin: 30, backgroundColor: 'yellow' }}
         onPress={() => {
+          let isUseAnimation = true;
+          if (preTaskTs.current === 0) {
+            preTaskTs.current = new Date().getTime();
+          } else {
+            const curTaskTs = new Date().getTime();
+            if (curTaskTs - preTaskTs.current < 250) {
+              isUseAnimation = false;
+            } else {
+              isUseAnimation = true;
+            }
+            preTaskTs.current = curTaskTs;
+          }
+          console.log('test:zuoyu:TestListView:onPress:', isUseAnimation);
+
           if (data.length === 0) {
             data.push({
               id: count.toString(),
@@ -165,10 +189,10 @@ export function TestGiftShowView() {
               height: itemHeight,
               width: winWidth,
               idState: '1',
-              isNewAdded: true,
+              isUseAnimation: isUseAnimation,
             });
           } else if (data.length === 1) {
-            data[0]!.isNewAdded = false;
+            data[0]!.isUseAnimation = isUseAnimation;
             data[0]!.idState = '2';
             data.push({
               id: count.toString(),
@@ -176,33 +200,35 @@ export function TestGiftShowView() {
               height: itemHeight,
               width: winWidth,
               idState: '1',
-              isNewAdded: true,
+              isUseAnimation: isUseAnimation,
             });
           } else if (data.length === 2) {
             // data.shift();
             data[0]!.idState = '3';
-            data[1]!.isNewAdded = false;
+            data[0]!.isUseAnimation = isUseAnimation;
             data[1]!.idState = '2';
+            data[1]!.isUseAnimation = isUseAnimation;
             data.push({
               id: count.toString(),
               content: count.toString() + ' item',
               height: itemHeight,
               width: winWidth,
               idState: '1',
-              isNewAdded: true,
+              isUseAnimation: isUseAnimation,
             });
           } else if (data.length === 3) {
             data.shift();
             data[0]!.idState = '3';
+            data[0]!.isUseAnimation = isUseAnimation;
             data[1]!.idState = '2';
-            data[1]!.isNewAdded = false;
+            data[1]!.isUseAnimation = isUseAnimation;
             data.push({
               id: count.toString(),
               content: count.toString() + ' item',
               height: itemHeight,
               width: winWidth,
               idState: '1',
-              isNewAdded: true,
+              isUseAnimation: isUseAnimation,
             });
           }
 
