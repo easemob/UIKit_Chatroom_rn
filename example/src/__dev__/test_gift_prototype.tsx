@@ -15,9 +15,11 @@ import {
   View,
 } from 'react-native';
 
-const listHeight = 64;
-const itemHeight = 40;
-const itemSmallHeight = 20;
+const listHeight = 60;
+const itemHeight = 38;
+const itemSmallHeight = 18;
+
+const animateDuration = 250;
 
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList<ItemT>);
 
@@ -26,45 +28,69 @@ type ItemT = {
   content: string;
   height: number;
   width: number;
-  isNew: boolean;
+  isNewAdded: boolean;
+  idState: '1' | '2' | '3'; // 新生代、中生代、老生代
 };
 
 export const AnimatedFlatListItem = ({ item }: { item: ItemT }) => {
   console.log('test:AnimatedFlatListItem:');
   const opacity = React.useRef(new Animated.Value(1)).current;
-  const newTranslateY = React.useRef(new Animated.Value(0)).current;
-  const oldTranslateY = React.useRef(new Animated.Value(0)).current;
-  const oldHeight = React.useRef(new Animated.Value(itemHeight)).current;
-  // const oldScaleX = React.useRef(new Animated.Value(1)).current; // !!! The text is deformed.
-  if (item.isNew === true) {
-    newTranslateY.setValue(40);
-    Animated.timing(newTranslateY, {
-      toValue: 0,
-      useNativeDriver: false,
-      duration: 1000,
-    }).start();
-  } else {
-    oldTranslateY.setValue(20);
-    // oldHeight.setValue(itemHeight);
-    Animated.parallel([
-      Animated.timing(oldTranslateY, {
+  const iHeight = React.useRef(new Animated.Value(item.height)).current;
+  const ix = React.useRef(new Animated.Value(0)).current;
+
+  React.useEffect(() => {
+    if (item.idState === '1') {
+      ix.setValue(40);
+      Animated.timing(ix, {
         toValue: 0,
         useNativeDriver: false,
-        duration: 1000,
-      }),
-      Animated.timing(oldHeight, {
-        toValue: itemSmallHeight,
-        useNativeDriver: false,
+        duration: animateDuration,
         easing: Easing.linear,
-        duration: 1000,
-      }),
-    ]).start();
+      }).start();
+    } else if (item.idState === '2') {
+      ix.setValue(20);
+      Animated.sequence([
+        Animated.timing(ix, {
+          toValue: 0,
+          useNativeDriver: false,
+          duration: animateDuration / 2,
+          delay: animateDuration * 0.4,
+          easing: Easing.linear,
+        }),
+        Animated.timing(iHeight, {
+          toValue: itemSmallHeight,
+          useNativeDriver: false,
+          duration: animateDuration / 2,
+          easing: Easing.linear,
+        }),
+      ]).start();
+    } else if (item.idState === '3') {
+      ix.setValue(20);
+      Animated.timing(ix, {
+        toValue: 0,
+        useNativeDriver: false,
+        duration: animateDuration / 2,
+        delay: animateDuration * 0.4,
+        easing: Easing.linear,
+      }).start();
+    }
+    return () => {
+      console.log('test:AnimatedFlatListItem:end:');
+      iHeight.stopAnimation();
+      ix.stopAnimation();
+    };
+  }, [iHeight, item.idState, ix]);
+
+  if (item.idState === '1') {
+  } else if (item.idState === '2') {
+  } else if (item.idState === '3') {
   }
+
   return (
     <Animated.View
       style={{
         flex: 0,
-        height: item.isNew === true ? item.height : oldHeight,
+        height: iHeight,
         width: item.width,
         margin: 1,
         backgroundColor: 'yellow',
@@ -72,7 +98,9 @@ export const AnimatedFlatListItem = ({ item }: { item: ItemT }) => {
         alignItems: 'flex-start',
         opacity: opacity,
         transform: [
-          { translateY: item.isNew === true ? newTranslateY : oldTranslateY },
+          {
+            translateY: ix,
+          },
         ],
       }}
       onTouchEnd={() => {
@@ -91,8 +119,9 @@ export const AnimatedFlatListItemMemo = React.memo(
       pre.item.id === next.item.id &&
       pre.item.content === next.item.content &&
       pre.item.height === next.item.height &&
-      pre.item.isNew === next.item.isNew &&
-      pre.item.width === next.item.width
+      pre.item.isNewAdded === next.item.isNewAdded &&
+      pre.item.width === next.item.width &&
+      pre.item.idState === next.item.idState
     );
   }
 );
@@ -107,7 +136,8 @@ export const initList = () => {
       content: count.toString() + ' init',
       height: 1,
       width: 1,
-      isNew: true,
+      idState: '1',
+      isNewAdded: false,
     });
     ++count;
   }
@@ -134,58 +164,45 @@ export function TestGiftShowView() {
               content: count.toString() + ' item',
               height: itemHeight,
               width: winWidth,
-              isNew: true,
+              idState: '1',
+              isNewAdded: true,
             });
           } else if (data.length === 1) {
-            const first = data[0]!;
-            // first.height = itemSmallHeight;
-            // first.width = first.width * 0.5;
-            first.isNew = false;
+            data[0]!.isNewAdded = false;
+            data[0]!.idState = '2';
             data.push({
               id: count.toString(),
               content: count.toString() + ' item',
               height: itemHeight,
               width: winWidth,
-              isNew: true,
+              idState: '1',
+              isNewAdded: true,
             });
           } else if (data.length === 2) {
             // data.shift();
-            const first = data[1]!;
-            // first.height = itemSmallHeight;
-            // first.width = first.width * 0.5;
-            first.isNew = false;
+            data[0]!.idState = '3';
+            data[1]!.isNewAdded = false;
+            data[1]!.idState = '2';
             data.push({
               id: count.toString(),
               content: count.toString() + ' item',
               height: itemHeight,
               width: winWidth,
-              isNew: true,
+              idState: '1',
+              isNewAdded: true,
             });
           } else if (data.length === 3) {
             data.shift();
-            const first = data[1]!;
-            // first.height = itemSmallHeight;
-            // first.width = first.width * 0.5;
-            first.isNew = false;
+            data[0]!.idState = '3';
+            data[1]!.idState = '2';
+            data[1]!.isNewAdded = false;
             data.push({
               id: count.toString(),
               content: count.toString() + ' item',
               height: itemHeight,
               width: winWidth,
-              isNew: true,
-            });
-          } else if (data.length === 4) {
-            data.shift();
-            const first = data[2]!;
-            // first.height = itemSmallHeight;
-            // first.width = first.width * 0.5;
-            first.isNew = false;
-            data.push({
-              id: count.toString(),
-              content: count.toString() + ' item',
-              height: itemHeight,
-              width: winWidth,
-              isNew: true,
+              idState: '1',
+              isNewAdded: true,
             });
           }
 
@@ -201,7 +218,9 @@ export function TestGiftShowView() {
           setTimeout(() => {
             console.log('test:zuoyu:count:', data.length);
             ref.current.scrollToEnd({ animated: true });
-          }, 1000);
+            // ref.current.scrollToOffset({ animated: true, offset: -10000 });
+          }, 500);
+          // ref.current.scrollToEnd({ animated: false });
         }}
       >
         <Text>{'Add Item'}</Text>
@@ -217,7 +236,8 @@ export function TestGiftShowView() {
           keyExtractor={(item: ItemT) => {
             return item.id;
           }}
-          onLayout={() => {
+          onLayout={(e) => {
+            console.log('test:onLayout:', e.nativeEvent);
             // ref.current.scrollToEnd();
           }}
           onScrollToIndexFailed={(e) => {
@@ -230,11 +250,12 @@ export function TestGiftShowView() {
             [{ nativeEvent: { contentOffset: { y: scrollY } } }],
             {
               useNativeDriver: false,
-              listener: (e) => {
-                console.log('test:onScroll:', e.nativeEvent);
+              listener: () => {
+                // console.log('test:onScroll:', e.nativeEvent);
               },
             }
           )}
+          bounces={false}
         />
       </View>
     </View>
