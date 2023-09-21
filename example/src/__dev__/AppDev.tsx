@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { View } from 'react-native';
 
-import { default as Test } from './test_marquee';
+import { default as Test } from './test_gift_prototype';
 
 // if (
 //   Platform.OS === 'android' &&
@@ -16,4 +16,11 @@ export function AppDev(): JSX.Element {
       <Test />
     </View>
   );
+  // return (
+  //   <React.StrictMode>
+  //     <View style={{ flex: 1 }}>
+  //       <Test />
+  //     </View>
+  //   </React.StrictMode>
+  // );
 }
