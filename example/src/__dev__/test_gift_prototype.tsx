@@ -29,7 +29,7 @@ type ItemT = {
   height: number;
   width: number;
   isUseAnimation: boolean;
-  idState: '1' | '2' | '3'; // 新生代、中生代、老生代
+  idState: '1' | '2' | '3';
 };
 
 export const AnimatedFlatListItem = ({ item }: { item: ItemT }) => {

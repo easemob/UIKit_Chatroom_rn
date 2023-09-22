@@ -4,17 +4,17 @@ import type { ViewStyle } from 'react-native';
 import type { StyleProp } from 'react-native';
 import { Animated, useWindowDimensions } from 'react-native';
 import { View } from 'react-native';
-import type { IconNameType } from 'src/assets';
 
+import type { IconNameType } from '../../assets';
 import { usePaletteContext, useThemeContext } from '../../theme';
 import { Queue } from '../../utils';
 import { Icon } from '../Image';
 import { PresetCalcTextWidth, Text } from '../Text';
 import { createCompose } from './Marquee.hooks';
-import type { Task } from './types';
+import type { MarqueeTask } from './types';
 
 export type MarqueeRef = {
-  pushTask: (task: Task) => void;
+  pushTask: (task: MarqueeTask) => void;
 };
 
 export type MarqueeProps = {
@@ -53,9 +53,11 @@ export function Marquee(props: MarqueeProps) {
   const contentState = React.useRef(0);
 
   const x = React.useRef(new Animated.Value(0)).current;
-  const tasks: Queue<Task> = React.useRef(new Queue<Task>()).current;
-  const preTask = React.useRef<Task | undefined>(undefined);
-  const curTask = React.useRef<Task | undefined>(undefined);
+  const tasks: Queue<MarqueeTask> = React.useRef(
+    new Queue<MarqueeTask>()
+  ).current;
+  const preTask = React.useRef<MarqueeTask | undefined>(undefined);
+  const curTask = React.useRef<MarqueeTask | undefined>(undefined);
 
   const contentColor = () => {
     console.log('test:color:', colors.barrage[100], style);
@@ -63,7 +65,7 @@ export function Marquee(props: MarqueeProps) {
   };
 
   if (propsRef.current) {
-    propsRef.current.pushTask = async (task: Task) => {
+    propsRef.current.pushTask = async (task: MarqueeTask) => {
       tasks.enqueue(task);
       execTask();
     };

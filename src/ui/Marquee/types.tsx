@@ -1,4 +1,4 @@
-export type Task = {
+export type MarqueeTask = {
   id: string;
   content: string;
 };

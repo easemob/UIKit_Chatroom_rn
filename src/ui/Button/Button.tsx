@@ -7,8 +7,8 @@ import {
   ViewStyle,
 } from 'react-native';
 import { Pressable, PressableStateCallbackType } from 'react-native';
-import type { IconNameType } from 'src/assets';
 
+import type { IconNameType } from '../../assets';
 import { ErrorCode, UIKitError } from '../../error';
 import type {
   ButtonColors,
