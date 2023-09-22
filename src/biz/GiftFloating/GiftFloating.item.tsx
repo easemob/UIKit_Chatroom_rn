@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Animated, View } from 'react-native';
 
 import { ICON_ASSETS } from '../../assets';
+import { usePaletteContext } from '../../theme';
 import { DefaultImage } from '../../ui/Image';
 import { Text } from '../../ui/Text';
 import { Avatar } from '../Avatar';
@@ -15,6 +16,8 @@ export type GiftFloatingItemFCProps = {
 export function GiftFloatingItemFC(props: GiftFloatingItemFCProps) {
   const { item } = props;
   console.log('test:GiftFloatingItemFC:', item);
+
+  const { colors } = usePaletteContext();
 
   const iHeight = React.useRef(new Animated.Value(item.height)).current;
   const iWidth = React.useRef(new Animated.Value(item.width)).current;
@@ -32,7 +35,7 @@ export function GiftFloatingItemFC(props: GiftFloatingItemFCProps) {
         flex: 0,
         height: iHeight,
         width: iWidth,
-        backgroundColor: 'yellow',
+        backgroundColor: colors.barrage[1],
         justifyContent: 'center',
         alignItems: 'flex-start',
         paddingHorizontal: 4,

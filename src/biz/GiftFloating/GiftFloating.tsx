@@ -80,7 +80,11 @@ export function GiftFloating(props: GiftFloatingProps) {
 
   return (
     <View
-      style={{ height: gListHeight, width: gListWidth, backgroundColor: 'red' }}
+      style={{
+        height: gListHeight,
+        width: gListWidth,
+        // backgroundColor: colors.barrage[1],
+      }}
     >
       <FlatList
         ref={ref}
