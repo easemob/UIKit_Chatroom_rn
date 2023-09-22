@@ -1,8 +1,12 @@
 import * as React from 'react';
-import { FlatList, useWindowDimensions } from 'react-native';
+import type { FlatList } from 'react-native';
 
 import { getCurTs, seqId } from '../../utils';
-import { gAnimateDuration, gItemHeight } from './GiftFloating.const';
+import {
+  gItemHeight,
+  gItemWidth,
+  gScrollingTimeout,
+} from './GiftFloating.const';
 import type { GiftFloatingItem } from './GiftFloating.item.hooks';
 import type { GiftFloatingTask } from './types';
 
@@ -12,9 +16,10 @@ export const useAddData = (params: {
   ref: React.MutableRefObject<FlatList<GiftFloatingItem>>;
 }) => {
   const { dataRef, setData, ref } = params;
-  const { width: winWidth } = useWindowDimensions();
   const preTaskTs = React.useRef(0);
   const delayedScrolling = React.useRef<NodeJS.Timeout>();
+  const width = gItemWidth;
+  const height = gItemHeight;
 
   return (task: GiftFloatingTask) => {
     let isUseAnimation = true;
@@ -34,8 +39,8 @@ export const useAddData = (params: {
     if (data.length === 0) {
       data.push({
         id: seqId().toString(),
-        height: gItemHeight,
-        width: winWidth,
+        height: height,
+        width: width,
         idState: '1-0',
         isUseAnimation: isUseAnimation,
         gift: task.gift,
@@ -45,8 +50,8 @@ export const useAddData = (params: {
       data[0]!.idState = '2-1';
       data.push({
         id: seqId().toString(),
-        height: gItemHeight,
-        width: winWidth,
+        height: height,
+        width: width,
         idState: '1-1',
         isUseAnimation: isUseAnimation,
         gift: task.gift,
@@ -58,8 +63,8 @@ export const useAddData = (params: {
       data[1]!.isUseAnimation = isUseAnimation;
       data.push({
         id: seqId().toString(),
-        height: gItemHeight,
-        width: winWidth,
+        height: height,
+        width: width,
         idState: '1-1',
         isUseAnimation: isUseAnimation,
         gift: task.gift,
@@ -72,8 +77,8 @@ export const useAddData = (params: {
       data[1]!.isUseAnimation = isUseAnimation;
       data.push({
         id: seqId().toString(),
-        height: gItemHeight,
-        width: winWidth,
+        height: height,
+        width: width,
         idState: '1-1',
         isUseAnimation: isUseAnimation,
         gift: task.gift,
@@ -89,6 +94,6 @@ export const useAddData = (params: {
     delayedScrolling.current = setTimeout(() => {
       delayedScrolling.current = undefined;
       ref.current.scrollToEnd({ animated: true });
-    }, gAnimateDuration * 2);
+    }, gScrollingTimeout);
   };
 };

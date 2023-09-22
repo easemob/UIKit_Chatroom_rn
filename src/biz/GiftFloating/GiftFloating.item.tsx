@@ -11,17 +11,17 @@ export function GiftFloatingItemFC(props: GiftFloatingItemFCProps) {
   const { item } = props;
   console.log('test:GiftFloatingItemFC:', item);
   const iHeight = React.useRef(new Animated.Value(item.height)).current;
+  const iWidth = React.useRef(new Animated.Value(item.width)).current;
   const ix = React.useRef(new Animated.Value(0)).current;
 
-  useAnimation({ item, iHeight, ix });
+  useAnimation({ item, iHeight, iWidth, ix });
 
   return (
     <Animated.View
       style={{
         flex: 0,
         height: iHeight,
-        width: item.width,
-        // margin: 1,
+        width: iWidth,
         backgroundColor: 'yellow',
         justifyContent: 'center',
         alignItems: 'flex-start',

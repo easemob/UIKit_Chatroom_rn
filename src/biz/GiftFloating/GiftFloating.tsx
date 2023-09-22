@@ -93,6 +93,7 @@ export function GiftFloating(props: GiftFloatingProps) {
         }}
         bounces={false}
         ItemSeparatorComponent={ItemSeparatorComponent}
+        showsVerticalScrollIndicator={false}
       />
     </View>
   );

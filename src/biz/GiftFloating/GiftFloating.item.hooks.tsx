@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Platform } from 'react-native';
 import { Animated } from 'react-native';
 
 import type { Gift } from '../../im';
@@ -6,6 +7,7 @@ import {
   gAnimateDuration,
   gAnimateType,
   gItemSmallHeight,
+  gItemSmallWidth,
 } from './GiftFloating.const';
 
 export type GiftFloatingItem = {
@@ -20,21 +22,24 @@ export type GiftFloatingItem = {
 export type useAnimationProps = {
   item: GiftFloatingItem;
   iHeight: Animated.Value;
+  iWidth: Animated.Value;
   ix: Animated.Value;
 };
 
 export function useAnimation(props: useAnimationProps) {
-  const { item, iHeight, ix } = props;
+  const { item, iHeight, iWidth, ix } = props;
   React.useEffect(() => {
     if (item.isUseAnimation === true) {
       if (item.idState === '1-0') {
-        ix.setValue(84);
-        Animated.timing(ix, {
-          toValue: 40,
-          useNativeDriver: false,
-          duration: gAnimateDuration,
-          easing: gAnimateType,
-        }).start();
+        if (Platform.OS === 'ios') {
+          ix.setValue(84);
+          Animated.timing(ix, {
+            toValue: 40,
+            useNativeDriver: false,
+            duration: gAnimateDuration,
+            easing: gAnimateType,
+          }).start();
+        }
       } else if (item.idState === '1-1') {
         ix.setValue(40);
         Animated.timing(ix, {
@@ -59,8 +64,28 @@ export function useAnimation(props: useAnimationProps) {
             delay: gAnimateDuration * (5 / 6),
             easing: gAnimateType,
           }),
+          Animated.timing(iWidth, {
+            toValue: gItemSmallWidth,
+            useNativeDriver: false,
+            duration: gAnimateDuration,
+            easing: gAnimateType,
+          }),
         ]).start();
       } else if (item.idState === '2-2') {
+        Animated.parallel([
+          Animated.timing(iHeight, {
+            toValue: gItemSmallHeight,
+            useNativeDriver: false,
+            duration: gAnimateDuration,
+            easing: gAnimateType,
+          }),
+          Animated.timing(iWidth, {
+            toValue: gItemSmallWidth,
+            useNativeDriver: false,
+            duration: gAnimateDuration,
+            easing: gAnimateType,
+          }),
+        ]).start();
       } else if (item.idState === '3-2') {
       } else if (item.idState === '3-3') {
         ix.setValue(40);
@@ -76,8 +101,13 @@ export function useAnimation(props: useAnimationProps) {
       } else if (item.idState === '1-1') {
       } else if (item.idState === '2-1') {
         iHeight.setValue(gItemSmallHeight);
+        iWidth.setValue(gItemSmallWidth);
       } else if (item.idState === '2-2') {
+        iHeight.setValue(gItemSmallHeight);
+        iWidth.setValue(gItemSmallWidth);
       } else if (item.idState === '2-3') {
+        iHeight.setValue(gItemSmallHeight);
+        iWidth.setValue(gItemSmallWidth);
       } else if (item.idState === '3-2') {
       } else if (item.idState === '3-3') {
       }
@@ -88,5 +118,5 @@ export function useAnimation(props: useAnimationProps) {
       iHeight.stopAnimation();
       ix.stopAnimation();
     };
-  }, [iHeight, item.idState, item.isUseAnimation, ix]);
+  }, [iHeight, iWidth, item.idState, item.isUseAnimation, ix]);
 }
