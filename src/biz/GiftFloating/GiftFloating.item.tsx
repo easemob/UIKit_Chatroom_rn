@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { StyleSheet } from 'react-native';
 import { Animated, View } from 'react-native';
 
 import { ICON_ASSETS } from '../../assets';
@@ -31,32 +32,29 @@ export function GiftFloatingItemFC(props: GiftFloatingItemFCProps) {
 
   return (
     <Animated.View
-      style={{
-        flex: 0,
-        height: iHeight,
-        width: iWidth,
-        backgroundColor: colors.barrage[1],
-        justifyContent: 'center',
-        alignItems: 'flex-start',
-        paddingHorizontal: 4,
-        paddingVertical: 2,
-        transform: [
-          {
-            translateY: ix,
-          },
-        ],
-        borderRadius: ibr,
-      }}
+      style={[
+        styles.item,
+        {
+          height: iHeight,
+          width: iWidth,
+          backgroundColor: colors.barrage[1],
+          transform: [
+            {
+              translateY: ix,
+            },
+          ],
+          borderRadius: ibr,
+        },
+      ]}
     >
       <Animated.View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'flex-start',
-          transform: [{ scale: sf }, { translateX: tx }],
-          width: item.width,
-          alignItems: 'center',
-          flex: 1,
-        }}
+        style={[
+          styles.itemContent,
+          {
+            transform: [{ scale: sf }, { translateX: tx }],
+            width: item.width,
+          },
+        ]}
       >
         <View>
           <Avatar
@@ -96,19 +94,32 @@ export function GiftFloatingItemFC(props: GiftFloatingItemFCProps) {
         </View>
 
         <View style={{ padding: 2 }}>
-          <Text
-            style={{
-              color: 'white',
-              fontSize: 18,
-              fontWeight: '900',
-              lineHeight: 24,
-              fontStyle: 'italic',
-            }}
-          >
-            x1
-          </Text>
+          <Text style={styles.dig}>x1</Text>
         </View>
       </Animated.View>
     </Animated.View>
   );
 }
+
+const styles = StyleSheet.create({
+  item: {
+    flex: 0,
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+    paddingHorizontal: 4,
+    paddingVertical: 2,
+  },
+  itemContent: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    flex: 1,
+  },
+  dig: {
+    color: 'white',
+    fontSize: 18,
+    fontWeight: '900',
+    lineHeight: 24,
+    fontStyle: 'italic',
+  },
+});
