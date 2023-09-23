@@ -15,7 +15,7 @@ export type GiftFloatingItemFCProps = {
 
 export function GiftFloatingItemFC(props: GiftFloatingItemFCProps) {
   const { item } = props;
-  console.log('test:GiftFloatingItemFC:', item);
+  // console.log('test:GiftFloatingItemFC:', item);
 
   const { colors } = usePaletteContext();
 
@@ -25,9 +25,9 @@ export function GiftFloatingItemFC(props: GiftFloatingItemFCProps) {
   const ibr = React.useRef(new Animated.Value(gItemBorderRadius)).current;
 
   const sf = React.useRef(new Animated.Value(1)).current;
-  const itx = React.useRef(new Animated.Value(0)).current;
+  const tx = React.useRef(new Animated.Value(0)).current;
 
-  useAnimation({ item, iHeight, iWidth, ix, sf, ibr, itx });
+  useAnimation({ item, iHeight, iWidth, ix, sf, ibr, tx });
 
   return (
     <Animated.View
@@ -52,7 +52,7 @@ export function GiftFloatingItemFC(props: GiftFloatingItemFCProps) {
         style={{
           flexDirection: 'row',
           justifyContent: 'flex-start',
-          transform: [{ scale: sf }, { translateX: itx }],
+          transform: [{ scale: sf }, { translateX: tx }],
           width: item.width,
           alignItems: 'center',
           flex: 1,

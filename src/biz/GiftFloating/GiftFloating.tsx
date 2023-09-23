@@ -35,7 +35,7 @@ export function GiftFloating(props: GiftFloatingProps) {
   const curTask = React.useRef<GiftFloatingTask | undefined>(undefined);
   const delayClear = React.useRef<NodeJS.Timeout>();
 
-  const addData = useAddData({
+  const { addData, clearData, scrollToEnd } = useAddData({
     dataRef: dataRef,
     setData: setData,
     ref: ref,
@@ -55,8 +55,9 @@ export function GiftFloating(props: GiftFloatingProps) {
       if (task) {
         console.log('test:execTask:ing:');
         curTask.current = task;
-        delayClearTask();
+        delayClearData();
         addData(task);
+        scrollToEnd();
         preTask.current = curTask.current;
         curTask.current = undefined;
         console.log('test:execTask:finish:');
@@ -65,15 +66,24 @@ export function GiftFloating(props: GiftFloatingProps) {
     }
   };
 
-  const delayClearTask = () => {
+  const checkData = () => {
+    console.log('test:execTask:clear:');
+    delayClearData();
+  };
+
+  const delayClearData = () => {
     if (delayClear.current) {
       clearTimeout(delayClear.current);
     }
     delayClear.current = setTimeout(() => {
+      console.log('test:execTask:delayclear:');
       delayClear.current = undefined;
       if (curTask.current === undefined) {
-        dataRef.current = [];
-        setData([]);
+        if (dataRef.current.length > 0) {
+          clearData();
+          scrollToEnd();
+          checkData();
+        }
       }
     }, gTimeoutTask);
   };
@@ -83,7 +93,7 @@ export function GiftFloating(props: GiftFloatingProps) {
       style={{
         height: gListHeight,
         width: gListWidth,
-        // backgroundColor: colors.barrage[1],
+        // backgroundColor: 'gray',
       }}
     >
       <FlatList

@@ -17,7 +17,14 @@ export type GiftFloatingItem = {
   height: number;
   width: number;
   isUseAnimation: boolean;
-  idState: '1-0' | '1-1' | '2-1' | '2-2' | '2-3' | '3-2' | '3-3';
+  idState:
+    | '1-0' //
+    | '1-1' //
+    | '2-1' //
+    | '2-2' //
+    | '2-3' //
+    | '3-2' //
+    | '3-3'; //
   gift: Gift;
 };
 
@@ -28,13 +35,13 @@ export type useAnimationProps = {
   ix: Animated.Value;
   sf: Animated.Value;
   ibr: Animated.Value;
-  itx: Animated.Value;
+  tx: Animated.Value;
 };
 
 export function useAnimation(props: useAnimationProps) {
-  const { item, iHeight, iWidth, ix, sf, ibr, itx } = props;
+  const { item, iHeight, iWidth, ix, sf, ibr, tx } = props;
   React.useEffect(() => {
-    const getItx = () => -(item.width - item.width * gScaleFactor) / 2 - 4;
+    const getTx = () => -(item.width - item.width * gScaleFactor) / 2 - 4;
     if (item.isUseAnimation === true) {
       if (item.idState === '1-0') {
         if (Platform.OS === 'ios') {
@@ -88,15 +95,22 @@ export function useAnimation(props: useAnimationProps) {
             duration: gAnimateDuration,
             easing: gAnimateType,
           }),
-          Animated.timing(itx, {
-            toValue: getItx(),
+          Animated.timing(tx, {
+            toValue: getTx(),
             useNativeDriver: false,
             duration: gAnimateDuration,
             easing: gAnimateType,
           }),
         ]).start();
       } else if (item.idState === '2-2') {
+        ix.setValue(0);
         Animated.parallel([
+          Animated.timing(ix, {
+            toValue: 0,
+            useNativeDriver: false,
+            duration: gAnimateDuration,
+            easing: gAnimateType,
+          }),
           Animated.timing(iHeight, {
             toValue: gItemSmallHeight,
             useNativeDriver: false,
@@ -121,14 +135,21 @@ export function useAnimation(props: useAnimationProps) {
             duration: gAnimateDuration,
             easing: gAnimateType,
           }),
-          Animated.timing(itx, {
-            toValue: getItx(),
+          Animated.timing(tx, {
+            toValue: getTx(),
             useNativeDriver: false,
             duration: gAnimateDuration,
             easing: gAnimateType,
           }),
         ]).start();
       } else if (item.idState === '3-2') {
+        ix.setValue(0);
+        Animated.timing(ix, {
+          toValue: 0,
+          useNativeDriver: false,
+          duration: gAnimateDuration,
+          easing: gAnimateType,
+        }).start();
       } else if (item.idState === '3-3') {
         ix.setValue(40);
         Animated.timing(ix, {
@@ -150,7 +171,7 @@ export function useAnimation(props: useAnimationProps) {
         iWidth.setValue(gItemSmallWidth);
         sf.setValue(gScaleFactor);
         ibr.setValue(gItemBorderRadius * gScaleFactor);
-        itx.setValue(getItx());
+        tx.setValue(getTx());
       } else if (item.idState === '3-2') {
       } else if (item.idState === '3-3') {
       }
@@ -168,7 +189,7 @@ export function useAnimation(props: useAnimationProps) {
     item.idState,
     item.isUseAnimation,
     item.width,
-    itx,
+    tx,
     ix,
     sf,
   ]);

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import type { FlatList } from 'react-native';
+import { Platform } from 'react-native';
 
 import { getCurTs, seqId } from '../../utils';
 import {
@@ -21,79 +22,109 @@ export const useAddData = (params: {
   const width = gItemWidth;
   const height = gItemHeight;
 
-  return (task: GiftFloatingTask) => {
-    let isUseAnimation = true;
-    if (preTaskTs.current === 0) {
-      preTaskTs.current = getCurTs();
-    } else {
-      const curTaskTs = getCurTs();
-      if (curTaskTs - preTaskTs.current < 250) {
-        isUseAnimation = false;
-      } else {
-        isUseAnimation = true;
+  const scrollToEnd = () => {
+    if (Platform.OS === 'ios') {
+      if (delayedScrolling.current) {
+        clearTimeout(delayedScrolling.current);
+        delayedScrolling.current = undefined;
       }
-      preTaskTs.current = curTaskTs;
+      delayedScrolling.current = setTimeout(() => {
+        delayedScrolling.current = undefined;
+        ref.current.scrollToEnd({ animated: true });
+      }, gScrollingTimeout);
+    } else {
+      if (delayedScrolling.current) {
+        clearTimeout(delayedScrolling.current);
+        delayedScrolling.current = undefined;
+      }
+      delayedScrolling.current = setTimeout(() => {
+        delayedScrolling.current = undefined;
+        ref.current.scrollToEnd({ animated: true });
+      }, gScrollingTimeout);
     }
+  };
 
-    const data = dataRef.current;
-    if (data.length === 0) {
-      data.push({
-        id: seqId().toString(),
-        height: height,
-        width: width,
-        idState: '1-0',
-        isUseAnimation: isUseAnimation,
-        gift: task.gift,
-      });
-    } else if (data.length === 1) {
-      data[0]!.isUseAnimation = isUseAnimation;
-      data[0]!.idState = '2-1';
-      data.push({
-        id: seqId().toString(),
-        height: height,
-        width: width,
-        idState: '1-1',
-        isUseAnimation: isUseAnimation,
-        gift: task.gift,
-      });
-    } else if (data.length === 2) {
-      data[0]!.idState = '3-2';
-      data[0]!.isUseAnimation = isUseAnimation;
-      data[1]!.idState = '2-2';
-      data[1]!.isUseAnimation = isUseAnimation;
-      data.push({
-        id: seqId().toString(),
-        height: height,
-        width: width,
-        idState: '1-1',
-        isUseAnimation: isUseAnimation,
-        gift: task.gift,
-      });
-    } else if (data.length === 3) {
-      data.shift();
-      data[0]!.idState = '3-3';
-      data[0]!.isUseAnimation = isUseAnimation;
-      data[1]!.idState = '2-3';
-      data[1]!.isUseAnimation = isUseAnimation;
-      data.push({
-        id: seqId().toString(),
-        height: height,
-        width: width,
-        idState: '1-1',
-        isUseAnimation: isUseAnimation,
-        gift: task.gift,
-      });
-    }
+  return {
+    scrollToEnd: scrollToEnd,
+    addData: (task: GiftFloatingTask) => {
+      let isUseAnimation = true;
+      if (preTaskTs.current === 0) {
+        preTaskTs.current = getCurTs();
+      } else {
+        const curTaskTs = getCurTs();
+        if (curTaskTs - preTaskTs.current < 250) {
+          isUseAnimation = false;
+        } else {
+          isUseAnimation = true;
+        }
+        preTaskTs.current = curTaskTs;
+      }
 
-    setData([...data]);
+      const data = dataRef.current;
+      if (data.length === 0) {
+        data.push({
+          id: seqId().toString(),
+          height: height,
+          width: width,
+          idState: '1-0',
+          isUseAnimation: isUseAnimation,
+          gift: task.gift,
+        });
+      } else if (data.length === 1) {
+        data[0]!.isUseAnimation = isUseAnimation;
+        data[0]!.idState = '2-1';
+        data.push({
+          id: seqId().toString(),
+          height: height,
+          width: width,
+          idState: '1-1',
+          isUseAnimation: isUseAnimation,
+          gift: task.gift,
+        });
+      } else if (data.length === 2) {
+        data[0]!.idState = '3-2';
+        data[0]!.isUseAnimation = isUseAnimation;
+        data[1]!.idState = '2-2';
+        data[1]!.isUseAnimation = isUseAnimation;
+        data.push({
+          id: seqId().toString(),
+          height: height,
+          width: width,
+          idState: '1-1',
+          isUseAnimation: isUseAnimation,
+          gift: task.gift,
+        });
+      } else if (data.length === 3) {
+        data.shift();
+        data[0]!.idState = '3-3';
+        data[0]!.isUseAnimation = isUseAnimation;
+        data[1]!.idState = '2-3';
+        data[1]!.isUseAnimation = isUseAnimation;
+        data.push({
+          id: seqId().toString(),
+          height: height,
+          width: width,
+          idState: '1-1',
+          isUseAnimation: isUseAnimation,
+          gift: task.gift,
+        });
+      }
 
-    if (delayedScrolling.current) {
-      clearTimeout(delayedScrolling.current);
-      delayedScrolling.current = undefined;
-    }
-    delayedScrolling.current = setTimeout(() => {
-      delayedScrolling.current = undefined;
-      ref.current.scrollToEnd({ animated: true });
-    }, gScrollingTimeout);
+      setData([...data]);
+    },
+    clearData: () => {
+      if (dataRef.current.length > 0) {
+        if (dataRef.current.length === 3) {
+          dataRef.current.shift();
+        }
+        if (dataRef.current.length === 2) {
+          dataRef.current.shift();
+          dataRef.current[0]!.idState = '2-1';
+        } else {
+          dataRef.current = [];
+        }
+        setData([...dataRef.current]);
+      }
+    },
   };
 };

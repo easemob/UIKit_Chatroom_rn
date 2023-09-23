@@ -15,4 +15,4 @@ export const gAnimateDuration = 300;
 export const gAnimateType = Easing.linear;
 export const gTimeoutTask = 3000;
 export const gScrollingTimeout =
-  Platform.OS === 'ios' ? gAnimateDuration * 0.5 : gAnimateDuration * 0.5;
+  Platform.OS === 'ios' ? gAnimateDuration * 0.5 : gAnimateDuration * 0.8; // !!! system tuning.
