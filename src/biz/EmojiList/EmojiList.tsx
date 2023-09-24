@@ -12,6 +12,7 @@ import moji from 'twemoji';
 import { FACE_ASSETS } from '../../assets';
 import { usePaletteContext, useThemeContext } from '../../theme';
 import { Text } from '../../ui/Text';
+import { gAspectRatio } from './EmojiList.const';
 
 export type EmojiListProps = {
   onFace: (id: string) => void;
@@ -28,7 +29,7 @@ export function EmojiList(props: EmojiListProps) {
   return (
     <View
       style={{
-        height: (300 / 390) * winWidth,
+        height: gAspectRatio * winWidth,
         backgroundColor:
           style === 'light' ? colors.neutral[98] : colors.neutral[1],
       }}

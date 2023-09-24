@@ -85,7 +85,7 @@ export function GiftFloatingItemFC(props: GiftFloatingItemFCProps) {
 
         <View>
           <DefaultImage
-            defaultSource={ICON_ASSETS.sendgift('3x')}
+            defaultSource={ICON_ASSETS.gift_color('3x')}
             source={{
               uri: 'https://cdn4.iconfinder.com/data/icons/animal-6/100/1-512.png',
             }}

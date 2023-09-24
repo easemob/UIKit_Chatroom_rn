@@ -131,7 +131,7 @@ const ButtonContent = (props: ButtonProps): React.JSX.Element => {
                 // backgroundColor: buttonState.backgroundColor,
               },
             ]}
-            name={icon ?? 'default'}
+            name={icon ?? 'star_fill'}
           />
           <View style={{ width: 4 }} />
           <Text style={[buttonSize.text, { color: buttonState.color }]}>
@@ -150,7 +150,7 @@ const ButtonContent = (props: ButtonProps): React.JSX.Element => {
               // backgroundColor: buttonState.backgroundColor,
             },
           ]}
-          name={icon ?? 'default'}
+          name={icon ?? 'star_fill'}
         />
       );
     case 'only-text':
@@ -174,7 +174,7 @@ const ButtonContent = (props: ButtonProps): React.JSX.Element => {
                 // backgroundColor: buttonState.backgroundColor,
               },
             ]}
-            name={icon ?? 'default'}
+            name={icon ?? 'star_fill'}
           />
         </View>
       );

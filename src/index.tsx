@@ -25,6 +25,7 @@ export * from './assets';
 export * from './biz/Avatar';
 export * from './biz/EmojiList';
 export * from './biz/GiftFloating';
+export * from './biz/GiftList';
 export * from './dispatch';
 export * from './error';
 export * from './i18n';

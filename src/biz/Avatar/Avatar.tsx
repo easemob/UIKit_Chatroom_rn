@@ -13,7 +13,7 @@ export function Avatar(props: AvatarProps) {
   const { url, size, borderRadius } = props;
   return (
     <DefaultImage
-      defaultSource={ICON_ASSETS.default_avatar('3x')}
+      defaultSource={ICON_ASSETS.person_single_outline('3x')}
       source={{ uri: url }}
       style={{
         width: size,

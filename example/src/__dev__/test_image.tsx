@@ -101,7 +101,7 @@ export function IconComponent(): React.JSX.Element {
             // backgroundColor: 'green',
             tintColor: 'orange',
           }}
-          name={'select'}
+          name={'star_fill'}
         />
       </View>
     </View>
