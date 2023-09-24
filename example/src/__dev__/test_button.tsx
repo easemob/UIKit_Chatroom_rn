@@ -18,7 +18,7 @@ function ButtonComponent(): React.JSX.Element {
         radiusType={'large'}
         contentType={'icon-text'}
         text={'Enabled'}
-        icon={'emojiKeyboard'}
+        icon={'keyboard'}
         onPress={() => {
           console.log('test:ButtonComponent:onPress:');
         }}
