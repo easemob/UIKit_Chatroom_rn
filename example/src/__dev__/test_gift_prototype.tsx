@@ -154,8 +154,6 @@ export const initList = () => {
 };
 
 export function TestGiftShowView() {
-  console.log('test:zuoyu:TestListView:');
-
   // const dataRef = React.useRef<ItemT[]>([]);
   const [data, setData] = React.useState<ItemT[]>([]);
   const ref = React.useRef<FlatList<ItemT>>({} as any);
@@ -180,7 +178,6 @@ export function TestGiftShowView() {
             }
             preTaskTs.current = curTaskTs;
           }
-          console.log('test:zuoyu:TestListView:onPress:', isUseAnimation);
 
           if (data.length === 0) {
             data.push({
@@ -242,7 +239,6 @@ export function TestGiftShowView() {
           ++count;
           setData([...data]);
           setTimeout(() => {
-            console.log('test:zuoyu:count:', data.length);
             ref.current.scrollToEnd({ animated: true });
             // ref.current.scrollToOffset({ animated: true, offset: -10000 });
           }, 500);

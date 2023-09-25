@@ -49,25 +49,21 @@ export function GiftFloating(props: GiftFloatingProps) {
   }
 
   const execTask = () => {
-    console.log('test:execTask:start:');
     if (curTask.current === undefined) {
       const task = tasks.dequeue();
       if (task) {
-        console.log('test:execTask:ing:');
         curTask.current = task;
         delayClearData();
         addData(task);
         scrollToEnd();
         preTask.current = curTask.current;
         curTask.current = undefined;
-        console.log('test:execTask:finish:');
         execTask();
       }
     }
   };
 
   const checkData = () => {
-    console.log('test:execTask:clear:');
     delayClearData();
   };
 
@@ -76,7 +72,6 @@ export function GiftFloating(props: GiftFloatingProps) {
       clearTimeout(delayClear.current);
     }
     delayClear.current = setTimeout(() => {
-      console.log('test:execTask:delayclear:');
       delayClear.current = undefined;
       if (curTask.current === undefined) {
         if (dataRef.current.length > 0) {

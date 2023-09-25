@@ -60,7 +60,6 @@ export function Marquee(props: MarqueeProps) {
   const curTask = React.useRef<MarqueeTask | undefined>(undefined);
 
   const contentColor = () => {
-    console.log('test:color:', colors.barrage[100], style);
     return style === 'light' ? colors.barrage[100] : colors.barrage[100];
   };
 
@@ -72,11 +71,9 @@ export function Marquee(props: MarqueeProps) {
   }
 
   const execTask = () => {
-    console.log('test:execTask:start:');
     if (curTask.current === undefined) {
       const task = tasks.dequeue();
       if (task) {
-        console.log('test:execTask:ing:');
         curTask.current = task;
         if (task.content === content) {
           setContent(task.content + ' ');
@@ -138,7 +135,6 @@ export function Marquee(props: MarqueeProps) {
               width: width,
               letterWidth: letterWidth,
             }).compose(() => {
-              console.log('test:execTask:finish:');
               preTask.current = curTask.current;
               curTask.current = undefined;
               execTask();

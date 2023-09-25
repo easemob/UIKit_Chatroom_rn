@@ -16,7 +16,6 @@ export type GiftFloatingItemFCProps = {
 
 export function GiftFloatingItemFC(props: GiftFloatingItemFCProps) {
   const { item } = props;
-  // console.log('test:GiftFloatingItemFC:', item);
 
   const { colors } = usePaletteContext();
 

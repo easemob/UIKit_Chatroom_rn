@@ -42,7 +42,6 @@ export function SimulativeModal(props: SimulativeModalProps) {
     propsRef,
     ...others
   } = props;
-  console.log('test:SimulativeModal:');
   const { translateY, startShow, startHide, backgroundOpacity } =
     useSimulativeModalAnimation(modalAnimationType);
   const { width, height } = useWindowDimensions();
@@ -71,21 +70,12 @@ export function SimulativeModal(props: SimulativeModalProps) {
         display: modalVisible === true ? 'flex' : 'none',
         // opacity: modalVisible === true ? 1 : 0,
       }}
-      onLayout={(e) => {
-        console.log('test:onLayout:', e.nativeEvent.layout);
-      }}
     >
       <TouchableWithoutFeedback
         onPress={() => {
           if (disableBackgroundClose !== true) {
             startHide(() => setModalVisible(false));
           }
-        }}
-        onLayout={(e) => {
-          console.log(
-            'test:TouchableWithoutFeedback:onLayout:',
-            e.nativeEvent.layout
-          );
         }}
       >
         <Animated.View

@@ -19,7 +19,6 @@ export type EmojiListProps = {
 };
 
 export function EmojiList(props: EmojiListProps) {
-  console.log('test:EmojiList');
   const { colors } = usePaletteContext();
   const { style } = useThemeContext();
   const { width: winWidth } = useWindowDimensions();

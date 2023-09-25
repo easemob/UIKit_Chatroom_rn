@@ -87,12 +87,12 @@ export class KeyboardAvoidingView extends React.Component<
           : ({ ...event, duration: 250, easing: 'linear' } as KeyboardEvent);
     }
 
-    console.log('test:rn:_onKeyboardChange:', event, this._keyboardEvent);
+    console.log('rn:_onKeyboardChange:', event, this._keyboardEvent);
     this._updateBottomIfNecessary();
   };
 
   _onLayout = async (event: ViewLayoutEvent) => {
-    console.log('test:rn:_onLayout:', event.nativeEvent);
+    console.log('rn:_onLayout:', event.nativeEvent);
     const wasFrameNull = this._frame == null;
     this._frame = event.nativeEvent.layout;
     if (!this._initialFrameHeight) {
@@ -118,7 +118,7 @@ export class KeyboardAvoidingView extends React.Component<
     const { duration, easing, endCoordinates } = this._keyboardEvent;
     const height = await this._relativeKeyboardHeight(endCoordinates);
     console.log(
-      'test:rn:_updateBottomIfNecessary:',
+      'rn:_updateBottomIfNecessary:',
       duration,
       easing,
       endCoordinates,
@@ -181,7 +181,7 @@ export class KeyboardAvoidingView extends React.Component<
     } = this.props;
     const bottomHeight = enabled === true ? this.state.bottom : 0;
     console.log(
-      'test:rn:render:',
+      'rn:render:',
       bottomHeight,
       this._initialFrameHeight,
       this._frame,

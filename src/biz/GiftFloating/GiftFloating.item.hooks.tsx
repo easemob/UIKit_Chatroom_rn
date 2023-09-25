@@ -178,7 +178,6 @@ export function useAnimation(props: useAnimationProps) {
     }
 
     return () => {
-      console.log('test:AnimatedFlatListItem:end:');
       iHeight.stopAnimation();
       ix.stopAnimation();
     };

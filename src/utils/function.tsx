@@ -9,7 +9,7 @@ export const asyncTask = (f: Callback, ...args: any[]) => {
   try {
     setImmediate(f, args);
   } catch (error) {
-    console.warn('test:asyncTask:', error);
+    console.warn('asyncTask:', error);
   }
 };
 
@@ -21,7 +21,7 @@ export const asyncTask = (f: Callback, ...args: any[]) => {
 //   try {
 //     immediate.current = setImmediate(f, args);
 //   } catch (error) {
-//     console.warn('test:useAsyncTask:', error);
+//     console.warn('useAsyncTask:', error);
 //   }
 // };
 
@@ -29,7 +29,7 @@ export const queueTask = (f: Callback, ...args: any[]) => {
   try {
     queueMicrotask(() => f(args));
   } catch (error) {
-    console.warn('test:queueTask:', error);
+    console.warn('queueTask:', error);
   }
 };
 
@@ -37,7 +37,7 @@ export const timeoutTask = (f: Callback, ...args: any[]) => {
   try {
     setTimeout(() => f(args), 0);
   } catch (error) {
-    console.warn('test:queueTask:', error);
+    console.warn('queueTask:', error);
   }
 };
 
@@ -73,7 +73,7 @@ export const arraySort = <T extends { key: string }>(list: T[]) => {
  *     pageX: number,
  *     pageY: number
  *   ) => {
- *     console.log('test:measure:', x, y, width, height, pageX, pageY);
+ *     console.log('measure:', x, y, width, height, pageX, pageY);
  *     listYRef.current = pageY;
  *   }
  * );
@@ -85,7 +85,6 @@ export const arraySort = <T extends { key: string }>(list: T[]) => {
 export const callbackToAsync = (f: Callback, cb: Callback, ...args: any[]) => {
   const r = new Promise((success, fail) => {
     try {
-      console.log('test:callbackToAsync:', f, cb, ...args);
       const r = f(cb, ...args);
       success(r);
     } catch (e: any) {
