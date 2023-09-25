@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { View } from 'react-native';
 
-import { default as Test } from './test_context_in_class3';
+import { default as Test } from './test_marquee';
 
 // if (
 //   Platform.OS === 'android' &&

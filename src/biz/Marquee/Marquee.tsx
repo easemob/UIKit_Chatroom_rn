@@ -7,9 +7,9 @@ import { View } from 'react-native';
 
 import type { IconNameType } from '../../assets';
 import { usePaletteContext, useThemeContext } from '../../theme';
+import { Icon } from '../../ui/Image';
+import { PresetCalcTextWidth, Text } from '../../ui/Text';
 import { Queue } from '../../utils';
-import { Icon } from '../Image';
-import { PresetCalcTextWidth, Text } from '../Text';
 import { createCompose } from './Marquee.hooks';
 import type { MarqueeTask } from './types';
 
