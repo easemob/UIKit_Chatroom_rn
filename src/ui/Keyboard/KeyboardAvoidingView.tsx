@@ -27,8 +27,7 @@ type State = {
 };
 
 /**
- * View that moves out of the way when the keyboard appears by automatically
- * adjusting its height, position, or bottom padding.
+ * Mainly trying to solve the problem of native component `KeyboardAvoidingView` android keyboard animation. It has not been effectively solved yet. Subsequent optimization.
  */
 export class KeyboardAvoidingView extends React.Component<
   KeyboardAvoidingViewProps,

@@ -10,6 +10,9 @@ export type ImageProps = Omit<RNImageProps, 'source'> & {
   failedSource?: ImageSourcePropType;
 };
 
+/**
+ * It mainly adds the function of native component `RNImage` to use the default image after loading failure.
+ */
 export function Image(props: ImageProps) {
   const { style, source, failedSource, onError, ...others } = props;
   const [_source, setSource] = React.useState(source);

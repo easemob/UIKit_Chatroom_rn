@@ -31,6 +31,9 @@ export type ModalProps = Omit<
   disableBackgroundClose?: boolean | undefined;
 };
 
+/**
+ * Mainly solves the effect problem of native modal component `RNModal` display mask.
+ */
 export function Modal(props: ModalProps) {
   const {
     modalAnimationType,

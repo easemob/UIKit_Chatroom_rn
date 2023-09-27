@@ -9,9 +9,7 @@ export type DefaultImageProps = Omit<ImageProps, 'source'> & {
 };
 
 /**
- * Consider using this component only when loading network images.
- * @param props
- * @returns
+ * It mainly adds the function of native component `Image` and preloading the default image.
  */
 export function DefaultImage(props: DefaultImageProps) {
   const { style, defaultSource, onLoad, source, ...others } = props;

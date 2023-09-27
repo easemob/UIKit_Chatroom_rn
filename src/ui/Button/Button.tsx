@@ -44,6 +44,9 @@ export type ButtonProps = Omit<PressableProps, 'style'> & {
   frequencyInterval?: number;
 };
 
+/**
+ * The native component `Button` is not easy to use. Here we use `Pressable` to simulate the button effect and support button status and theme.
+ */
 export function Button(props: ButtonProps) {
   const {
     style,

@@ -39,4 +39,5 @@ export * from './ui/Keyboard';
 export * from './ui/Modal';
 export * from './ui/TabPage';
 export * from './ui/Text';
+export * from './ui/TextInput';
 export * from './utils';

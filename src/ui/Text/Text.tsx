@@ -14,6 +14,9 @@ export type TextProps = RNTextProps & {
   paletteType?: FontsPaletteType;
 };
 
+/**
+ * Added theme support based on the native component `Text`.
+ */
 export function Text(props: TextProps) {
   const { textType, paletteType, children, style, ...others } = props;
   const presetTextStyle = useGetTextStyle({ textType, paletteType });

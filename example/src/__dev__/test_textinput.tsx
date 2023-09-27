@@ -1,21 +1,20 @@
 // ref: https://github.com/GetStream/stream-chat-react-native/blob/23ac2215fc790e309d75b7b503a05d52973fcb24/package/src/components/KeyboardCompatibleView/KeyboardCompatibleViewFC.tsx
 
 import * as React from 'react';
-import { Platform, TextInput, View } from 'react-native';
+import { Platform, useWindowDimensions, View } from 'react-native';
+import { TextInput } from 'react-native-chat-room';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 export function TestChatroom() {
+  const { width: winWidth } = useWindowDimensions();
   const fontSize = 18;
-  const [_maxHeight, _setMaxHeight] = React.useState(0);
-  const getMaxHeight = () => {
-    return Platform.OS === 'ios' ? 91 : _maxHeight === 0 ? 100 : _maxHeight;
-  };
   return (
     <SafeAreaProvider style={{ flex: 1, backgroundColor: 'green', top: 100 }}>
       <View
         style={{
-          backgroundColor: 'yellow',
-          maxHeight: getMaxHeight(),
+          height: 300,
+          width: winWidth,
+          backgroundColor: 'red',
         }}
       >
         <TextInput
@@ -23,21 +22,9 @@ export function TestChatroom() {
           style={{ fontSize: fontSize }}
           numberOfLines={4}
           multiline={true}
-          onLayout={(e) => {
-            console.log('test:zuoyu:onLayout:', e.nativeEvent.layout);
-          }}
-          // onTextInput={(e) => {
-          //   console.log('test:zuoyu:onTextInput:', e.nativeEvent);
-          // }}
-          // onChange={(e) => {
-          //   console.log('test:zuoyu:onChange:', e.nativeEvent);
-          // }}
-          onContentSizeChange={(e) => {
-            console.log('test:zuoyu:onContentSizeChange:', e.nativeEvent);
-            if (Platform.OS === 'ios') {
-            } else {
-              _setMaxHeight(e.nativeEvent.contentSize.height);
-            }
+          unitHeight={Platform.OS === 'ios' ? 23 : 25}
+          containerStyle={{
+            backgroundColor: 'yellow',
           }}
         />
       </View>
