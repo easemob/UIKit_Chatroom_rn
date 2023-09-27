@@ -13,10 +13,6 @@ import {
 
 let count = 1;
 
-export type Task = {
-  id: string;
-};
-
 export function TestMarquee() {
   const ref = React.useRef<MarqueeRef>({} as any);
   const pal = createPresetPalette();

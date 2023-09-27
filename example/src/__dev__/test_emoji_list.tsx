@@ -10,10 +10,6 @@ import {
   ThemeContextProvider,
 } from 'react-native-chat-room';
 
-export type Task = {
-  id: string;
-};
-
 export function TestEmojiList() {
   const pal = createPresetPalette();
   const dark = createDarkTheme(pal);

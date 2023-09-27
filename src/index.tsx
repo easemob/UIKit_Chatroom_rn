@@ -23,12 +23,14 @@ export function multiply(a: number, b: number): Promise<number> {
 
 export * from './assets';
 export * from './biz/Avatar';
+export * from './biz/Chatroom';
 export * from './biz/EmojiList';
 export * from './biz/GiftFloating';
 export * from './biz/GiftList';
 export * from './biz/Marquee';
 export * from './dispatch';
 export * from './error';
+export * from './hook';
 export * from './i18n';
 export * from './theme';
 export * from './ui/Button';

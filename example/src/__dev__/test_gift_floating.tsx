@@ -13,10 +13,6 @@ import {
 
 let count = 1;
 
-export type Task = {
-  id: string;
-};
-
 export function TestGiftFloating() {
   const ref = React.useRef<GiftFloatingRef>({} as any);
   const pal = createPresetPalette();
