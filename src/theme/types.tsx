@@ -78,20 +78,6 @@ export type ColorLineGradientPalette = {
   leftBottomToRightTop: LineGradientPoint; // ↗️
 };
 
-export type ShadowDesc = {
-  x: number;
-  y: number;
-  blur: number;
-  spread: number;
-  color: string;
-};
-
-export type ShadowPalette = {
-  small: ShadowDesc[];
-  middle: ShadowDesc[];
-  large: ShadowDesc[];
-};
-
 export type CornerRadiusPaletteType = Keyof<CornerRadiusPalette>;
 
 export type CornerRadiusPalette = {
@@ -105,7 +91,6 @@ export interface Palette {
   colors: ColorsPalette;
   fonts: FontsPalette;
   lineGradient: ColorLineGradientPalette;
-  shadow: ShadowPalette;
   cornerRadius: CornerRadiusPalette;
 }
 
@@ -173,18 +158,30 @@ export type ButtonStyle = {
   };
 };
 
+export type Shadow = {
+  shadowColor?: ColorValue | undefined;
+  shadowOffset?: { width: number; height: number } | undefined;
+  shadowOpacity?: number | undefined;
+  shadowRadius?: number | undefined;
+  elevation?: number | undefined;
+};
+
+export type ShadowStyle = {
+  small: Shadow[];
+  middle: Shadow[];
+  large: Shadow[];
+};
+
 export interface Theme {
   style: ThemeType;
   button: {
     style: ButtonStyle;
     size: ButtonSizes;
   };
+  shadow: {
+    style: ShadowStyle;
+  };
 }
-
-export type createShadowParams = {
-  color1: string;
-  color2: string;
-};
 
 export type createPaletteParams = {
   colors: {
@@ -193,10 +190,6 @@ export type createPaletteParams = {
     error: number;
     neutral: number;
     neutralSpecial: number;
-  };
-  shadow: {
-    color1: string;
-    color2: string;
   };
 };
 

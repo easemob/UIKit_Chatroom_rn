@@ -16,16 +16,17 @@ import {
   useThemeContext,
 } from '../../theme';
 import type { PartialDeep } from '../../types';
-import { Icon } from '../Image';
+import { Icon, IconResolutionType } from '../Image';
 import { gMaxTimeout } from './Button.const';
 
 export type IconButtonProps = Pick<PressableProps, 'onPress' | 'disabled'> & {
   style?: StyleProp<ImageStyle> | undefined;
   containerStyle?: StyleProp<ViewStyle> | undefined;
-  icon: IconNameType;
+  iconName: IconNameType;
   preventHighFrequencyClicks?: boolean;
   frequencyInterval?: number;
   buttonStateColors?: PartialDeep<ButtonStateColor>;
+  iconResolution?: IconResolutionType;
 };
 
 export function IconButton(props: IconButtonProps) {
@@ -36,8 +37,9 @@ export function IconButton(props: IconButtonProps) {
     frequencyInterval = gMaxTimeout,
     disabled,
     onPress,
-    icon,
+    iconName,
     buttonStateColors,
+    iconResolution,
   } = props;
 
   const { style: themeStyle } = useThemeContext();
@@ -110,13 +112,14 @@ export function IconButton(props: IconButtonProps) {
       }}
     >
       <Icon
-        name={icon}
+        name={iconName}
         style={[
           {
             tintColor: buttonState().enabled?.color as any,
           },
           style,
         ]}
+        resolution={iconResolution}
       />
     </Pressable>
   );

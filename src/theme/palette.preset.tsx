@@ -42,9 +42,5 @@ export function createPresetPalette(): Palette {
       neutral: 203,
       neutralSpecial: 220,
     },
-    shadow: {
-      color1: 'hsla(204, 10%, 10%, 0.08)',
-      color2: 'hsla(204, 10%, 10%, 0.16)',
-    },
   });
 }

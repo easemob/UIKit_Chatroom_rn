@@ -3,6 +3,15 @@
 /// https://www.rapidtables.com/convert/color/index.html
 /// https://www.myfixguide.com/color-converter/
 
+import {
+  ex_hex,
+  ex_hexa,
+  ex_hsl,
+  ex_hsla,
+  ex_rgb,
+  ex_rgba,
+} from './colorConverter.const';
+
 export function RGBAToHexACore(rgba: string[]) {
   const rgbaString = rgba;
   const length = rgba.length;
@@ -49,10 +58,7 @@ export function RGBAToHexACore(rgba: string[]) {
 }
 
 export function RGBToHex(rgb: string, isUpper?: boolean) {
-  let ex =
-    /^rgb\((((((((1?[1-9]?\d)|10\d|(2[0-4]\d)|25[0-5]),\s?)){2}|((((1?[1-9]?\d)|10\d|(2[0-4]\d)|25[0-5])\s)){2})((1?[1-9]?\d)|10\d|(2[0-4]\d)|25[0-5]))|((((([1-9]?\d(\.\d+)?)|100|(\.\d+))%,\s?){2}|((([1-9]?\d(\.\d+)?)|100|(\.\d+))%\s){2})(([1-9]?\d(\.\d+)?)|100|(\.\d+))%))\)$/i;
-
-  if (ex.test(rgb) === false) {
+  if (ex_rgb.test(rgb) === false) {
     throw new Error('Invalid input color');
   }
 
@@ -67,10 +73,7 @@ export function RGBToHex(rgb: string, isUpper?: boolean) {
 }
 
 export function RGBAToHexA(rgba: string, isUpper?: boolean) {
-  let ex =
-    /^rgba\((((((((1?[1-9]?\d)|10\d|(2[0-4]\d)|25[0-5]),\s?)){3})|(((([1-9]?\d(\.\d+)?)|100|(\.\d+))%,\s?){3}))|(((((1?[1-9]?\d)|10\d|(2[0-4]\d)|25[0-5])\s){3})|(((([1-9]?\d(\.\d+)?)|100|(\.\d+))%\s){3}))\/\s)((0?\.\d+)|[01]|(([1-9]?\d(\.\d+)?)|100|(\.\d+))%)\)$/i;
-
-  if (ex.test(rgba) === false) {
+  if (ex_rgba.test(rgba) === false) {
     throw new Error('Invalid input color');
   }
 
@@ -138,8 +141,7 @@ export function hexAToRGBACore(hex: string, isPct?: boolean) {
 }
 
 export function hexToRGB(h: string, isPct?: boolean) {
-  let ex = /^#([\da-f]{3}){1,2}$/i;
-  if (ex.test(h) === false) {
+  if (ex_hex.test(h) === false) {
     throw new Error('Invalid input color');
   }
 
@@ -150,8 +152,7 @@ export function hexToRGB(h: string, isPct?: boolean) {
 }
 
 export function hexAToRGBA(h: string, isPct?: boolean) {
-  let ex = /^#([\da-f]{4}){1,2}$/i;
-  if (ex.test(h) === false) {
+  if (ex_hexa.test(h) === false) {
     throw new Error('Invalid input color');
   }
 
@@ -234,9 +235,7 @@ export function RGBAToHSLACore(rgba: string[]) {
 }
 
 export function RGBToHSL(rgb: string) {
-  let ex =
-    /^rgb\((((((((1?[1-9]?\d)|10\d|(2[0-4]\d)|25[0-5]),\s?)){2}|((((1?[1-9]?\d)|10\d|(2[0-4]\d)|25[0-5])\s)){2})((1?[1-9]?\d)|10\d|(2[0-4]\d)|25[0-5]))|((((([1-9]?\d(\.\d+)?)|100|(\.\d+))%,\s?){2}|((([1-9]?\d(\.\d+)?)|100|(\.\d+))%\s){2})(([1-9]?\d(\.\d+)?)|100|(\.\d+))%))\)$/i;
-  if (ex.test(rgb) === false) {
+  if (ex_rgb.test(rgb) === false) {
     throw new Error('Invalid input color');
   }
 
@@ -250,10 +249,7 @@ export function RGBToHSL(rgb: string) {
 }
 
 export function RGBAToHSLA(rgba: string) {
-  let ex =
-    /^rgba\((((((((1?[1-9]?\d)|10\d|(2[0-4]\d)|25[0-5]),\s?)){3})|(((([1-9]?\d(\.\d+)?)|100|(\.\d+))%,\s?){3}))|(((((1?[1-9]?\d)|10\d|(2[0-4]\d)|25[0-5])\s){3})|(((([1-9]?\d(\.\d+)?)|100|(\.\d+))%\s){3}))\/\s)((0?\.\d+)|[01]|(([1-9]?\d(\.\d+)?)|100|(\.\d+))%)\)$/i;
-
-  if (ex.test(rgba) === false) {
+  if (ex_rgba.test(rgba) === false) {
     throw new Error('Invalid input color');
   }
 
@@ -353,9 +349,7 @@ export function HSLAToRGBACore(hsla: string[], isPct?: boolean) {
 }
 
 export function HSLToRGB(hsl: string, isPct?: boolean) {
-  let ex =
-    /^hsl\(((((([12]?[1-9]?\d)|[12]0\d|(3[0-5]\d))(\.\d+)?)|(\.\d+))(deg)?|(0|0?\.\d+)turn|(([0-6](\.\d+)?)|(\.\d+))rad)((,\s?(([1-9]?\d(\.\d+)?)|100|(\.\d+))%){2}|(\s(([1-9]?\d(\.\d+)?)|100|(\.\d+))%){2})\)$/i;
-  if (ex.test(hsl) === false) {
+  if (ex_hsl.test(hsl) === false) {
     throw new Error('Invalid input color');
   }
 
@@ -368,10 +362,7 @@ export function HSLToRGB(hsl: string, isPct?: boolean) {
 }
 
 export function HSLAToRGBA(hsla: string, isPct?: boolean) {
-  let ex =
-    /^hsla\(((((([12]?[1-9]?\d)|[12]0\d|(3[0-5]\d))(\.\d+)?)|(\.\d+))(deg)?|(0|0?\.\d+)turn|(([0-6](\.\d+)?)|(\.\d+))rad)(((,\s?(([1-9]?\d(\.\d+)?)|100|(\.\d+))%){2},\s?)|((\s(([1-9]?\d(\.\d+)?)|100|(\.\d+))%){2}\s\/\s))((0?\.\d+)|[01]|(([1-9]?\d(\.\d+)?)|100|(\.\d+))%)\)$/i;
-
-  if (ex.test(hsla) === false) {
+  if (ex_hsla.test(hsla) === false) {
     throw new Error('Invalid input color');
   }
 
@@ -406,8 +397,7 @@ export function hexAToHSLACore(hex: string) {
 }
 
 export function hexToHSL(hex: string) {
-  let ex = /^#([\da-f]{3}){1,2}$/i;
-  if (ex.test(hex) === false) {
+  if (ex_hex.test(hex) === false) {
     throw new Error('Invalid input color');
   }
   const ret = hexAToHSLACore(hex);
@@ -415,8 +405,7 @@ export function hexToHSL(hex: string) {
 }
 
 export function hexAToHSLA(hex: string) {
-  let ex = /^#([\da-f]{4}){1,2}$/i;
-  if (ex.test(hex) === false) {
+  if (ex_hexa.test(hex) === false) {
     throw new Error('Invalid input color');
   }
   const ret = hexAToHSLACore(hex);
@@ -441,9 +430,7 @@ export function HSLAToHexACore(hsla: string[]) {
 }
 
 export function HSLToHex(hsl: string, isUpper?: boolean) {
-  let ex =
-    /^hsl\(((((([12]?[1-9]?\d)|[12]0\d|(3[0-5]\d))(\.\d+)?)|(\.\d+))(deg)?|(0|0?\.\d+)turn|(([0-6](\.\d+)?)|(\.\d+))rad)((,\s?(([1-9]?\d(\.\d+)?)|100|(\.\d+))%){2}|(\s(([1-9]?\d(\.\d+)?)|100|(\.\d+))%){2})\)$/i;
-  if (ex.test(hsl) === false) {
+  if (ex_hsl.test(hsl) === false) {
     throw new Error('Invalid input color');
   }
   let sep = hsl.indexOf(',') > -1 ? ',' : ' ';
@@ -454,9 +441,7 @@ export function HSLToHex(hsl: string, isUpper?: boolean) {
 }
 
 export function HSLAToHexA(hsla: string, isUpper?: boolean) {
-  let ex =
-    /^hsla\(((((([12]?[1-9]?\d)|[12]0\d|(3[0-5]\d))(\.\d+)?)|(\.\d+))(deg)?|(0|0?\.\d+)turn|(([0-6](\.\d+)?)|(\.\d+))rad)(((,\s?(([1-9]?\d(\.\d+)?)|100|(\.\d+))%){2},\s?)|((\s(([1-9]?\d(\.\d+)?)|100|(\.\d+))%){2}\s\/\s))((0?\.\d+)|[01]|(([1-9]?\d(\.\d+)?)|100|(\.\d+))%)\)$/i;
-  if (ex.test(hsla) === false) {
+  if (ex_hsla.test(hsla) === false) {
     throw new Error('Invalid input color');
   }
   let sep = hsla.indexOf(',') > -1 ? ',' : ' ';
@@ -468,4 +453,49 @@ export function HSLAToHexA(hsla: string, isUpper?: boolean) {
   const ret = HSLAToHexACore(hslaString);
   const hex = `#${ret.r}${ret.g}${ret.b}${ret.a}`;
   return isUpper === true ? hex.toUpperCase() : hex;
+}
+
+export function getOpacityFromRGBA(rgba: string) {
+  let sep = rgba.indexOf(',') > -1 ? ',' : ' ';
+  const rgbaString = rgba.substring(4).split(')')[0]!.split(sep);
+  const rgbaNumber = [0, 0, 0, 0];
+  for (let index = 0; index < rgbaString.length; index++) {
+    const r = rgbaString[index]!;
+    if (r.indexOf('%') > -1) {
+      const p = Number.parseInt(r.substring(0, r.length - 1), 10) / 100;
+      if (index < 3) {
+        rgbaNumber[index] = Math.round(p * 255);
+      } else {
+        rgbaNumber[index] = p;
+      }
+    } else {
+      rgbaNumber[index] = +r;
+    }
+  }
+  return rgbaNumber[3]!;
+}
+
+export function getOpacityFromHSLA(hsla: string) {
+  let sep = hsla.indexOf(',') > -1 ? ',' : ' ';
+  const hslString = hsla.substring(4).split(')')[0]!.split(sep);
+  return +hslString[3]!;
+}
+
+export function getOpacityFromHexA(hex: string) {
+  let a = 1;
+  a = Number.parseInt('0x' + hex[7] + hex[8], 16);
+  a = +(a / 255).toFixed(3);
+  return a;
+}
+
+export function getOpacity(color: string) {
+  if (ex_rgba.test(color) === true) {
+    return getOpacityFromRGBA(color);
+  } else if (ex_hexa.test(color) === true) {
+    return getOpacityFromHexA(color);
+  } else if (ex_hsla.test(color) === true) {
+    return getOpacityFromHSLA(color);
+  } else {
+    throw new Error('Invalid input color');
+  }
 }

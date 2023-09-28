@@ -18,20 +18,13 @@ import {
   generateTitleFont,
 } from './generate.font';
 import { generateLineGradientPoint } from './generate.gradient';
-import {
-  generateLargeShadow,
-  generateMiddleShadow,
-  generateSmallShadow,
-} from './generate.shadow';
 import type {
   ColorLineGradientPalette,
   ColorsPalette,
   CornerRadiusPalette,
   createPaletteParams,
-  createShadowParams,
   FontsPalette,
   Palette,
-  ShadowPalette,
 } from './types';
 
 const PaletteContext = React.createContext<Palette | undefined>(undefined);
@@ -54,17 +47,8 @@ export function usePaletteContext(): Palette {
   return palette;
 }
 
-function createShadow(params: createShadowParams): ShadowPalette {
-  const { color1, color2 } = params;
-  return {
-    small: generateSmallShadow(color1, color2),
-    middle: generateMiddleShadow(color1, color2),
-    large: generateLargeShadow(color1, color2),
-  };
-}
-
 export function createPalette(params: createPaletteParams): Palette {
-  const { colors, shadow } = params;
+  const { colors } = params;
   return {
     colors: {
       primary: generatePrimaryColor(colors.primary),
@@ -90,7 +74,6 @@ export function createPalette(params: createPaletteParams): Palette {
       rightTopToLeftBottom: generateLineGradientPoint('rightTopToLeftBottom'),
       rightBottomToLeftTop: generateLineGradientPoint('rightBottomToLeftTop'),
     } as ColorLineGradientPalette,
-    shadow: createShadow(shadow),
     cornerRadius: {
       extraSmall: generateExtraSmallCornerRadius(),
       small: generateSmallCornerRadius(),

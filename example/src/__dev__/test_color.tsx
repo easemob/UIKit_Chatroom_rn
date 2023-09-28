@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { View } from 'react-native';
 import {
+  getOpacity,
   hexAToHSLA,
   hexAToRGBA,
   hexToHSL,
@@ -60,11 +61,23 @@ function test3() {
   console.log('test_color:test3:', v1, rgba, hsla);
 }
 
+function test4() {
+  const v1 = 'hsla(96, 55%, 55%, 0.65)';
+  const rgba = HSLAToRGBA(v1, false);
+  const hsla = RGBAToHSLA(rgba);
+  const hexa = HSLAToHexA(v1);
+  const r1 = getOpacity(v1);
+  const r2 = getOpacity(rgba);
+  const r3 = getOpacity(hexa);
+  console.log('test_color:test4:', v1, rgba, hsla, hexa, r1, r2, r3);
+}
+
 export default function test_color() {
   const onColor = () => {
     test1();
     test2();
     test3();
+    test4();
   };
   return (
     <View

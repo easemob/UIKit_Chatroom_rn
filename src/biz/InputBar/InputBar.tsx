@@ -193,7 +193,7 @@ export const InputBar = React.forwardRef<InputBarRef, InputBarProps>(function (
                   inputRef.current.focus();
                 }
               }}
-              icon={iconName}
+              iconName={iconName}
             />
             <IconButton
               style={{
@@ -209,7 +209,7 @@ export const InputBar = React.forwardRef<InputBarRef, InputBarProps>(function (
                 margin: 6,
               }}
               onPress={() => {}}
-              icon={'airplane'}
+              iconName={'airplane'}
             />
           </View>
         </View>
@@ -226,13 +226,21 @@ export const InputBar = React.forwardRef<InputBarRef, InputBarProps>(function (
         <View
           style={{
             position: 'absolute',
-            width: 40,
-            height: 40,
-            backgroundColor: 'red',
             right: 16,
             bottom: 16,
+            backgroundColor:
+              style === 'light' ? colors.neutral[98] : colors.neutral[1],
+            borderRadius: 40,
           }}
-        ></View>
+        >
+          <IconButton
+            iconName={'arrow_left_thick'}
+            style={{
+              width: 40,
+              height: 40,
+            }}
+          />
+        </View>
       </View>
     </>
   );
