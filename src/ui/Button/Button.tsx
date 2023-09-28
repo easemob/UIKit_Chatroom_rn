@@ -18,14 +18,13 @@ import type {
 } from '../../theme';
 import { Icon } from '../Image';
 import { Text } from '../Text';
+import { gMaxTimeout } from './Button.const';
 import {
   useGetButtonRadiusStyle,
   useGetButtonSizeStyle,
   useGetButtonStateStyle,
   useGetButtonStyle,
 } from './Button.hooks';
-
-const MAX_TIMEOUT = 500;
 
 export type ButtonProps = Omit<PressableProps, 'style'> & {
   style?: StyleProp<ViewStyle> | undefined;
@@ -52,7 +51,7 @@ export function Button(props: ButtonProps) {
     style,
     buttonStyle,
     preventHighFrequencyClicks = true,
-    frequencyInterval = MAX_TIMEOUT,
+    frequencyInterval = gMaxTimeout,
     disabled,
     onPress,
     ...others

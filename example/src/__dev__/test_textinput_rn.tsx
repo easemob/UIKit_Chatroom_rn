@@ -60,7 +60,6 @@ export function TestChatroom() {
             //   console.log('test:zuoyu:onChange:', e.nativeEvent);
             // }}
             onContentSizeChange={(e) => {
-              console.log('test:zuoyu:onContentSizeChange:', e.nativeEvent);
               if (Platform.OS === 'ios') {
               } else {
                 _setMaxHeight(

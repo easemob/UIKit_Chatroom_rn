@@ -30,23 +30,20 @@ export const TextInput = React.forwardRef<RNTextInput, TextInputProps>(
     } = props;
 
     const getMaxHeight = () => {
-      console.log('test:zuoyu:g:', multiline, numberOfLines, unitHeight);
       if (multiline === true && numberOfLines && unitHeight) {
         return numberOfLines * unitHeight;
       }
       return undefined;
     };
     const maxHeightRef = React.useRef<number | undefined>(getMaxHeight());
-    console.log('test:TextInput:', maxHeightRef.current);
     let [maxHeight, setMaxHeight] = React.useState<number | undefined>(
       maxHeightRef.current
     );
 
     const getStyle = (): StyleProp<TextStyle> => {
       const s = containerStyle as any;
-      const max = s.maxHeight ?? maxHeight;
-      const min = s.minHeight ?? unitHeight;
-      console.log('test:zuoyu:getStyle:', max, min);
+      const max = s?.maxHeight ?? maxHeight;
+      const min = s?.minHeight ?? unitHeight;
       if (max || min) {
         if (Platform.OS === 'ios') {
           return {

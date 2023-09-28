@@ -26,6 +26,5 @@ export function useKeyboardHeight(useCache: boolean) {
     };
   }, [keyboardHeight, setKeyboardHeight, useCache]);
 
-  console.log('test:useKeyboardHeight:', keyboardHeight);
   return keyboardHeight;
 }

@@ -3,7 +3,7 @@ import type { ImageSourcePropType, ImageURISource } from 'react-native';
 
 import { Image, ImageProps } from './Image';
 
-export type DefaultImageProps = Omit<ImageProps, 'source'> & {
+export type DefaultImageProps = Omit<ImageProps, 'source' | 'defaultSource'> & {
   defaultSource: ImageSourcePropType;
   source: ImageURISource;
 };
@@ -33,6 +33,28 @@ export function DefaultImage(props: DefaultImageProps) {
           setVisible(false);
         }}
         source={{ ...source, cache: source.cache ?? 'only-if-cached' }}
+        {...others}
+      />
+    </React.Fragment>
+  );
+}
+
+export type DefaultImageProps2 = Omit<ImageProps, 'source'> & {
+  source: ImageURISource;
+};
+
+/**
+ * The Android platform cannot display default images properly.
+ */
+export function DefaultImage2(props: DefaultImageProps2) {
+  const { style, defaultSource, onLoad, source, ...others } = props;
+  return (
+    <React.Fragment>
+      <Image
+        style={style}
+        onLoad={onLoad}
+        source={{ ...source, cache: source.cache ?? 'only-if-cached' }}
+        defaultSource={defaultSource}
         {...others}
       />
     </React.Fragment>

@@ -43,10 +43,6 @@ export class Chatroom extends React.Component<ChatroomProps, ChatroomState> {
       <SafeAreaView style={{ flex: 1 }}>
         <MessageList
           onRequestCloseInputBar={() => {
-            console.log(
-              'test:zuoyu:onRequestCloseInputBar:',
-              this.inputBarRef?.current?.close
-            );
             if (this.inputBarRef?.current?.close) {
               this.inputBarRef.current.close();
             }

@@ -1,15 +1,17 @@
 import * as React from 'react';
 import { View } from 'react-native';
 import {
+  BorderIconButton,
   Button,
   createDarkTheme,
   createLightTheme,
   createPresetPalette,
   PaletteContextProvider,
+  Text1IconButton,
   ThemeContextProvider,
 } from 'react-native-chat-room';
 
-function ButtonComponent(): React.JSX.Element {
+export function ButtonComponent(): React.JSX.Element {
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <Button
@@ -27,6 +29,36 @@ function ButtonComponent(): React.JSX.Element {
   );
 }
 
+export function IconButtonComponent(): React.JSX.Element {
+  return (
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <Text1IconButton
+        sizesType={'large'}
+        radiusType={'large'}
+        icon={'keyboard'}
+        onPress={() => {
+          console.log('test:ButtonComponent:onPress:');
+        }}
+      />
+    </View>
+  );
+}
+
+export function IconButtonComponent2(): React.JSX.Element {
+  return (
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <BorderIconButton
+        sizesType={'large'}
+        radiusType={'large'}
+        icon={'keyboard'}
+        onPress={() => {
+          console.log('test:ButtonComponent:onPress:');
+        }}
+      />
+    </View>
+  );
+}
+
 export default function test_button() {
   const palette = createPresetPalette();
   const light = createLightTheme(palette);
@@ -35,7 +67,7 @@ export default function test_button() {
   return (
     <ThemeContextProvider value={theme}>
       <PaletteContextProvider value={palette}>
-        <ButtonComponent />
+        <IconButtonComponent2 />
       </PaletteContextProvider>
     </ThemeContextProvider>
   );

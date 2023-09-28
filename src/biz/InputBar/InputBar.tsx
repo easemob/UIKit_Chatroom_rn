@@ -1,11 +1,19 @@
 import * as React from 'react';
-import { Keyboard, LayoutAnimation } from 'react-native';
-import { useWindowDimensions } from 'react-native';
-import { Platform, TextInput, View } from 'react-native';
+import {
+  Keyboard,
+  LayoutAnimation,
+  TextInput as RNTextInput,
+} from 'react-native';
+import { Platform, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { useKeyboardHeight } from '../../hook';
+import type { IconNameType } from '../../assets';
+import { usePaletteContext, useThemeContext } from '../../theme';
+import { IconButton } from '../../ui/Button';
 import { KeyboardAvoidingView } from '../../ui/Keyboard';
+import { TextInput } from '../../ui/TextInput';
+import { timeoutTask } from '../../utils';
+import { EmojiListMemo } from '../EmojiList';
 import { InputBarStyle } from './InputBarStyle';
 
 export type InputBarRef = {
@@ -21,22 +29,42 @@ export const InputBar = React.forwardRef<InputBarRef, InputBarProps>(function (
   ref: React.ForwardedRef<InputBarRef>
 ) {
   const { onInputBarWillHide, onInputBarWillShow } = props;
-  const { width } = useWindowDimensions();
   const { bottom } = useSafeAreaInsets();
-  const keyboardHeight = useKeyboardHeight(true);
+  const { style } = useThemeContext();
+  const { colors } = usePaletteContext();
+
+  // const keyboardHeight = useKeyboardHeight(true);
+  const [keyboardHeight, setKeyboardHeight] = React.useState(0);
 
   const [isStyle, setIsStyle] = React.useState(true);
-  const inputRef = React.useRef<TextInput>({} as any);
+  const inputRef = React.useRef<RNTextInput>({} as any);
 
   const isClosedEmoji = React.useRef(true);
   const isClosedKeyboard = React.useRef(true);
-  const [emojiHeight, setEmojiHeight] = React.useState(0);
+  const [emojiHeight, _setEmojiHeight] = React.useState(0);
 
-  console.log('test:zuoyu:InputBar:', bottom);
+  const [iconName, setIconName] = React.useState<IconNameType>('face');
 
   const closeKeyboard = () => {
     Keyboard.dismiss();
   };
+
+  const setEmojiHeight = (h: number) => {
+    _setEmojiHeight(h);
+  };
+
+  React.useEffect(() => {
+    const showSubscription = Keyboard.addListener('keyboardDidShow', (e) => {
+      setKeyboardHeight(e.endCoordinates.height);
+    });
+    const hideSubscription = Keyboard.addListener('keyboardWillHide', () => {
+      // setKeyboardHeight(0);
+    });
+    return () => {
+      showSubscription.remove();
+      hideSubscription.remove();
+    };
+  }, [setKeyboardHeight]);
 
   React.useImperativeHandle(ref, () => {
     return {
@@ -50,26 +78,21 @@ export const InputBar = React.forwardRef<InputBarRef, InputBarProps>(function (
     };
   });
 
-  React.useEffect(() => {
-    const getFocus = () => {
-      if (inputRef.current.focus) {
-        inputRef.current.focus();
-      }
-    };
-    if (isStyle === false) {
-      setTimeout(() => {
-        getFocus();
-      }, 0);
-    }
-  }, [isStyle]);
-
   if (isStyle === true) {
     return (
       <InputBarStyle
         onGift={() => {}}
         onInputBar={() => {
+          isClosedEmoji.current = false;
+          isClosedKeyboard.current = false;
           setIsStyle(false);
+          setIconName('face');
           onInputBarWillShow?.();
+          timeoutTask(() => {
+            if (inputRef.current.focus) {
+              inputRef.current.focus();
+            }
+          });
         }}
       />
     );
@@ -80,49 +103,59 @@ export const InputBar = React.forwardRef<InputBarRef, InputBarProps>(function (
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 0}
       >
-        <View style={{ backgroundColor: '#f5f5dc' }}>
-          <View style={{ flexDirection: 'row', width: width }}>
-            <View
-              style={{ width: 40, height: 40, backgroundColor: '#8a2be2' }}
-            />
+        <View
+          style={{
+            backgroundColor:
+              style === 'light' ? colors.neutral[98] : colors.neutral[1],
+          }}
+        >
+          <View
+            style={{
+              flexDirection: 'row',
+              margin: 8,
+            }}
+          >
             <View
               style={{
                 flexDirection: 'column',
                 flexGrow: 1,
                 justifyContent: 'center',
+                flexShrink: 1,
+                marginHorizontal: 6,
               }}
             >
-              <TextInput
-                ref={inputRef}
-                // numberOfLines={4}
-                multiline={true}
-                style={
-                  {
-                    // height: gInputBarHeight,
-                    // width: '100%',
-                    // maxWidth: 295,
-                    // maxHeight: gInputBarHeight * 4,
-                  }
-                }
-                onFocus={() => {
-                  console.log('test:onFocus:');
-                  isClosedKeyboard.current = false;
-                  isClosedEmoji.current = false;
-
-                  LayoutAnimation.configureNext({
-                    duration: 250, // from keyboard event
-                    update: {
-                      duration: 250,
-                      type: Platform.OS === 'ios' ? 'keyboard' : 'linear',
-                    },
-                  });
-                  setEmojiHeight(
-                    Platform.OS === 'ios' ? keyboardHeight - bottom : 0
-                  );
+              <View
+                style={{
+                  flexDirection: 'row',
+                  paddingHorizontal: 16,
+                  paddingVertical: 7,
+                  backgroundColor:
+                    style === 'light' ? colors.neutral[95] : colors.neutral[2],
+                  borderRadius: 18,
                 }}
-                onBlur={() => {
-                  console.log('test:onBlur:');
-                  if (isClosedEmoji.current === true) {
+              >
+                <TextInput
+                  ref={inputRef}
+                  numberOfLines={4}
+                  multiline={true}
+                  unitHeight={Platform.OS === 'ios' ? 24 : 22}
+                  style={{
+                    fontSize: 16,
+                    fontStyle: 'normal',
+                    fontWeight: '400',
+                    lineHeight: 22,
+                  }}
+                  containerStyle={{
+                    width: '100%',
+                  }}
+                  onFocus={() => {
+                    setIconName('face');
+                    if (Platform.OS !== 'ios') {
+                      setEmojiHeight(0);
+                    }
+                  }}
+                  onBlur={() => {
+                    setIconName('keyboard2');
                     LayoutAnimation.configureNext({
                       duration: 250, // from keyboard event
                       update: {
@@ -130,27 +163,77 @@ export const InputBar = React.forwardRef<InputBarRef, InputBarProps>(function (
                         type: Platform.OS === 'ios' ? 'keyboard' : 'linear',
                       },
                     });
-                    setEmojiHeight(
-                      Platform.OS === 'ios' ? 0 : keyboardHeight - bottom
-                    );
-                  } else {
-                    setEmojiHeight(keyboardHeight - bottom);
-                  }
-                }}
-              />
+                    if (isClosedEmoji.current === true) {
+                      setEmojiHeight(0);
+                    } else {
+                      setEmojiHeight(keyboardHeight - bottom);
+                    }
+                  }}
+                />
+              </View>
             </View>
-            <View
-              style={{ width: 40, height: 40, backgroundColor: '#8a2be2' }}
-              onTouchEnd={() => {
-                isClosedEmoji.current = false;
-                isClosedKeyboard.current = true;
-                closeKeyboard();
+            <IconButton
+              style={{
+                width: 30,
+                height: 30,
+                tintColor:
+                  style === 'light' ? colors.neutral[3] : colors.neutral[95],
               }}
+              containerStyle={{
+                alignSelf: 'flex-end',
+                margin: 6,
+              }}
+              onPress={() => {
+                if (iconName === 'face') {
+                  isClosedEmoji.current = false;
+                  isClosedKeyboard.current = true;
+                  closeKeyboard();
+                } else {
+                  isClosedKeyboard.current = false;
+                  inputRef.current.focus();
+                }
+              }}
+              icon={iconName}
+            />
+            <IconButton
+              style={{
+                width: 30,
+                height: 30,
+                tintColor:
+                  style === 'light' ? colors.primary[5] : colors.primary[6],
+                backgroundColor: style === 'light' ? undefined : undefined,
+                borderRadius: 30,
+              }}
+              containerStyle={{
+                alignSelf: 'flex-end',
+                margin: 6,
+              }}
+              onPress={() => {}}
+              icon={'airplane'}
             />
           </View>
         </View>
       </KeyboardAvoidingView>
-      <View style={{ backgroundColor: 'gray', height: emojiHeight }} />
+      <View
+        style={{
+          backgroundColor:
+            style === 'light' ? colors.neutral[98] : colors.neutral[1],
+          height: emojiHeight,
+          // overflow: 'hidden',
+        }}
+      >
+        <EmojiListMemo style={{ flex: 1 }} onFace={() => {}} />
+        <View
+          style={{
+            position: 'absolute',
+            width: 40,
+            height: 40,
+            backgroundColor: 'red',
+            right: 16,
+            bottom: 16,
+          }}
+        ></View>
+      </View>
     </>
   );
 });

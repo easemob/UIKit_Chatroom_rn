@@ -1,9 +1,15 @@
 import * as React from 'react';
 import { ImageLoadEventData, NativeSyntheticEvent, View } from 'react-native';
-import { DefaultImage, Icon, ICON_ASSETS, Image } from 'react-native-chat-room';
+import {
+  DefaultImage,
+  DefaultImage2,
+  Icon,
+  ICON_ASSETS,
+  Image,
+} from 'react-native-chat-room';
 
 export default function test_image() {
-  return <IconComponent />;
+  return <ImageComponent3 />;
 }
 
 /**
@@ -78,7 +84,37 @@ export function ImageComponent3(): React.JSX.Element {
             tintColor: 'orange',
           }}
           source={{
-            uri: 'https://cdn4.iconfinder.com/data/icons/multimedia-75/512/multimedia-01-1024.png',
+            uri: 'https://cdn4.iconfinder.com.test/data/icons/multimedia-75/512/multimedia-01-1024.png',
+          }}
+          onLoad={(event: NativeSyntheticEvent<ImageLoadEventData>) => {
+            console.log('test:onLoad:event:', event.nativeEvent.source);
+          }}
+          defaultSource={d}
+        />
+      </View>
+    </View>
+  );
+}
+
+/**
+ * Load default image.
+ * @returns
+ */
+export function ImageComponent4(): React.JSX.Element {
+  const d = ICON_ASSETS.airplane('');
+  return (
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <View style={{ width: 100, height: 100, backgroundColor: 'red' }}>
+        <DefaultImage2
+          style={{
+            height: 100,
+            width: 100,
+            // backgroundColor: 'green',
+            tintColor: 'orange',
+          }}
+          source={{
+            uri: 'https://cdn4.iconfinder.com.test/data/icons/multimedia-75/512/multimedia-01-1024.png',
+            cache: 'reload',
           }}
           onLoad={(event: NativeSyntheticEvent<ImageLoadEventData>) => {
             console.log('test:onLoad:event:', event.nativeEvent.source);

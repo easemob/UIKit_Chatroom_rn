@@ -1,4 +1,6 @@
 import * as React from 'react';
+import type { ViewStyle } from 'react-native';
+import type { StyleProp } from 'react-native';
 import {
   Platform,
   ScrollView,
@@ -16,64 +18,68 @@ import { gAspectRatio } from './EmojiList.const';
 
 export type EmojiListProps = {
   onFace: (id: string) => void;
+  style?: StyleProp<ViewStyle>;
 };
 
 export function EmojiList(props: EmojiListProps) {
   const { colors } = usePaletteContext();
-  const { style } = useThemeContext();
+  const { style: themeStyle } = useThemeContext();
   const { width: winWidth } = useWindowDimensions();
-  const [unitWidth, setUnitWidth] = React.useState(44);
-  const unitHeight = unitWidth * 1;
-  const { onFace } = props;
+  const { onFace, style } = props;
+  const getUnitSize = () => {
+    return winWidth / 7 - 1;
+  };
   return (
     <View
-      style={{
-        height: gAspectRatio * winWidth,
-        backgroundColor:
-          style === 'light' ? colors.neutral[98] : colors.neutral[1],
-      }}
+      style={[
+        {
+          height: gAspectRatio * winWidth,
+          backgroundColor:
+            themeStyle === 'light' ? colors.neutral[98] : colors.neutral[1],
+        },
+        style,
+      ]}
     >
       <ScrollView>
-        <View
-          style={styles.group}
-          onLayout={(e) => {
-            const s = e.nativeEvent.layout.width / 7;
-            setUnitWidth(Math.floor(s));
-          }}
-        >
-          <View style={styles.title}>
+        <View style={styles.group}>
+          {/* <View style={styles.title}>
             <Text
               textType={'small'}
               paletteType={'title'}
               style={{
                 color:
-                  style === 'light' ? colors.neutral[5] : colors.neutral[6],
+                  themeStyle === 'light'
+                    ? colors.neutral[5]
+                    : colors.neutral[6],
               }}
             >
               {'All Emojis'}
             </Text>
-          </View>
+          </View> */}
           <View style={styles.list}>
             {FACE_ASSETS.map((v, i) => {
               const r = moji.convert.fromCodePoint(v);
               return (
-                <TouchableOpacity
+                <View
                   key={i}
                   style={{
                     justifyContent: 'center',
                     alignItems: 'center',
-                    width: unitWidth,
-                    height: unitHeight,
+                    width: getUnitSize(),
+                    height: getUnitSize(),
                     // alignSelf: 'baseline', // !!! crash
                   }}
-                  onPress={() => {
-                    onFace?.(v);
-                  }}
                 >
-                  <Text style={{ fontSize: Platform.OS === 'ios' ? 32 : 26 }}>
-                    {r}
-                  </Text>
-                </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => {
+                      onFace?.(v);
+                    }}
+                  >
+                    <Text style={{ fontSize: Platform.OS === 'ios' ? 32 : 26 }}>
+                      {r}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
               );
             })}
           </View>
@@ -97,3 +103,5 @@ const styles = StyleSheet.create({
     paddingHorizontal: 2,
   },
 });
+
+export const EmojiListMemo = React.memo(EmojiList);

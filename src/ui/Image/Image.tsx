@@ -17,6 +17,9 @@ export function Image(props: ImageProps) {
   const { style, source, failedSource, onError, ...others } = props;
   const [_source, setSource] = React.useState(source);
   const ref = React.useRef<RNImage>(undefined as any);
+  if (source !== _source) {
+    setSource(source);
+  }
   return (
     <RNImage
       ref={ref}
