@@ -2,36 +2,60 @@ import * as React from 'react';
 import { useWindowDimensions, View } from 'react-native';
 
 import { ErrorCode, UIKitError } from '../../error';
-import { TabPageBody, type TabPageBodyRef } from './TabPageBody';
-import { TabPageHeader, type TabPageHeaderRef } from './TabPageHeader';
+import {
+  TabPageBody,
+  TabPageBodyProps,
+  type TabPageBodyRef,
+} from './TabPageBody';
+import {
+  TabPageHeader,
+  type TabPageHeaderProps,
+  type TabPageHeaderRef,
+} from './TabPageHeader';
 
 export type TabPageProps = {
   header: {
     Header?: typeof TabPageHeader;
-    titles: string[];
+    HeaderProps: Omit<TabPageHeaderProps, 'propRef' | 'onClicked' | 'width'>;
   };
   body: {
     Body?: typeof TabPageBody;
-    BodyPages: React.ReactNode[];
+    BodyProps: Omit<TabPageBodyProps, 'propsRef' | 'height' | 'width'>;
   };
   height?: number;
   width?: number;
+  headerPosition?: 'up' | 'down';
 };
 
 const _TabPage = (props: TabPageProps) => {
-  const { header, body, height, width: initWidth } = props;
-  const { Header, titles } = header;
-  const { Body, BodyPages } = body;
-  const { width } = useWindowDimensions();
+  const {
+    header,
+    body,
+    height,
+    width: initWidth,
+    headerPosition = 'up',
+  } = props;
+  const { Header, HeaderProps } = header;
+  const { titles: headerTitles } = HeaderProps;
+  const { Body, BodyProps } = body;
+  const {
+    children: bodyChildren,
+    onMomentumScrollEnd,
+    ...BodyOtherProps
+  } = BodyProps;
+  const { width: winWidth } = useWindowDimensions();
   const headerRef = React.useRef<TabPageHeaderRef>({} as any);
   const bodyRef = React.useRef<TabPageBodyRef>({} as any);
   const preIndex = React.useRef(0);
-  const count = titles.length;
+  const count = headerTitles.length;
   const _TabPageHeader = Header ?? TabPageHeader;
   const _TabPageBody = Body ?? TabPageBody;
-  const w = initWidth ?? width;
+  const width = initWidth ?? winWidth;
 
-  if (titles.length <= 0 || titles.length !== BodyPages?.length) {
+  if (
+    headerTitles.length <= 0 ||
+    headerTitles.length !== bodyChildren?.length
+  ) {
     throw new UIKitError({ code: ErrorCode.params });
   }
 
@@ -44,20 +68,24 @@ const _TabPage = (props: TabPageProps) => {
   };
 
   return (
-    <View style={{ width: w }}>
-      <_TabPageHeader
-        propRef={headerRef}
-        onClicked={(index: number) => {
-          bodyRef.current?.scrollTo(index);
-        }}
-        titles={titles}
-        width={initWidth}
-      />
+    <View style={{ width: width }}>
+      {headerPosition === 'up' ? (
+        <_TabPageHeader
+          propRef={headerRef}
+          onClicked={(index: number) => {
+            bodyRef.current?.scrollTo(index);
+          }}
+          width={width}
+          {...HeaderProps}
+        />
+      ) : null}
+
       <_TabPageBody
         propsRef={bodyRef}
         onMomentumScrollEnd={(e) => {
+          onMomentumScrollEnd?.(e);
           const index = calculateIndex({
-            width: w,
+            width: width,
             contentOffsetX: e.nativeEvent.contentOffset.x,
           });
           const current = index;
@@ -74,10 +102,22 @@ const _TabPage = (props: TabPageProps) => {
             }
           }
         }}
-        children={BodyPages}
         height={height}
-        width={initWidth}
+        width={width}
+        children={bodyChildren}
+        {...BodyOtherProps}
       />
+
+      {headerPosition !== 'up' ? (
+        <_TabPageHeader
+          propRef={headerRef}
+          onClicked={(index: number) => {
+            bodyRef.current?.scrollTo(index);
+          }}
+          width={width}
+          {...HeaderProps}
+        />
+      ) : null}
     </View>
   );
 };

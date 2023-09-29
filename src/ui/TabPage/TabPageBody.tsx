@@ -9,9 +9,6 @@ import {
 export type TabPageBodyItemProps = ScrollViewProps;
 export function TabPageBodyItem(props: TabPageBodyItemProps) {
   const { style, children, ...others } = props;
-  // const { width } = useWindowDimensions();
-  // const { width: width2 } = Dimensions.get('window');
-  // return <>{children}</>;
   return (
     <ScrollView style={[style]} {...others}>
       {children}
@@ -45,8 +42,8 @@ export function TabPageBody(props: TabPageBodyProps) {
     ...others
   } = props;
   const ref = React.useRef<ScrollView>({} as any);
-  const { width, height } = useWindowDimensions();
-  const w = initWidth ?? width;
+  const { width: winWidth, height } = useWindowDimensions();
+  const w = initWidth ?? winWidth;
   const [pageY, setPageY] = React.useState(0);
   let viewRef = React.useRef<View | undefined>();
   if (propsRef.current) {

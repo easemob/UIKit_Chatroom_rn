@@ -1,4 +1,5 @@
 import * as React from 'react';
+import type { StyleProp, TextStyle, ViewStyle } from 'react-native';
 import {
   Animated,
   Text,
@@ -7,6 +8,12 @@ import {
   View,
 } from 'react-native';
 
+import { ErrorCode, UIKitError } from '../../error';
+import {
+  gIndicatorBorderRadius,
+  gIndicatorHeight,
+  gIndicatorWidth,
+} from './TabPage.const';
 import {
   calculateLeft,
   useTabPageHeaderAnimation,
@@ -21,21 +28,40 @@ export type TabPageHeaderProps = {
   onClicked?: (index: number) => void;
   titles: string[];
   width?: number;
+  indicatorStyle?: StyleProp<ViewStyle>;
+  containerStyle?: StyleProp<ViewStyle>;
+  content?: {
+    style?: StyleProp<TextStyle>;
+    containerStyle?: StyleProp<ViewStyle>;
+  };
 };
 export function TabPageHeader(props: TabPageHeaderProps) {
-  const { propRef, onClicked, titles, width: initWidth } = props;
-  const { width } = useWindowDimensions();
-  const indicatorWidth = 28;
-  const w = initWidth ?? width;
+  const {
+    propRef,
+    onClicked,
+    titles,
+    width: initWidth,
+    indicatorStyle,
+    containerStyle,
+    content,
+  } = props;
+  const { width: winWidth } = useWindowDimensions();
+  const count = titles.length;
+  const indicatorWidth = (indicatorStyle as any)?.width ?? 28;
+  const width = initWidth ?? winWidth;
   const { left, toNext } = useTabPageHeaderAnimation({
-    unitWidth: w / 3,
+    unitWidth: width / count,
     initLeft: calculateLeft({
-      width: w,
-      count: 3,
+      width: width,
+      count: count,
       index: 0,
       indicatorWidth: indicatorWidth,
     }),
   });
+
+  if (indicatorWidth * count >= width) {
+    throw new UIKitError({ code: ErrorCode.params });
+  }
 
   if (propRef.current) {
     propRef.current.toLeft = (count?: number) => {
@@ -47,43 +73,54 @@ export function TabPageHeader(props: TabPageHeaderProps) {
   }
 
   return (
-    <View
-      style={{
-        height: 50,
-        backgroundColor: 'green',
-      }}
-    >
+    <View style={{ flexDirection: 'column' }}>
       <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-around',
-          alignItems: 'center',
-        }}
+        style={[
+          {
+            flexDirection: 'row',
+            justifyContent: 'space-around',
+            alignItems: 'center',
+          },
+          containerStyle,
+        ]}
       >
         {titles.map((v, i) => {
           return (
             <TouchableOpacity
               key={i}
-              style={{ height: 40, width: 40, backgroundColor: 'yellow' }}
+              style={[
+                {
+                  height: 40,
+                  width: 80,
+                  margin: 10,
+                  backgroundColor: 'yellow',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                },
+                content?.containerStyle,
+              ]}
               onPress={() => {
                 onClicked?.(i);
               }}
             >
-              <Text>{v}</Text>
+              <Text style={[content?.style]}>{v}</Text>
             </TouchableOpacity>
           );
         })}
       </View>
       <Animated.View
-        style={{
-          position: 'absolute',
-          width: indicatorWidth,
-          height: 4,
-          borderRadius: 2,
-          backgroundColor: 'blue',
-          bottom: 0,
-          left: left,
-        }}
+        style={[
+          {
+            position: 'absolute',
+            width: gIndicatorWidth,
+            height: gIndicatorHeight,
+            borderRadius: gIndicatorBorderRadius,
+            backgroundColor: 'blue',
+            bottom: 0,
+            left: left,
+          },
+          indicatorStyle,
+        ]}
       />
     </View>
   );

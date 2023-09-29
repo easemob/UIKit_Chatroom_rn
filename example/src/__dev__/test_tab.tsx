@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { TabPage, TabPageBodyItem } from 'react-native-chat-room';
 
 export function BodyPages(): React.ReactNode[] {
-  const list = [1, 2, 3];
+  const list = [1, 2, 3, 4];
   const r = list.map((_, i) => {
     const color = () => {
       if (i === 0) {
@@ -12,6 +12,8 @@ export function BodyPages(): React.ReactNode[] {
         return ['orange', 'yellow'];
       } else if (i === 2) {
         return ['yellow', 'gray'];
+      } else if (i === 3) {
+        return ['red', 'yellow'];
       }
       return [];
     };
@@ -30,11 +32,15 @@ export function TestTab() {
       <TabPage
         header={{
           // Header: TabPage.DefaultHeader,
-          titles: ['1', '2', '3'],
+          HeaderProps: {
+            titles: ['1', '2', '3', '4'],
+          },
         }}
         body={{
           // Body: TabPage.DefaultBody,
-          BodyPages: BodyPages(),
+          BodyProps: {
+            children: BodyPages(),
+          },
         }}
         // height={300}
         // width={300}

@@ -1,30 +1,21 @@
 import * as React from 'react';
 import { Keyboard } from 'react-native';
 
-export function useKeyboardHeight(useCache: boolean) {
+export function useKeyboardHeight() {
   const [keyboardHeight, setKeyboardHeight] = React.useState(0);
 
   React.useEffect(() => {
     const showSubscription = Keyboard.addListener('keyboardDidShow', (e) => {
-      if (useCache === true) {
-        if (keyboardHeight !== e.endCoordinates.height) {
-          setKeyboardHeight(e.endCoordinates.height);
-        }
-      } else {
-        setKeyboardHeight(e.endCoordinates.height);
-      }
+      setKeyboardHeight(e.endCoordinates.height);
     });
     const hideSubscription = Keyboard.addListener('keyboardWillHide', () => {
-      if (useCache === true) {
-      } else {
-        setKeyboardHeight(0);
-      }
+      // setKeyboardHeight(0);
     });
     return () => {
       showSubscription.remove();
       hideSubscription.remove();
     };
-  }, [keyboardHeight, setKeyboardHeight, useCache]);
+  }, [setKeyboardHeight]);
 
   return keyboardHeight;
 }
