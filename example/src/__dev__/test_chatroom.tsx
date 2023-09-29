@@ -8,10 +8,68 @@ import {
   createLightTheme,
   createPresetPalette,
   DispatchContextProvider,
+  IconButton,
   PaletteContextProvider,
   ThemeContextProvider,
+  usePaletteContext,
+  useThemeContext,
 } from 'react-native-chat-room';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+
+export function ChatroomFC() {
+  const { colors } = usePaletteContext();
+  const { style } = useThemeContext();
+  return (
+    <Chatroom
+      after={[
+        <View
+          style={{
+            borderRadius: 38,
+            backgroundColor:
+              style === 'light' ? colors.barrage[2] : colors.barrage[2],
+            width: 38,
+            height: 38,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <IconButton
+            iconName={'ellipsis_vertical'}
+            iconResolution={'3x'}
+            style={{
+              width: 30,
+              height: 30,
+              tintColor:
+                style === 'light' ? colors.barrage[8] : colors.barrage[8],
+            }}
+            onPress={() => {
+              console.log('test:zuoyu:press');
+            }}
+          />
+        </View>,
+        <View
+          style={{
+            borderRadius: 38,
+            backgroundColor:
+              style === 'light' ? colors.barrage[2] : colors.barrage[2],
+            width: 38,
+            height: 38,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <IconButton
+            iconName={'gift_color'}
+            style={{ width: 30, height: 30, tintColor: undefined }}
+            onPress={() => {
+              console.log('test:zuoyu:press');
+            }}
+          />
+        </View>,
+      ]}
+    />
+  );
+}
 
 export function TestChatroom() {
   const pal = createPresetPalette();
@@ -30,7 +88,7 @@ export function TestChatroom() {
                 // marginTop: 100,
               }}
             >
-              <Chatroom />
+              <ChatroomFC />
             </View>
           </ThemeContextProvider>
         </PaletteContextProvider>

@@ -14,12 +14,12 @@ import { KeyboardAvoidingView } from '../../ui/Keyboard';
 import { TextInput } from '../../ui/TextInput';
 import { timeoutTask } from '../../utils';
 import { EmojiListMemo } from '../EmojiList';
-import { InputBarStyle } from './InputBarStyle';
+import { InputBarStyle, InputBarStyleProps } from './InputBarStyle';
 
 export type InputBarRef = {
   close: () => void;
 };
-export type InputBarProps = {
+export type InputBarProps = Omit<InputBarStyleProps, 'onInputBar'> & {
   onInputBarWillShow?: () => void;
   onInputBarWillHide?: () => void;
 };
@@ -28,7 +28,7 @@ export const InputBar = React.forwardRef<InputBarRef, InputBarProps>(function (
   props: React.PropsWithChildren<InputBarProps>,
   ref: React.ForwardedRef<InputBarRef>
 ) {
-  const { onInputBarWillHide, onInputBarWillShow } = props;
+  const { onInputBarWillHide, onInputBarWillShow, ...others } = props;
   const { bottom } = useSafeAreaInsets();
   const { style } = useThemeContext();
   const { colors } = usePaletteContext();
@@ -81,7 +81,6 @@ export const InputBar = React.forwardRef<InputBarRef, InputBarProps>(function (
   if (isStyle === true) {
     return (
       <InputBarStyle
-        onGift={() => {}}
         onInputBar={() => {
           isClosedEmoji.current = false;
           isClosedKeyboard.current = false;
@@ -94,6 +93,7 @@ export const InputBar = React.forwardRef<InputBarRef, InputBarProps>(function (
             }
           });
         }}
+        {...others}
       />
     );
   }

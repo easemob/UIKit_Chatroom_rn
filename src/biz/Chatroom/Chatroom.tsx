@@ -3,10 +3,13 @@ import * as React from 'react';
 import { View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { InputBar, InputBarRef } from '../InputBar';
+import { InputBar, InputBarProps, InputBarRef } from '../InputBar';
 import { MessageList } from '../MessageList';
 
-export type ChatroomProps = {};
+export type ChatroomProps = Omit<
+  InputBarProps,
+  'onInputBarWillShow' | 'onInputBarWillHide'
+> & {};
 export type ChatroomState = {
   isInputBarShow: boolean;
 };
@@ -39,6 +42,7 @@ export class Chatroom extends React.Component<ChatroomProps, ChatroomState> {
   }
 
   render(): React.ReactNode {
+    const { ...others } = this.props;
     return (
       <SafeAreaView style={{ flex: 1 }}>
         <MessageList
@@ -58,6 +62,7 @@ export class Chatroom extends React.Component<ChatroomProps, ChatroomState> {
           onInputBarWillShow={() => {
             this.setState({ isInputBarShow: true });
           }}
+          {...others}
         />
       </SafeAreaView>
     );

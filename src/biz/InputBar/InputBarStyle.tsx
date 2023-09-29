@@ -1,6 +1,11 @@
 import * as React from 'react';
+import { StyleSheet } from 'react-native';
 import { View } from 'react-native';
 
+import { ErrorCode, UIKitError } from '../../error';
+import { usePaletteContext, useThemeContext } from '../../theme';
+import { Icon } from '../../ui/Image';
+import { Text } from '../../ui/Text';
 import {
   gInputBarStyleHeight,
   gInputBarStyleItemHeight,
@@ -8,60 +13,92 @@ import {
 
 export type InputBarStyleProps = {
   onInputBar: () => void;
-  onGift: () => void;
+  first?: React.ReactNode;
+  after?: React.ReactNode[];
 };
 
 export function InputBarStyle(props: InputBarStyleProps) {
-  const { onInputBar, onGift } = props;
+  const { onInputBar, first, after } = props;
+  const { style } = useThemeContext();
+  const { colors } = usePaletteContext();
+
+  if (after && after?.length > 3) {
+    throw new UIKitError({ code: ErrorCode.params, extra: 'after count > 3' });
+  }
 
   return (
-    <View
-      style={{
-        height: gInputBarStyleHeight,
-        alignItems: 'center',
-        backgroundColor: 'red',
-        flexDirection: 'row',
-        paddingHorizontal: 12,
-      }}
-    >
+    <View style={styles.container}>
+      {first ? <View style={styles.button}>{first}</View> : null}
+
       <View
-        style={{
-          backgroundColor: '#adff2f',
-          height: gInputBarStyleItemHeight,
-          width: gInputBarStyleItemHeight,
-          marginHorizontal: 4,
-        }}
-      />
-      <View
-        style={{
-          flex: 1,
-          height: gInputBarStyleItemHeight,
-          backgroundColor: '#adff2f',
-          marginHorizontal: 12,
-        }}
+        style={[
+          styles.input,
+          {
+            backgroundColor:
+              style === 'light' ? colors.barrage[2] : colors.barrage[2],
+          },
+        ]}
         onTouchEnd={() => {
           onInputBar();
         }}
-      />
-      {/* <View
-        style={{
-          backgroundColor: '#adff2f',
-          height: gInputBarStyleItemHeight,
-          width: gInputBarStyleItemHeight,
-          marginHorizontal: 4,
-        }}
-      /> */}
-      <View
-        style={{
-          backgroundColor: '#adff2f',
-          height: gInputBarStyleItemHeight,
-          width: gInputBarStyleItemHeight,
-          marginHorizontal: 4,
-        }}
-        onTouchEnd={() => {
-          onGift();
-        }}
-      />
+      >
+        <View
+          style={{
+            flex: 1,
+            flexDirection: 'row',
+            alignItems: 'center',
+            paddingHorizontal: 8,
+          }}
+        >
+          <Icon
+            name={'bubble_fill'}
+            style={{
+              width: 20,
+              height: 20,
+              tintColor:
+                style === 'light' ? colors.barrage[8] : colors.barrage[8],
+            }}
+          />
+          <View style={{ width: 4 }} />
+          <Text
+            paletteType="body"
+            textType="large"
+            style={{
+              color: style === 'light' ? colors.barrage[8] : colors.barrage[8],
+            }}
+          >
+            {'Input'}
+          </Text>
+        </View>
+      </View>
+
+      {after?.map((v, i) => {
+        return (
+          <View key={i} style={styles.button}>
+            {v}
+          </View>
+        );
+      })}
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    height: gInputBarStyleHeight,
+    alignItems: 'center',
+    flexDirection: 'row',
+    paddingHorizontal: 12,
+  },
+  button: {
+    height: gInputBarStyleItemHeight,
+    width: gInputBarStyleItemHeight,
+    marginHorizontal: 4,
+  },
+  input: {
+    flex: 1,
+    height: gInputBarStyleItemHeight,
+    borderRadius: 38,
+    marginHorizontal: 12,
+  },
+});
