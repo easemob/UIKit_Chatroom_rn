@@ -72,5 +72,5 @@ export function AlertComponent() {
 }
 
 export default function test_modal_simulative() {
-  return <AlertComponent />;
+  return <ModalComponent />;
 }

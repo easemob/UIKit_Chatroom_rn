@@ -13,6 +13,11 @@ import {
 import { useModalAnimation, useModalPanResponder } from './Modal.hooks';
 import type { ModalAnimationType } from './types';
 
+export type ModalRef = {
+  startShow: () => void;
+  startHide: () => void;
+};
+
 export type ModalProps = Omit<
   RNModalProps,
   | 'animated'
@@ -22,7 +27,7 @@ export type ModalProps = Omit<
   | 'style'
   | 'onRequestClose'
 > & {
-  modalVisible: boolean;
+  propsRef: React.RefObject<ModalRef>;
   onRequestModalClose: () => void;
   modalAnimationType?: ModalAnimationType;
   modalStyle?: StyleProp<ViewStyle> | undefined;
@@ -36,9 +41,9 @@ export type ModalProps = Omit<
  */
 export function Modal(props: ModalProps) {
   const {
+    propsRef,
     modalAnimationType,
     modalStyle,
-    modalVisible,
     onRequestModalClose,
     disableBackgroundClose = false,
     backgroundColor,
@@ -48,27 +53,22 @@ export function Modal(props: ModalProps) {
   } = props;
   const { translateY, startShow, startHide, backgroundOpacity } =
     useModalAnimation(modalAnimationType);
-  const [visible, setVisible] = React.useState(modalVisible);
+  const [visible, setVisible] = React.useState(false);
 
-  React.useEffect(() => {
-    if (modalVisible === false) {
-      // !!! There are still problems with this implementation and it needs to be refreshed three times. There is no native callback for hidden components. This may not be possible.
-      startHide(() => setVisible(modalVisible));
-    } else {
-      setVisible(modalVisible);
-    }
-  }, [startHide, modalVisible]);
+  if (propsRef.current) {
+    propsRef.current.startShow = () => {
+      setVisible(true);
+      startShow();
+    };
+    propsRef.current.startHide = () => {
+      startHide(() => setVisible(false));
+    };
+  }
 
   return (
     <RNModal
       transparent={true}
       visible={visible}
-      onShow={() => {
-        startShow();
-      }}
-      onDismiss={() => {
-        startHide();
-      }}
       animationType="none"
       onRequestClose={onRequestModalClose}
       supportedOrientations={[

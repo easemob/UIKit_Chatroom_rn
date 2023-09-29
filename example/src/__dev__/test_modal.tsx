@@ -1,37 +1,32 @@
 import * as React from 'react';
 import { Pressable, Text, useWindowDimensions, View } from 'react-native';
-import { Modal } from 'react-native-chat-room';
+import { Modal, ModalRef } from 'react-native-chat-room';
 
 export function ModalComponent(): React.JSX.Element {
-  const [visible, setVisible] = React.useState(false);
   const { width } = useWindowDimensions();
+  const modalRef = React.useRef<ModalRef>({} as any);
   return (
-    <View
-      style={{ flex: 1, paddingTop: 100 }}
-      onLayout={(e) => {
-        console.log('test:onLayout:', e.nativeEvent.layout);
-      }}
-    >
+    <View style={{ flex: 1, paddingTop: 100 }}>
       <Pressable
         onPress={() => {
-          setVisible(!visible);
+          modalRef.current.startShow();
         }}
       >
         <View style={{ width: width, height: 50, backgroundColor: 'orange' }} />
       </Pressable>
       <Modal
+        propsRef={modalRef}
         modalAnimationType="slide"
         backgroundColor={'rgba(1,1,1, 0.2)'}
         backgroundTransparent={false}
-        modalVisible={visible}
         onRequestModalClose={() => {
-          setVisible(false);
+          modalRef.current.startHide();
         }}
       >
         <Pressable
           style={{ height: 400, backgroundColor: 'yellow' }}
           onPress={() => {
-            setVisible(false);
+            modalRef.current.startHide();
           }}
         />
       </Modal>
@@ -40,36 +35,31 @@ export function ModalComponent(): React.JSX.Element {
 }
 
 export function AlertComponent(): React.JSX.Element {
-  const [visible, setVisible] = React.useState(false);
   const { width } = useWindowDimensions();
+  const modalRef = React.useRef<ModalRef>({} as any);
   return (
-    <View
-      style={{ flex: 1, paddingTop: 100 }}
-      onLayout={(e) => {
-        console.log('test:onLayout:', e.nativeEvent.layout);
-      }}
-    >
+    <View style={{ flex: 1, paddingTop: 100 }}>
       <Pressable
         onPress={() => {
-          setVisible(!visible);
+          modalRef.current.startShow();
         }}
       >
         <View style={{ width: width, height: 50, backgroundColor: 'orange' }} />
       </Pressable>
       <Modal
+        propsRef={modalRef}
         modalAnimationType="fade"
         backgroundColor={'rgba(1,1,1, 0.2)'}
         backgroundTransparent={false}
-        modalVisible={visible}
         onRequestModalClose={() => {
-          setVisible(false);
+          modalRef.current.startHide();
         }}
         modalStyle={{ justifyContent: 'center', alignItems: 'center' }}
       >
         <Pressable
           style={{ height: 200, width: 200, backgroundColor: 'yellow' }}
           onPress={() => {
-            setVisible(false);
+            modalRef.current.startHide();
           }}
         />
       </Modal>
