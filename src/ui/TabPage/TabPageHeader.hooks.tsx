@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { Animated } from 'react-native';
 
+import { usePaletteContext, useThemeContext } from '../../theme';
+
 export const calculateLeft = (params: {
   width: number;
   count: number;
@@ -9,9 +11,16 @@ export const calculateLeft = (params: {
 }) => {
   const { width, count, index, indicatorWidth } = params;
   const unitWidth = width / count;
-  return unitWidth / 2 - indicatorWidth / 2 + unitWidth * index;
+  return {
+    left: unitWidth / 2 - indicatorWidth / 2 + unitWidth * index,
+    unitWidth: unitWidth,
+  };
 };
 
+/**
+ *
+ * **Note** On the Android platform, fast and complex operations may cause the indicator position to be incorrect.
+ */
 export const useTabPageHeaderAnimation = (params: {
   unitWidth: number;
   initLeft: number;
@@ -33,5 +42,55 @@ export const useTabPageHeaderAnimation = (params: {
   return {
     left,
     toNext: createAnimated,
+  };
+};
+
+export const useTabPageHeaderAnimation2 = (params: {
+  width: number;
+  count: number;
+  index?: number;
+  indicatorWidth: number;
+}) => {
+  const { width, count, index = 0, indicatorWidth } = params;
+  const { left: leftValue, unitWidth } = calculateLeft({
+    width,
+    count,
+    index,
+    indicatorWidth,
+  });
+  const left = React.useRef(new Animated.Value(leftValue)).current;
+
+  const createAnimated = (params: {
+    width: number;
+    count: number;
+    index: number;
+    indicatorWidth: number;
+  }) => {
+    const { left: leftValue } = calculateLeft(params);
+    const config = { duration: 250, useNativeDriver: false };
+    return Animated.timing(left, {
+      toValue: leftValue,
+      ...config,
+    }).start;
+  };
+
+  return {
+    left,
+    unitWidth,
+    toNext: createAnimated,
+  };
+};
+
+export const useGetColor = () => {
+  const { style } = useThemeContext();
+  const { colors } = usePaletteContext();
+  return {
+    getColor: (selected: boolean) => {
+      if (selected) {
+        return style === 'light' ? colors.neutral[1] : colors.neutral[98];
+      } else {
+        return style === 'light' ? colors.neutral[7] : colors.neutral[4];
+      }
+    },
   };
 };

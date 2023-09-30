@@ -2,26 +2,24 @@ import * as React from 'react';
 import type { StyleProp, TextStyle, ViewStyle } from 'react-native';
 import {
   Animated,
-  Text,
   TouchableOpacity,
   useWindowDimensions,
   View,
 } from 'react-native';
 
 import { ErrorCode, UIKitError } from '../../error';
+import { usePaletteContext, useThemeContext } from '../../theme';
+import { Text } from '../Text';
 import {
   gIndicatorBorderRadius,
   gIndicatorHeight,
   gIndicatorWidth,
 } from './TabPage.const';
-import {
-  calculateLeft,
-  useTabPageHeaderAnimation,
-} from './TabPageHeader.hooks';
+import { useGetColor, useTabPageHeaderAnimation2 } from './TabPageHeader.hooks';
 
 export type TabPageHeaderRef = {
-  toLeft: (count?: number) => void;
-  toRight: (count?: number) => void;
+  toLeft: (movedCount: number) => void;
+  toRight: (movedCount: number) => void;
 };
 export type TabPageHeaderProps = {
   propRef: React.RefObject<TabPageHeaderRef>;
@@ -35,6 +33,7 @@ export type TabPageHeaderProps = {
     containerStyle?: StyleProp<ViewStyle>;
   };
 };
+
 export function TabPageHeader(props: TabPageHeaderProps) {
   const {
     propRef,
@@ -46,17 +45,17 @@ export function TabPageHeader(props: TabPageHeaderProps) {
     content,
   } = props;
   const { width: winWidth } = useWindowDimensions();
+  const { style } = useThemeContext();
+  const { colors } = usePaletteContext();
+  const { getColor } = useGetColor();
+  const [currentIndex, setCurrentIndex] = React.useState(0);
   const count = titles.length;
   const indicatorWidth = (indicatorStyle as any)?.width ?? 28;
   const width = initWidth ?? winWidth;
-  const { left, toNext } = useTabPageHeaderAnimation({
-    unitWidth: width / count,
-    initLeft: calculateLeft({
-      width: width,
-      count: count,
-      index: 0,
-      indicatorWidth: indicatorWidth,
-    }),
+  const { left, toNext, unitWidth } = useTabPageHeaderAnimation2({
+    width: width,
+    count: count,
+    indicatorWidth: indicatorWidth,
   });
 
   if (indicatorWidth * count >= width) {
@@ -64,11 +63,27 @@ export function TabPageHeader(props: TabPageHeaderProps) {
   }
 
   if (propRef.current) {
-    propRef.current.toLeft = (count?: number) => {
-      toNext('l', count)();
+    propRef.current.toLeft = (movedCount: number) => {
+      if (movedCount === 0) return;
+      const cur = currentIndex - movedCount;
+      setCurrentIndex(cur);
+      toNext({
+        count: count,
+        width: width,
+        indicatorWidth: indicatorWidth,
+        index: cur,
+      })();
     };
-    propRef.current.toRight = (count?: number) => {
-      toNext('r', count)();
+    propRef.current.toRight = (movedCount: number) => {
+      if (movedCount === 0) return;
+      const cur = currentIndex + movedCount;
+      setCurrentIndex(cur);
+      toNext({
+        count: count,
+        width: width,
+        indicatorWidth: indicatorWidth,
+        index: cur,
+      })();
     };
   }
 
@@ -90,10 +105,9 @@ export function TabPageHeader(props: TabPageHeaderProps) {
               key={i}
               style={[
                 {
-                  height: 40,
-                  width: 80,
-                  margin: 10,
-                  backgroundColor: 'yellow',
+                  height: 44,
+                  width: unitWidth - unitWidth * 0.1,
+                  // backgroundColor: 'yellow',
                   justifyContent: 'center',
                   alignItems: 'center',
                 },
@@ -103,7 +117,18 @@ export function TabPageHeader(props: TabPageHeaderProps) {
                 onClicked?.(i);
               }}
             >
-              <Text style={[content?.style]}>{v}</Text>
+              <Text
+                textType={'medium'}
+                paletteType={'title'}
+                style={[
+                  content?.style,
+                  {
+                    color: getColor(currentIndex === i),
+                  },
+                ]}
+              >
+                {v}
+              </Text>
             </TouchableOpacity>
           );
         })}
@@ -115,7 +140,8 @@ export function TabPageHeader(props: TabPageHeaderProps) {
             width: gIndicatorWidth,
             height: gIndicatorHeight,
             borderRadius: gIndicatorBorderRadius,
-            backgroundColor: 'blue',
+            backgroundColor:
+              style === 'light' ? colors.primary[5] : colors.primary[6],
             bottom: 0,
             left: left,
           },

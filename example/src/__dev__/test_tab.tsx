@@ -1,6 +1,14 @@
 import * as React from 'react';
 import { View } from 'react-native';
-import { TabPage, TabPageBodyItem } from 'react-native-chat-room';
+import {
+  createDarkTheme,
+  createLightTheme,
+  createPresetPalette,
+  PaletteContextProvider,
+  TabPage,
+  TabPageBodyItem,
+  ThemeContextProvider,
+} from 'react-native-chat-room';
 
 export function BodyPages(): React.ReactNode[] {
   const list = [1, 2, 3, 4];
@@ -27,26 +35,34 @@ export function BodyPages(): React.ReactNode[] {
 }
 
 export function TestTab() {
+  const palette = createPresetPalette();
+  const light = createLightTheme(palette);
+  const dark = createDarkTheme(palette);
+  const theme = light ? light : dark;
   return (
-    <View style={{ top: 100 }}>
-      <TabPage
-        header={{
-          // Header: TabPage.DefaultHeader,
-          HeaderProps: {
-            titles: ['1', '2', '3', '4'],
-          },
-        }}
-        body={{
-          // Body: TabPage.DefaultBody,
-          BodyProps: {
-            children: BodyPages(),
-          },
-        }}
-        height={300}
-        // width={300}
-        headerPosition="down"
-      />
-    </View>
+    <ThemeContextProvider value={theme}>
+      <PaletteContextProvider value={palette}>
+        <View style={{ top: 100 }}>
+          <TabPage
+            header={{
+              // Header: TabPage.DefaultHeader,
+              HeaderProps: {
+                titles: ['1', '2', '3', '4'],
+              },
+            }}
+            body={{
+              // Body: TabPage.DefaultBody,
+              BodyProps: {
+                children: BodyPages(),
+              },
+            }}
+            height={300}
+            // width={300}
+            headerPosition="up"
+          />
+        </View>
+      </PaletteContextProvider>
+    </ThemeContextProvider>
   );
 }
 
