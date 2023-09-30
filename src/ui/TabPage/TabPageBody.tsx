@@ -1,4 +1,6 @@
 import * as React from 'react';
+import type { ViewStyle } from 'react-native';
+import type { StyleProp } from 'react-native';
 import {
   ScrollView,
   ScrollViewProps,
@@ -31,6 +33,7 @@ export type TabPageBodyProps = Omit<
   children: React.ReactNode[];
   height?: number;
   width?: number;
+  containerStyle?: StyleProp<ViewStyle>;
 };
 export function TabPageBody(props: TabPageBodyProps) {
   const {
@@ -39,6 +42,7 @@ export function TabPageBody(props: TabPageBodyProps) {
     propsRef,
     height: initHeight,
     width: initWidth,
+    containerStyle,
     ...others
   } = props;
   const ref = React.useRef<ScrollView>({} as any);
@@ -53,7 +57,10 @@ export function TabPageBody(props: TabPageBodyProps) {
   }
   return (
     <View
-      style={[{ height: initHeight ? initHeight : height - pageY }]}
+      style={[
+        { height: initHeight ? initHeight : height - pageY },
+        containerStyle,
+      ]}
       ref={(ref) => {
         if (ref) {
           viewRef.current = ref;
