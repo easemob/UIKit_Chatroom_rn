@@ -28,6 +28,7 @@ export * from './biz/EmojiList';
 export * from './biz/GiftFloating';
 export * from './biz/GiftList';
 export * from './biz/Marquee';
+export * from './biz/MemberList';
 export * from './dispatch';
 export * from './error';
 export * from './hook';

@@ -24,11 +24,13 @@ export function ModalComponent(): React.JSX.Element {
         }}
       >
         <Pressable
-          style={{ height: 400, backgroundColor: 'yellow' }}
-          onPress={() => {
-            modalRef.current.startHide();
-          }}
-        />
+        // style={{ height: 400, backgroundColor: 'yellow' }}
+        // onPress={() => {
+        //   modalRef.current.startHide();
+        // }}
+        >
+          <View style={{ height: 400, backgroundColor: 'yellow' }} />
+        </Pressable>
       </Modal>
     </View>
   );

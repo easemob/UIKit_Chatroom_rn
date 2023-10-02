@@ -2,6 +2,8 @@ import * as React from 'react';
 import {
   Animated,
   ColorValue,
+  GestureResponderEvent,
+  PanResponderGestureState,
   StyleProp,
   StyleSheet,
   TouchableWithoutFeedback,
@@ -17,9 +19,17 @@ import {
 } from './SimuModal.hooks';
 import type { ModalAnimationType } from './types';
 
+/**
+ * Why not use properties to show and hide components? The method of using attributes has been tried, but this method requires more renderings (the function needs to be executed multiple times internally).
+ *
+ * ref: example/src/__dev__/test_modal_prototype.tsx
+ */
 export type SimulativeModalRef = {
   startShow: () => void;
-  startHide: () => void;
+  /**
+   * Hiding a component is not destroying it.
+   */
+  startHide: (onFinished?: () => void) => void;
 };
 
 export type SimulativeModalProps = Omit<ViewProps, 'style'> & {
@@ -29,8 +39,18 @@ export type SimulativeModalProps = Omit<ViewProps, 'style'> & {
   backgroundTransparent?: boolean | undefined;
   disableBackgroundClose?: boolean | undefined;
   propsRef: React.RefObject<SimulativeModalRef>;
+  onStartShouldSetPanResponder?:
+    | ((
+        e: GestureResponderEvent,
+        gestureState: PanResponderGestureState
+      ) => boolean)
+    | undefined;
+  onFinished?: () => void;
 };
 
+/**
+ * Simulate a modal window.
+ */
 export function SimulativeModal(props: SimulativeModalProps) {
   const {
     modalAnimationType,
@@ -40,6 +60,8 @@ export function SimulativeModal(props: SimulativeModalProps) {
     backgroundTransparent = true,
     children,
     propsRef,
+    onStartShouldSetPanResponder,
+    onFinished,
     ...others
   } = props;
   const { translateY, startShow, startHide, backgroundOpacity } =
@@ -53,8 +75,12 @@ export function SimulativeModal(props: SimulativeModalProps) {
         setModalVisible(true);
         startShow();
       };
-      propsRef.current.startHide = () => {
-        startHide(() => setModalVisible(false));
+      propsRef.current.startHide = (onf?: () => void) => {
+        startHide(() => {
+          setModalVisible(false);
+          onf?.();
+          onFinished?.();
+        });
       };
     }
   }
@@ -107,6 +133,7 @@ export function SimulativeModal(props: SimulativeModalProps) {
           startShow,
           startHide,
           setModalVisible,
+          onStartShouldSetPanResponder,
         }).panHandlers}
         {...others}
       >

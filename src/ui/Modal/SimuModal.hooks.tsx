@@ -1,7 +1,9 @@
 import * as React from 'react';
 import {
   Animated,
+  GestureResponderEvent,
   PanResponder,
+  PanResponderGestureState,
   PanResponderInstance,
   useWindowDimensions,
 } from 'react-native';
@@ -40,8 +42,21 @@ export const useSimulativeModalPanResponder = (params: {
   startShow: (callback?: Animated.EndCallback | undefined) => void;
   startHide: (callback?: Animated.EndCallback | undefined) => void;
   setModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
+  onStartShouldSetPanResponder?:
+    | ((
+        e: GestureResponderEvent,
+        gestureState: PanResponderGestureState
+      ) => boolean)
+    | undefined;
 }): PanResponderInstance => {
-  const { type, translateY, setModalVisible, startHide, startShow } = params;
+  const {
+    type,
+    translateY,
+    setModalVisible,
+    startHide,
+    startShow,
+    onStartShouldSetPanResponder,
+  } = params;
   const isHideGesture = React.useCallback(
     (distanceY: number, velocityY: number) => {
       return distanceY > 125 || (distanceY > 0 && velocityY > 0.1);
@@ -50,8 +65,17 @@ export const useSimulativeModalPanResponder = (params: {
   );
   const r = React.useRef(
     PanResponder.create({
-      onMoveShouldSetPanResponderCapture: (_, { dy }) => {
-        return dy > 8;
+      onStartShouldSetPanResponder: (e, g) => {
+        if (onStartShouldSetPanResponder) {
+          return onStartShouldSetPanResponder(e, g);
+        }
+        return g.dy > 8;
+      },
+      onMoveShouldSetPanResponder: (e, g) => {
+        if (onStartShouldSetPanResponder) {
+          return onStartShouldSetPanResponder(e, g);
+        }
+        return g.dy > 8;
       },
       onPanResponderGrant: (_, __) => {
         // @ts-ignore

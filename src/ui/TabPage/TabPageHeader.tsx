@@ -11,6 +11,7 @@ import { ErrorCode, UIKitError } from '../../error';
 import { usePaletteContext, useThemeContext } from '../../theme';
 import { Text } from '../Text';
 import {
+  gHeaderHeight,
   gIndicatorBorderRadius,
   gIndicatorHeight,
   gIndicatorWidth,
@@ -105,7 +106,7 @@ export function TabPageHeader(props: TabPageHeaderProps) {
               key={i}
               style={[
                 {
-                  height: 44,
+                  height: gHeaderHeight,
                   width: unitWidth - unitWidth * 0.1,
                   // backgroundColor: 'yellow',
                   justifyContent: 'center',

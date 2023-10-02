@@ -14,29 +14,18 @@ export type ChatroomState = {
   isInputBarShow: boolean;
 };
 
-// type MyContext = number;
-// const Ctx = React.createContext<MyContext>(0);
-
 export class Chatroom extends React.Component<ChatroomProps, ChatroomState> {
   inputBarRef?: React.RefObject<InputBarRef>;
-  // ref?: React.RefObject<TextInput>;
   constructor(props: ChatroomProps) {
     super(props);
     this.inputBarRef = React.createRef();
-    // setTimeout(() => {
-    //   this.ref?.current?.focus();
-    // }, 3000);
     this.state = {
       isInputBarShow: false,
     };
   }
 
-  componentDidMount?(): void {
-    console.log('test:componentDidMount:');
-  }
-  componentWillUnmount?(): void {
-    console.log('test:componentWillUnmount:');
-  }
+  componentDidMount?(): void {}
+  componentWillUnmount?(): void {}
   componentDidCatch?(error: Error, errorInfo: ErrorInfo): void {
     console.log('test:componentDidCatch:', error, errorInfo);
   }

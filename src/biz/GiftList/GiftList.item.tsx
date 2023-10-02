@@ -58,13 +58,11 @@ function GiftListNoSelectedItem(props: GiftListItemProps) {
         onSelected?.(gift.giftId);
       }}
     >
-      <View>
-        <DefaultImage
-          defaultSource={ICON_ASSETS.gift_color('3x')}
-          source={{ uri: gift.giftIcon }}
-          style={{ width: gItemGiftSize, height: gItemGiftSize }}
-        />
-      </View>
+      <DefaultImage
+        defaultSource={ICON_ASSETS.gift_color('3x')}
+        source={{ uri: gift.giftIcon }}
+        style={{ width: gItemGiftSize, height: gItemGiftSize }}
+      />
       <View style={{ height: 4 }} />
       <View>
         <Text
@@ -119,13 +117,11 @@ function GiftListSelectedItem(props: GiftListItemProps) {
           alignItems: 'center',
         }}
       >
-        <View>
-          <DefaultImage
-            defaultSource={ICON_ASSETS.gift_color('3x')}
-            source={{ uri: gift.giftIcon }}
-            style={{ width: gItemGiftSize, height: gItemGiftSize }}
-          />
-        </View>
+        <DefaultImage
+          defaultSource={ICON_ASSETS.gift_color('3x')}
+          source={{ uri: gift.giftIcon }}
+          style={{ width: gItemGiftSize, height: gItemGiftSize }}
+        />
         <View style={{ flexDirection: 'row' }}>
           <Icon name={'agora_dollar'} style={{ width: 14, height: 14 }} />
           <Text

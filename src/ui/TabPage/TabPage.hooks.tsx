@@ -27,7 +27,6 @@ export const useHeaderStartScrolling = (
       const current = index;
       const pre = currentIndex.current;
       const c = Math.abs(current - pre);
-      console.log('test:zuoyu:', pre, current, c, x, width);
       currentIndex.current = current;
       if (current > pre) {
         if (current < count) {

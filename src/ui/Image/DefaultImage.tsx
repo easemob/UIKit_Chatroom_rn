@@ -1,5 +1,5 @@
 import * as React from 'react';
-import type { ImageSourcePropType, ImageURISource } from 'react-native';
+import { ImageSourcePropType, ImageURISource, View } from 'react-native';
 
 import { Image, ImageProps } from './Image';
 
@@ -15,7 +15,7 @@ export function DefaultImage(props: DefaultImageProps) {
   const { style, defaultSource, onLoad, source, ...others } = props;
   const [visible, setVisible] = React.useState(true);
   return (
-    <React.Fragment>
+    <View>
       <Image
         style={[
           style,
@@ -35,7 +35,7 @@ export function DefaultImage(props: DefaultImageProps) {
         source={{ ...source, cache: source.cache ?? 'only-if-cached' }}
         {...others}
       />
-    </React.Fragment>
+    </View>
   );
 }
 

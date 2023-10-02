@@ -67,7 +67,6 @@ const _TabPage = (props: TabPageProps) => {
       <_TabPageHeader
         propRef={headerRef}
         onClicked={(index: number) => {
-          console.log('test:zuoyu:3', index);
           bodyRef.current?.scrollTo(index);
           if (Platform.OS === 'android') {
             headerStartScrolling(width, width * index);
@@ -80,7 +79,12 @@ const _TabPage = (props: TabPageProps) => {
   };
 
   return (
-    <View style={{ width: width }}>
+    <View
+      style={{
+        flex: 1,
+        width: width,
+      }}
+    >
       {headerPosition === 'up' ? getHeader() : null}
 
       <_TabPageBody

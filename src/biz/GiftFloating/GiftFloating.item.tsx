@@ -82,15 +82,13 @@ export function GiftFloatingItemFC(props: GiftFloatingItemFCProps) {
           </Text>
         </View>
 
-        <View>
-          <DefaultImage
-            defaultSource={ICON_ASSETS.gift_color('3x')}
-            source={{
-              uri: 'https://cdn4.iconfinder.com/data/icons/animal-6/100/1-512.png',
-            }}
-            style={{ width: 40, height: 40 }}
-          />
-        </View>
+        <DefaultImage
+          defaultSource={ICON_ASSETS.gift_color('3x')}
+          source={{
+            uri: 'https://cdn4.iconfinder.com/data/icons/animal-6/100/1-512.png',
+          }}
+          style={{ width: 40, height: 40 }}
+        />
 
         <View style={{ padding: 2 }}>
           <Text style={styles.dig}>x1</Text>

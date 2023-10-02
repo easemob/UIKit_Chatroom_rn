@@ -25,11 +25,11 @@ export function ModalComponent() {
         backgroundColor={'rgba(1,1,1, 0.2)'}
         backgroundTransparent={false}
       >
-        <Pressable
+        <View
           style={{ height: 400, backgroundColor: 'yellow' }}
-          onPress={() => {
-            ref.current.startHide();
-          }}
+          // onPress={() => {
+          //   ref.current.startHide();
+          // }}
         />
       </SimulativeModal>
     </View>
