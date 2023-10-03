@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { ScrollView } from 'react-native';
-import { useWindowDimensions, View } from 'react-native';
+import { ScrollView, useWindowDimensions, View } from 'react-native';
 
 import { usePaletteContext, useThemeContext } from '../../theme';
 import { gAspectRatio } from './GiftList.const';

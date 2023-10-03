@@ -1,6 +1,5 @@
 import * as React from 'react';
-import type { FlatList } from 'react-native';
-import { Platform } from 'react-native';
+import { FlatList, Platform } from 'react-native';
 
 import { getCurTs, seqId } from '../../utils';
 import {

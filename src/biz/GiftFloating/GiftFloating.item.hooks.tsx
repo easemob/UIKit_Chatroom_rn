@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { Platform } from 'react-native';
-import { Animated } from 'react-native';
+import { Animated, Platform } from 'react-native';
 
 import type { Gift } from '../../im';
 import {

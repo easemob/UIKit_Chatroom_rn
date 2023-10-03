@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { StyleSheet } from 'react-native';
-import { View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import { ErrorCode, UIKitError } from '../../error';
 import { usePaletteContext, useThemeContext } from '../../theme';

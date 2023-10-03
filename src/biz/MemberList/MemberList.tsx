@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { useWindowDimensions } from 'react-native';
-import { View } from 'react-native';
+import { useWindowDimensions, View } from 'react-native';
 
 import { usePaletteContext, useThemeContext } from '../../theme';
 import { SimulativeModal, SimulativeModalRef } from '../../ui/Modal';
@@ -41,11 +40,11 @@ export function MemberList(props: MemberListProps) {
           backgroundColor={'rgba(0, 0, 0, 0.2)'}
           backgroundTransparent={false}
           onStartShouldSetPanResponder={() => {
-            console.log('test:zuoyu:use:', isUsePanResponder.current);
+            console.log('test:modal:use:', isUsePanResponder.current);
             return isUsePanResponder.current;
           }}
           // onMoveShouldSetPanResponder={() => {
-          //   console.log('test:zuoyu:use:', isUsePanResponder.current);
+          //   console.log('test:modal:use:', isUsePanResponder.current);
           //   return isUsePanResponder.current;
           // }}
           // onRequestModalClose={() => {
@@ -76,7 +75,7 @@ export function MemberList(props: MemberListProps) {
             <TabPage
               header={{
                 HeaderProps: {
-                  titles: ['Participants'],
+                  titles: ['Participants', 'Muted'],
                 },
               }}
               body={{
@@ -88,6 +87,7 @@ export function MemberList(props: MemberListProps) {
                         isUsePanResponder.current = finished;
                       }}
                     />,
+                    <View key={'2'} />,
                   ],
                 },
               }}

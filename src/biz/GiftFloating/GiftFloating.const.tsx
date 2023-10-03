@@ -1,5 +1,4 @@
-import { Platform } from 'react-native';
-import { Easing } from 'react-native';
+import { Easing, Platform } from 'react-native';
 
 export const gScaleFactor = 36 / 44;
 

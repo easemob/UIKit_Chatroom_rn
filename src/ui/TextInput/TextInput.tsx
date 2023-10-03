@@ -1,9 +1,12 @@
 import * as React from 'react';
-import { View, ViewStyle } from 'react-native';
-import { Platform, StyleProp, TextStyle } from 'react-native';
 import {
+  Platform,
+  StyleProp,
   TextInput as RNTextInput,
   TextInputProps as RNTextInputProps,
+  TextStyle,
+  View,
+  ViewStyle,
 } from 'react-native';
 
 export type TextInputProps = RNTextInputProps & {

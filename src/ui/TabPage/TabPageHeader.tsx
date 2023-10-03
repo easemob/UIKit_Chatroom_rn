@@ -1,10 +1,12 @@
 import * as React from 'react';
-import type { StyleProp, TextStyle, ViewStyle } from 'react-native';
 import {
   Animated,
+  StyleProp,
+  TextStyle,
   TouchableOpacity,
   useWindowDimensions,
   View,
+  ViewStyle,
 } from 'react-native';
 
 import { ErrorCode, UIKitError } from '../../error';

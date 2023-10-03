@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { Platform } from 'react-native';
-import { View } from 'react-native';
+import { Platform, View } from 'react-native';
 
 import { usePaletteContext, useThemeContext } from '../../theme';
 import { IconButton } from '../../ui/Button';

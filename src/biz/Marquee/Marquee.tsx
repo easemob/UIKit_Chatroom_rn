@@ -1,9 +1,13 @@
 import * as React from 'react';
-import type { ImageStyle, TextStyle } from 'react-native';
-import type { ViewStyle } from 'react-native';
-import type { StyleProp } from 'react-native';
-import { Animated, useWindowDimensions } from 'react-native';
-import { View } from 'react-native';
+import {
+  Animated,
+  ImageStyle,
+  StyleProp,
+  TextStyle,
+  useWindowDimensions,
+  View,
+  ViewStyle,
+} from 'react-native';
 
 import type { IconNameType } from '../../assets';
 import { usePaletteContext, useThemeContext } from '../../theme';

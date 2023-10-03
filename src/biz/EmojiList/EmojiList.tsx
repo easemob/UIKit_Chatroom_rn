@@ -1,6 +1,5 @@
 import * as React from 'react';
-import type { ViewStyle } from 'react-native';
-import type { StyleProp } from 'react-native';
+import type { StyleProp, ViewStyle } from 'react-native';
 import {
   Platform,
   ScrollView,

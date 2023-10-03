@@ -1,5 +1,4 @@
-import type { TextStyle } from 'react-native';
-import type { ColorValue, ViewStyle } from 'react-native';
+import type { ColorValue, TextStyle, ViewStyle } from 'react-native';
 
 import type { Keyof } from '../types';
 

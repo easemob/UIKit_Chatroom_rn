@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { TouchableOpacity } from 'react-native';
-import { View } from 'react-native';
+import { TouchableOpacity, View } from 'react-native';
 
 import { ICON_ASSETS } from '../../assets';
 import { usePaletteContext, useThemeContext } from '../../theme';

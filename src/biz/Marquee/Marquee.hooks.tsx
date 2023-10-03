@@ -1,4 +1,3 @@
-// import { Easing } from 'react-native';
 import { Animated } from 'react-native';
 
 export const createCompose = (params: {

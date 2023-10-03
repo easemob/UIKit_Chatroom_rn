@@ -29,7 +29,12 @@ export function ModalComponent(): React.JSX.Element {
         //   modalRef.current.startHide();
         // }}
         >
-          <View style={{ height: 400, backgroundColor: 'yellow' }} />
+          <View style={{ height: 400, backgroundColor: 'yellow' }}>
+            <View style={{ height: 40, margin: 10, backgroundColor: 'blue' }} />
+            <View style={{ height: 40, margin: 10, backgroundColor: 'blue' }} />
+            <View style={{ height: 40, margin: 10, backgroundColor: 'blue' }} />
+            <View style={{ height: 40, margin: 10, backgroundColor: 'blue' }} />
+          </View>
         </Pressable>
       </Modal>
     </View>

@@ -1,8 +1,14 @@
 import * as React from 'react';
-import { useWindowDimensions } from 'react-native';
-import { Platform, StatusBar } from 'react-native';
-import { Pressable } from 'react-native';
-import { FlatList, ListRenderItemInfo, PanResponder, View } from 'react-native';
+import {
+  FlatList,
+  ListRenderItemInfo,
+  PanResponder,
+  Platform,
+  Pressable,
+  StatusBar,
+  useWindowDimensions,
+  View,
+} from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { usePaletteContext, useThemeContext } from '../../theme';

@@ -2,9 +2,10 @@ import * as React from 'react';
 import {
   Keyboard,
   LayoutAnimation,
+  Platform,
   TextInput as RNTextInput,
+  View,
 } from 'react-native';
-import { Platform, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import type { IconNameType } from '../../assets';

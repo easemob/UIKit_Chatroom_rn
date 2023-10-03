@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { StyleSheet } from 'react-native';
-import { Animated, View } from 'react-native';
+import { Animated, StyleSheet, View } from 'react-native';
 
 import { ICON_ASSETS } from '../../assets';
 import { usePaletteContext } from '../../theme';

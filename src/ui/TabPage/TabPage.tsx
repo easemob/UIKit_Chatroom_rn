@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { Platform } from 'react-native';
-import { useWindowDimensions, View } from 'react-native';
+import { Platform, useWindowDimensions, View } from 'react-native';
 
 import { ErrorCode, UIKitError } from '../../error';
 import { useHeaderStartScrolling } from './TabPage.hooks';
