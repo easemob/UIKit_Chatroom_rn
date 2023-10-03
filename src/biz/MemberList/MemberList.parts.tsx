@@ -4,23 +4,20 @@ import {
   ListRenderItemInfo,
   PanResponder,
   Platform,
-  Pressable,
   StatusBar,
   useWindowDimensions,
   View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { usePaletteContext, useThemeContext } from '../../theme';
-import { Icon } from '../../ui/Image';
 import type { SimulativeModalRef } from '../../ui/Modal';
-import { Text } from '../../ui/Text';
 import {
   gAspectRatio,
   gBottomSheetHeaderHeight,
   gTabHeaderHeight,
 } from './MemberList.const';
 import { MemberListItem, MemberListItemProps } from './MemberList.item';
+import { SearchStyle } from './SearchStyle';
 
 export type MemberListParticipantsRef = SimulativeModalRef & {};
 
@@ -45,8 +42,6 @@ export function MemberListParticipants(props: MemberListParticipantsProps) {
   const isScrollingRef = React.useRef(false);
   const { width: winWidth } = useWindowDimensions();
   const { bottom } = useSafeAreaInsets();
-  const { style } = useThemeContext();
-  const { colors } = usePaletteContext();
   let height =
     winWidth / gAspectRatio -
     gBottomSheetHeaderHeight -
@@ -90,53 +85,11 @@ export function MemberListParticipants(props: MemberListParticipantsProps) {
       }}
       {...r.panHandlers}
     >
-      <View
-        style={{
-          justifyContent: 'center',
-          paddingHorizontal: 16,
-          paddingVertical: 4,
+      <SearchStyle
+        onPress={() => {
+          // todo:
         }}
-      >
-        <Pressable
-          onPress={() => {
-            // todo:
-          }}
-        >
-          <View
-            style={{
-              flexDirection: 'row',
-              borderRadius: 18,
-              height: 36,
-              paddingVertical: 7,
-              width: '100%',
-              backgroundColor:
-                style === 'light' ? colors.neutral[95] : colors.neutral[2],
-              justifyContent: 'center',
-            }}
-          >
-            <Icon
-              name={'magnifier'}
-              style={{
-                width: 22,
-                height: 22,
-                tintColor:
-                  style === 'light' ? colors.neutral[6] : colors.neutral[4],
-              }}
-            />
-            <View style={{ width: 4 }} />
-            <Text
-              textType={'large'}
-              paletteType={'body'}
-              style={{
-                color:
-                  style === 'light' ? colors.neutral[6] : colors.neutral[4],
-              }}
-            >
-              {'Search'}
-            </Text>
-          </View>
-        </Pressable>
-      </View>
+      />
       <FlatList
         ref={ref}
         data={data}

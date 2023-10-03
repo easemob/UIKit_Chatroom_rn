@@ -6,21 +6,21 @@ import { Text1Button } from '../../ui/Button';
 import { Icon } from '../../ui/Image';
 import { TextInput } from '../../ui/TextInput';
 
-export type MemberSearchProps = {
-  onCancel: () => {};
+export type SearchProps = {
+  onCancel: () => void;
   onChangeText?: ((text: string) => void) | undefined;
   value?: string | undefined;
 };
 
-export function MemberSearch(props: MemberSearchProps) {
+export function Search(props: SearchProps) {
   const { onCancel, onChangeText, value } = props;
   const { style } = useThemeContext();
   const { colors } = usePaletteContext();
   return (
     <View
       style={{
-        flex: 1,
-        paddingTop: 100,
+        // flex: 1,
+        // paddingTop: 100,
         backgroundColor: 'yellow',
       }}
     >
