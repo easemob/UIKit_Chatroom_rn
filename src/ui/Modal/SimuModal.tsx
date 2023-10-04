@@ -13,6 +13,7 @@ import {
   ViewStyle,
 } from 'react-native';
 
+import { g_mask_color } from '../../const';
 import {
   useSimulativeModalAnimation,
   useSimulativeModalPanResponder,
@@ -57,7 +58,7 @@ export function SimulativeModal(props: SimulativeModalProps) {
     modalStyle,
     disableBackgroundClose = false,
     backgroundColor,
-    backgroundTransparent = true,
+    backgroundTransparent = false,
     children,
     propsRef,
     onStartShouldSetPanResponder,
@@ -109,7 +110,9 @@ export function SimulativeModal(props: SimulativeModalProps) {
             StyleSheet.absoluteFill,
             {
               backgroundColor:
-                backgroundTransparent === true ? undefined : backgroundColor,
+                backgroundTransparent === true
+                  ? undefined
+                  : backgroundColor ?? g_mask_color,
               opacity: backgroundTransparent === true ? 0 : backgroundOpacity,
             },
           ]}

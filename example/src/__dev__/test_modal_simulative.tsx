@@ -1,6 +1,14 @@
 import * as React from 'react';
 import { Pressable, useWindowDimensions, View } from 'react-native';
-import { SimulativeModal, SimulativeModalRef } from 'react-native-chat-room';
+import {
+  createDarkTheme,
+  createLightTheme,
+  createPresetPalette,
+  PaletteContextProvider,
+  SimulativeModal,
+  SimulativeModalRef,
+  ThemeContextProvider,
+} from 'react-native-chat-room';
 
 export function ModalComponent() {
   const ref = React.useRef<SimulativeModalRef>({} as any);
@@ -72,5 +80,15 @@ export function AlertComponent() {
 }
 
 export default function test_modal_simulative() {
-  return <ModalComponent />;
+  const palette = createPresetPalette();
+  const light = createLightTheme(palette);
+  const dark = createDarkTheme(palette);
+  const theme = light ? light : dark;
+  return (
+    <ThemeContextProvider value={theme}>
+      <PaletteContextProvider value={palette}>
+        <ModalComponent />
+      </PaletteContextProvider>
+    </ThemeContextProvider>
+  );
 }

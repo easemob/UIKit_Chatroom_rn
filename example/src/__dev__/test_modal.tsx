@@ -1,6 +1,14 @@
 import * as React from 'react';
 import { Pressable, Text, useWindowDimensions, View } from 'react-native';
-import { Modal, ModalRef } from 'react-native-chat-room';
+import {
+  createDarkTheme,
+  createLightTheme,
+  createPresetPalette,
+  Modal,
+  ModalRef,
+  PaletteContextProvider,
+  ThemeContextProvider,
+} from 'react-native-chat-room';
 
 export function ModalComponent(): React.JSX.Element {
   const { width } = useWindowDimensions();
@@ -105,5 +113,15 @@ export function TestModal() {
 }
 
 export default function test_modal() {
-  return <TestModal />;
+  const palette = createPresetPalette();
+  const light = createLightTheme(palette);
+  const dark = createDarkTheme(palette);
+  const theme = light ? light : dark;
+  return (
+    <ThemeContextProvider value={theme}>
+      <PaletteContextProvider value={palette}>
+        <TestModal />
+      </PaletteContextProvider>
+    </ThemeContextProvider>
+  );
 }

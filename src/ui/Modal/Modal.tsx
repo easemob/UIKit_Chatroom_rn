@@ -16,6 +16,7 @@ import {
   ViewStyle,
 } from 'react-native';
 
+import { g_mask_color } from '../../const';
 import { useModalAnimation, useModalPanResponder } from './Modal.hooks';
 import type { ModalAnimationType } from './types';
 
@@ -68,7 +69,7 @@ export function Modal(props: ModalProps) {
     onRequestModalClose,
     disableBackgroundClose = false,
     backgroundColor,
-    backgroundTransparent = true,
+    backgroundTransparent = false,
     children,
     onMoveShouldSetPanResponder,
     onFinished,
@@ -119,7 +120,9 @@ export function Modal(props: ModalProps) {
             StyleSheet.absoluteFill,
             {
               backgroundColor:
-                backgroundTransparent === true ? undefined : backgroundColor,
+                backgroundTransparent === true
+                  ? undefined
+                  : backgroundColor ?? g_mask_color,
               opacity: backgroundTransparent === true ? 0 : backgroundOpacity,
             },
           ]}

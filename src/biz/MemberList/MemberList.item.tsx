@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { Platform, View } from 'react-native';
+import { View } from 'react-native';
 
+import { g_flatlist_border_bottom_width } from '../../const';
 import { usePaletteContext, useThemeContext } from '../../theme';
 import { IconButton } from '../../ui/Button';
 import { Icon } from '../../ui/Image';
@@ -74,7 +75,7 @@ export function MemberListItem(props: MemberListItemProps) {
       <View
         style={{
           // height: 0.5,
-          borderBottomWidth: Platform.OS === 'ios' ? 0.5 : 0.6,
+          borderBottomWidth: g_flatlist_border_bottom_width,
           backgroundColor:
             style === 'light' ? colors.neutral[5] : colors.neutral[6],
           marginLeft: 50,
