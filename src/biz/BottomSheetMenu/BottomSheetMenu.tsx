@@ -45,7 +45,7 @@ export function BottomSheetMenu(props: BottomSheetMenuProps) {
         style={{
           // height: 56 * 6 + 36 + 80,
           backgroundColor:
-            style === 'light' ? colors.neutral[98] : colors.barrage[1],
+            style === 'light' ? colors.neutral[98] : colors.neutral[1],
           alignItems: 'center',
           width: '100%',
           borderTopLeftRadius: 16,
@@ -63,12 +63,12 @@ export function BottomSheetMenu(props: BottomSheetMenuProps) {
           }}
         />
 
-        <View style={{ paddingVertical: 13 }}>
+        <View style={{ paddingVertical: 13, paddingHorizontal: 16 }}>
           <Text
             textType={'medium'}
             paletteType={'body'}
             style={{
-              color: style === 'light' ? colors.neutral[5] : colors.neutral[3],
+              color: style === 'light' ? colors.neutral[5] : colors.neutral[6],
             }}
           >
             {title}

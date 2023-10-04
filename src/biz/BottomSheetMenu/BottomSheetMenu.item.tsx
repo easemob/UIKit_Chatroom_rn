@@ -66,9 +66,9 @@ export function BottomSheetMenuItem(props: BottomSheetMenuItemProps) {
 
   const getBackgroundColor = () => {
     return {
-      disabled: style === 'light' ? colors.neutral[98] : colors.barrage[1],
-      enabled: style === 'light' ? colors.neutral[98] : colors.barrage[1],
-      pressed: style === 'light' ? colors.neutral[95] : colors.barrage[1],
+      disabled: style === 'light' ? colors.neutral[98] : colors.neutral[1],
+      enabled: style === 'light' ? colors.neutral[98] : colors.neutral[1],
+      pressed: style === 'light' ? colors.neutral[95] : colors.neutral[0],
     };
   };
 
@@ -125,7 +125,7 @@ const ItemDivider = () => {
       style={{
         width: '80%',
         borderBottomColor:
-          style === 'light' ? colors.neutral[95] : colors.barrage[1],
+          style === 'light' ? colors.neutral[95] : colors.neutral[2],
         borderBottomWidth: g_border_bottom_width,
         justifyContent: 'flex-end',
       }}
@@ -162,10 +162,10 @@ const ItemContent = (props: BottomSheetMenuItemProps) => {
 
   const getColor = (state: ButtonState) => {
     const c = {
-      disabled: style === 'light' ? colors.neutral[7] : colors.barrage[1],
-      enabled: style === 'light' ? colors.primary[5] : colors.barrage[1],
-      pressed: style === 'light' ? colors.primary[4] : colors.barrage[1],
-      warned: style === 'light' ? colors.error[5] : colors.barrage[1],
+      disabled: style === 'light' ? colors.neutral[7] : colors.neutral[3],
+      enabled: style === 'light' ? colors.primary[5] : colors.primary[6],
+      pressed: style === 'light' ? colors.primary[4] : colors.primary[6],
+      warned: style === 'light' ? colors.error[5] : colors.error[6],
     };
     switch (state) {
       case 'warned':
