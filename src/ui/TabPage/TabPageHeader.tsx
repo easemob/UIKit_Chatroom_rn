@@ -105,13 +105,19 @@ export function TabPageHeader(props: TabPageHeaderProps) {
   }
 
   return (
-    <View style={{ flexDirection: 'column' }}>
+    <View
+      style={{
+        flexDirection: 'column',
+        height: gHeaderHeight + gIndicatorHeight,
+      }}
+    >
       <View
         style={[
           {
             flexDirection: 'row',
             justifyContent: 'space-around',
             alignItems: 'center',
+            height: '100%',
           },
           containerStyle,
         ]}
