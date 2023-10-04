@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {
+  ColorValue,
   Keyboard,
   LayoutAnimation,
   Platform,
@@ -155,7 +156,7 @@ export const InputBar = React.forwardRef<InputBarRef, InputBarProps>(function (
                   ref={inputRef}
                   numberOfLines={4}
                   multiline={true}
-                  unitHeight={Platform.OS === 'ios' ? 24 : 22}
+                  unitHeight={Platform.OS === 'ios' ? 22 : 22}
                   style={{
                     fontSize: 16,
                     fontStyle: 'normal',
@@ -164,6 +165,8 @@ export const InputBar = React.forwardRef<InputBarRef, InputBarProps>(function (
                   }}
                   containerStyle={{
                     width: '100%',
+                    // backgroundColor: 'red',
+                    minHeight: 22,
                   }}
                   onFocus={() => {
                     setIconName('face');
@@ -237,24 +240,50 @@ export const InputBar = React.forwardRef<InputBarRef, InputBarProps>(function (
         }}
       >
         <EmojiListMemo style={{ flex: 1 }} onFace={() => {}} />
-        <View
-          style={{
-            position: 'absolute',
-            right: 16,
-            bottom: 16,
-            backgroundColor: getColor('backgroundColor'),
-            borderRadius: 40,
+        <DelButton
+          getColor={getColor}
+          emojiHeight={emojiHeight}
+          onClicked={() => {
+            // todo:
           }}
-        >
-          <IconButton
-            iconName={'arrow_left_thick'}
-            style={{
-              width: 40,
-              height: 40,
-            }}
-          />
-        </View>
+        />
       </View>
     </>
   );
 });
+
+const DelButton = (params: {
+  getColor: (key: string) => ColorValue | undefined;
+  emojiHeight: number;
+  onClicked: () => void;
+}) => {
+  const { getColor, emojiHeight, onClicked } = params;
+  const b = (
+    <View
+      style={{
+        position: 'absolute',
+        right: 16,
+        bottom: 16,
+        backgroundColor: getColor('backgroundColor'),
+        borderRadius: 40,
+      }}
+    >
+      <IconButton
+        iconName={'arrow_left_thick'}
+        style={{
+          width: 40,
+          height: 40,
+        }}
+        onPress={onClicked}
+      />
+    </View>
+  );
+  if (Platform.OS === 'ios') {
+    return b;
+  } else {
+    if (emojiHeight === 0) {
+      return null;
+    }
+    return b;
+  }
+};
