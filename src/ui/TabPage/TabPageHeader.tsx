@@ -10,7 +10,8 @@ import {
 } from 'react-native';
 
 import { ErrorCode, UIKitError } from '../../error';
-import { usePaletteContext, useThemeContext } from '../../theme';
+import { useColors } from '../../hook';
+import { usePaletteContext } from '../../theme';
 import { Text } from '../Text';
 import {
   gHeaderHeight,
@@ -18,7 +19,7 @@ import {
   gIndicatorHeight,
   gIndicatorWidth,
 } from './TabPage.const';
-import { useGetColor, useTabPageHeaderAnimation2 } from './TabPageHeader.hooks';
+import { useTabPageHeaderAnimation2 } from './TabPageHeader.hooks';
 
 export type TabPageHeaderRef = {
   toLeft: (movedCount: number) => void;
@@ -48,9 +49,22 @@ export function TabPageHeader(props: TabPageHeaderProps) {
     content,
   } = props;
   const { width: winWidth } = useWindowDimensions();
-  const { style } = useThemeContext();
   const { colors } = usePaletteContext();
-  const { getColor } = useGetColor();
+  // const { getColor } = useGetColor();
+  const { getColor } = useColors({
+    backgroundColor: {
+      light: colors.primary[5],
+      dark: colors.primary[6],
+    },
+    selected: {
+      light: colors.neutral[1],
+      dark: colors.neutral[98],
+    },
+    no_selected: {
+      light: colors.neutral[7],
+      dark: colors.neutral[4],
+    },
+  });
   const [currentIndex, setCurrentIndex] = React.useState(0);
   const count = titles.length;
   const indicatorWidth = (indicatorStyle as any)?.width ?? 28;
@@ -126,7 +140,9 @@ export function TabPageHeader(props: TabPageHeaderProps) {
                 style={[
                   content?.style,
                   {
-                    color: getColor(currentIndex === i),
+                    color: getColor(
+                      currentIndex === i ? 'selected' : 'no_selected'
+                    ),
                   },
                 ]}
               >
@@ -143,8 +159,7 @@ export function TabPageHeader(props: TabPageHeaderProps) {
             width: gIndicatorWidth,
             height: gIndicatorHeight,
             borderRadius: gIndicatorBorderRadius,
-            backgroundColor:
-              style === 'light' ? colors.primary[5] : colors.primary[6],
+            backgroundColor: getColor('backgroundColor'),
             bottom: 0,
             left: left,
           },

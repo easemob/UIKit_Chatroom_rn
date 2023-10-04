@@ -2,10 +2,10 @@ import * as React from 'react';
 
 export function useIsLoadedCheck(onChanged?: (isLoaded: boolean) => void) {
   React.useEffect(() => {
-    console.log('test:load:');
+    console.log(`${useIsLoadedCheck.name}:load:`);
     onChanged?.(true);
     return () => {
-      console.log('test:unload:');
+      console.log(`${useIsLoadedCheck.name}:unload:`);
       onChanged?.(false);
     };
   }, [onChanged]);

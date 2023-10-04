@@ -1,13 +1,23 @@
 import * as React from 'react';
 import { Pressable, View } from 'react-native';
 
-import { usePaletteContext, useThemeContext } from '../../theme';
+import { useColors } from '../../hook';
+import { usePaletteContext } from '../../theme';
 import { Icon } from '../../ui/Image';
 import { Text } from '../../ui/Text';
 
 export function SearchStyle({ onPress }: { onPress: () => void }) {
-  const { style } = useThemeContext();
   const { colors } = usePaletteContext();
+  const { getColor } = useColors({
+    backgroundColor: {
+      light: colors.neutral[95],
+      dark: colors.neutral[2],
+    },
+    color: {
+      light: colors.neutral[6],
+      dark: colors.neutral[4],
+    },
+  });
   return (
     <View
       style={{
@@ -24,8 +34,7 @@ export function SearchStyle({ onPress }: { onPress: () => void }) {
             height: 36,
             paddingVertical: 7,
             width: '100%',
-            backgroundColor:
-              style === 'light' ? colors.neutral[95] : colors.neutral[2],
+            backgroundColor: getColor('backgroundColor'),
             justifyContent: 'center',
           }}
         >
@@ -34,8 +43,7 @@ export function SearchStyle({ onPress }: { onPress: () => void }) {
             style={{
               width: 22,
               height: 22,
-              tintColor:
-                style === 'light' ? colors.neutral[6] : colors.neutral[4],
+              tintColor: getColor('color'),
             }}
           />
           <View style={{ width: 4 }} />
@@ -43,7 +51,7 @@ export function SearchStyle({ onPress }: { onPress: () => void }) {
             textType={'large'}
             paletteType={'body'}
             style={{
-              color: style === 'light' ? colors.neutral[6] : colors.neutral[4],
+              color: getColor('color'),
             }}
           >
             {'Search'}

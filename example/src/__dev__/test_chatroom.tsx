@@ -80,7 +80,7 @@ export function TestChatroom() {
     <SafeAreaProvider>
       <DispatchContextProvider>
         <PaletteContextProvider value={pal}>
-          <ThemeContextProvider value={light ? light : dark}>
+          <ThemeContextProvider value={light ? dark : dark}>
             <View
               style={{
                 flex: 1,

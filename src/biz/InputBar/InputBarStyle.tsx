@@ -2,7 +2,8 @@ import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { ErrorCode, UIKitError } from '../../error';
-import { usePaletteContext, useThemeContext } from '../../theme';
+import { useColors } from '../../hook';
+import { usePaletteContext } from '../../theme';
 import { Icon } from '../../ui/Image';
 import { Text } from '../../ui/Text';
 import {
@@ -18,8 +19,17 @@ export type InputBarStyleProps = {
 
 export function InputBarStyle(props: InputBarStyleProps) {
   const { onInputBar, first, after } = props;
-  const { style } = useThemeContext();
   const { colors } = usePaletteContext();
+  const { getColor } = useColors({
+    backgroundColor: {
+      light: colors.barrage[2],
+      dark: colors.barrage[2],
+    },
+    tintColor: {
+      light: colors.barrage[8],
+      dark: colors.barrage[8],
+    },
+  });
 
   if (after && after?.length > 3) {
     throw new UIKitError({ code: ErrorCode.params, extra: 'after count > 3' });
@@ -33,8 +43,7 @@ export function InputBarStyle(props: InputBarStyleProps) {
         style={[
           styles.input,
           {
-            backgroundColor:
-              style === 'light' ? colors.barrage[2] : colors.barrage[2],
+            backgroundColor: getColor('backgroundColor'),
           },
         ]}
         onTouchEnd={() => {
@@ -54,8 +63,7 @@ export function InputBarStyle(props: InputBarStyleProps) {
             style={{
               width: 20,
               height: 20,
-              tintColor:
-                style === 'light' ? colors.barrage[8] : colors.barrage[8],
+              tintColor: getColor('tintColor'),
             }}
           />
           <View style={{ width: 4 }} />
@@ -63,7 +71,7 @@ export function InputBarStyle(props: InputBarStyleProps) {
             paletteType="body"
             textType="large"
             style={{
-              color: style === 'light' ? colors.barrage[8] : colors.barrage[8],
+              color: getColor('tintColor'),
             }}
           >
             {'Input'}

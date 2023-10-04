@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { ScrollView, useWindowDimensions, View } from 'react-native';
 
-import { usePaletteContext, useThemeContext } from '../../theme';
+import { useColors } from '../../hook';
+import { usePaletteContext } from '../../theme';
 import { gAspectRatio } from './GiftList.const';
 import { GiftListItem } from './GiftList.item';
 import type { GiftData } from './types';
@@ -15,15 +16,19 @@ export function GiftList(props: GiftListProps) {
   const { gifts, onSend } = props;
   const { width: winWidth } = useWindowDimensions();
   const { colors } = usePaletteContext();
-  const { style } = useThemeContext();
+  const { getColor } = useColors({
+    backgroundColor: {
+      light: colors.neutral[98],
+      dark: colors.neutral[1],
+    },
+  });
   const [unitWidth, setUnitWidth] = React.useState(80);
   const [selected, setSelected] = React.useState<string | undefined>(undefined);
   return (
     <View
       style={{
         height: gAspectRatio * winWidth,
-        backgroundColor:
-          style === 'light' ? colors.neutral[98] : colors.neutral[1],
+        backgroundColor: getColor('backgroundColor'),
       }}
       onLayout={(e) => {
         const s = e.nativeEvent.layout.width / 4;

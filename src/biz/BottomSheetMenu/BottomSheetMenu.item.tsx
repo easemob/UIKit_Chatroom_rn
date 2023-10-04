@@ -10,8 +10,8 @@ import {
 import type { IconNameType } from '../../assets';
 import { g_border_bottom_width } from '../../const';
 import { useDispatchContext } from '../../dispatch';
-import { ErrorCode, UIKitError } from '../../error';
-import { usePaletteContext, useThemeContext } from '../../theme';
+import { useColors } from '../../hook';
+import { usePaletteContext } from '../../theme';
 import { Icon, IconResolutionType } from '../../ui/Image';
 import { Text } from '../../ui/Text';
 import { gItemHeight } from './BottomSheetMenu.const';
@@ -32,7 +32,6 @@ export type BottomSheetMenuItemProps = {
 };
 
 export function BottomSheetMenuItem(props: BottomSheetMenuItemProps) {
-  console.log('test:BottomSheetMenuItem');
   const {
     id,
     initState,
@@ -43,9 +42,22 @@ export function BottomSheetMenuItem(props: BottomSheetMenuItemProps) {
     containerStyle,
   } = props;
   const clicked = React.useRef(false);
-  const { style } = useThemeContext();
   const { colors } = usePaletteContext();
   const { emit } = useDispatchContext();
+  const { getColor } = useColors({
+    disabled: {
+      light: colors.neutral[98],
+      dark: colors.neutral[1],
+    },
+    enabled: {
+      light: colors.neutral[98],
+      dark: colors.neutral[1],
+    },
+    pressed: {
+      light: colors.neutral[95],
+      dark: colors.neutral[0],
+    },
+  });
   const disabled = initState === 'disabled' ? true : false;
 
   const onPressInternal = () => {
@@ -64,12 +76,40 @@ export function BottomSheetMenuItem(props: BottomSheetMenuItemProps) {
     }
   };
 
-  const getBackgroundColor = () => {
-    return {
-      disabled: style === 'light' ? colors.neutral[98] : colors.neutral[1],
-      enabled: style === 'light' ? colors.neutral[98] : colors.neutral[1],
-      pressed: style === 'light' ? colors.neutral[95] : colors.neutral[0],
-    };
+  const onChangeStateColor = (
+    state: PressableStateCallbackType
+  ): StyleProp<ViewStyle> => {
+    let buttonColors;
+    if (state.pressed === true) {
+      buttonColors = getColor('pressed');
+      emit(
+        `_$${ItemContent.name}`,
+        initState === 'warned' ? 'warned' : 'pressed',
+        id
+      );
+    } else {
+      if (disabled === true) {
+        buttonColors = getColor('disabled');
+        emit(`_$${ItemContent.name}`, 'disabled', id);
+      } else {
+        buttonColors = getColor('enabled');
+        emit(
+          `_$${ItemContent.name}`,
+          initState === 'warned' ? 'warned' : 'enabled',
+          id
+        );
+      }
+    }
+    return [
+      {
+        backgroundColor: buttonColors,
+        justifyContent: iconName ? 'flex-start' : 'center',
+        alignItems: 'center',
+        height: gItemHeight,
+        width: '100%',
+      },
+      containerStyle,
+    ];
   };
 
   return (
@@ -78,37 +118,7 @@ export function BottomSheetMenuItem(props: BottomSheetMenuItemProps) {
       disabled={disabled}
       onPress={onPressInternal}
       style={(state: PressableStateCallbackType): StyleProp<ViewStyle> => {
-        let buttonColors;
-        if (state.pressed === true) {
-          buttonColors = getBackgroundColor().pressed;
-          emit(
-            `_$${ItemContent.name}`,
-            initState === 'warned' ? 'warned' : 'pressed',
-            id
-          );
-        } else {
-          if (disabled === true) {
-            buttonColors = getBackgroundColor().disabled;
-            emit(`_$${ItemContent.name}`, 'disabled', id);
-          } else {
-            buttonColors = getBackgroundColor().enabled;
-            emit(
-              `_$${ItemContent.name}`,
-              initState === 'warned' ? 'warned' : 'enabled',
-              id
-            );
-          }
-        }
-        return [
-          {
-            backgroundColor: buttonColors,
-            justifyContent: iconName ? 'flex-start' : 'center',
-            alignItems: 'center',
-            height: gItemHeight,
-            width: '100%',
-          },
-          containerStyle,
-        ];
+        return onChangeStateColor(state);
       }}
     >
       <ItemContent {...props} />
@@ -118,14 +128,18 @@ export function BottomSheetMenuItem(props: BottomSheetMenuItemProps) {
 }
 
 const ItemDivider = () => {
-  const { style } = useThemeContext();
   const { colors } = usePaletteContext();
+  const { getColor } = useColors({
+    borderBottomColor: {
+      light: colors.neutral[95],
+      dark: colors.neutral[2],
+    },
+  });
   return (
     <View
       style={{
         width: '80%',
-        borderBottomColor:
-          style === 'light' ? colors.neutral[95] : colors.neutral[2],
+        borderBottomColor: getColor('borderBottomColor'),
         borderBottomWidth: g_border_bottom_width,
         justifyContent: 'flex-end',
       }}
@@ -134,12 +148,28 @@ const ItemDivider = () => {
 };
 
 const ItemContent = (props: BottomSheetMenuItemProps) => {
-  console.log('test:BottomSheetMenuItem:ItemContent:');
   const { initState, text, iconName, iconResolution, id: pid } = props;
 
-  const { style } = useThemeContext();
   const { colors } = usePaletteContext();
   const { addListener, removeListener } = useDispatchContext();
+  const { getColor } = useColors({
+    disabled: {
+      light: colors.neutral[7],
+      dark: colors.neutral[3],
+    },
+    enabled: {
+      light: colors.primary[5],
+      dark: colors.primary[6],
+    },
+    pressed: {
+      light: colors.primary[4],
+      dark: colors.primary[6],
+    },
+    warned: {
+      light: colors.error[5],
+      dark: colors.error[6],
+    },
+  });
 
   const disabled = initState === 'disabled' ? true : false;
   const warned = initState === 'warned' ? true : false;
@@ -159,28 +189,6 @@ const ItemContent = (props: BottomSheetMenuItemProps) => {
       removeListener(`_$${ItemContent.name}`, listener);
     };
   }, [addListener, removeListener, pid]);
-
-  const getColor = (state: ButtonState) => {
-    const c = {
-      disabled: style === 'light' ? colors.neutral[7] : colors.neutral[3],
-      enabled: style === 'light' ? colors.primary[5] : colors.primary[6],
-      pressed: style === 'light' ? colors.primary[4] : colors.primary[6],
-      warned: style === 'light' ? colors.error[5] : colors.error[6],
-    };
-    switch (state) {
-      case 'warned':
-        return c.warned;
-      case 'disabled':
-        return c.disabled;
-      case 'enabled':
-        return c.enabled;
-      case 'pressed':
-        return c.pressed;
-      default:
-        break;
-    }
-    throw new UIKitError({ code: ErrorCode.params });
-  };
 
   const getContentText = () => {
     return (

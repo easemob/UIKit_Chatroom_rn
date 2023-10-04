@@ -9,12 +9,9 @@ import type {
 import { Pressable, PressableStateCallbackType } from 'react-native';
 
 import type { IconNameType } from '../../assets';
+import { useColors } from '../../hook';
 import type { ButtonColors } from '../../theme';
-import {
-  ButtonStateColor,
-  usePaletteContext,
-  useThemeContext,
-} from '../../theme';
+import { ButtonStateColor, usePaletteContext } from '../../theme';
 import type { PartialDeep } from '../../types';
 import { Icon, IconResolutionType } from '../Image';
 import { gMaxTimeout } from './Button.const';
@@ -42,8 +39,21 @@ export function IconButton(props: IconButtonProps) {
     iconResolution,
   } = props;
 
-  const { style: themeStyle } = useThemeContext();
   const { colors } = usePaletteContext();
+  const { getColor } = useColors({
+    enabled_color: {
+      light: colors.neutral[3],
+      dark: colors.neutral[95],
+    },
+    disabled_color: {
+      light: colors.neutral[3],
+      dark: colors.neutral[95],
+    },
+    pressed_color: {
+      light: colors.neutral[3],
+      dark: colors.neutral[95],
+    },
+  });
 
   const clicked = React.useRef(false);
 
@@ -69,17 +79,17 @@ export function IconButton(props: IconButtonProps) {
     }
     return {
       enabled: {
-        color: themeStyle === 'light' ? colors.neutral[3] : colors.neutral[95],
+        color: getColor('enabled_color'),
         backgroundColor: undefined,
         borderColor: undefined,
       },
       disabled: {
-        color: themeStyle === 'light' ? colors.neutral[3] : colors.neutral[95],
+        color: getColor('disabled_color'),
         backgroundColor: undefined,
         borderColor: undefined,
       },
       pressed: {
-        color: themeStyle === 'light' ? colors.neutral[3] : colors.neutral[95],
+        color: getColor('pressed_color'),
         backgroundColor: undefined,
         borderColor: undefined,
       },

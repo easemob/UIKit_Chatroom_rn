@@ -2,7 +2,8 @@ import * as React from 'react';
 import { TouchableOpacity, View } from 'react-native';
 
 import { ICON_ASSETS } from '../../assets';
-import { usePaletteContext, useThemeContext } from '../../theme';
+import { useColors } from '../../hook';
+import { usePaletteContext } from '../../theme';
 import { DefaultImage, Icon } from '../../ui/Image';
 import { Text } from '../../ui/Text';
 import {
@@ -44,7 +45,16 @@ export function GiftListItem(props: GiftListItemProps) {
 function GiftListNoSelectedItem(props: GiftListItemProps) {
   const { gift, onSelected } = props;
   const { colors } = usePaletteContext();
-  const { style } = useThemeContext();
+  const { getColor } = useColors({
+    t1: {
+      light: colors.neutral[1],
+      dark: colors.neutral[98],
+    },
+    t2: {
+      light: colors.neutral[5],
+      dark: colors.neutral[6],
+    },
+  });
   return (
     <View
       style={{
@@ -68,7 +78,7 @@ function GiftListNoSelectedItem(props: GiftListItemProps) {
           textType={'small'}
           paletteType={'title'}
           style={{
-            color: style === 'light' ? colors.neutral[1] : colors.neutral[98],
+            color: getColor('t1'),
           }}
         >
           {'Title'}
@@ -80,7 +90,7 @@ function GiftListNoSelectedItem(props: GiftListItemProps) {
           textType={'extraSmall'}
           paletteType={'label'}
           style={{
-            color: style === 'light' ? colors.neutral[5] : colors.neutral[6],
+            color: getColor('t2'),
           }}
         >
           {'SubTitle'}
@@ -93,7 +103,28 @@ function GiftListNoSelectedItem(props: GiftListItemProps) {
 function GiftListSelectedItem(props: GiftListItemProps) {
   const { gift, onSelected } = props;
   const { colors } = usePaletteContext();
-  const { style } = useThemeContext();
+  const { getColor } = useColors({
+    borderColor: {
+      light: colors.primary[6],
+      dark: colors.primary[5],
+    },
+    backgroundColor: {
+      light: colors.primary[95],
+      dark: colors.primary[2],
+    },
+    color: {
+      light: colors.neutral[5],
+      dark: colors.neutral[6],
+    },
+    backgroundColor2: {
+      light: colors.primary[5],
+      dark: colors.primary[6],
+    },
+    color2: {
+      light: colors.neutral[98],
+      dark: colors.neutral[98],
+    },
+  });
   return (
     <View
       style={{
@@ -103,9 +134,8 @@ function GiftListSelectedItem(props: GiftListItemProps) {
         alignItems: 'center',
         borderRadius: 8,
         borderWidth: 1,
-        borderColor: style === 'light' ? colors.primary[6] : colors.primary[5],
-        backgroundColor:
-          style === 'light' ? colors.primary[95] : colors.primary[2],
+        borderColor: getColor('borderColor'),
+        backgroundColor: getColor('backgroundColor'),
         overflow: 'hidden',
       }}
     >
@@ -127,7 +157,7 @@ function GiftListSelectedItem(props: GiftListItemProps) {
             textType={'extraSmall'}
             paletteType={'label'}
             style={{
-              color: style === 'light' ? colors.neutral[5] : colors.neutral[6],
+              color: getColor('color'),
             }}
           >
             {'SubTitle'}
@@ -137,8 +167,7 @@ function GiftListSelectedItem(props: GiftListItemProps) {
       <View
         style={{
           height: gItemButtonHeight,
-          backgroundColor:
-            style === 'light' ? colors.primary[5] : colors.primary[6],
+          backgroundColor: getColor('backgroundColor2'),
           justifyContent: 'center',
           alignItems: 'center',
           width: '100%',
@@ -153,8 +182,7 @@ function GiftListSelectedItem(props: GiftListItemProps) {
             textType={'medium'}
             paletteType={'label'}
             style={{
-              color:
-                style === 'light' ? colors.neutral[98] : colors.neutral[98],
+              color: getColor('color2'),
             }}
           >
             {'Send'}

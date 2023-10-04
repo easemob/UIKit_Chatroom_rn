@@ -1,8 +1,6 @@
 import * as React from 'react';
 import { Animated } from 'react-native';
 
-import { usePaletteContext, useThemeContext } from '../../theme';
-
 export const calculateLeft = (params: {
   width: number;
   count: number;
@@ -78,19 +76,5 @@ export const useTabPageHeaderAnimation2 = (params: {
     left,
     unitWidth,
     toNext: createAnimated,
-  };
-};
-
-export const useGetColor = () => {
-  const { style } = useThemeContext();
-  const { colors } = usePaletteContext();
-  return {
-    getColor: (selected: boolean) => {
-      if (selected) {
-        return style === 'light' ? colors.neutral[1] : colors.neutral[98];
-      } else {
-        return style === 'light' ? colors.neutral[7] : colors.neutral[4];
-      }
-    },
   };
 };

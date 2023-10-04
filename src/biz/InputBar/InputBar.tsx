@@ -9,7 +9,8 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import type { IconNameType } from '../../assets';
-import { usePaletteContext, useThemeContext } from '../../theme';
+import { useColors } from '../../hook';
+import { usePaletteContext } from '../../theme';
 import { IconButton } from '../../ui/Button';
 import { KeyboardAvoidingView } from '../../ui/Keyboard';
 import { TextInput } from '../../ui/TextInput';
@@ -31,8 +32,25 @@ export const InputBar = React.forwardRef<InputBarRef, InputBarProps>(function (
 ) {
   const { onInputBarWillHide, onInputBarWillShow, ...others } = props;
   const { bottom } = useSafeAreaInsets();
-  const { style } = useThemeContext();
   const { colors } = usePaletteContext();
+  const { getColor } = useColors({
+    backgroundColor: {
+      light: colors.neutral[98],
+      dark: colors.neutral[1],
+    },
+    backgroundColor2: {
+      light: colors.neutral[95],
+      dark: colors.neutral[2],
+    },
+    tintColor: {
+      light: colors.neutral[3],
+      dark: colors.neutral[95],
+    },
+    tintColor2: {
+      light: colors.primary[5],
+      dark: colors.primary[6],
+    },
+  });
 
   // const keyboardHeight = useKeyboardHeight(true);
   const [keyboardHeight, setKeyboardHeight] = React.useState(0);
@@ -106,8 +124,7 @@ export const InputBar = React.forwardRef<InputBarRef, InputBarProps>(function (
       >
         <View
           style={{
-            backgroundColor:
-              style === 'light' ? colors.neutral[98] : colors.neutral[1],
+            backgroundColor: getColor('backgroundColor'),
           }}
         >
           <View
@@ -130,8 +147,7 @@ export const InputBar = React.forwardRef<InputBarRef, InputBarProps>(function (
                   flexDirection: 'row',
                   paddingHorizontal: 16,
                   paddingVertical: 7,
-                  backgroundColor:
-                    style === 'light' ? colors.neutral[95] : colors.neutral[2],
+                  backgroundColor: getColor('backgroundColor2'),
                   borderRadius: 18,
                 }}
               >
@@ -177,8 +193,7 @@ export const InputBar = React.forwardRef<InputBarRef, InputBarProps>(function (
               style={{
                 width: 30,
                 height: 30,
-                tintColor:
-                  style === 'light' ? colors.neutral[3] : colors.neutral[95],
+                tintColor: getColor('tintColor'),
               }}
               containerStyle={{
                 alignSelf: 'flex-end',
@@ -200,9 +215,8 @@ export const InputBar = React.forwardRef<InputBarRef, InputBarProps>(function (
               style={{
                 width: 30,
                 height: 30,
-                tintColor:
-                  style === 'light' ? colors.primary[5] : colors.primary[6],
-                backgroundColor: style === 'light' ? undefined : undefined,
+                tintColor: getColor('tintColor2'),
+                backgroundColor: undefined,
                 borderRadius: 30,
               }}
               containerStyle={{
@@ -217,8 +231,7 @@ export const InputBar = React.forwardRef<InputBarRef, InputBarProps>(function (
       </KeyboardAvoidingView>
       <View
         style={{
-          backgroundColor:
-            style === 'light' ? colors.neutral[98] : colors.neutral[1],
+          backgroundColor: getColor('backgroundColor'),
           height: emojiHeight,
           // overflow: 'hidden',
         }}
@@ -229,8 +242,7 @@ export const InputBar = React.forwardRef<InputBarRef, InputBarProps>(function (
             position: 'absolute',
             right: 16,
             bottom: 16,
-            backgroundColor:
-              style === 'light' ? colors.neutral[98] : colors.neutral[1],
+            backgroundColor: getColor('backgroundColor'),
             borderRadius: 40,
           }}
         >

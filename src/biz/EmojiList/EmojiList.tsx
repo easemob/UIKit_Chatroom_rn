@@ -11,7 +11,8 @@ import {
 import moji from 'twemoji';
 
 import { FACE_ASSETS } from '../../assets';
-import { usePaletteContext, useThemeContext } from '../../theme';
+import { useColors } from '../../hook';
+import { usePaletteContext } from '../../theme';
 import { Text } from '../../ui/Text';
 import { gAspectRatio } from './EmojiList.const';
 
@@ -22,8 +23,13 @@ export type EmojiListProps = {
 
 export function EmojiList(props: EmojiListProps) {
   const { colors } = usePaletteContext();
-  const { style: themeStyle } = useThemeContext();
   const { width: winWidth } = useWindowDimensions();
+  const { getColor } = useColors({
+    bg1: {
+      light: colors.neutral[98],
+      dark: colors.neutral[1],
+    },
+  });
   const { onFace, style } = props;
   const getUnitSize = () => {
     return winWidth / 7 - 1;
@@ -33,28 +39,13 @@ export function EmojiList(props: EmojiListProps) {
       style={[
         {
           height: gAspectRatio * winWidth,
-          backgroundColor:
-            themeStyle === 'light' ? colors.neutral[98] : colors.neutral[1],
+          backgroundColor: getColor('bg1'),
         },
         style,
       ]}
     >
       <ScrollView>
         <View style={styles.group}>
-          {/* <View style={styles.title}>
-            <Text
-              textType={'small'}
-              paletteType={'title'}
-              style={{
-                color:
-                  themeStyle === 'light'
-                    ? colors.neutral[5]
-                    : colors.neutral[6],
-              }}
-            >
-              {'All Emojis'}
-            </Text>
-          </View> */}
           <View style={styles.list}>
             {FACE_ASSETS.map((v, i) => {
               const r = moji.convert.fromCodePoint(v);

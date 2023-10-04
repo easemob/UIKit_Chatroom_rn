@@ -10,7 +10,8 @@ import {
 } from 'react-native';
 
 import type { IconNameType } from '../../assets';
-import { usePaletteContext, useThemeContext } from '../../theme';
+import { useColors } from '../../hook';
+import { usePaletteContext } from '../../theme';
 import { Icon } from '../../ui/Image';
 import { PresetCalcTextWidth, Text } from '../../ui/Text';
 import { Queue } from '../../utils';
@@ -48,7 +49,12 @@ export function Marquee(props: MarqueeProps) {
   } = props;
 
   const { colors } = usePaletteContext();
-  const { style } = useThemeContext();
+  const { getColor } = useColors({
+    color: {
+      light: colors.barrage[100],
+      dark: colors.barrage[100],
+    },
+  });
 
   const [contentWidth, setContentWidth] = React.useState(1);
   const { width: winWidth } = useWindowDimensions();
@@ -62,10 +68,6 @@ export function Marquee(props: MarqueeProps) {
   ).current;
   const preTask = React.useRef<MarqueeTask | undefined>(undefined);
   const curTask = React.useRef<MarqueeTask | undefined>(undefined);
-
-  const contentColor = () => {
-    return style === 'light' ? colors.barrage[100] : colors.barrage[100];
-  };
 
   if (propsRef.current) {
     propsRef.current.pushTask = async (task: MarqueeTask) => {
@@ -150,7 +152,7 @@ export function Marquee(props: MarqueeProps) {
           textType={'small'}
           paletteType={'body'}
           numberOfLines={1}
-          style={[{ color: contentColor() }, contentStyle]}
+          style={[{ color: getColor('color') }, contentStyle]}
         >
           {content}
         </Text>

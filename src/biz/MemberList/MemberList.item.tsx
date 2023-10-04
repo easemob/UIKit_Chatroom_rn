@@ -2,7 +2,8 @@ import * as React from 'react';
 import { View } from 'react-native';
 
 import { g_flatlist_border_bottom_width } from '../../const';
-import { usePaletteContext, useThemeContext } from '../../theme';
+import { useColors } from '../../hook';
+import { usePaletteContext } from '../../theme';
 import { IconButton } from '../../ui/Button';
 import { Icon } from '../../ui/Image';
 import { Text } from '../../ui/Text';
@@ -13,15 +14,27 @@ export type MemberListItemProps = {
 };
 
 export function MemberListItem(props: MemberListItemProps) {
-  const { style } = useThemeContext();
   const { colors } = usePaletteContext();
+  const { getColor } = useColors({
+    backgroundColor: {
+      light: colors.neutral[98],
+      dark: colors.neutral[1],
+    },
+    color: {
+      light: colors.neutral[1],
+      dark: colors.neutral[98],
+    },
+    color2: {
+      light: colors.neutral[5],
+      dark: colors.neutral[6],
+    },
+  });
   const { id } = props;
   return (
     <View
       key={id}
       style={{
-        backgroundColor:
-          style === 'light' ? colors.neutral[98] : colors.neutral[1],
+        backgroundColor: getColor('backgroundColor'),
         paddingHorizontal: 10,
         width: '100%',
       }}
@@ -45,7 +58,7 @@ export function MemberListItem(props: MemberListItemProps) {
             textType={'medium'}
             paletteType={'title'}
             style={{
-              color: style === 'light' ? colors.neutral[1] : colors.neutral[98],
+              color: getColor('color'),
             }}
           >
             {'NickName'}
@@ -54,7 +67,7 @@ export function MemberListItem(props: MemberListItemProps) {
             textType={'medium'}
             paletteType={'body'}
             style={{
-              color: style === 'light' ? colors.neutral[5] : colors.neutral[6],
+              color: getColor('color2'),
             }}
           >
             {'Role'}
@@ -64,8 +77,7 @@ export function MemberListItem(props: MemberListItemProps) {
         <IconButton
           iconName={'ellipsis_vertical'}
           style={{
-            tintColor:
-              style === 'light' ? colors.neutral[5] : colors.neutral[6],
+            tintColor: getColor('color2'),
             width: 24,
             height: 24,
             margin: 4,
@@ -76,8 +88,7 @@ export function MemberListItem(props: MemberListItemProps) {
         style={{
           // height: 0.5,
           borderBottomWidth: g_flatlist_border_bottom_width,
-          backgroundColor:
-            style === 'light' ? colors.neutral[5] : colors.neutral[6],
+          backgroundColor: getColor('color2'),
           marginLeft: 50,
         }}
       />

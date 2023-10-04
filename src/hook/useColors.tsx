@@ -4,11 +4,6 @@ import type { ColorValue } from 'react-native';
 import { ThemeType, useThemeContext } from '../theme';
 import type { KV } from '../types';
 
-export type StyleColor = {
-  styleName: ThemeType;
-  color?: ColorValue | undefined;
-};
-
 export type StyleColorParams = KV<
   string,
   KV<ThemeType, ColorValue | undefined>

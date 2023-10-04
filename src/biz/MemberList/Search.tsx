@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { View } from 'react-native';
 
-import { usePaletteContext, useThemeContext } from '../../theme';
+import { useColors } from '../../hook';
+import { usePaletteContext } from '../../theme';
 import { Text1Button } from '../../ui/Button';
 import { Icon } from '../../ui/Image';
 import { TextInput } from '../../ui/TextInput';
@@ -14,8 +15,21 @@ export type SearchProps = {
 
 export function Search(props: SearchProps) {
   const { onCancel, onChangeText, value } = props;
-  const { style } = useThemeContext();
   const { colors } = usePaletteContext();
+  const { getColor } = useColors({
+    backgroundColor: {
+      light: colors.neutral[98],
+      dark: colors.neutral[1],
+    },
+    backgroundColor2: {
+      light: colors.neutral[95],
+      dark: colors.neutral[2],
+    },
+    color: {
+      light: colors.neutral[5],
+      dark: colors.neutral[5],
+    },
+  });
   return (
     <View
       style={{
@@ -28,8 +42,7 @@ export function Search(props: SearchProps) {
         style={{
           flexDirection: 'row',
           alignItems: 'center',
-          backgroundColor:
-            style === 'light' ? colors.neutral[98] : colors.neutral[1],
+          backgroundColor: getColor('backgroundColor'),
           paddingLeft: 16,
           paddingRight: 8,
         }}
@@ -43,15 +56,14 @@ export function Search(props: SearchProps) {
         >
           <TextInput
             containerStyle={{
-              backgroundColor:
-                style === 'light' ? colors.neutral[95] : colors.neutral[2],
+              backgroundColor: getColor('backgroundColor2'),
               justifyContent: 'center',
               borderRadius: 18,
               height: 36,
             }}
             style={{
               paddingLeft: 35,
-              color: style === 'light' ? colors.neutral[5] : colors.neutral[5],
+              color: getColor('color'),
             }}
             onChangeText={onChangeText}
             value={value}
@@ -63,8 +75,7 @@ export function Search(props: SearchProps) {
               left: 8,
               width: 22,
               height: 22,
-              tintColor:
-                style === 'light' ? colors.neutral[5] : colors.neutral[5],
+              tintColor: getColor('color'),
             }}
           />
         </View>

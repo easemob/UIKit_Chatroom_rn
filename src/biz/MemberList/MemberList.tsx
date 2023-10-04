@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { useWindowDimensions, View } from 'react-native';
 
-import { usePaletteContext, useThemeContext } from '../../theme';
+import { useColors } from '../../hook';
+import { usePaletteContext } from '../../theme';
 import { SimulativeModal, SimulativeModalRef } from '../../ui/Modal';
 import { TabPage } from '../../ui/TabPage';
 import { gAspectRatio } from './MemberList.const';
@@ -19,8 +20,17 @@ export function MemberList(props: MemberListProps) {
   const { width: winWidth } = useWindowDimensions();
   const height = winWidth / gAspectRatio;
   const isUsePanResponder = React.useRef(true);
-  const { style } = useThemeContext();
   const { colors } = usePaletteContext();
+  const { getColor } = useColors({
+    backgroundColor: {
+      light: colors.neutral[98],
+      dark: colors.neutral[1],
+    },
+    backgroundColor2: {
+      light: colors.neutral[8],
+      dark: colors.neutral[3],
+    },
+  });
 
   if (propsRef.current) {
     propsRef.current.startHide = (onFinished?: () => void) => {
@@ -54,8 +64,7 @@ export function MemberList(props: MemberListProps) {
           <View
             style={{
               height: height,
-              backgroundColor:
-                style === 'light' ? colors.neutral[98] : colors.neutral[1],
+              backgroundColor: getColor('backgroundColor'),
               alignItems: 'center',
               width: '100%',
               borderTopRightRadius: 16,
@@ -67,8 +76,7 @@ export function MemberList(props: MemberListProps) {
                 width: 36,
                 height: 5,
                 marginVertical: 6,
-                backgroundColor:
-                  style === 'light' ? colors.neutral[8] : colors.neutral[3],
+                backgroundColor: getColor('backgroundColor2'),
                 borderRadius: 2.5,
               }}
             />
