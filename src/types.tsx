@@ -7,6 +7,13 @@ export type PartialNullable<T> = {
 };
 export type PromiseType<T> = (...args: any[]) => Promise<T>;
 export type UnPromisify<T> = T extends PromiseType<infer U> ? U : never;
+export type KeyValue<K, V> = {
+  key: K;
+  value: V;
+};
+export type KV<K extends string | number | symbol, V> = {
+  [k in K]: V;
+};
 
 export type PartialDeep<T> = T extends object
   ? T extends Function
