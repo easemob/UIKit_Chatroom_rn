@@ -15,13 +15,13 @@ import {
   gMessageListWidth,
 } from './MessageList.const';
 import { useKeyboardOnAndroid } from './MessageList.hooks';
-import {
+import { MessageListItem } from './MessageList.item';
+import type {
   GiftContent,
-  MessageListItem,
   MessageListItemProps,
   TextContent,
   VoiceContent,
-} from './MessageList.item';
+} from './types';
 
 export type MessageListProps = {
   onRequestCloseInputBar?: () => void;
