@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { TouchableOpacity, View } from 'react-native';
+import { LinearGradient } from 'react-native-linear-gradient';
 
 import { ICON_ASSETS } from '../../assets';
 import { useColors } from '../../hook';
@@ -102,8 +103,9 @@ function GiftListNoSelectedItem(props: GiftListItemProps) {
 
 function GiftListSelectedItem(props: GiftListItemProps) {
   const { gift, onSelected } = props;
-  const { colors } = usePaletteContext();
-  const { getColor } = useColors({
+  const { colors, lineGradient } = usePaletteContext();
+  const { start, end } = lineGradient.bottomToTop;
+  const { getColor, getColors } = useColors({
     borderColor: {
       light: colors.primary[6],
       dark: colors.primary[5],
@@ -117,8 +119,8 @@ function GiftListSelectedItem(props: GiftListItemProps) {
       dark: colors.neutral[6],
     },
     backgroundColor2: {
-      light: colors.primary[5],
-      dark: colors.primary[6],
+      light: [colors.primary[5], 'hsla(233, 100%, 70%, 1)'],
+      dark: [colors.primary[6], 'hsla(233, 100%, 70%, 1)'],
     },
     color2: {
       light: colors.neutral[98],
@@ -164,10 +166,13 @@ function GiftListSelectedItem(props: GiftListItemProps) {
           </Text>
         </View>
       </View>
-      <View
+      <LinearGradient
+        colors={getColors('backgroundColor2') as (string | number)[]}
+        start={start}
+        end={end}
         style={{
           height: gItemButtonHeight,
-          backgroundColor: getColor('backgroundColor2'),
+          // backgroundColor: getColor('backgroundColor2'),
           justifyContent: 'center',
           alignItems: 'center',
           width: '100%',
@@ -188,7 +193,7 @@ function GiftListSelectedItem(props: GiftListItemProps) {
             {'Send'}
           </Text>
         </TouchableOpacity>
-      </View>
+      </LinearGradient>
     </View>
   );
 }
