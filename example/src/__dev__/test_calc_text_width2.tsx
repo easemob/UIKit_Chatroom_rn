@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Text, View } from 'react-native';
+import { Animated, Text, View } from 'react-native';
 import { PresetCalcTextWidth } from 'react-native-chat-room';
 
 export function CalcTextWidth() {
@@ -25,6 +25,31 @@ export function CalcTextWidth() {
   );
 }
 
+export function CalcTextWidth2() {
+  console.log('test:CalcTextWidth2:');
+  // const [width, setWidth] = React.useState(200);
+  const width = React.useRef(new Animated.Value(0));
+  const content = ' ';
+  return (
+    <View style={{ flex: 1, backgroundColor: 'green', top: 100 }}>
+      <PresetCalcTextWidth
+        content={content}
+        textProps={{ style: { lineHeight: 30, fontSize: 40 } }}
+        onWidth={(w: number) => {
+          console.log('test:width:', w);
+          width.current.setValue(w);
+        }}
+      />
+      <Animated.View style={{ width: width.current }}>
+        <Text style={{ lineHeight: 30, fontSize: 40, backgroundColor: 'red' }}>
+          {content}
+        </Text>
+      </Animated.View>
+      <View style={{ flex: 1 }} />
+    </View>
+  );
+}
+
 export default function test_calc_text_width() {
-  return <CalcTextWidth />;
+  return <CalcTextWidth2 />;
 }
