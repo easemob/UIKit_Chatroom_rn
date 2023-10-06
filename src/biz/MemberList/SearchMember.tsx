@@ -1,7 +1,9 @@
 import * as React from 'react';
-import { FlatList, ListRenderItemInfo } from 'react-native';
+import { useWindowDimensions } from 'react-native';
+import { FlatList, ListRenderItemInfo, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { Image } from '../../ui/Image';
 import { gSearchTimeout } from './MemberList.const';
 import { MemberListItem, MemberListItemProps } from './MemberList.item';
 import { Search } from './Search';
@@ -76,7 +78,32 @@ export function SearchMember() {
         keyExtractor={(item: MemberListItemProps) => {
           return item.id;
         }}
+        onLayout={(e) => {
+          console.log('test:zuoyu:onLayout:', e.nativeEvent.layout);
+        }}
+        ListEmptyComponent={EmptyBlank}
       />
     </SafeAreaView>
   );
 }
+
+const EmptyBlank = () => {
+  const { height: winHeight } = useWindowDimensions();
+  return (
+    <View
+      style={{
+        flex: 1,
+        width: '100%',
+        height: winHeight - 94,
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
+    >
+      <Image
+        source={require('../../assets/bg/blank.png')}
+        style={{ height: 140 }}
+        resizeMode={'contain'}
+      />
+    </View>
+  );
+};
