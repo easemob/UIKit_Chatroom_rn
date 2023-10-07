@@ -69,7 +69,9 @@ export function Marquee(props: MarqueeProps) {
   const [contentWidth, setContentWidth] = React.useState(0);
   const { width: winWidth } = useWindowDimensions();
   const width = marqueeWidth ?? winWidth;
-  const [content, setContent] = React.useState('Asdf');
+  const [content, setContent] = React.useState(' ');
+  const [isShow, setIsShow] = React.useState(false);
+  const isSameContent = React.useRef(false);
 
   const x = React.useRef(new Animated.Value(0)).current;
   const tasks: Queue<MarqueeTask> = React.useRef(
@@ -90,12 +92,16 @@ export function Marquee(props: MarqueeProps) {
       const task = tasks.dequeue();
       if (task) {
         curTask.current = task;
+        setIsShow(true);
         if (task.content === content) {
+          isSameContent.current = true;
           execAnimating(contentWidth);
         } else {
+          isSameContent.current = false;
           setContent(task.content);
         }
       } else {
+        setIsShow(false);
         onFinished?.();
       }
     }
@@ -127,6 +133,7 @@ export function Marquee(props: MarqueeProps) {
           paddingLeft: marqueeHeight,
           borderRadius: 10,
           paddingHorizontal: 4,
+          display: isShow ? 'flex' : 'none',
         },
         containerStyle,
       ]}
@@ -137,6 +144,9 @@ export function Marquee(props: MarqueeProps) {
         onWidth={(w: number) => {
           setContentWidth(w);
           if (curTask.current === undefined) {
+            return;
+          }
+          if (isSameContent.current === true) {
             return;
           }
           execAnimating(w);
