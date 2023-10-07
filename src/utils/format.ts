@@ -14,7 +14,7 @@ export function getDateMeta() {
   };
 }
 
-export function msgTs(date: Date | number): string {
+export function formatTs(date: Date | number): string {
   const align = (c: number) => {
     if (c < 10) {
       return `0${c}`;

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Animated } from 'react-native';
 import { View } from 'react-native';
+import type { IconNameType } from 'src/assets';
 
 import { useDispatchContext } from '../../dispatch';
 import { ErrorCode, UIKitError } from '../../error';
@@ -8,7 +9,7 @@ import { useColors } from '../../hook';
 import { usePaletteContext } from '../../theme';
 import { Icon } from '../../ui/Image';
 import { Text } from '../../ui/Text';
-import { msgTs } from '../../utils';
+import { formatTs } from '../../utils';
 import { Avatar } from '../Avatar';
 import { MessageListGiftItem } from './MessageList.item.gift';
 import { MessageListTextItem } from './MessageList.item.text';
@@ -36,7 +37,7 @@ export function MessageListItem(props: MessageListItemProps) {
   });
   const headerWidth = React.useRef(0);
   const width = React.useRef(0);
-  const { type } = props;
+  const { type, basic } = props;
   const sub = () => {
     switch (type) {
       case 'gift':
@@ -106,15 +107,18 @@ export function MessageListItem(props: MessageListItemProps) {
                   color: getColor('time'),
                 }}
               >
-                {msgTs(Date.now())}
+                {formatTs(basic.timestamp)}
               </Text>
             </View>
             <View>
-              <Icon name={'achievement'} style={{ height: 18, width: 18 }} />
+              <Icon
+                name={(basic.tag as IconNameType) ?? 'achievement'}
+                style={{ height: 18, width: 18 }}
+              />
             </View>
             <View>
               <Avatar
-                url={'http://www.sdf.com/x'}
+                url={basic.avatar ?? 'http://www.sdf.com/x'}
                 size={18}
                 borderRadius={18}
               />
@@ -125,7 +129,7 @@ export function MessageListItem(props: MessageListItemProps) {
                 paletteType={'label'}
                 style={{ color: getColor('name') }}
               >
-                {'name'}
+                {basic.nickName}
               </Text>
             </View>
           </View>

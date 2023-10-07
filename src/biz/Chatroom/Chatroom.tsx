@@ -4,7 +4,7 @@ import { View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { InputBar, InputBarProps, InputBarRef } from '../InputBar';
-import { MessageList } from '../MessageList';
+import { MessageList, MessageListRef } from '../MessageList';
 
 export type ChatroomProps = Omit<
   InputBarProps,
@@ -16,9 +16,11 @@ type ChatroomState = {
 
 export class Chatroom extends React.Component<ChatroomProps, ChatroomState> {
   inputBarRef?: React.RefObject<InputBarRef>;
+  messageRef?: React.RefObject<MessageListRef>;
   constructor(props: ChatroomProps) {
     super(props);
     this.inputBarRef = React.createRef();
+    this.messageRef = React.createRef();
     this.state = {
       isInputBarShow: false,
     };
@@ -35,6 +37,7 @@ export class Chatroom extends React.Component<ChatroomProps, ChatroomState> {
     return (
       <SafeAreaView style={{ flex: 1 }}>
         <MessageList
+          ref={this.messageRef}
           onRequestCloseInputBar={() => {
             if (this.inputBarRef?.current?.close) {
               this.inputBarRef.current.close();
@@ -51,8 +54,9 @@ export class Chatroom extends React.Component<ChatroomProps, ChatroomState> {
           onInputBarWillShow={() => {
             this.setState({ isInputBarShow: true });
           }}
-          onSend={() => {
-            // todo:
+          onSend={(content) => {
+            console.log('test:zuoyu:');
+            this.messageRef?.current?.addNewMessage(content);
           }}
           {...others}
         />
