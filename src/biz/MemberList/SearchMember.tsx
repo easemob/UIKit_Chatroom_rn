@@ -5,7 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Image } from '../../ui/Image';
 import { gSearchTimeout } from './MemberList.const';
-import { MemberListItem, MemberListItemProps } from './MemberList.item';
+import { MemberListItemMemo, MemberListItemProps } from './MemberList.item';
 import { Search } from './Search';
 
 export type SearchMemberProps = {};
@@ -73,7 +73,7 @@ export function SearchMember() {
         data={data}
         renderItem={(info: ListRenderItemInfo<MemberListItemProps>) => {
           const { item } = info;
-          return <MemberListItem id={item.id} />;
+          return <MemberListItemMemo id={item.id} />;
         }}
         keyExtractor={(item: MemberListItemProps) => {
           return item.id;

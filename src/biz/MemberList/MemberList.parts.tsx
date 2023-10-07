@@ -16,7 +16,7 @@ import {
   gBottomSheetHeaderHeight,
   gTabHeaderHeight,
 } from './MemberList.const';
-import { MemberListItem, MemberListItemProps } from './MemberList.item';
+import { MemberListItemMemo, MemberListItemProps } from './MemberList.item';
 import { SearchStyle } from './SearchStyle';
 
 export type MemberListParticipantsRef = SimulativeModalRef & {};
@@ -95,7 +95,7 @@ export function MemberListParticipants(props: MemberListParticipantsProps) {
         data={data}
         renderItem={(info: ListRenderItemInfo<MemberListItemProps>) => {
           const { item } = info;
-          return <MemberListItem id={item.id} />;
+          return <MemberListItemMemo id={item.id} />;
         }}
         keyExtractor={(item: MemberListItemProps) => {
           return item.id;

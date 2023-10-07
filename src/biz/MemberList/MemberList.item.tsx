@@ -95,3 +95,5 @@ export function MemberListItem(props: MemberListItemProps) {
     </View>
   );
 }
+
+export const MemberListItemMemo = React.memo(MemberListItem);
