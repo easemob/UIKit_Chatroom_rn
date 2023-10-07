@@ -140,3 +140,5 @@ export function MessageListItem(props: MessageListItemProps) {
     </View>
   );
 }
+
+export const MessageListItemMemo = React.memo(MessageListItem);

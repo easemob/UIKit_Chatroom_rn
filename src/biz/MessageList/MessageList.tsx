@@ -16,7 +16,7 @@ import {
   gMessageListWidth,
 } from './MessageList.const';
 import { useKeyboardOnAndroid, useMessageListApi } from './MessageList.hooks';
-import { MessageListItem } from './MessageList.item';
+import { MessageListItemMemo } from './MessageList.item';
 import type { MessageListItemProps } from './types';
 
 export type MessageListRef = {
@@ -89,9 +89,9 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
             ref={listRef}
             data={data}
             renderItem={(info: ListRenderItemInfo<MessageListItemProps>) => {
-              const { item } = info;
-              return <MessageListItem {...item} />;
+              return <MessageListItemMemo {...info.item} />;
             }}
+            // renderItem={RenderItemMemo}
             keyExtractor={(item: MessageListItemProps) => {
               return item.id;
             }}
@@ -103,3 +103,10 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
 );
 
 export const MessageListMemo = React.memo(MessageList);
+
+// const RenderItemMemo = React.memo(
+//   (info: ListRenderItemInfo<MessageListItemProps>) => {
+//     const { item } = info;
+//     return <MessageListItem {...item} />;
+//   }
+// );
