@@ -1,6 +1,5 @@
 import * as React from 'react';
 import {
-  ColorValue,
   Keyboard,
   LayoutAnimation,
   Platform,
@@ -8,30 +7,33 @@ import {
   View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import moji from 'twemoji';
 
 import type { IconNameType } from '../../assets';
-import { useColors } from '../../hook';
+import { useColors, useKeyboardHeight } from '../../hook';
 import { usePaletteContext } from '../../theme';
 import { IconButton } from '../../ui/Button';
 import { KeyboardAvoidingView } from '../../ui/Keyboard';
 import { TextInput } from '../../ui/TextInput';
 import { timeoutTask } from '../../utils';
-import { EmojiListMemo } from '../EmojiList';
+import { EmojiListMemo, FACE_ASSETS_UTF16 } from '../EmojiList';
+import { DelButton } from './DelButton';
 import { InputBarStyle, InputBarStyleProps } from './InputBarStyle';
 
 export type InputBarRef = {
   close: () => void;
 };
-export type InputBarProps = Omit<InputBarStyleProps, 'onInputBar'> & {
+export type InputBarProps = Omit<InputBarStyleProps, 'onClickInput'> & {
   onInputBarWillShow?: () => void;
   onInputBarWillHide?: () => void;
+  onSend: (content: string) => void;
 };
 
 export const InputBar = React.forwardRef<InputBarRef, InputBarProps>(function (
   props: React.PropsWithChildren<InputBarProps>,
   ref: React.ForwardedRef<InputBarRef>
 ) {
-  const { onInputBarWillHide, onInputBarWillShow, ...others } = props;
+  const { onInputBarWillHide, onInputBarWillShow, onSend, ...others } = props;
   const { bottom } = useSafeAreaInsets();
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
@@ -53,8 +55,7 @@ export const InputBar = React.forwardRef<InputBarRef, InputBarProps>(function (
     },
   });
 
-  // const keyboardHeight = useKeyboardHeight(true);
-  const [keyboardHeight, setKeyboardHeight] = React.useState(0);
+  const keyboardHeight = useKeyboardHeight();
 
   const [isStyle, setIsStyle] = React.useState(true);
   const inputRef = React.useRef<RNTextInput>({} as any);
@@ -65,6 +66,8 @@ export const InputBar = React.forwardRef<InputBarRef, InputBarProps>(function (
 
   const [iconName, setIconName] = React.useState<IconNameType>('face');
 
+  const [value, setValue] = React.useState('');
+
   const closeKeyboard = () => {
     Keyboard.dismiss();
   };
@@ -72,19 +75,6 @@ export const InputBar = React.forwardRef<InputBarRef, InputBarProps>(function (
   const setEmojiHeight = (h: number) => {
     _setEmojiHeight(h);
   };
-
-  React.useEffect(() => {
-    const showSubscription = Keyboard.addListener('keyboardDidShow', (e) => {
-      setKeyboardHeight(e.endCoordinates.height);
-    });
-    const hideSubscription = Keyboard.addListener('keyboardWillHide', () => {
-      // setKeyboardHeight(0);
-    });
-    return () => {
-      showSubscription.remove();
-      hideSubscription.remove();
-    };
-  }, [setKeyboardHeight]);
 
   React.useImperativeHandle(ref, () => {
     return {
@@ -101,7 +91,7 @@ export const InputBar = React.forwardRef<InputBarRef, InputBarProps>(function (
   if (isStyle === true) {
     return (
       <InputBarStyle
-        onInputBar={() => {
+        onClickInput={() => {
           isClosedEmoji.current = false;
           isClosedKeyboard.current = false;
           setIsStyle(false);
@@ -189,6 +179,8 @@ export const InputBar = React.forwardRef<InputBarRef, InputBarProps>(function (
                       setEmojiHeight(keyboardHeight - bottom);
                     }
                   }}
+                  onChangeText={setValue}
+                  value={value}
                 />
               </View>
             </View>
@@ -226,7 +218,10 @@ export const InputBar = React.forwardRef<InputBarRef, InputBarProps>(function (
                 alignSelf: 'flex-end',
                 margin: 6,
               }}
-              onPress={() => {}}
+              onPress={() => {
+                onSend?.(value);
+                inputRef.current.clear();
+              }}
               iconName={'airplane'}
             />
           </View>
@@ -239,51 +234,34 @@ export const InputBar = React.forwardRef<InputBarRef, InputBarProps>(function (
           // overflow: 'hidden',
         }}
       >
-        <EmojiListMemo style={{ flex: 1 }} onFace={() => {}} />
+        <EmojiListMemo
+          style={{ flex: 1 }}
+          onFace={(face) => {
+            setValue(value + moji.convert.fromCodePoint(face));
+          }}
+        />
         <DelButton
           getColor={getColor}
           emojiHeight={emojiHeight}
           onClicked={() => {
-            // todo:
+            if (value.length >= 2) {
+              const isFace = value.substring(value.length - 2);
+              let lastIsFace = false;
+              FACE_ASSETS_UTF16.forEach((v) => {
+                if (isFace === v) {
+                  lastIsFace = true;
+                  setValue(value.substring(0, value.length - 2));
+                }
+              });
+              if (lastIsFace === false) {
+                setValue(value.substring(0, value.length - 1));
+              }
+            } else if (value.length > 0) {
+              setValue(value.substring(0, value.length - 1));
+            }
           }}
         />
       </View>
     </>
   );
 });
-
-const DelButton = (params: {
-  getColor: (key: string) => ColorValue | undefined;
-  emojiHeight: number;
-  onClicked: () => void;
-}) => {
-  const { getColor, emojiHeight, onClicked } = params;
-  const b = (
-    <View
-      style={{
-        position: 'absolute',
-        right: 16,
-        bottom: 16,
-        backgroundColor: getColor('backgroundColor'),
-        borderRadius: 40,
-      }}
-    >
-      <IconButton
-        iconName={'arrow_left_thick'}
-        style={{
-          width: 40,
-          height: 40,
-        }}
-        onPress={onClicked}
-      />
-    </View>
-  );
-  if (Platform.OS === 'ios') {
-    return b;
-  } else {
-    if (emojiHeight === 0) {
-      return null;
-    }
-    return b;
-  }
-};

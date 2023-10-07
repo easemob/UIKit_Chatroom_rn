@@ -12,13 +12,13 @@ import {
 } from './InputBar.const';
 
 export type InputBarStyleProps = {
-  onInputBar: () => void;
+  onClickInput: () => void;
   first?: React.ReactNode;
   after?: React.ReactNode[];
 };
 
 export function InputBarStyle(props: InputBarStyleProps) {
-  const { onInputBar, first, after } = props;
+  const { onClickInput, first, after } = props;
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     backgroundColor: {
@@ -47,7 +47,7 @@ export function InputBarStyle(props: InputBarStyleProps) {
           },
         ]}
         onTouchEnd={() => {
-          onInputBar();
+          onClickInput();
         }}
       >
         <View

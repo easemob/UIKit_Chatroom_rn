@@ -8,9 +8,9 @@ import { MessageList } from '../MessageList';
 
 export type ChatroomProps = Omit<
   InputBarProps,
-  'onInputBarWillShow' | 'onInputBarWillHide'
+  'onInputBarWillShow' | 'onInputBarWillHide' | 'onSend'
 > & {};
-export type ChatroomState = {
+type ChatroomState = {
   isInputBarShow: boolean;
 };
 
@@ -50,6 +50,9 @@ export class Chatroom extends React.Component<ChatroomProps, ChatroomState> {
           }}
           onInputBarWillShow={() => {
             this.setState({ isInputBarShow: true });
+          }}
+          onSend={() => {
+            // todo:
           }}
           {...others}
         />
