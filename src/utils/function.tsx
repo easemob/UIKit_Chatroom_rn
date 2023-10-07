@@ -123,7 +123,7 @@ export function once(fn: Callback, ...args: any[]) {
   f.called = false;
   return f;
 }
-export function onceEx(fn: Callback) {
+export function once2(fn: Callback) {
   let f: any = function (...args: any[]) {
     if (f.called) return f.value;
     f.called = true;
