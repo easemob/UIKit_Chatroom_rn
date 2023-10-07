@@ -17,9 +17,11 @@ export function TestMarquee() {
   const ref = React.useRef<MarqueeRef>({} as any);
   const pal = createPresetPalette();
   const light = createDarkTheme(pal);
+  const [isVisible, setIsVisible] = React.useState(false);
   const content =
     'For several generations, stories from Africa have traditionally been passed down by word of mouth. Often, after a hard day’s work, the adults would gather the children together by moonlight, around a village fire and tell stories. This was traditionally called Tales by Moonlight. Usually, the stories are meant to prepare young people for life, and so each story taught a lesson or moral. ';
   // const content = 'sdf';
+  // const content = 'For several generations, stories from Africa.';
 
   return (
     <PaletteContextProvider value={pal}>
@@ -33,10 +35,13 @@ export function TestMarquee() {
           }}
         >
           <TouchableOpacity
+            style={{ width: 100, height: 60, backgroundColor: 'yellow' }}
             onPress={() => {
+              setIsVisible(true);
               ref.current?.pushTask({
                 id: count.toString(),
                 content: count.toString() + content,
+                // content: content,
               });
               ++count;
             }}
@@ -44,7 +49,15 @@ export function TestMarquee() {
             <Text>{'Start Scrolling'}</Text>
           </TouchableOpacity>
           <View style={{ height: 100 }} />
-          <Marquee propsRef={ref} width={300} />
+          {isVisible === true ? (
+            <Marquee
+              propsRef={ref}
+              width={300}
+              onFinished={() => {
+                setIsVisible(false);
+              }}
+            />
+          ) : null}
         </View>
       </ThemeContextProvider>
     </PaletteContextProvider>

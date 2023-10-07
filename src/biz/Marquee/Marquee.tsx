@@ -26,7 +26,7 @@ export type MarqueeProps = {
   propsRef: React.RefObject<MarqueeRef>;
   height?: number;
   width?: number;
-  letterWidth?: number;
+  speed?: number;
   containerStyle?: StyleProp<ViewStyle>;
   contentStyle?: StyleProp<TextStyle>;
   contentContainerStyle?: StyleProp<TextStyle>;
@@ -34,6 +34,7 @@ export type MarqueeProps = {
     iconName?: IconNameType;
     iconStyle?: StyleProp<ImageStyle>;
   };
+  onFinished?: () => void;
 };
 
 export function Marquee(props: MarqueeProps) {
@@ -41,11 +42,12 @@ export function Marquee(props: MarqueeProps) {
     width: marqueeWidth,
     height: marqueeHeight = 20,
     propsRef,
-    letterWidth,
+    speed,
     containerStyle,
     contentStyle,
     contentContainerStyle,
     icon,
+    onFinished,
   } = props;
 
   const { colors } = usePaletteContext();
@@ -54,13 +56,20 @@ export function Marquee(props: MarqueeProps) {
       light: colors.barrage[100],
       dark: colors.barrage[100],
     },
+    backgroundColor: {
+      light: colors.error[7],
+      dark: colors.error[7],
+    },
+    tintColor: {
+      light: colors.neutral[98],
+      dark: colors.neutral[98],
+    },
   });
 
-  const [contentWidth, setContentWidth] = React.useState(1);
+  const [contentWidth, setContentWidth] = React.useState(0);
   const { width: winWidth } = useWindowDimensions();
   const width = marqueeWidth ?? winWidth;
   const [content, setContent] = React.useState('Asdf');
-  const contentState = React.useRef(0);
 
   const x = React.useRef(new Animated.Value(0)).current;
   const tasks: Queue<MarqueeTask> = React.useRef(
@@ -82,12 +91,29 @@ export function Marquee(props: MarqueeProps) {
       if (task) {
         curTask.current = task;
         if (task.content === content) {
-          setContent(task.content + ' ');
+          execAnimating(contentWidth);
         } else {
           setContent(task.content);
         }
+      } else {
+        onFinished?.();
       }
     }
+  };
+
+  const execAnimating = (w: number) => {
+    createCompose({
+      x: x,
+      startX: 0,
+      endX: width - w,
+      contentWidth: w,
+      width: width,
+      speed: speed,
+    }).compose(() => {
+      preTask.current = curTask.current;
+      curTask.current = undefined;
+      execTask();
+    });
   };
 
   return (
@@ -108,45 +134,28 @@ export function Marquee(props: MarqueeProps) {
       <PresetCalcTextWidth
         content={content}
         textProps={{ textType: 'small', paletteType: 'body' }}
-        onWidth={function (width: number): void {
-          contentState.current = 1;
-          setContentWidth(width);
+        onWidth={(w: number) => {
+          setContentWidth(w);
+          if (curTask.current === undefined) {
+            return;
+          }
+          execAnimating(w);
         }}
       />
       <Animated.View
         style={[
           {
             height: marqueeHeight,
-            width: contentWidth + 8,
+            width: contentWidth,
             justifyContent: 'center',
             borderTopRightRadius: 10,
             borderBottomRightRadius: 10,
             paddingHorizontal: 4,
-            backgroundColor: colors.error[7],
+            backgroundColor: getColor('backgroundColor'),
             transform: [{ translateX: x }],
           },
           contentContainerStyle,
         ]}
-        onLayout={() => {
-          if (contentState.current === 1) {
-            contentState.current = 0;
-            if (curTask.current === undefined) {
-              return;
-            }
-            createCompose({
-              x: x,
-              startX: 0,
-              endX: width - contentWidth,
-              contentWidth: contentWidth,
-              width: width,
-              letterWidth: letterWidth,
-            }).compose(() => {
-              preTask.current = curTask.current;
-              curTask.current = undefined;
-              execTask();
-            });
-          }
-        }}
       >
         <Text
           textType={'small'}
@@ -161,7 +170,7 @@ export function Marquee(props: MarqueeProps) {
         style={{
           height: marqueeHeight,
           width: marqueeHeight,
-          backgroundColor: colors.error[7],
+          backgroundColor: getColor('backgroundColor'),
           position: 'absolute',
           justifyContent: 'center',
           alignItems: 'center',
@@ -172,10 +181,10 @@ export function Marquee(props: MarqueeProps) {
           style={[
             {
               marginLeft: 4,
-              tintColor: colors.neutral[98],
+              tintColor: getColor('tintColor'),
               height: 16,
               width: 16,
-              backgroundColor: colors.error[7],
+              backgroundColor: getColor('backgroundColor'),
             },
             icon?.iconStyle,
           ]}

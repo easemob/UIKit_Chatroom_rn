@@ -6,9 +6,9 @@ export const createCompose = (params: {
   endX: number;
   contentWidth: number;
   width: number;
-  letterWidth?: number;
+  speed?: number;
 }) => {
-  const { x, startX, endX, contentWidth, width, letterWidth = 8.0 } = params;
+  const { x, startX, endX, contentWidth, width, speed = 8.0 } = params;
   x.setValue(0);
 
   if (contentWidth < width) {
@@ -19,7 +19,7 @@ export const createCompose = (params: {
     });
     return { compose: Animated.sequence([start]).start };
   } else {
-    const ms = (contentWidth / (letterWidth * 10)) * 1000;
+    const ms = (contentWidth / (speed * 10)) * 1000;
     const start = Animated.timing(x, {
       toValue: startX,
       useNativeDriver: true,
