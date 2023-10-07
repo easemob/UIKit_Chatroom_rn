@@ -13,29 +13,17 @@ export const asyncTask = (f: Callback, ...args: any[]) => {
   }
 };
 
-// export const useAsyncTask = (
-//   immediate: React.MutableRefObject<NodeJS.Immediate>,
-//   f: Callback,
-//   ...args: any[]
-// ) => {
-//   try {
-//     immediate.current = setImmediate(f, args);
-//   } catch (error) {
-//     console.warn('useAsyncTask:', error);
-//   }
-// };
-
-export const queueTask = (f: Callback, ...args: any[]) => {
+export const timeoutTask = (f: Callback, ...args: any[]) => {
   try {
-    queueMicrotask(() => f(args));
+    setTimeout(() => f(args), 0);
   } catch (error) {
     console.warn('queueTask:', error);
   }
 };
 
-export const timeoutTask = (f: Callback, ...args: any[]) => {
+export const queueTask = (f: Callback, ...args: any[]) => {
   try {
-    setTimeout(() => f(args), 0);
+    queueMicrotask(() => f(args));
   } catch (error) {
     console.warn('queueTask:', error);
   }
