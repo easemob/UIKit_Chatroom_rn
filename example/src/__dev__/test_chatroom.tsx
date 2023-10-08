@@ -4,6 +4,7 @@ import * as React from 'react';
 import { View } from 'react-native';
 import {
   Chatroom,
+  Container,
   createDarkTheme,
   createLightTheme,
   createPresetPalette,
@@ -97,6 +98,30 @@ export function TestChatroom() {
   );
 }
 
+export function TestChatroom2() {
+  const pal = createPresetPalette();
+  const dark = createDarkTheme(pal);
+  const light = createLightTheme(pal);
+  return (
+    <Container
+      appKey="sdf"
+      isDevMode={true}
+      palette={pal}
+      theme={light ? light : dark}
+    >
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: 'green',
+          // marginTop: 100,
+        }}
+      >
+        <ChatroomFC />
+      </View>
+    </Container>
+  );
+}
+
 export default function test_chatroom() {
-  return <TestChatroom />;
+  return <TestChatroom2 />;
 }

@@ -30,6 +30,8 @@ export * from './biz/GiftFloating';
 export * from './biz/GiftList';
 export * from './biz/Marquee';
 export * from './biz/MemberList';
+export * from './config';
+export * from './container';
 export * from './dispatch';
 export * from './error';
 export * from './hook';

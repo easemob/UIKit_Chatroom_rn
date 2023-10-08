@@ -1,12 +1,15 @@
 import * as React from 'react';
 
-export function useIsLoadedCheck(onChanged?: (isLoaded: boolean) => void) {
+export function useIsLoadedCheck(
+  name?: string,
+  onChanged?: (isLoaded: boolean) => void
+) {
   React.useEffect(() => {
-    console.log(`${useIsLoadedCheck.name}:load:`);
+    console.log(`${name ?? useIsLoadedCheck.name}:load:`);
     onChanged?.(true);
     return () => {
-      console.log(`${useIsLoadedCheck.name}:unload:`);
+      console.log(`${name ?? useIsLoadedCheck.name}:unload:`);
       onChanged?.(false);
     };
-  }, [onChanged]);
+  }, [name, onChanged]);
 }

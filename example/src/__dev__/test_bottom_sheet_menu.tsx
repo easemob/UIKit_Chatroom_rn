@@ -3,14 +3,11 @@ import { Pressable, Text, View } from 'react-native';
 import {
   BottomSheetMenu,
   BottomSheetMenuRef,
+  Container,
   createDarkTheme,
   createLightTheme,
   createPresetPalette,
-  DispatchContextProvider,
-  PaletteContextProvider,
-  ThemeContextProvider,
 } from 'react-native-chat-room';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 export function TestBottomSheetMenu() {
   const ref = React.useRef<BottomSheetMenuRef>({} as any);
@@ -42,19 +39,17 @@ export function TestBottomSheetMenu() {
 }
 
 export default function test_bottom_sheet_menu() {
-  const palette = createPresetPalette();
-  const light = createLightTheme(palette);
-  const dark = createDarkTheme(palette);
-  const theme = light ? light : dark;
+  const pal = createPresetPalette();
+  const dark = createDarkTheme(pal);
+  const light = createLightTheme(pal);
   return (
-    <ThemeContextProvider value={theme}>
-      <PaletteContextProvider value={palette}>
-        <DispatchContextProvider>
-          <SafeAreaProvider>
-            <TestBottomSheetMenu />
-          </SafeAreaProvider>
-        </DispatchContextProvider>
-      </PaletteContextProvider>
-    </ThemeContextProvider>
+    <Container
+      appKey="sdf"
+      isDevMode={true}
+      palette={pal}
+      theme={light ? light : dark}
+    >
+      <TestBottomSheetMenu />
+    </Container>
   );
 }

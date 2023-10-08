@@ -5,6 +5,7 @@ import {
   useSafeAreaInsets,
 } from 'react-native-safe-area-context';
 
+import { useIsLoadedCheck } from '../../hook';
 import { useColors } from '../../hook';
 import { usePaletteContext } from '../../theme';
 import { Modal, ModalRef } from '../../ui/Modal';
@@ -39,6 +40,7 @@ export function BottomSheetMenu(props: BottomSheetMenuProps) {
       dark: colors.neutral[6],
     },
   });
+  useIsLoadedCheck(BottomSheetMenu.name);
 
   if (propsRef.current) {
     propsRef.current.startShow = () => {
