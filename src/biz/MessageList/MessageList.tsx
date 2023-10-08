@@ -24,31 +24,41 @@ export type MessageListRef = {
    * The message comes from the input box. Automatically scroll to the bottom.
    */
   addNewMessage: (content: string) => void;
+  scrollToEnd: () => void;
 };
 
 export type MessageListProps = {
   onRequestCloseInputBar?: () => void;
   isInputBarShow: boolean;
+  onLongPressItem?: (item: Omit<MessageListItemProps, 'action'>) => void;
+  onUnreadCount?: (count: number) => void;
 };
 
 export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
   function (props: MessageListProps, ref: React.ForwardedRef<MessageListRef>) {
-    console.log('test:zuoyu:MessageList:');
-    const { onRequestCloseInputBar, isInputBarShow } = props;
+    const {
+      onRequestCloseInputBar,
+      isInputBarShow,
+      onLongPressItem,
+      onUnreadCount,
+    } = props;
     const { width, height } = useWindowDimensions();
     const { bottom, top } = useSafeAreaInsets();
 
     const translateY = useKeyboardOnAndroid(isInputBarShow);
-    const { data, addTextMessage, listRef, scrollToEnd } = useMessageListApi();
+    const { data, addTextMessage, listRef, scrollToEnd, onEndReached } =
+      useMessageListApi({ onLongPress: onLongPressItem, onUnreadCount });
 
     React.useImperativeHandle(
       ref,
       () => {
         return {
           addNewMessage: (content: string) => {
-            // todo: self send text message.
             addTextMessage(content);
             timeoutTask(() => scrollToEnd());
+          },
+          scrollToEnd: () => {
+            scrollToEnd();
           },
         };
       },
@@ -94,6 +104,22 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
             // renderItem={RenderItemMemo}
             keyExtractor={(item: MessageListItemProps) => {
               return item.id;
+            }}
+            // onScroll={(e) => {
+            //   console.log('test:onScroll', e.nativeEvent);
+            // }}
+            // onScrollAnimationEnd={() => {
+            //   console.log('test:onScrollAnimationEnd');
+            // }}
+            // onMomentumScrollEnd={() => {
+            //   console.log('test:onMomentumScrollEnd');
+            // }}
+            // onScrollToTop={() => {
+            //   console.log('test:onScrollToTop');
+            // }}
+            onEndReached={(e) => {
+              console.log('test:onEndReached', e);
+              onEndReached();
             }}
           />
         </View>

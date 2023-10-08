@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Pressable } from 'react-native';
 import { Animated } from 'react-native';
 import { View } from 'react-native';
 import type { IconNameType } from 'src/assets';
@@ -37,7 +38,7 @@ export function MessageListItem(props: MessageListItemProps) {
   });
   const headerWidth = React.useRef(0);
   const width = React.useRef(0);
-  const { type, basic } = props;
+  const { type, basic, action } = props;
   const sub = () => {
     switch (type) {
       case 'gift':
@@ -68,7 +69,15 @@ export function MessageListItem(props: MessageListItemProps) {
         }
       }}
     >
-      <View style={{ flexDirection: 'row', flex: 1 }}>
+      <Pressable
+        style={{ flexDirection: 'row', flex: 1 }}
+        onLongPress={() => {
+          action?.onLongPress?.(props);
+        }}
+        onPressIn={() => {
+          action?.onStartPress?.(props);
+        }}
+      >
         <Animated.View
           style={[
             {
@@ -136,7 +145,7 @@ export function MessageListItem(props: MessageListItemProps) {
 
           {sub()}
         </Animated.View>
-      </View>
+      </Pressable>
     </View>
   );
 }

@@ -3,6 +3,7 @@ import { FlatList, Keyboard, Platform } from 'react-native';
 
 import { useDispatchContext } from '../../dispatch';
 import { seqId } from '../../utils';
+import { gIdleTimeout, gMaxMessageCount } from './MessageList.const';
 import type { MessageListItemProps } from './types';
 
 export const useKeyboardOnAndroid = (isInputBarShow: boolean) => {
@@ -60,7 +61,11 @@ export const useKeyboardOnAndroid = (isInputBarShow: boolean) => {
   return translateY;
 };
 
-export function useMessageListApi() {
+export function useMessageListApi(params: {
+  onLongPress?: (data: Omit<MessageListItemProps, 'action'>) => void;
+  onUnreadCount?: (count: number) => void;
+}) {
+  const { onLongPress } = params;
   const listRef = React.useRef<FlatList>({} as any);
   const dataRef = React.useRef<MessageListItemProps[]>([
     // {
@@ -125,6 +130,22 @@ export function useMessageListApi() {
     dataRef.current
   );
 
+  // If idle for more than three seconds, the oldest messages will be cleared.
+  const clearTask = React.useRef<NodeJS.Timeout | undefined>();
+  const _startClearTask = () => {
+    if (clearTask.current) {
+      clearTimeout(clearTask.current);
+    }
+    clearTask.current = setTimeout(() => {
+      if (dataRef.current.length > gMaxMessageCount) {
+        dataRef.current.splice(0, dataRef.current.length - gMaxMessageCount);
+        setData([...dataRef.current]);
+      }
+    }, gIdleTimeout);
+  };
+
+  const needScroll = React.useRef(true);
+
   const _addTextMessage = (content: string) => {
     dataRef.current.push({
       id: `${seqId('_msg')}`,
@@ -136,12 +157,27 @@ export function useMessageListApi() {
       content: {
         text: content,
       },
+      action: {
+        onStartPress: () => {
+          // needScroll.current = false;
+        },
+        onLongPress: (data: Omit<MessageListItemProps, 'action'>) => {
+          needScroll.current = false;
+          onLongPress?.(data);
+        },
+      },
     });
+    needScroll.current = true;
     setData([...dataRef.current]);
+    _startClearTask();
   };
 
   const _scrollToEnd = () => {
     listRef.current?.scrollToEnd();
+  };
+
+  const _onEndReached = () => {
+    needScroll.current = true;
   };
 
   return {
@@ -149,5 +185,6 @@ export function useMessageListApi() {
     listRef: listRef,
     addTextMessage: _addTextMessage,
     scrollToEnd: _scrollToEnd,
+    onEndReached: _onEndReached,
   };
 }
