@@ -52,7 +52,6 @@ export function MemberListParticipants(props: MemberListParticipantsProps) {
   const r = React.useRef(
     PanResponder.create({
       onStartShouldSetPanResponder: () => {
-        console.log('test:zuoyu:request:1:', isScrollingRef.current);
         if (isScrollingRef.current === false) {
           isScrollingRef.current = true;
           requestUseScrollGesture?.(false);
@@ -63,7 +62,6 @@ export function MemberListParticipants(props: MemberListParticipantsProps) {
         return true;
       },
       onMoveShouldSetPanResponder: () => {
-        console.log('test:zuoyu:request:11:', isScrollingRef.current);
         if (isScrollingRef.current === false) {
           isScrollingRef.current = true;
           requestUseScrollGesture?.(false);

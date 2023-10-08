@@ -105,20 +105,7 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
             keyExtractor={(item: MessageListItemProps) => {
               return item.id;
             }}
-            // onScroll={(e) => {
-            //   console.log('test:onScroll', e.nativeEvent);
-            // }}
-            // onScrollAnimationEnd={() => {
-            //   console.log('test:onScrollAnimationEnd');
-            // }}
-            // onMomentumScrollEnd={() => {
-            //   console.log('test:onMomentumScrollEnd');
-            // }}
-            // onScrollToTop={() => {
-            //   console.log('test:onScrollToTop');
-            // }}
-            onEndReached={(e) => {
-              console.log('test:onEndReached', e);
+            onEndReached={() => {
               onEndReached();
             }}
           />

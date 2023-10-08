@@ -42,68 +42,62 @@ export function MemberList(props: MemberListProps) {
   }
 
   return (
-    <View style={{ flex: 1 }}>
-      <View style={{ flex: 1 }}>
-        <SimulativeModal
-          propsRef={ref}
-          modalAnimationType="slide"
-          backgroundColor={'rgba(0, 0, 0, 0.2)'}
-          backgroundTransparent={false}
-          onStartShouldSetPanResponder={() => {
-            console.log('test:modal:use:', isUsePanResponder.current);
-            return isUsePanResponder.current;
+    <SimulativeModal
+      propsRef={ref}
+      modalAnimationType="slide"
+      backgroundColor={'rgba(0, 0, 0, 0.2)'}
+      backgroundTransparent={false}
+      onStartShouldSetPanResponder={() => {
+        return isUsePanResponder.current;
+      }}
+      // onMoveShouldSetPanResponder={() => {
+      //   return isUsePanResponder.current;
+      // }}
+      // onRequestModalClose={() => {
+      //   ref.current.startHide();
+      // }}
+    >
+      <View
+        style={{
+          height: height,
+          backgroundColor: getColor('backgroundColor'),
+          alignItems: 'center',
+          width: '100%',
+          borderTopRightRadius: 16,
+          borderTopLeftRadius: 16,
+        }}
+      >
+        <View
+          style={{
+            width: 36,
+            height: 5,
+            marginVertical: 6,
+            backgroundColor: getColor('backgroundColor2'),
+            borderRadius: 2.5,
           }}
-          // onMoveShouldSetPanResponder={() => {
-          //   console.log('test:modal:use:', isUsePanResponder.current);
-          //   return isUsePanResponder.current;
-          // }}
-          // onRequestModalClose={() => {
-          //   ref.current.startHide();
-          // }}
-        >
-          <View
-            style={{
-              height: height,
-              backgroundColor: getColor('backgroundColor'),
-              alignItems: 'center',
-              width: '100%',
-              borderTopRightRadius: 16,
-              borderTopLeftRadius: 16,
-            }}
-          >
-            <View
-              style={{
-                width: 36,
-                height: 5,
-                marginVertical: 6,
-                backgroundColor: getColor('backgroundColor2'),
-                borderRadius: 2.5,
-              }}
-            />
-            <TabPage
-              header={{
-                HeaderProps: {
-                  titles: ['Participants', 'Muted'],
-                },
-              }}
-              body={{
-                BodyProps: {
-                  children: [
-                    <MemberListParticipants
-                      key={'1'}
-                      requestUseScrollGesture={(finished) => {
-                        isUsePanResponder.current = finished;
-                      }}
-                    />,
-                    <View key={'2'} />,
-                  ],
-                },
-              }}
-              headerPosition="up"
-            />
-          </View>
-        </SimulativeModal>
+        />
+        <TabPage
+          header={{
+            HeaderProps: {
+              titles: ['Participants', 'Muted'],
+            },
+          }}
+          body={{
+            BodyProps: {
+              children: [
+                <MemberListParticipants
+                  key={'1'}
+                  requestUseScrollGesture={(finished) => {
+                    isUsePanResponder.current = finished;
+                  }}
+                />,
+                <View key={'2'} />,
+              ],
+            },
+          }}
+          headerPosition="up"
+        />
       </View>
-    </View>
+    </SimulativeModal>
   );
 }

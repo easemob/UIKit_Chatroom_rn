@@ -55,7 +55,6 @@ export class Chatroom extends React.Component<ChatroomProps, ChatroomState> {
             this.setState({ isInputBarShow: true });
           }}
           onSend={(content) => {
-            console.log('test:zuoyu:');
             this.messageRef?.current?.addNewMessage(content);
           }}
           {...others}

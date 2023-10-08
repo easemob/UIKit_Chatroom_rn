@@ -78,9 +78,6 @@ export function SearchMember() {
         keyExtractor={(item: MemberListItemProps) => {
           return item.id;
         }}
-        onLayout={(e) => {
-          console.log('test:zuoyu:onLayout:', e.nativeEvent.layout);
-        }}
         ListEmptyComponent={EmptyBlank}
       />
     </SafeAreaView>

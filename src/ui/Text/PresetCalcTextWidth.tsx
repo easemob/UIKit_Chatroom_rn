@@ -30,12 +30,10 @@ export function PresetCalcTextWidth(props: PresetCalcTextWidthProps) {
       <ScrollView horizontal={true}>
         <Text
           onLayout={(e) => {
-            // console.log('test:onLayout:', e.nativeEvent.layout);
             // onWidth(e.nativeEvent.layout.width);
             onLayout?.(e);
           }}
           onTextLayout={(e) => {
-            // console.log('test:onTextLayout:', e.nativeEvent.lines);
             onWidth(e.nativeEvent.lines[0]?.width ?? 0);
             onTextLayout?.(e);
           }}
