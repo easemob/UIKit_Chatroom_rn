@@ -16,17 +16,21 @@ import type { GiftFloatingTask } from './types';
 export type GiftFloatingRef = {
   pushTask: (task: GiftFloatingTask) => void;
 };
-export type GiftFloatingProps = {
-  propsRef: React.RefObject<GiftFloatingRef>;
-};
+export type GiftFloatingProps = {};
 
-export function GiftFloating(props: GiftFloatingProps) {
-  const { propsRef } = props;
+export const GiftFloating = React.forwardRef<
+  GiftFloatingRef,
+  GiftFloatingProps
+>(function (
+  props: GiftFloatingProps,
+  ref: React.ForwardedRef<GiftFloatingRef>
+) {
+  const {} = props;
 
   const dataRef = React.useRef<GiftFloatingItem[]>([]);
   const [data, setData] = React.useState<GiftFloatingItem[]>(dataRef.current);
 
-  const ref = React.useRef<FlatList<GiftFloatingItem>>({} as any);
+  const listRef = React.useRef<FlatList<GiftFloatingItem>>({} as any);
 
   const tasks: Queue<GiftFloatingTask> = React.useRef(
     new Queue<GiftFloatingTask>()
@@ -38,15 +42,8 @@ export function GiftFloating(props: GiftFloatingProps) {
   const { addData, clearData, scrollToEnd } = useAddData({
     dataRef: dataRef,
     setData: setData,
-    ref: ref,
+    ref: listRef,
   });
-
-  if (propsRef.current) {
-    propsRef.current.pushTask = async (task: GiftFloatingTask) => {
-      tasks.enqueue(task);
-      execTask();
-    };
-  }
 
   const execTask = () => {
     if (curTask.current === undefined) {
@@ -83,6 +80,25 @@ export function GiftFloating(props: GiftFloatingProps) {
     }, gTimeoutTask);
   };
 
+  const pushTask = (task: GiftFloatingTask) => {
+    tasks.enqueue(task);
+    execTask();
+  };
+
+  React.useImperativeHandle(
+    ref,
+    () => {
+      return {
+        pushTask: (task: GiftFloatingTask) => {
+          pushTask(task);
+        },
+      };
+    },
+    // !!!
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
+
   return (
     <View
       style={{
@@ -92,7 +108,7 @@ export function GiftFloating(props: GiftFloatingProps) {
       }}
     >
       <FlatList
-        ref={ref}
+        ref={listRef}
         data={data}
         renderItem={(info: ListRenderItemInfo<GiftFloatingItem>) => {
           return <GiftFloatingItemFC item={info.item} />;
@@ -106,7 +122,7 @@ export function GiftFloating(props: GiftFloatingProps) {
       />
     </View>
   );
-}
+});
 
 const ItemSeparatorComponent = () => {
   return <View style={{ height: gItemInterval }} />;

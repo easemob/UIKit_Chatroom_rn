@@ -3,58 +3,51 @@
 import * as React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import {
+  Container,
   createDarkTheme,
+  createLightTheme,
   createPresetPalette,
   GiftFloating,
   GiftFloatingRef,
-  PaletteContextProvider,
-  ThemeContextProvider,
+  seqId,
 } from 'react-native-chat-room';
-
-let count = 1;
 
 export function TestGiftFloating() {
   const ref = React.useRef<GiftFloatingRef>({} as any);
   const pal = createPresetPalette();
   const dark = createDarkTheme(pal);
+  const light = createLightTheme(pal);
 
   return (
-    <PaletteContextProvider value={pal}>
-      <ThemeContextProvider value={dark}>
-        <View
-          style={{
-            flex: 1,
-            backgroundColor: 'green',
-            paddingTop: 100,
-            // left: 100,
+    <Container appKey="sdf" palette={pal} theme={light ? light : dark}>
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: 'green',
+          paddingTop: 100,
+          // left: 100,
+        }}
+      >
+        <TouchableOpacity
+          style={{ width: 200, height: 40, backgroundColor: 'red' }}
+          onPress={() => {
+            ref.current?.pushTask({
+              gift: {
+                id: seqId('_gf').toString(),
+                nickName: 'NickName',
+                giftCount: 1,
+                giftIcon: 'http://notext.png',
+                content: 'send Agoraship',
+              },
+            });
           }}
         >
-          <TouchableOpacity
-            style={{ width: 200, height: 40, backgroundColor: 'red' }}
-            onPress={() => {
-              ref.current?.pushTask({
-                gift: {
-                  id: count.toString(),
-                  name: '',
-                  price: '',
-                  count: 0,
-                  icon: '',
-                  effect: '',
-                  selected: false,
-                  sendedThenClose: false,
-                  sendedFromUser: undefined,
-                },
-              });
-              ++count;
-            }}
-          >
-            <Text>{'Start painting presents'}</Text>
-          </TouchableOpacity>
-          <View style={{ height: 100 }} />
-          <GiftFloating propsRef={ref} />
-        </View>
-      </ThemeContextProvider>
-    </PaletteContextProvider>
+          <Text>{'Start painting presents'}</Text>
+        </TouchableOpacity>
+        <View style={{ height: 100 }} />
+        <GiftFloating ref={ref} />
+      </View>
+    </Container>
   );
 }
 

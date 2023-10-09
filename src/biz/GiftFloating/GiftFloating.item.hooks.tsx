@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { Animated, Platform } from 'react-native';
 
-import type { Gift } from '../../im';
 import {
   gAnimateDuration,
   gAnimateType,
@@ -10,6 +9,7 @@ import {
   gItemSmallWidth,
   gScaleFactor,
 } from './GiftFloating.const';
+import type { GiftModal } from './types';
 
 export type GiftFloatingItem = {
   id: string;
@@ -24,7 +24,7 @@ export type GiftFloatingItem = {
     | '2-3' //
     | '3-2' //
     | '3-3'; //
-  gift: Gift;
+  gift: GiftModal;
 };
 
 export type useAnimationProps = {

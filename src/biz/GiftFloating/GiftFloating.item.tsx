@@ -2,11 +2,12 @@ import * as React from 'react';
 import { Animated, StyleSheet, View } from 'react-native';
 
 import { ICON_ASSETS } from '../../assets';
+import { useColors } from '../../hook';
 import { usePaletteContext } from '../../theme';
 import { DefaultImage } from '../../ui/Image';
 import { Text } from '../../ui/Text';
 import { Avatar } from '../Avatar';
-import { gItemBorderRadius } from './GiftFloating.const';
+import { gItemBorderRadius, gItemMaxWidth } from './GiftFloating.const';
 import { GiftFloatingItem, useAnimation } from './GiftFloating.item.hooks';
 
 export type GiftFloatingItemFCProps = {
@@ -17,6 +18,12 @@ export function GiftFloatingItemFC(props: GiftFloatingItemFCProps) {
   const { item } = props;
 
   const { colors } = usePaletteContext();
+  const { getColor } = useColors({
+    bg: {
+      light: colors.barrage[1],
+      dark: colors.barrage[1],
+    },
+  });
 
   const iHeight = React.useRef(new Animated.Value(item.height)).current;
   const iWidth = React.useRef(new Animated.Value(item.width)).current;
@@ -35,7 +42,7 @@ export function GiftFloatingItemFC(props: GiftFloatingItemFCProps) {
         {
           height: iHeight,
           width: iWidth,
-          backgroundColor: colors.barrage[1],
+          backgroundColor: getColor('bg'),
           transform: [
             {
               translateY: ix,
@@ -57,6 +64,7 @@ export function GiftFloatingItemFC(props: GiftFloatingItemFCProps) {
         <View>
           <Avatar
             url={
+              item.gift.avatar ??
               'https://cdn4.iconfinder.com/data/icons/animal-6/100/1-512.png'
             }
             size={36}
@@ -64,34 +72,40 @@ export function GiftFloatingItemFC(props: GiftFloatingItemFCProps) {
           />
         </View>
 
-        <View style={{ paddingHorizontal: 4 }}>
+        <View
+          style={{ paddingHorizontal: 4, width: gItemMaxWidth, flexGrow: 1 }}
+        >
           <Text
             textType={'small'}
             paletteType={'label'}
+            numberOfLines={1}
             style={{ color: 'white' }}
           >
-            NickName
+            {item.gift.nickName}
           </Text>
           <Text
             textType={'extraSmall'}
             paletteType={'label'}
             style={{ color: 'white' }}
           >
-            sent @Agoraship
+            {item.gift.content}
           </Text>
         </View>
 
         <DefaultImage
           defaultSource={ICON_ASSETS.gift_color('3x')}
           source={{
-            uri: 'https://cdn4.iconfinder.com/data/icons/animal-6/100/1-512.png',
+            uri:
+              item.gift.giftIcon ??
+              'https://cdn4.iconfinder.com/data/icons/animal-6/100/1-512.png',
           }}
           style={{ width: 40, height: 40 }}
         />
 
-        <View style={{ padding: 2 }}>
-          <Text style={styles.dig}>x1</Text>
+        <View style={{ padding: 2, paddingHorizontal: 6 }}>
+          <Text style={styles.dig}>x{item.gift.giftCount ?? 1}</Text>
         </View>
+        <View style={{ width: 10 }} />
       </Animated.View>
     </Animated.View>
   );
