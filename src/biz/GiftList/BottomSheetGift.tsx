@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useWindowDimensions, View } from 'react-native';
 
+import { g_mask_color } from '../../const';
 import { useColors } from '../../hook';
 import { usePaletteContext } from '../../theme';
 import { SimulativeModal, SimulativeModalRef } from '../../ui/Modal';
@@ -61,7 +62,7 @@ export const BottomSheetGift = React.forwardRef<
     <SimulativeModal
       propsRef={modalRef}
       modalAnimationType="slide"
-      backgroundColor={'rgba(0, 0, 0, 0.2)'}
+      backgroundColor={g_mask_color}
       backgroundTransparent={false}
       onStartShouldSetPanResponder={() => {
         return isUsePanResponder.current;

@@ -2,22 +2,22 @@ import * as React from 'react';
 import { useWindowDimensions, View } from 'react-native';
 
 import { g_mask_color } from '../../const';
-import { useColors, useIsLoadedCheck } from '../../hook';
+import { useColors } from '../../hook';
 import { usePaletteContext } from '../../theme';
 import { SimulativeModal, SimulativeModalRef } from '../../ui/Modal';
 import { TabPage } from '../../ui/TabPage';
-import { gAspectRatio } from './MemberList.const';
-import { MemberListParticipants } from './MemberList.parts';
+import { ReportList } from './ReportList';
+import { gAspectRatio } from './ReportList.const';
 
-export type MemberListRef = SimulativeModalRef & {};
+export type ReportRef = SimulativeModalRef & {};
+export type ReportProps = {};
 
-export type MemberListProps = {
-  propsRef: React.RefObject<MemberListRef>;
-};
-
-export function MemberList(props: MemberListProps) {
-  const { propsRef } = props;
-  const ref = React.useRef<SimulativeModalRef>({} as any);
+export const Report = React.forwardRef<ReportRef, ReportProps>(function (
+  props: ReportProps,
+  ref: React.ForwardedRef<ReportRef>
+) {
+  const {} = props;
+  const modalRef = React.useRef<SimulativeModalRef>({} as any);
   const { width: winWidth } = useWindowDimensions();
   const height = winWidth / gAspectRatio;
   const isUsePanResponder = React.useRef(true);
@@ -33,19 +33,24 @@ export function MemberList(props: MemberListProps) {
     },
   });
 
-  if (propsRef.current) {
-    propsRef.current.startHide = (onFinished?: () => void) => {
-      ref.current?.startHide(onFinished);
-    };
-    propsRef.current.startShow = () => {
-      ref.current?.startShow();
-    };
-  }
-  useIsLoadedCheck(`${MemberList.name}`);
+  React.useImperativeHandle(
+    ref,
+    () => {
+      return {
+        startHide: (onFinished?: () => void) => {
+          modalRef.current?.startHide?.(onFinished);
+        },
+        startShow: () => {
+          modalRef.current?.startShow?.();
+        },
+      };
+    },
+    []
+  );
 
   return (
     <SimulativeModal
-      propsRef={ref}
+      propsRef={modalRef}
       modalAnimationType="slide"
       backgroundColor={g_mask_color}
       backgroundTransparent={false}
@@ -81,19 +86,21 @@ export function MemberList(props: MemberListProps) {
         <TabPage
           header={{
             HeaderProps: {
-              titles: ['Participants', 'Muted'],
+              titles: ['Report'],
             },
           }}
           body={{
             BodyProps: {
               children: [
-                <MemberListParticipants
+                <ReportList
                   key={'1'}
                   requestUseScrollGesture={(finished) => {
                     isUsePanResponder.current = finished;
                   }}
+                  onCancel={() => {
+                    modalRef.current?.startHide?.();
+                  }}
                 />,
-                <View key={'2'} />,
               ],
             },
           }}
@@ -102,4 +109,4 @@ export function MemberList(props: MemberListProps) {
       </View>
     </SimulativeModal>
   );
-}
+});

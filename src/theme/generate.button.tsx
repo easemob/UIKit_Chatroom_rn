@@ -285,7 +285,7 @@ function generateSizeButton(params: { palette: Palette }): ButtonSizes {
       minWidth: 48,
       maxWidth: undefined,
       paddingHorizontal: 24,
-      paddingVertical: 12,
+      // paddingVertical: 12,
       width: undefined,
     },
     text: palette.fonts.headline.small,
