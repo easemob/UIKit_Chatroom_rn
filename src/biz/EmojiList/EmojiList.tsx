@@ -8,7 +8,7 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native';
-import moji from 'twemoji';
+import emoji from 'twemoji';
 
 import { FACE_ASSETS } from '../../assets';
 import { useColors } from '../../hook';
@@ -48,7 +48,7 @@ export function EmojiList(props: EmojiListProps) {
         <View style={styles.group}>
           <View style={styles.list}>
             {FACE_ASSETS.map((v, i) => {
-              const r = moji.convert.fromCodePoint(v);
+              const r = emoji.convert.fromCodePoint(v);
               return (
                 <View
                   key={i}

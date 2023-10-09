@@ -7,7 +7,7 @@ import {
   View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import moji from 'twemoji';
+import emoji from 'twemoji';
 
 import type { IconNameType } from '../../assets';
 import { useColors, useKeyboardHeight } from '../../hook';
@@ -239,7 +239,7 @@ export const InputBar = React.forwardRef<InputBarRef, InputBarProps>(function (
         <EmojiListMemo
           style={{ flex: 1 }}
           onFace={(face) => {
-            setValue(value + moji.convert.fromCodePoint(face));
+            setValue(value + emoji.convert.fromCodePoint(face));
           }}
         />
         <DelButton

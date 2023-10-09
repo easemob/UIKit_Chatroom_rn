@@ -7,7 +7,6 @@ import { default as Test } from './test_chatroom';
 //   Platform.OS === 'android' &&
 //   UIManager.setLayoutAnimationEnabledExperimental
 // ) {
-//   console.log('test:zuoyu:setLayoutAnimationEnabledExperimental');
 //   UIManager.setLayoutAnimationEnabledExperimental(true);
 // }
 
