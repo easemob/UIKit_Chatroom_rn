@@ -1,12 +1,13 @@
 import * as React from 'react';
 import {
   GestureResponderEvent,
+  Pressable,
   PressableProps,
+  PressableStateCallbackType,
   StyleProp,
   View,
   ViewStyle,
 } from 'react-native';
-import { Pressable, PressableStateCallbackType } from 'react-native';
 
 import type { IconNameType } from '../../assets';
 import { ErrorCode, UIKitError } from '../../error';

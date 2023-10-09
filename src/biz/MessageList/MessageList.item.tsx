@@ -1,9 +1,7 @@
 import * as React from 'react';
-import { Pressable } from 'react-native';
-import { Animated } from 'react-native';
-import { View } from 'react-native';
-import type { IconNameType } from 'src/assets';
+import { Animated, Pressable, View } from 'react-native';
 
+import type { IconNameType } from '../../assets';
 import { useDispatchContext } from '../../dispatch';
 import { ErrorCode, UIKitError } from '../../error';
 import { useColors } from '../../hook';
