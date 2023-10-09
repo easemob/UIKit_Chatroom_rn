@@ -1,4 +1,6 @@
 import * as React from 'react';
+import type { ViewStyle } from 'react-native';
+import type { StyleProp } from 'react-native';
 import { FlatList, ListRenderItemInfo, View } from 'react-native';
 
 import { Queue } from '../../utils';
@@ -16,16 +18,18 @@ import type { GiftFloatingTask } from './types';
 export type GiftFloatingRef = {
   pushTask: (task: GiftFloatingTask) => void;
 };
-export type GiftFloatingProps = {};
+export type GiftFloatingProps = {
+  containerStyle?: StyleProp<ViewStyle>;
+};
 
 export const GiftFloating = React.forwardRef<
   GiftFloatingRef,
   GiftFloatingProps
 >(function (
   props: GiftFloatingProps,
-  ref: React.ForwardedRef<GiftFloatingRef>
+  ref?: React.ForwardedRef<GiftFloatingRef>
 ) {
-  const {} = props;
+  const { containerStyle } = props;
 
   const dataRef = React.useRef<GiftFloatingItem[]>([]);
   const [data, setData] = React.useState<GiftFloatingItem[]>(dataRef.current);
@@ -101,11 +105,14 @@ export const GiftFloating = React.forwardRef<
 
   return (
     <View
-      style={{
-        height: gListHeight,
-        width: gListWidth,
-        // backgroundColor: 'gray',
-      }}
+      style={[
+        containerStyle,
+        {
+          height: gListHeight,
+          width: gListWidth,
+          // backgroundColor: 'gray',
+        },
+      ]}
     >
       <FlatList
         ref={listRef}

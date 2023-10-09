@@ -9,7 +9,7 @@ import {
   gItemSmallWidth,
   gScaleFactor,
 } from './GiftFloating.const';
-import type { GiftModal } from './types';
+import type { GiftFloatingModel } from './types';
 
 export type GiftFloatingItem = {
   id: string;
@@ -24,7 +24,7 @@ export type GiftFloatingItem = {
     | '2-3' //
     | '3-2' //
     | '3-3'; //
-  gift: GiftModal;
+  gift: GiftFloatingModel;
 };
 
 export type useAnimationProps = {

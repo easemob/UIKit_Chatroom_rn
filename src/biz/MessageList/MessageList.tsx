@@ -35,7 +35,7 @@ export type MessageListProps = {
 };
 
 export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
-  function (props: MessageListProps, ref: React.ForwardedRef<MessageListRef>) {
+  function (props: MessageListProps, ref?: React.ForwardedRef<MessageListRef>) {
     const {
       onRequestCloseInputBar,
       isInputBarShow,

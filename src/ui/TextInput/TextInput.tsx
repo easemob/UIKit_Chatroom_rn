@@ -20,7 +20,7 @@ export type TextInputProps = RNTextInputProps & {
 export const TextInput = React.forwardRef<RNTextInput, TextInputProps>(
   function (
     props: React.PropsWithChildren<TextInputProps>,
-    ref: React.ForwardedRef<RNTextInput>
+    ref?: React.ForwardedRef<RNTextInput>
   ) {
     const {
       unitHeight,

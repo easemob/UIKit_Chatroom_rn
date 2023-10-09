@@ -17,7 +17,7 @@ export function MemberListItem(): React.JSX.Element {
   const ref = React.useRef<MemberListRef>({} as any);
   return (
     <View style={{ flex: 1 }}>
-      <MemberList propsRef={ref} />
+      <MemberList ref={ref} />
       <View
         style={{
           position: 'absolute', // !!! must
@@ -59,10 +59,10 @@ export function MemberListItem2(): React.JSX.Element {
 
       {Platform.OS === 'ios' ? (
         <View style={{ position: 'absolute' }}>
-          <MemberList propsRef={ref} />
+          <MemberList ref={ref} />
         </View>
       ) : (
-        <MemberList propsRef={ref} />
+        <MemberList ref={ref} />
       )}
     </View>
   );

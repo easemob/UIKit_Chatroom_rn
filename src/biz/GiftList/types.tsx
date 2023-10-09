@@ -1,4 +1,4 @@
-export type GiftData = {
+export type GiftListModel = {
   giftId: string;
   giftIcon: string;
   giftName: string;

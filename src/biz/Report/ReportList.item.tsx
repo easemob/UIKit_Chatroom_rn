@@ -6,10 +6,10 @@ import { usePaletteContext } from '../../theme';
 import { IconButton } from '../../ui/Button';
 import { Text } from '../../ui/Text';
 import { gReportListItemHeight } from './ReportList.const';
-import type { ReportItemData } from './types';
+import type { ReportItemModel } from './types';
 
 export type ReportListItemProps = {
-  data: ReportItemData;
+  data: ReportItemModel;
   onChecked?: (current: boolean) => void;
 };
 

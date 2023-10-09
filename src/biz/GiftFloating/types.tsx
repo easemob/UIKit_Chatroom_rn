@@ -1,4 +1,4 @@
-export type GiftModal = {
+export type GiftFloatingModel = {
   /**
    * suggestion: seqId('_gf').toString()
    */
@@ -13,5 +13,5 @@ export type GiftModal = {
   giftCount?: number;
 };
 export type GiftFloatingTask = {
-  gift: GiftModal;
+  model: GiftFloatingModel;
 };

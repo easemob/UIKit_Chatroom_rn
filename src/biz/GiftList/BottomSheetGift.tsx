@@ -8,13 +8,13 @@ import { SimulativeModal, SimulativeModalRef } from '../../ui/Modal';
 import { TabPage } from '../../ui/TabPage';
 import { gAspectRatio } from './BottomSheetGift.const';
 import { GiftList } from './GiftList';
-import type { GiftData } from './types';
+import type { GiftListModel } from './types';
 
 export type BottomSheetGiftRef = SimulativeModalRef & {};
 export type BottomSheetGiftProps = {
   gifts: {
     title: string;
-    gifts: GiftData[];
+    gifts: GiftListModel[];
   }[];
   onSend?: (giftId: string) => void;
 };
@@ -24,7 +24,7 @@ export const BottomSheetGift = React.forwardRef<
   BottomSheetGiftProps
 >(function (
   props: BottomSheetGiftProps,
-  ref: React.ForwardedRef<BottomSheetGiftRef>
+  ref?: React.ForwardedRef<BottomSheetGiftRef>
 ) {
   const { gifts, onSend } = props;
   const modalRef = React.useRef<SimulativeModalRef>({} as any);

@@ -38,9 +38,11 @@ export function TestMarquee() {
             style={{ width: 100, height: 60, backgroundColor: 'yellow' }}
             onPress={() => {
               ref.current?.pushTask?.({
-                id: count.toString(),
-                content: count.toString() + content,
-                // content: content,
+                model: {
+                  id: count.toString(),
+                  content: count.toString() + content,
+                  // content: content,
+                },
               });
               ++count;
             }}
@@ -48,7 +50,11 @@ export function TestMarquee() {
             <Text>{'Start Scrolling'}</Text>
           </TouchableOpacity>
           <View style={{ height: 100 }} />
-          <Marquee propsRef={ref} width={300} />
+          <Marquee
+            ref={ref}
+            width={200}
+            containerStyle={{ top: 100, left: 100 }}
+          />
         </View>
       </ThemeContextProvider>
     </PaletteContextProvider>

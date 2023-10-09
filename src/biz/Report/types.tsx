@@ -1,4 +1,4 @@
-export type ReportItemData = {
+export type ReportItemModel = {
   /**
    * suggestion: seqId('_rp').toString()
    */

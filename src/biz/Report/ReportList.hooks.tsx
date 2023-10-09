@@ -3,9 +3,9 @@ import { PanResponder } from 'react-native';
 
 import { seqId } from '../../utils';
 import type { ReportListItemProps } from './ReportList.item';
-import type { ReportItemData } from './types';
+import type { ReportItemModel } from './types';
 
-export function useReportListApi(itemData: ReportItemData[]) {
+export function useReportListApi(itemData: ReportItemModel[]) {
   const dataRef = React.useRef<ReportListItemProps[]>(
     itemData
       ? itemData.map((v) => {

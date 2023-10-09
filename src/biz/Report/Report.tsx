@@ -8,16 +8,16 @@ import { SimulativeModal, SimulativeModalRef } from '../../ui/Modal';
 import { TabPage } from '../../ui/TabPage';
 import { ReportList } from './ReportList';
 import { gAspectRatio } from './ReportList.const';
-import type { ReportItemData } from './types';
+import type { ReportItemModel } from './types';
 
 export type ReportRef = SimulativeModalRef & {};
 export type ReportProps = {
-  data: ReportItemData[];
+  data: ReportItemModel[];
 };
 
 export const Report = React.forwardRef<ReportRef, ReportProps>(function (
   props: ReportProps,
-  ref: React.ForwardedRef<ReportRef>
+  ref?: React.ForwardedRef<ReportRef>
 ) {
   const { data } = props;
   const modalRef = React.useRef<SimulativeModalRef>({} as any);

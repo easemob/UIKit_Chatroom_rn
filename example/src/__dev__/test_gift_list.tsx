@@ -9,8 +9,8 @@ import {
   createDarkTheme,
   createLightTheme,
   createPresetPalette,
-  GiftData,
   GiftList,
+  GiftListModel,
 } from 'react-native-chat-room';
 
 export function TestGiftList() {
@@ -80,7 +80,7 @@ export default function test_gift_list() {
   return <TestGiftList2 />;
 }
 
-export const gifts: GiftData[] = [
+export const gifts: GiftListModel[] = [
   {
     giftId: '2665752a-e273-427c-ac5a-4b2a9c82b255',
     giftIcon:

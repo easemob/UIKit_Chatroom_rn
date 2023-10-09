@@ -67,7 +67,7 @@ export const useAddData = (params: {
           width: width,
           idState: '1-0',
           isUseAnimation: isUseAnimation,
-          gift: task.gift,
+          gift: task.model,
         });
       } else if (data.length === 1) {
         data[0]!.isUseAnimation = isUseAnimation;
@@ -78,7 +78,7 @@ export const useAddData = (params: {
           width: width,
           idState: '1-1',
           isUseAnimation: isUseAnimation,
-          gift: task.gift,
+          gift: task.model,
         });
       } else if (data.length === 2) {
         data[0]!.idState = '3-2';
@@ -91,7 +91,7 @@ export const useAddData = (params: {
           width: width,
           idState: '1-1',
           isUseAnimation: isUseAnimation,
-          gift: task.gift,
+          gift: task.model,
         });
       } else if (data.length === 3) {
         data.shift();
@@ -105,7 +105,7 @@ export const useAddData = (params: {
           width: width,
           idState: '1-1',
           isUseAnimation: isUseAnimation,
-          gift: task.gift,
+          gift: task.model,
         });
       }
 

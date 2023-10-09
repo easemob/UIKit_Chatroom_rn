@@ -13,10 +13,10 @@ import {
   gItemHeight,
   gItemWidth,
 } from './GiftList.const';
-import type { GiftData } from './types';
+import type { GiftListModel } from './types';
 
 export type GiftListItemProps = {
-  gift: GiftData;
+  gift: GiftListModel;
   selected: boolean;
   width?: number;
   onSelected?: (giftId: string) => void;

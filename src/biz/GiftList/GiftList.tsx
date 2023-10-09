@@ -11,10 +11,10 @@ import { useColors } from '../../hook';
 import { usePaletteContext } from '../../theme';
 import { gAspectRatio } from './GiftList.const';
 import { GiftListItem } from './GiftList.item';
-import type { GiftData } from './types';
+import type { GiftListModel } from './types';
 
 export type GiftListProps = {
-  gifts: GiftData[];
+  gifts: GiftListModel[];
   onSend?: (giftId: string) => void;
   requestUseScrollGesture?: (finished: boolean) => void;
 };

@@ -23,7 +23,6 @@ export type MarqueeRef = {
 };
 
 export type MarqueeProps = {
-  propsRef: React.RefObject<MarqueeRef>;
   height?: number;
   width?: number;
   speed?: number;
@@ -37,11 +36,13 @@ export type MarqueeProps = {
   onFinished?: () => void;
 };
 
-export function Marquee(props: MarqueeProps) {
+export const Marquee = React.forwardRef<MarqueeRef, MarqueeProps>(function (
+  props: MarqueeProps,
+  ref?: React.ForwardedRef<MarqueeRef>
+) {
   const {
     width: marqueeWidth,
     height: marqueeHeight = 20,
-    propsRef,
     speed,
     containerStyle,
     contentStyle,
@@ -80,25 +81,18 @@ export function Marquee(props: MarqueeProps) {
   const preTask = React.useRef<MarqueeTask | undefined>(undefined);
   const curTask = React.useRef<MarqueeTask | undefined>(undefined);
 
-  if (propsRef.current) {
-    propsRef.current.pushTask = async (task: MarqueeTask) => {
-      tasks.enqueue(task);
-      execTask();
-    };
-  }
-
   const execTask = () => {
     if (curTask.current === undefined) {
       const task = tasks.dequeue();
       if (task) {
         curTask.current = task;
         setIsShow(true);
-        if (task.content === content) {
+        if (task.model.content === content) {
           isSameContent.current = true;
           execAnimating(contentWidth);
         } else {
           isSameContent.current = false;
-          setContent(task.content);
+          setContent(task.model.content);
         }
       } else {
         setIsShow(false);
@@ -122,9 +116,29 @@ export function Marquee(props: MarqueeProps) {
     });
   };
 
+  const pushTask = (task: MarqueeTask) => {
+    tasks.enqueue(task);
+    execTask();
+  };
+
+  React.useImperativeHandle(
+    ref,
+    () => {
+      return {
+        pushTask: (task: MarqueeTask) => {
+          pushTask(task);
+        },
+      };
+    },
+    // !!!
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
+
   return (
     <View
       style={[
+        containerStyle,
         {
           width: width,
           justifyContent: 'center',
@@ -135,7 +149,6 @@ export function Marquee(props: MarqueeProps) {
           paddingHorizontal: 4,
           display: isShow ? 'flex' : 'none',
         },
-        containerStyle,
       ]}
     >
       <PresetCalcTextWidth
@@ -202,4 +215,4 @@ export function Marquee(props: MarqueeProps) {
       </View>
     </View>
   );
-}
+});

@@ -18,14 +18,14 @@ import {
 } from './ReportList.const';
 import { useReportListApi, useScrollGesture } from './ReportList.hooks';
 import { ReportListItemMemo, ReportListItemProps } from './ReportList.item';
-import type { ReportItemData } from './types';
+import type { ReportItemModel } from './types';
 
 export type ReportListRef = SimulativeModalRef & {};
 
 export type ReportListProps = {
   requestUseScrollGesture?: (finished: boolean) => void;
   onCancel: () => void;
-  data: ReportItemData[];
+  data: ReportItemModel[];
 };
 
 export function ReportList(props: ReportListProps) {

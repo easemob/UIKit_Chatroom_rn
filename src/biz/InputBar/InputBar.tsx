@@ -31,7 +31,7 @@ export type InputBarProps = Omit<InputBarStyleProps, 'onClickInput'> & {
 
 export const InputBar = React.forwardRef<InputBarRef, InputBarProps>(function (
   props: React.PropsWithChildren<InputBarProps>,
-  ref: React.ForwardedRef<InputBarRef>
+  ref?: React.ForwardedRef<InputBarRef>
 ) {
   const { onInputBarWillHide, onInputBarWillShow, onSend, ...others } = props;
   const { bottom } = useSafeAreaInsets();

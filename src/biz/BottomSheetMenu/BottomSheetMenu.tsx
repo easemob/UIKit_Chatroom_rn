@@ -29,7 +29,7 @@ export const BottomSheetMenu = React.forwardRef<
   BottomSheetMenuProps
 >(function (
   props: BottomSheetMenuProps,
-  ref: React.ForwardedRef<BottomSheetMenuRef>
+  ref?: React.ForwardedRef<BottomSheetMenuRef>
 ) {
   const { onRequestModalClose, initItems, title } = props;
   const { colors } = usePaletteContext();

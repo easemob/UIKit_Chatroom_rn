@@ -32,7 +32,7 @@ export function TestGiftFloating() {
           style={{ width: 200, height: 40, backgroundColor: 'red' }}
           onPress={() => {
             ref.current?.pushTask({
-              gift: {
+              model: {
                 id: seqId('_gf').toString(),
                 nickName: 'NickName',
                 giftCount: 1,
@@ -45,7 +45,7 @@ export function TestGiftFloating() {
           <Text>{'Start painting presents'}</Text>
         </TouchableOpacity>
         <View style={{ height: 100 }} />
-        <GiftFloating ref={ref} />
+        <GiftFloating ref={ref} containerStyle={{ top: 50, left: 100 }} />
       </View>
     </Container>
   );
