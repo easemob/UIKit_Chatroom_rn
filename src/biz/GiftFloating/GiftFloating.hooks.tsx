@@ -13,7 +13,7 @@ import type { GiftFloatingTask } from './types';
 export const useAddData = (params: {
   dataRef: React.MutableRefObject<GiftFloatingItem[]>;
   setData: React.Dispatch<React.SetStateAction<GiftFloatingItem[]>>;
-  ref?: React.MutableRefObject<FlatList<GiftFloatingItem>>;
+  ref?: React.RefObject<FlatList<GiftFloatingItem>>;
 }) => {
   const { dataRef, setData, ref } = params;
   const preTaskTs = React.useRef(0);
@@ -29,7 +29,7 @@ export const useAddData = (params: {
       }
       delayedScrolling.current = setTimeout(() => {
         delayedScrolling.current = undefined;
-        ref?.current.scrollToEnd({ animated: true });
+        ref?.current?.scrollToEnd({ animated: true });
       }, gScrollingTimeout);
     } else {
       if (delayedScrolling.current) {
@@ -38,7 +38,7 @@ export const useAddData = (params: {
       }
       delayedScrolling.current = setTimeout(() => {
         delayedScrolling.current = undefined;
-        ref?.current.scrollToEnd({ animated: true });
+        ref?.current?.scrollToEnd({ animated: true });
       }, gScrollingTimeout);
     }
   };
