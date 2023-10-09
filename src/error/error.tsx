@@ -39,6 +39,9 @@ export class UIKitError extends Error {
       case ErrorCode.params:
         ret = ErrorDescription.params;
         break;
+      case ErrorCode.max_count:
+        ret = ErrorDescription.max_count;
+        break;
       default:
         break;
     }

@@ -20,6 +20,9 @@ type ButtonInitState = 'enabled' | 'disabled' | 'warned';
 type ButtonState = 'disabled' | 'enabled' | 'pressed' | 'warned';
 
 export type BottomSheetMenuItemProps = {
+  /**
+   * suggestion: seqId('_bsm').toString()
+   */
   id: string;
   initState: ButtonInitState;
   text: string;

@@ -4,6 +4,7 @@ export enum ErrorCode {
   enum = 10,
   existed = 11,
   params = 12,
+  max_count = 13,
   // protocol error 1000 start
 
   // network error 2000 start

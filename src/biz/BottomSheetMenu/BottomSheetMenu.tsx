@@ -5,26 +5,36 @@ import {
   useSafeAreaInsets,
 } from 'react-native-safe-area-context';
 
+import { ErrorCode, UIKitError } from '../../error';
 import { useIsLoadedCheck } from '../../hook';
 import { useColors } from '../../hook';
 import { usePaletteContext } from '../../theme';
 import { Modal, ModalRef } from '../../ui/Modal';
 import { Text } from '../../ui/Text';
+import { gMaxItemCount } from './BottomSheetMenu.const';
 import { useGetItems } from './BottomSheetMenu.hooks';
 
 export type BottomSheetMenuRef = ModalRef & {};
 export type BottomSheetMenuProps = {
-  propsRef: React.RefObject<BottomSheetMenuRef>;
   onRequestModalClose: () => void;
   title: string;
-  initItems?: React.ReactElement[];
+  /**
+   * The maximum number should not exceed 6.
+   */
+  initItems: React.ReactElement[];
 };
 
-export function BottomSheetMenu(props: BottomSheetMenuProps) {
-  const { propsRef, onRequestModalClose, initItems, title } = props;
+export const BottomSheetMenu = React.forwardRef<
+  BottomSheetMenuRef,
+  BottomSheetMenuProps
+>(function (
+  props: BottomSheetMenuProps,
+  ref: React.ForwardedRef<BottomSheetMenuRef>
+) {
+  const { onRequestModalClose, initItems, title } = props;
   const { colors } = usePaletteContext();
   const { bottom } = useSafeAreaInsets();
-  const ref = React.useRef<ModalRef>({} as any);
+  const modalRef = React.useRef<ModalRef>({} as any);
   const { items } = useGetItems(initItems);
   const { getColor } = useColors({
     bg1: {
@@ -42,18 +52,28 @@ export function BottomSheetMenu(props: BottomSheetMenuProps) {
   });
   useIsLoadedCheck(BottomSheetMenu.name);
 
-  if (propsRef.current) {
-    propsRef.current.startShow = () => {
-      ref.current?.startShow();
-    };
-    propsRef.current.startHide = (f) => {
-      ref.current?.startHide(f);
-    };
+  React.useImperativeHandle(
+    ref,
+    () => {
+      return {
+        startHide: (onFinished?: () => void) => {
+          modalRef?.current?.startHide?.(onFinished);
+        },
+        startShow: () => {
+          modalRef?.current?.startShow?.();
+        },
+      };
+    },
+    []
+  );
+
+  if (initItems.length > gMaxItemCount) {
+    throw new UIKitError({ code: ErrorCode.max_count });
   }
 
   return (
     <Modal
-      propsRef={ref}
+      propsRef={modalRef}
       modalAnimationType={'slide'}
       onRequestModalClose={onRequestModalClose}
     >
@@ -95,4 +115,4 @@ export function BottomSheetMenu(props: BottomSheetMenuProps) {
       </SafeAreaView>
     </Modal>
   );
-}
+});

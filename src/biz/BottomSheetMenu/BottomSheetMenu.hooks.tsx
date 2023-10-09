@@ -1,8 +1,18 @@
 import * as React from 'react';
+import { View } from 'react-native';
 
+import { useColors } from '../../hook';
+import { usePaletteContext } from '../../theme';
 import { BottomSheetMenuItem } from './BottomSheetMenu.item';
 
 export function useGetItems(initItems?: React.ReactElement[]) {
+  const { colors } = usePaletteContext();
+  const { getColor } = useColors({
+    divider: {
+      light: colors.neutral[9],
+      dark: colors.neutral[0],
+    },
+  });
   return {
     items: React.useMemo(() => {
       return (
@@ -37,6 +47,14 @@ export function useGetItems(initItems?: React.ReactElement[]) {
             initState={'warned'}
             text={'Report'}
           />,
+          <View
+            key={6}
+            style={{
+              height: 8,
+              width: '100%',
+              backgroundColor: getColor('divider'),
+            }}
+          />,
           <BottomSheetMenuItem
             key={5}
             id={'6'}
@@ -45,6 +63,6 @@ export function useGetItems(initItems?: React.ReactElement[]) {
           />,
         ]
       );
-    }, [initItems]),
+    }, [getColor, initItems]),
   };
 }
