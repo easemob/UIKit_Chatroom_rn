@@ -24,7 +24,7 @@ export function BottomSheetMenu(props: BottomSheetMenuProps) {
   const { propsRef, onRequestModalClose, initItems, title } = props;
   const { colors } = usePaletteContext();
   const { bottom } = useSafeAreaInsets();
-  const ref = React.useRef<ModalRef>({} as any);
+  const ref = React.useRef<ModalRef>(null);
   const { items } = useGetItems(initItems);
   const { getColor } = useColors({
     bg1: {
@@ -44,10 +44,10 @@ export function BottomSheetMenu(props: BottomSheetMenuProps) {
 
   if (propsRef.current) {
     propsRef.current.startShow = () => {
-      ref.current.startShow();
+      ref.current?.startShow();
     };
     propsRef.current.startHide = (f) => {
-      ref.current.startHide(f);
+      ref.current?.startHide(f);
     };
   }
 

@@ -66,7 +66,7 @@ export function useMessageListApi(params: {
   onUnreadCount?: (count: number) => void;
 }) {
   const { onLongPress } = params;
-  const listRef = React.useRef<FlatList>({} as any);
+  const listRef = React.useRef<FlatList>(null);
   const dataRef = React.useRef<MessageListItemProps[]>([
     // {
     //   id: '1',

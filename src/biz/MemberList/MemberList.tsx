@@ -16,7 +16,7 @@ export type MemberListProps = {
 
 export function MemberList(props: MemberListProps) {
   const { propsRef } = props;
-  const ref = React.useRef<SimulativeModalRef>({} as any);
+  const ref = React.useRef<SimulativeModalRef>(null);
   const { width: winWidth } = useWindowDimensions();
   const height = winWidth / gAspectRatio;
   const isUsePanResponder = React.useRef(true);
@@ -34,10 +34,10 @@ export function MemberList(props: MemberListProps) {
 
   if (propsRef.current) {
     propsRef.current.startHide = (onFinished?: () => void) => {
-      ref.current.startHide(onFinished);
+      ref.current?.startHide(onFinished);
     };
     propsRef.current.startShow = () => {
-      ref.current.startShow();
+      ref.current?.startShow();
     };
   }
 

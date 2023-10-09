@@ -59,7 +59,7 @@ export const InputBar = React.forwardRef<InputBarRef, InputBarProps>(function (
   const keyboardHeight = useKeyboardHeight();
 
   const [isStyle, setIsStyle] = React.useState(true);
-  const inputRef = React.useRef<RNTextInput>({} as any);
+  const inputRef = React.useRef<RNTextInput>(null);
 
   const isClosedEmoji = React.useRef(true);
   const isClosedKeyboard = React.useRef(true);
@@ -99,8 +99,8 @@ export const InputBar = React.forwardRef<InputBarRef, InputBarProps>(function (
           setIconName('face');
           onInputBarWillShow?.();
           timeoutTask(() => {
-            if (inputRef.current.focus) {
-              inputRef.current.focus();
+            if (inputRef.current?.focus) {
+              inputRef.current?.focus();
             }
           });
         }}
@@ -203,7 +203,7 @@ export const InputBar = React.forwardRef<InputBarRef, InputBarProps>(function (
                   closeKeyboard();
                 } else {
                   isClosedKeyboard.current = false;
-                  inputRef.current.focus();
+                  inputRef.current?.focus();
                 }
               }}
               iconName={iconName}
@@ -222,7 +222,7 @@ export const InputBar = React.forwardRef<InputBarRef, InputBarProps>(function (
               }}
               onPress={() => {
                 onSend?.(value);
-                inputRef.current.clear();
+                inputRef.current?.clear();
               }}
               iconName={'airplane'}
             />

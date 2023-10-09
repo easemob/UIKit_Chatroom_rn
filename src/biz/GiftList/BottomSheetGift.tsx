@@ -26,7 +26,7 @@ export const BottomSheetGift = React.forwardRef<
   ref: React.ForwardedRef<BottomSheetGiftRef>
 ) {
   const { gifts, onSend } = props;
-  const modalRef = React.useRef<SimulativeModalRef>({} as any);
+  const modalRef = React.useRef<SimulativeModalRef>(null);
   const { width: winWidth } = useWindowDimensions();
   const height = winWidth / gAspectRatio;
   const isUsePanResponder = React.useRef(true);

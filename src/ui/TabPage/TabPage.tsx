@@ -46,13 +46,13 @@ const _TabPage = (props: TabPageProps) => {
     ...BodyOtherProps
   } = BodyProps;
   const { width: winWidth } = useWindowDimensions();
-  const headerRef = React.useRef<TabPageHeaderRef>({} as any);
-  const bodyRef = React.useRef<TabPageBodyRef>({} as any);
+  const headerRef = React.useRef<TabPageHeaderRef>(null);
+  const bodyRef = React.useRef<TabPageBodyRef>(null);
   const count = headerTitles.length;
   const _TabPageHeader = Header ?? TabPageHeader;
   const _TabPageBody = Body ?? TabPageBody;
   const width = initWidth ?? winWidth;
-  const { headerStartScrolling } = useHeaderStartScrolling(headerRef, count);
+  const { headerStartScrolling } = useHeaderStartScrolling(count, headerRef);
 
   if (
     headerTitles.length <= 0 ||
