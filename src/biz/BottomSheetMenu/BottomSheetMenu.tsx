@@ -24,7 +24,7 @@ export function BottomSheetMenu(props: BottomSheetMenuProps) {
   const { propsRef, onRequestModalClose, initItems, title } = props;
   const { colors } = usePaletteContext();
   const { bottom } = useSafeAreaInsets();
-  const ref = React.useRef<ModalRef>(null);
+  const ref = React.useRef<ModalRef>({} as any);
   const { items } = useGetItems(initItems);
   const { getColor } = useColors({
     bg1: {

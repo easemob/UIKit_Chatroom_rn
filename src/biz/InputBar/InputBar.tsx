@@ -59,7 +59,7 @@ export const InputBar = React.forwardRef<InputBarRef, InputBarProps>(function (
   const keyboardHeight = useKeyboardHeight();
 
   const [isStyle, setIsStyle] = React.useState(true);
-  const inputRef = React.useRef<RNTextInput>(null);
+  const inputRef = React.useRef<RNTextInput>({} as any);
 
   const isClosedEmoji = React.useRef(true);
   const isClosedKeyboard = React.useRef(true);

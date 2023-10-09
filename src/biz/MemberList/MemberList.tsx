@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useWindowDimensions, View } from 'react-native';
 
-import { useColors } from '../../hook';
+import { useColors, useIsLoadedCheck } from '../../hook';
 import { usePaletteContext } from '../../theme';
 import { SimulativeModal, SimulativeModalRef } from '../../ui/Modal';
 import { TabPage } from '../../ui/TabPage';
@@ -16,7 +16,7 @@ export type MemberListProps = {
 
 export function MemberList(props: MemberListProps) {
   const { propsRef } = props;
-  const ref = React.useRef<SimulativeModalRef>(null);
+  const ref = React.useRef<SimulativeModalRef>({} as any);
   const { width: winWidth } = useWindowDimensions();
   const height = winWidth / gAspectRatio;
   const isUsePanResponder = React.useRef(true);
@@ -40,6 +40,7 @@ export function MemberList(props: MemberListProps) {
       ref.current?.startShow();
     };
   }
+  useIsLoadedCheck(`${MemberList.name}`);
 
   return (
     <SimulativeModal

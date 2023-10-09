@@ -26,7 +26,7 @@ export function GiftFloating(props: GiftFloatingProps) {
   const dataRef = React.useRef<GiftFloatingItem[]>([]);
   const [data, setData] = React.useState<GiftFloatingItem[]>(dataRef.current);
 
-  const ref = React.useRef<FlatList<GiftFloatingItem>>(null);
+  const ref = React.useRef<FlatList<GiftFloatingItem>>({} as any);
 
   const tasks: Queue<GiftFloatingTask> = React.useRef(
     new Queue<GiftFloatingTask>()

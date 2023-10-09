@@ -31,7 +31,6 @@ export function MemberListItem(): React.JSX.Element {
         <Pressable
           style={{ height: 60, width: 300, backgroundColor: 'white' }}
           onPress={() => {
-            console.log('test:zuoyu:');
             ref.current?.startShow();
           }}
         >

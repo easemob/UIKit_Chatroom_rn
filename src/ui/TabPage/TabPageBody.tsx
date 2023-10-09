@@ -44,7 +44,7 @@ export function TabPageBody(props: TabPageBodyProps) {
     containerStyle,
     ...others
   } = props;
-  const ref = React.useRef<ScrollView>(null);
+  const ref = React.useRef<ScrollView>({} as any);
   const { width: winWidth, height } = useWindowDimensions();
   const w = initWidth ?? winWidth;
   const [pageY, setPageY] = React.useState(0);

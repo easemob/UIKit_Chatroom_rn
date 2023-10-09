@@ -40,7 +40,7 @@ export function MemberListParticipants(props: MemberListParticipantsProps) {
   ]);
   const [data] = React.useState<MemberListItemProps[]>(dataRef.current);
   const isScrollingRef = React.useRef(false);
-  const ref = React.useRef<FlatList<MemberListItemProps>>(null);
+  const ref = React.useRef<FlatList<MemberListItemProps>>({} as any);
   const { width: winWidth } = useWindowDimensions();
   const { bottom } = useSafeAreaInsets();
   let height =
