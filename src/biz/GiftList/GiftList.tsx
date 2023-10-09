@@ -1,5 +1,11 @@
 import * as React from 'react';
-import { ScrollView, useWindowDimensions, View } from 'react-native';
+import {
+  PanResponder,
+  Platform,
+  ScrollView,
+  useWindowDimensions,
+  View,
+} from 'react-native';
 
 import { useColors } from '../../hook';
 import { usePaletteContext } from '../../theme';
@@ -10,10 +16,11 @@ import type { GiftData } from './types';
 export type GiftListProps = {
   gifts: GiftData[];
   onSend?: (giftId: string) => void;
+  requestUseScrollGesture?: (finished: boolean) => void;
 };
 
 export function GiftList(props: GiftListProps) {
-  const { gifts, onSend } = props;
+  const { gifts, onSend, requestUseScrollGesture } = props;
   const { width: winWidth } = useWindowDimensions();
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
@@ -24,6 +31,33 @@ export function GiftList(props: GiftListProps) {
   });
   const [unitWidth, setUnitWidth] = React.useState(80);
   const [selected, setSelected] = React.useState<string | undefined>(undefined);
+  const isScrollingRef = React.useRef(false);
+
+  const r = React.useRef(
+    PanResponder.create({
+      onStartShouldSetPanResponder: () => {
+        if (isScrollingRef.current === false) {
+          isScrollingRef.current = true;
+          requestUseScrollGesture?.(false);
+        }
+        if (isScrollingRef.current === true) {
+          return false;
+        }
+        return true;
+      },
+      onMoveShouldSetPanResponder: () => {
+        if (isScrollingRef.current === false) {
+          isScrollingRef.current = true;
+          requestUseScrollGesture?.(false);
+        }
+        if (isScrollingRef.current === true) {
+          return false;
+        }
+        return true;
+      },
+    })
+  ).current;
+
   return (
     <View
       style={{
@@ -34,8 +68,22 @@ export function GiftList(props: GiftListProps) {
         const s = e.nativeEvent.layout.width / 4;
         setUnitWidth(Math.floor(s));
       }}
+      {...r.panHandlers}
     >
-      <ScrollView>
+      <ScrollView
+        onMomentumScrollEnd={() => {
+          if (Platform.OS !== 'ios') {
+            isScrollingRef.current = false;
+            requestUseScrollGesture?.(true);
+          }
+        }}
+        onResponderEnd={() => {
+          if (Platform.OS === 'ios') {
+            isScrollingRef.current = false;
+            requestUseScrollGesture?.(true);
+          }
+        }}
+      >
         <View
           style={{
             flexDirection: 'row',

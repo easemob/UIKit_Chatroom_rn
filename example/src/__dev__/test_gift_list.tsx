@@ -3,13 +3,14 @@
 import * as React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import {
+  BottomSheetGift,
+  BottomSheetGiftRef,
+  Container,
   createDarkTheme,
   createLightTheme,
   createPresetPalette,
   GiftData,
   GiftList,
-  PaletteContextProvider,
-  ThemeContextProvider,
 } from 'react-native-chat-room';
 
 export function TestGiftList() {
@@ -18,31 +19,59 @@ export function TestGiftList() {
   const light = createLightTheme(pal);
 
   return (
-    <PaletteContextProvider value={pal}>
-      <ThemeContextProvider value={light ? light : dark}>
-        <View
-          style={{
-            flex: 1,
-            backgroundColor: 'green',
-            paddingTop: 100,
+    <Container appKey={'sdf'} palette={pal} theme={light ? light : dark}>
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: 'green',
+          paddingTop: 100,
+        }}
+      >
+        <TouchableOpacity
+          style={{ width: 200, height: 40, backgroundColor: 'red' }}
+          onPress={() => {}}
+        >
+          <Text>{'Start painting presents'}</Text>
+        </TouchableOpacity>
+        <View style={{ height: 100 }} />
+        <GiftList gifts={gifts} />
+      </View>
+    </Container>
+  );
+}
+
+export function TestGiftList2() {
+  const pal = createPresetPalette();
+  const dark = createDarkTheme(pal);
+  const light = createLightTheme(pal);
+  const ref = React.useRef<BottomSheetGiftRef>({} as any);
+
+  return (
+    <Container appKey={'sdf'} palette={pal} theme={light ? light : dark}>
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: 'green',
+          paddingTop: 100,
+        }}
+      >
+        <TouchableOpacity
+          style={{ width: 200, height: 40, backgroundColor: 'red' }}
+          onPress={() => {
+            ref.current?.startShow();
           }}
         >
-          <TouchableOpacity
-            style={{ width: 200, height: 40, backgroundColor: 'red' }}
-            onPress={() => {}}
-          >
-            <Text>{'Start painting presents'}</Text>
-          </TouchableOpacity>
-          <View style={{ height: 100 }} />
-          <GiftList gifts={gifts} />
-        </View>
-      </ThemeContextProvider>
-    </PaletteContextProvider>
+          <Text>{'Start painting presents'}</Text>
+        </TouchableOpacity>
+        <View style={{ height: 100 }} />
+        <BottomSheetGift ref={ref} gifts={gifts} />
+      </View>
+    </Container>
   );
 }
 
 export default function test_gift_list() {
-  return <TestGiftList />;
+  return <TestGiftList2 />;
 }
 
 export const gifts: GiftData[] = [
