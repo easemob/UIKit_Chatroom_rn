@@ -64,7 +64,13 @@ export function TestGiftList2() {
           <Text>{'Start painting presents'}</Text>
         </TouchableOpacity>
         <View style={{ height: 100 }} />
-        <BottomSheetGift ref={ref} gifts={gifts} />
+        <BottomSheetGift
+          ref={ref}
+          gifts={[
+            { title: 'gift1', gifts },
+            { title: 'gift2', gifts },
+          ]}
+        />
       </View>
     </Container>
   );

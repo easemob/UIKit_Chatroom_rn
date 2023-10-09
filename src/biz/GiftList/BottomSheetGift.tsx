@@ -11,7 +11,11 @@ import type { GiftData } from './types';
 
 export type BottomSheetGiftRef = SimulativeModalRef & {};
 export type BottomSheetGiftProps = {
-  gifts: GiftData[];
+  gifts: {
+    title: string;
+    gifts: GiftData[];
+  }[];
+  onSend?: (giftId: string) => void;
 };
 
 export const BottomSheetGift = React.forwardRef<
@@ -21,7 +25,7 @@ export const BottomSheetGift = React.forwardRef<
   props: BottomSheetGiftProps,
   ref: React.ForwardedRef<BottomSheetGiftRef>
 ) {
-  const { gifts } = props;
+  const { gifts, onSend } = props;
   const modalRef = React.useRef<SimulativeModalRef>({} as any);
   const { width: winWidth } = useWindowDimensions();
   const height = winWidth / gAspectRatio;
@@ -91,20 +95,25 @@ export const BottomSheetGift = React.forwardRef<
         <TabPage
           header={{
             HeaderProps: {
-              titles: ['gift1'],
+              titles: gifts.map((v) => {
+                return v.title;
+              }),
             },
           }}
           body={{
             BodyProps: {
-              children: [
-                <GiftList
-                  key={'1'}
-                  gifts={gifts}
-                  requestUseScrollGesture={(finished) => {
-                    isUsePanResponder.current = finished;
-                  }}
-                />,
-              ],
+              children: gifts.map((v, i) => {
+                return (
+                  <GiftList
+                    key={i}
+                    gifts={v.gifts}
+                    requestUseScrollGesture={(finished) => {
+                      isUsePanResponder.current = finished;
+                    }}
+                    onSend={onSend}
+                  />
+                );
+              }),
             },
           }}
           headerPosition="up"
