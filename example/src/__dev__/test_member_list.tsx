@@ -1,16 +1,14 @@
 import * as React from 'react';
 import { Platform, Pressable, TouchableOpacity, View } from 'react-native';
 import {
+  Container,
   createDarkTheme,
   createLightTheme,
   createPresetPalette,
   MemberList,
   MemberListRef,
-  PaletteContextProvider,
   Text,
-  ThemeContextProvider,
 } from 'react-native-chat-room';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 /**
  * for test member list.
@@ -50,7 +48,7 @@ export function MemberListItem(): React.JSX.Element {
 export function MemberListItem2(): React.JSX.Element {
   const ref = React.useRef<MemberListRef>({} as any);
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, top: 100 }}>
       <TouchableOpacity
         style={{ height: 60, backgroundColor: 'white' }}
         onPress={() => {
@@ -77,20 +75,16 @@ export default function test_button() {
   const dark = createDarkTheme(palette);
   const theme = light ? light : dark;
   return (
-    <SafeAreaProvider>
-      <ThemeContextProvider value={theme}>
-        <PaletteContextProvider value={palette}>
-          <View
-            style={{
-              flex: 1,
-              // paddingTop: 100,
-              backgroundColor: 'green',
-            }}
-          >
-            <MemberListItem />
-          </View>
-        </PaletteContextProvider>
-      </ThemeContextProvider>
-    </SafeAreaProvider>
+    <Container appKey="sdf" isDevMode={true} palette={palette} theme={theme}>
+      <View
+        style={{
+          flex: 1,
+          // paddingTop: 100,
+          backgroundColor: 'green',
+        }}
+      >
+        <MemberListItem />
+      </View>
+    </Container>
   );
 }
