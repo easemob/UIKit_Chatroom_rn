@@ -2,7 +2,7 @@ import * as React from 'react';
 import { View } from 'react-native';
 
 import { useColors } from '../../hook';
-import { usePaletteContext } from '../../theme';
+import { usePaletteContext, useThemeContext } from '../../theme';
 import { Text1Button } from '../../ui/Button';
 import { Icon } from '../../ui/Image';
 import { TextInput } from '../../ui/TextInput';
@@ -15,6 +15,7 @@ export type SearchProps = {
 
 export function Search(props: SearchProps) {
   const { onCancel, onChangeText, value } = props;
+  const { style } = useThemeContext();
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     backgroundColor: {
@@ -67,6 +68,7 @@ export function Search(props: SearchProps) {
             }}
             onChangeText={onChangeText}
             value={value}
+            keyboardAppearance={style === 'light' ? 'light' : 'dark'}
           />
           <Icon
             name={'magnifier'}

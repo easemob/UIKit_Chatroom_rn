@@ -11,7 +11,7 @@ import moji from 'twemoji';
 
 import type { IconNameType } from '../../assets';
 import { useColors, useKeyboardHeight } from '../../hook';
-import { usePaletteContext } from '../../theme';
+import { usePaletteContext, useThemeContext } from '../../theme';
 import { IconButton } from '../../ui/Button';
 import { KeyboardAvoidingView } from '../../ui/Keyboard';
 import { TextInput } from '../../ui/TextInput';
@@ -36,6 +36,7 @@ export const InputBar = React.forwardRef<InputBarRef, InputBarProps>(function (
   const { onInputBarWillHide, onInputBarWillShow, onSend, ...others } = props;
   const { bottom } = useSafeAreaInsets();
   const { colors } = usePaletteContext();
+  const { style } = useThemeContext();
   const { getColor } = useColors({
     backgroundColor: {
       light: colors.neutral[98],
@@ -181,6 +182,7 @@ export const InputBar = React.forwardRef<InputBarRef, InputBarProps>(function (
                   }}
                   onChangeText={setValue}
                   value={value}
+                  keyboardAppearance={style === 'light' ? 'light' : 'dark'}
                 />
               </View>
             </View>
