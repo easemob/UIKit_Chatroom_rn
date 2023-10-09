@@ -62,7 +62,7 @@ export const useAddData = (params: {
       const data = dataRef.current;
       if (data.length === 0) {
         data.push({
-          id: seqId().toString(),
+          id: seqId('_gf').toString(),
           height: height,
           width: width,
           idState: '1-0',
@@ -73,7 +73,7 @@ export const useAddData = (params: {
         data[0]!.isUseAnimation = isUseAnimation;
         data[0]!.idState = '2-1';
         data.push({
-          id: seqId().toString(),
+          id: seqId('_gf').toString(),
           height: height,
           width: width,
           idState: '1-1',
@@ -86,7 +86,7 @@ export const useAddData = (params: {
         data[1]!.idState = '2-2';
         data[1]!.isUseAnimation = isUseAnimation;
         data.push({
-          id: seqId().toString(),
+          id: seqId('_gf').toString(),
           height: height,
           width: width,
           idState: '1-1',
@@ -100,7 +100,7 @@ export const useAddData = (params: {
         data[1]!.idState = '2-3';
         data[1]!.isUseAnimation = isUseAnimation;
         data.push({
-          id: seqId().toString(),
+          id: seqId('_gf').toString(),
           height: height,
           width: width,
           idState: '1-1',

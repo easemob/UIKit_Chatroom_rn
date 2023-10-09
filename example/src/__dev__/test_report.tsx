@@ -7,8 +7,42 @@ import {
   createPresetPalette,
   MemberListRef,
   Report,
+  seqId,
   Text,
 } from 'react-native-chat-room';
+
+const data = [
+  {
+    id: seqId('_rp').toString(),
+    title: 'Unwelcome commercial content or spam',
+    checked: true,
+  },
+  {
+    id: seqId('_rp').toString(),
+    title: 'Pornographic or explicit content',
+    checked: false,
+  },
+  {
+    id: seqId('_rp').toString(),
+    title: 'Child abuse',
+    checked: false,
+  },
+  {
+    id: seqId('_rp').toString(),
+    title: 'Hate speech or graphic violence',
+    checked: false,
+  },
+  {
+    id: seqId('_rp').toString(),
+    title: 'Promote terrorism',
+    checked: false,
+  },
+  {
+    id: seqId('_rp').toString(),
+    title: 'Harassment or bullying',
+    checked: false,
+  },
+];
 
 /**
  * for test report list.
@@ -17,7 +51,7 @@ export function TestReport(): React.JSX.Element {
   const ref = React.useRef<MemberListRef>({} as any);
   return (
     <View style={{ flex: 1 }}>
-      <Report ref={ref} />
+      <Report ref={ref} data={data} />
       <View
         style={{
           position: 'absolute', // !!! must
@@ -59,10 +93,10 @@ export function TestReport2(): React.JSX.Element {
 
       {Platform.OS === 'ios' ? (
         <View style={{ position: 'absolute' }}>
-          <Report ref={ref} />
+          <Report ref={ref} data={data} />
         </View>
       ) : (
-        <Report ref={ref} />
+        <Report ref={ref} data={data} />
       )}
     </View>
   );

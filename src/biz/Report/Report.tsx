@@ -8,15 +8,18 @@ import { SimulativeModal, SimulativeModalRef } from '../../ui/Modal';
 import { TabPage } from '../../ui/TabPage';
 import { ReportList } from './ReportList';
 import { gAspectRatio } from './ReportList.const';
+import type { ReportItemData } from './types';
 
 export type ReportRef = SimulativeModalRef & {};
-export type ReportProps = {};
+export type ReportProps = {
+  data: ReportItemData[];
+};
 
 export const Report = React.forwardRef<ReportRef, ReportProps>(function (
   props: ReportProps,
   ref: React.ForwardedRef<ReportRef>
 ) {
-  const {} = props;
+  const { data } = props;
   const modalRef = React.useRef<SimulativeModalRef>({} as any);
   const { width: winWidth } = useWindowDimensions();
   const height = winWidth / gAspectRatio;
@@ -100,6 +103,7 @@ export const Report = React.forwardRef<ReportRef, ReportProps>(function (
                   onCancel={() => {
                     modalRef.current?.startHide?.();
                   }}
+                  data={data}
                 />,
               ],
             },

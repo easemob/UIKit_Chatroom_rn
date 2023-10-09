@@ -6,10 +6,10 @@ import { usePaletteContext } from '../../theme';
 import { IconButton } from '../../ui/Button';
 import { Text } from '../../ui/Text';
 import { gReportListItemHeight } from './ReportList.const';
+import type { ReportItemData } from './types';
 
 export type ReportListItemProps = {
-  id: string;
-  checked: boolean;
+  data: ReportItemData;
   onChecked?: (current: boolean) => void;
 };
 
@@ -33,7 +33,8 @@ export function ReportListItem(props: ReportListItemProps) {
       dark: colors.neutral[6],
     },
   });
-  const { id, checked, onChecked } = props;
+  const { data, onChecked } = props;
+  const { id, title, checked } = data;
   return (
     <View
       key={id}
@@ -54,7 +55,7 @@ export function ReportListItem(props: ReportListItemProps) {
               color: getColor('color'),
             }}
           >
-            {id}
+            {title}
           </Text>
         </View>
         <View style={{ flex: 1 }} />

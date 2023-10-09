@@ -2,7 +2,6 @@ import * as React from 'react';
 import {
   FlatList,
   ListRenderItemInfo,
-  PanResponder,
   Platform,
   StatusBar,
   useWindowDimensions,
@@ -17,20 +16,22 @@ import {
   gBottomSheetHeaderHeight,
   gTabHeaderHeight,
 } from './ReportList.const';
-import { useReportListApi } from './ReportList.hooks';
+import { useReportListApi, useScrollGesture } from './ReportList.hooks';
 import { ReportListItemMemo, ReportListItemProps } from './ReportList.item';
+import type { ReportItemData } from './types';
 
 export type ReportListRef = SimulativeModalRef & {};
 
 export type ReportListProps = {
   requestUseScrollGesture?: (finished: boolean) => void;
   onCancel: () => void;
+  data: ReportItemData[];
 };
 
 export function ReportList(props: ReportListProps) {
-  const { requestUseScrollGesture, onCancel } = props;
-  const { data, onUpdate, report } = useReportListApi();
-  const isScrollingRef = React.useRef(false);
+  const { requestUseScrollGesture, onCancel, data: itemData } = props;
+  const { data, onUpdate, report } = useReportListApi(itemData);
+  const { isScrollingRef, handles } = useScrollGesture(requestUseScrollGesture);
   const ref = React.useRef<FlatList<ReportListItemProps>>({} as any);
   const { width: winWidth } = useWindowDimensions();
   const { bottom } = useSafeAreaInsets();
@@ -41,37 +42,12 @@ export function ReportList(props: ReportListProps) {
     bottom -
     (StatusBar.currentHeight ?? 0);
 
-  const r = React.useRef(
-    PanResponder.create({
-      onStartShouldSetPanResponder: () => {
-        if (isScrollingRef.current === false) {
-          isScrollingRef.current = true;
-          requestUseScrollGesture?.(false);
-        }
-        if (isScrollingRef.current === true) {
-          return false;
-        }
-        return true;
-      },
-      onMoveShouldSetPanResponder: () => {
-        if (isScrollingRef.current === false) {
-          isScrollingRef.current = true;
-          requestUseScrollGesture?.(false);
-        }
-        if (isScrollingRef.current === true) {
-          return false;
-        }
-        return true;
-      },
-    })
-  ).current;
-
   return (
     <View
       style={{
         height: height,
       }}
-      {...r.panHandlers}
+      {...handles}
     >
       <FlatList
         ref={ref}
@@ -80,16 +56,18 @@ export function ReportList(props: ReportListProps) {
           const { item } = info;
           return (
             <ReportListItemMemo
-              id={item.id}
-              checked={item.checked}
+              data={item.data}
               onChecked={() => {
-                onUpdate({ ...item, checked: !item.checked });
+                onUpdate({
+                  ...item,
+                  data: { ...item.data, checked: !item.data.checked },
+                });
               }}
             />
           );
         }}
         keyExtractor={(item: ReportListItemProps) => {
-          return item.id;
+          return item.data.id;
         }}
         onMomentumScrollEnd={() => {
           if (Platform.OS !== 'ios') {
