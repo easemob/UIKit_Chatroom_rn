@@ -1,6 +1,6 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
-import { View } from 'react-native';
+import { Platform, View } from 'react-native';
 import { Chatroom, useColors, usePaletteContext } from 'react-native-chat-room';
 
 import type { RootScreenParamsList } from '../routes';
@@ -17,7 +17,7 @@ export function ChatroomScreen(props: Props) {
   });
   return (
     <View style={{ flex: 1, backgroundColor: 'green' }}>
-      <Chatroom />
+      <Chatroom keyboardVerticalOffset={Platform.OS === 'ios' ? 94 : 0} />
     </View>
   );
 }

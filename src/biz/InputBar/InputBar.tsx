@@ -27,13 +27,20 @@ export type InputBarProps = Omit<InputBarStyleProps, 'onClickInput'> & {
   onInputBarWillShow?: () => void;
   onInputBarWillHide?: () => void;
   onSend: (content: string) => void;
+  keyboardVerticalOffset?: number;
 };
 
 export const InputBar = React.forwardRef<InputBarRef, InputBarProps>(function (
   props: React.PropsWithChildren<InputBarProps>,
   ref?: React.ForwardedRef<InputBarRef>
 ) {
-  const { onInputBarWillHide, onInputBarWillShow, onSend, ...others } = props;
+  const {
+    onInputBarWillHide,
+    onInputBarWillShow,
+    onSend,
+    keyboardVerticalOffset = 0,
+    ...others
+  } = props;
   const { bottom } = useSafeAreaInsets();
   const { colors } = usePaletteContext();
   const { style } = useThemeContext();
@@ -112,7 +119,7 @@ export const InputBar = React.forwardRef<InputBarRef, InputBarProps>(function (
     <>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 0}
+        keyboardVerticalOffset={keyboardVerticalOffset}
       >
         <View
           style={{
