@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useWindowDimensions, View } from 'react-native';
+import { StyleProp, useWindowDimensions, View, ViewStyle } from 'react-native';
 
 import { g_mask_color } from '../../const';
 import { useColors, useIsLoadedCheck } from '../../hook';
@@ -13,11 +13,13 @@ export type MemberListRef = SimulativeModalRef & {
   startShowWithInit: () => void;
 };
 
-export type MemberListProps = {};
+export type MemberListProps = {
+  containerStyle?: StyleProp<ViewStyle> | undefined;
+};
 
 export const MemberList = React.forwardRef<MemberListRef, MemberListProps>(
   function (props: MemberListProps, ref?: React.ForwardedRef<MemberListRef>) {
-    const {} = props;
+    const { containerStyle } = props;
     const modalRef = React.useRef<SimulativeModalRef>({} as any);
     const { width: winWidth } = useWindowDimensions();
     const height = winWidth / gAspectRatio;
@@ -70,6 +72,7 @@ export const MemberList = React.forwardRef<MemberListRef, MemberListProps>(
         // onRequestModalClose={() => {
         //   ref.current.startHide();
         // }}
+        containerStyle={containerStyle}
       >
         <View
           style={{

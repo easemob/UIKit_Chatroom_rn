@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useWindowDimensions, View } from 'react-native';
+import { StyleProp, useWindowDimensions, View, ViewStyle } from 'react-native';
 
 import { g_mask_color } from '../../const';
 import { useColors } from '../../hook';
@@ -24,6 +24,7 @@ export type BottomSheetGiftProps = {
     gifts: GiftListModel[];
   }[];
   onSend?: (giftId: string) => void;
+  containerStyle?: StyleProp<ViewStyle> | undefined;
 };
 
 export const BottomSheetGift = React.forwardRef<
@@ -33,7 +34,7 @@ export const BottomSheetGift = React.forwardRef<
   props: BottomSheetGiftProps,
   ref?: React.ForwardedRef<BottomSheetGiftRef>
 ) {
-  const { gifts: initGifts, onSend } = props;
+  const { gifts: initGifts, onSend, containerStyle } = props;
   const [gifts, setGift] = React.useState(initGifts);
   const modalRef = React.useRef<SimulativeModalRef>({} as any);
   const { width: winWidth } = useWindowDimensions();
@@ -104,6 +105,7 @@ export const BottomSheetGift = React.forwardRef<
       // onRequestModalClose={() => {
       //   ref.current.startHide();
       // }}
+      containerStyle={containerStyle}
     >
       <View
         style={{

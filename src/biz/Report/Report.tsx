@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useWindowDimensions, View } from 'react-native';
+import { StyleProp, useWindowDimensions, View, ViewStyle } from 'react-native';
 
 import { g_mask_color } from '../../const';
 import { useColors } from '../../hook';
@@ -13,13 +13,14 @@ import type { ReportItemModel } from './types';
 export type ReportRef = SimulativeModalRef & {};
 export type ReportProps = {
   data: ReportItemModel[];
+  containerStyle?: StyleProp<ViewStyle> | undefined;
 };
 
 export const Report = React.forwardRef<ReportRef, ReportProps>(function (
   props: ReportProps,
   ref?: React.ForwardedRef<ReportRef>
 ) {
-  const { data } = props;
+  const { data, containerStyle } = props;
   const modalRef = React.useRef<SimulativeModalRef>({} as any);
   const { width: winWidth } = useWindowDimensions();
   const height = winWidth / gAspectRatio;
@@ -66,6 +67,7 @@ export const Report = React.forwardRef<ReportRef, ReportProps>(function (
       // onRequestModalClose={() => {
       //   ref.current.startHide();
       // }}
+      containerStyle={containerStyle}
     >
       <View
         style={{

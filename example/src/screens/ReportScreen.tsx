@@ -11,7 +11,11 @@ export function ReportScreen(props: Props) {
   const ref = React.useRef<SimulativeModalRef>({} as any);
   return (
     <View style={{ flex: 1 }}>
-      <Report ref={ref} data={data} />
+      <Report
+        ref={ref}
+        data={data}
+        containerStyle={{ transform: [{ translateY: -94 }] }} // !!! Correct the offset.
+      />
       <View
         style={{
           position: 'absolute', // !!! must

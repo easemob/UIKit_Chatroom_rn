@@ -47,6 +47,7 @@ export type SimulativeModalProps = Omit<ViewProps, 'style'> & {
       ) => boolean)
     | undefined;
   onFinished?: () => void;
+  containerStyle?: StyleProp<ViewStyle> | undefined;
 };
 
 /**
@@ -63,6 +64,7 @@ export function SimulativeModal(props: SimulativeModalProps) {
     propsRef,
     onStartShouldSetPanResponder,
     onFinished,
+    containerStyle,
     ...others
   } = props;
   const { translateY, startShow, startHide, backgroundOpacity } =
@@ -88,15 +90,18 @@ export function SimulativeModal(props: SimulativeModalProps) {
 
   return (
     <View
-      style={{
-        flex: 1,
-        position: 'absolute',
-        width: width,
-        height: height,
-        // backgroundColor: 'red',
-        display: modalVisible === true ? 'flex' : 'none',
-        // opacity: modalVisible === true ? 1 : 0,
-      }}
+      style={[
+        {
+          flex: 1,
+          position: 'absolute',
+          width: width,
+          height: height,
+          // backgroundColor: 'red',
+          display: modalVisible === true ? 'flex' : 'none',
+          // opacity: modalVisible === true ? 1 : 0,
+        },
+        containerStyle,
+      ]}
     >
       <TouchableWithoutFeedback
         onPress={() => {
