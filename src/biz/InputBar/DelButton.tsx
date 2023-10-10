@@ -12,8 +12,20 @@ export function DelButton(params: {
   const { getColor, emojiHeight, onClicked } = params;
   const { shadow } = useThemeContext();
   const b = (
-    <View style={{ ...shadow.style.small[0] }}>
-      <View style={{ ...shadow.style.small[1] }}>
+    <View
+      style={{
+        ...shadow.style.small[0],
+        //  WARN  (ADVICE) View #3647 of type RCTView has a shadow set but cannot calculate shadow efficiently. Consider setting a background color to fix this, or apply the shadow to a more specific component.
+        backgroundColor: getColor('backgroundColor'),
+      }}
+    >
+      <View
+        style={{
+          ...shadow.style.small[1],
+          //  WARN  (ADVICE) View #3645 of type RCTView has a shadow set but cannot calculate shadow efficiently. Consider setting a background color to fix this, or apply the shadow to a more specific component.
+          backgroundColor: getColor('backgroundColor'),
+        }}
+      >
         <View
           style={{
             position: 'absolute',
