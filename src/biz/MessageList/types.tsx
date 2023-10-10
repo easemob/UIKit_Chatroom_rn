@@ -26,9 +26,9 @@ export type MessageListItemOp = {
    * When starting to press, scrolling needs to stop.
    * When scrolling to the bottom through gestures, or sending a message, start scrolling to the bottom.
    */
-  onStartPress?: (data: Omit<MessageListItemProps, 'action'>) => void;
-  onLongPress?: (data: Omit<MessageListItemProps, 'action'>) => void;
-  onPress?: (data: Omit<MessageListItemProps, 'action'>) => void;
+  onStartPress?: (data: MessageListItemModel) => void;
+  onLongPress?: (data: MessageListItemModel) => void;
+  onPress?: (data: MessageListItemModel) => void;
 };
 
 export type MessageListItemProps = {
@@ -38,3 +38,4 @@ export type MessageListItemProps = {
   content: MessageListItemContent;
   action?: MessageListItemOp;
 };
+export type MessageListItemModel = Omit<MessageListItemProps, 'action'>;

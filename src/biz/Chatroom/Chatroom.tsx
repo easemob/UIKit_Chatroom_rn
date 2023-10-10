@@ -46,6 +46,7 @@ export class Chatroom extends React.Component<ChatroomProps, ChatroomState> {
           isInputBarShow={this.state.isInputBarShow}
           // containerStyle={{ height: 300, width: 300 }}
           // backgroundStyle={{ justifyContent: 'center' }}
+          onLongPressItem={() => {}}
         />
         <View style={{ flex: 1 }} pointerEvents={'none'} />
         <InputBar

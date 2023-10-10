@@ -4,7 +4,7 @@ import { FlatList, Keyboard, Platform } from 'react-native';
 import { useDispatchContext } from '../../dispatch';
 import { seqId } from '../../utils';
 import { gIdleTimeout, gMaxMessageCount } from './MessageList.const';
-import type { MessageListItemProps } from './types';
+import type { MessageListItemModel, MessageListItemProps } from './types';
 
 export const useKeyboardOnAndroid = (isInputBarShow: boolean) => {
   const { addListener, removeListener, emit } = useDispatchContext();
@@ -62,7 +62,7 @@ export const useKeyboardOnAndroid = (isInputBarShow: boolean) => {
 };
 
 export function useMessageListApi(params: {
-  onLongPress?: (data: Omit<MessageListItemProps, 'action'>) => void;
+  onLongPress?: (data: MessageListItemModel) => void;
   onUnreadCount?: (count: number) => void;
 }) {
   const { onLongPress } = params;
@@ -161,7 +161,7 @@ export function useMessageListApi(params: {
         onStartPress: () => {
           // needScroll.current = false;
         },
-        onLongPress: (data: Omit<MessageListItemProps, 'action'>) => {
+        onLongPress: (data: MessageListItemModel) => {
           needScroll.current = false;
           onLongPress?.(data);
         },

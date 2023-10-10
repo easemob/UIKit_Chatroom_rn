@@ -74,6 +74,7 @@ export const InputBar = React.forwardRef<InputBarRef, InputBarProps>(function (
   };
 
   const setEmojiHeight = (h: number) => {
+    console.log('test:zuoyu:', h);
     _setEmojiHeight(h);
   };
 
@@ -237,7 +238,7 @@ export const InputBar = React.forwardRef<InputBarRef, InputBarProps>(function (
         }}
       >
         <EmojiListMemo
-          style={{ flex: 1 }}
+          style={{ flex: 1, marginBottom: 8 }}
           onFace={(face) => {
             setValue(value + emoji.convert.fromCodePoint(face));
           }}

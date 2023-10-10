@@ -19,7 +19,7 @@ import {
 } from './MessageList.const';
 import { useKeyboardOnAndroid, useMessageListApi } from './MessageList.hooks';
 import { MessageListItemMemo } from './MessageList.item';
-import type { MessageListItemProps } from './types';
+import type { MessageListItemModel, MessageListItemProps } from './types';
 
 export type MessageListRef = {
   /**
@@ -32,7 +32,7 @@ export type MessageListRef = {
 export type MessageListProps = {
   onRequestCloseInputBar?: () => void;
   isInputBarShow: boolean;
-  onLongPressItem?: (item: Omit<MessageListItemProps, 'action'>) => void;
+  onLongPressItem?: (item: MessageListItemModel) => void;
   onUnreadCount?: (count: number) => void;
   containerStyle?: StyleProp<ViewStyle>;
   backgroundStyle?: StyleProp<ViewStyle>;
