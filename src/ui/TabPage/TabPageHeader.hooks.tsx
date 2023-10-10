@@ -57,6 +57,11 @@ export const useTabPageHeaderAnimation2 = (params: {
     indicatorWidth,
   });
   const left = React.useRef(new Animated.Value(leftValue)).current;
+  const preCount = React.useRef(count);
+  if (preCount.current !== count) {
+    preCount.current = count;
+    left.setValue(leftValue);
+  }
 
   const createAnimated = (params: {
     width: number;

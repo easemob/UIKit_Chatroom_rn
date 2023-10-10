@@ -10,7 +10,14 @@ import { gAspectRatio } from './BottomSheetGift.const';
 import { GiftList } from './GiftList';
 import type { GiftListModel } from './types';
 
-export type BottomSheetGiftRef = SimulativeModalRef & {};
+export type BottomSheetGiftRef = SimulativeModalRef & {
+  startShowWithInit: (
+    gifts: {
+      title: string;
+      gifts: GiftListModel[];
+    }[]
+  ) => void;
+};
 export type BottomSheetGiftProps = {
   gifts: {
     title: string;
@@ -26,7 +33,8 @@ export const BottomSheetGift = React.forwardRef<
   props: BottomSheetGiftProps,
   ref?: React.ForwardedRef<BottomSheetGiftRef>
 ) {
-  const { gifts, onSend } = props;
+  const { gifts: initGifts, onSend } = props;
+  const [gifts, setGift] = React.useState(initGifts);
   const modalRef = React.useRef<SimulativeModalRef>({} as any);
   const { width: winWidth } = useWindowDimensions();
   const height = winWidth / gAspectRatio;
@@ -42,21 +50,44 @@ export const BottomSheetGift = React.forwardRef<
       dark: colors.neutral[3],
     },
   });
+  const isShow = React.useRef(false);
 
   React.useImperativeHandle(
     ref,
     () => {
       return {
         startHide: (onFinished?: () => void) => {
+          isShow.current = false;
           modalRef.current?.startHide(onFinished);
         },
         startShow: () => {
+          isShow.current = true;
           modalRef.current?.startShow();
+        },
+        startShowWithInit: (
+          giftsParams: {
+            title: string;
+            gifts: GiftListModel[];
+          }[]
+        ) => {
+          if (JSON.stringify(giftsParams) !== JSON.stringify(gifts)) {
+            isShow.current = true;
+            setGift([...giftsParams]);
+          } else {
+            isShow.current = true;
+            modalRef.current?.startShow();
+          }
         },
       };
     },
-    []
+    [gifts]
   );
+
+  React.useEffect(() => {
+    if (isShow.current === true) {
+      modalRef.current?.startShow();
+    }
+  }, [gifts]);
 
   return (
     <SimulativeModal
