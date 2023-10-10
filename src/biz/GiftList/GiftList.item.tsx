@@ -78,11 +78,12 @@ function GiftListNoSelectedItem(props: GiftListItemProps) {
         <Text
           textType={'small'}
           paletteType={'title'}
+          numberOfLines={1}
           style={{
             color: getColor('t1'),
           }}
         >
-          {'Title'}
+          {gift.giftName}
         </Text>
       </View>
       <View style={{ flexDirection: 'row' }}>
@@ -90,11 +91,12 @@ function GiftListNoSelectedItem(props: GiftListItemProps) {
         <Text
           textType={'extraSmall'}
           paletteType={'label'}
+          numberOfLines={1}
           style={{
             color: getColor('t2'),
           }}
         >
-          {'SubTitle'}
+          {gift.giftPrice}
         </Text>
       </View>
     </View>
@@ -158,11 +160,12 @@ function GiftListSelectedItem(props: GiftListItemProps) {
           <Text
             textType={'extraSmall'}
             paletteType={'label'}
+            numberOfLines={1}
             style={{
               color: getColor('color'),
             }}
           >
-            {'SubTitle'}
+            {gift.giftPrice}
           </Text>
         </View>
       </View>
@@ -186,6 +189,7 @@ function GiftListSelectedItem(props: GiftListItemProps) {
           <Text
             textType={'medium'}
             paletteType={'label'}
+            numberOfLines={1}
             style={{
               color: getColor('color2'),
             }}

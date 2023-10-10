@@ -1,4 +1,6 @@
 import * as React from 'react';
+import type { ViewStyle } from 'react-native';
+import type { StyleProp } from 'react-native';
 import {
   FlatList,
   ListRenderItemInfo,
@@ -32,6 +34,7 @@ export type MessageListProps = {
   isInputBarShow: boolean;
   onLongPressItem?: (item: Omit<MessageListItemProps, 'action'>) => void;
   onUnreadCount?: (count: number) => void;
+  containerStyle?: StyleProp<ViewStyle>;
 };
 
 export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
