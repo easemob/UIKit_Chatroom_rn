@@ -96,7 +96,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     paddingHorizontal: 12,
-    backgroundColor: 'red',
   },
   button: {
     height: gInputBarStyleItemHeight,

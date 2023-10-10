@@ -97,7 +97,7 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
               marginBottom: gMessageListMarginBottom,
               width: gMessageListWidth,
               height: gMessageListHeight,
-              backgroundColor: '#ffd700',
+              // backgroundColor: '#ffd700',
             },
             containerStyle,
           ]}
