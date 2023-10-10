@@ -35,6 +35,7 @@ export type MessageListProps = {
   onLongPressItem?: (item: Omit<MessageListItemProps, 'action'>) => void;
   onUnreadCount?: (count: number) => void;
   containerStyle?: StyleProp<ViewStyle>;
+  backgroundStyle?: StyleProp<ViewStyle>;
 };
 
 export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
@@ -44,6 +45,8 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
       isInputBarShow,
       onLongPressItem,
       onUnreadCount,
+      containerStyle,
+      backgroundStyle,
     } = props;
     const { width, height } = useWindowDimensions();
     const { bottom, top } = useSafeAreaInsets();
@@ -70,33 +73,34 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
 
     return (
       <View
-        style={{
-          flex: 1,
-          width: width,
-          height: height - bottom - top - gInputBarStyleHeight,
-          // backgroundColor: '#7fffd4',
-          position: 'absolute',
-          bottom: bottom + gInputBarStyleHeight,
-          transform: [{ translateY: translateY }],
+        style={[
+          {
+            flex: 1,
+            width: width,
+            height: height - bottom - top - gInputBarStyleHeight,
+            // backgroundColor: '#7fffd4',
+            position: 'absolute',
+            bottom: bottom + gInputBarStyleHeight,
+            transform: [{ translateY: translateY }],
+            justifyContent: 'flex-end',
+          },
+          backgroundStyle,
+        ]}
+        onTouchEnd={() => {
+          onRequestCloseInputBar?.();
         }}
       >
         <View
-          style={{
-            flex: 1,
-            // backgroundColor: '#8fbc8f',
-          }}
-          onTouchEnd={() => {
-            onRequestCloseInputBar?.();
-          }}
-        />
-        <View
-          style={{
-            marginLeft: gMessageListMarginLeft,
-            marginBottom: gMessageListMarginBottom,
-            width: gMessageListWidth,
-            height: gMessageListHeight,
-            // backgroundColor: '#ffd700',
-          }}
+          style={[
+            {
+              marginLeft: gMessageListMarginLeft,
+              marginBottom: gMessageListMarginBottom,
+              width: gMessageListWidth,
+              height: gMessageListHeight,
+              backgroundColor: '#ffd700',
+            },
+            containerStyle,
+          ]}
         >
           <FlatList
             ref={listRef}
