@@ -1,35 +1,114 @@
+import {
+  NavigationAction,
+  NavigationContainer,
+  NavigationState,
+} from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { multiply } from 'react-native-chat-room';
+import { View } from 'react-native';
+import {
+  Container,
+  createDarkTheme,
+  createLightTheme,
+  createPresetPalette,
+} from 'react-native-chat-room';
 
 import { AppDev } from './__dev__/AppDev';
+import type { RootParamsList, RootParamsName } from './routes';
+import { ChatroomListScreen, LoginListScreen, TopMenuScreen } from './screens';
+import { ChatroomScreen } from './screens/ChatroomScreen';
+import { ReportScreen } from './screens/ReportScreen';
+
+const Root = createNativeStackNavigator<RootParamsList>();
 
 export function App() {
-  const [result, setResult] = React.useState<number | undefined>();
+  const [initialRouteName] = React.useState('TopMenu' as RootParamsName);
+  const palette = createPresetPalette();
+  const dark = createDarkTheme(palette);
+  const light = createLightTheme(palette);
 
-  React.useEffect(() => {
-    multiply(3, 7).then(setResult);
-  }, []);
+  const formatNavigationState = (
+    state: NavigationState | undefined,
+    result: string[] & string[][]
+  ) => {
+    if (state) {
+      const ret: string[] & string[][] = [];
+      for (const route of state.routes) {
+        ret.push(route.name);
+        if (route.state) {
+          formatNavigationState(
+            route.state as NavigationState | undefined,
+            ret
+          );
+        }
+      }
+      result.push(ret);
+    }
+  };
 
   return (
-    <View style={styles.container}>
-      <Text>Result: {result}</Text>
-    </View>
+    <Container appKey={'sdf'} palette={palette} theme={light ? light : dark}>
+      <NavigationContainer
+        onStateChange={(state: NavigationState | undefined) => {
+          const rr: string[] & string[][] = [];
+          formatNavigationState(state, rr);
+          console.log(
+            'test:onStateChange:',
+            JSON.stringify(rr, undefined, '  ')
+          );
+          // console.log('test:onStateChange:o:', JSON.stringify(state));
+        }}
+        onUnhandledAction={(action: NavigationAction) => {
+          console.log('test:onUnhandledAction:', action);
+        }}
+        onReady={() => {
+          console.log('test:onReady:');
+        }}
+        fallback={
+          <View style={{ height: 100, width: 100, backgroundColor: 'red' }} />
+        }
+      >
+        <Root.Navigator initialRouteName={initialRouteName}>
+          <Root.Screen
+            name={'TopMenu'}
+            options={{
+              headerShown: true,
+            }}
+            component={TopMenuScreen}
+          />
+          <Root.Screen
+            name={'LoginList'}
+            options={{
+              headerShown: true,
+            }}
+            component={LoginListScreen}
+          />
+          <Root.Screen
+            name={'ChatroomList'}
+            options={{
+              headerShown: true,
+            }}
+            component={ChatroomListScreen}
+          />
+          <Root.Screen
+            name={'TestChatroom'}
+            options={{
+              headerShown: true,
+            }}
+            component={ChatroomScreen}
+          />
+          <Root.Screen
+            name={'TestReport'}
+            options={{
+              headerShown: true,
+            }}
+            component={ReportScreen}
+          />
+        </Root.Navigator>
+      </NavigationContainer>
+    </Container>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  box: {
-    width: 60,
-    height: 60,
-    marginVertical: 20,
-  },
-});
 
 let AppWrapper = App;
 try {

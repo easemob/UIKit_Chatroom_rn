@@ -8,6 +8,7 @@ import {
   MemberListRef,
   Report,
   seqId,
+  SimulativeModalRef,
   Text,
 } from 'react-native-chat-room';
 
@@ -48,7 +49,7 @@ const data = [
  * for test report list.
  */
 export function TestReport(): React.JSX.Element {
-  const ref = React.useRef<MemberListRef>({} as any);
+  const ref = React.useRef<SimulativeModalRef>({} as any);
   return (
     <View style={{ flex: 1 }}>
       <Report ref={ref} data={data} />
