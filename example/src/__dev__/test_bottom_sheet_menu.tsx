@@ -21,52 +21,57 @@ export function TestBottomSheetMenu() {
       dark: colors.neutral[0],
     },
   });
-  const data = [
-    <BottomSheetMenuItem
-      key={0}
-      id={'1'}
-      initState={'enabled'}
-      text={'Private Chat'}
-    />,
-    <BottomSheetMenuItem
-      key={1}
-      id={'2'}
-      initState={'enabled'}
-      text={'Translate'}
-    />,
-    <BottomSheetMenuItem
-      key={2}
-      id={'3'}
-      initState={'enabled'}
-      text={'Deleted'}
-    />,
-    <BottomSheetMenuItem
-      key={3}
-      id={'4'}
-      initState={'enabled'}
-      text={'Muted'}
-    />,
-    <BottomSheetMenuItem
-      key={4}
-      id={'5'}
-      initState={'warned'}
-      text={'Report'}
-    />,
-    <View
-      key={6}
-      style={{
-        height: 8,
-        width: '100%',
-        backgroundColor: getColor('divider'),
-      }}
-    />,
-    <BottomSheetMenuItem
-      key={5}
-      id={'6'}
-      initState={'enabled'}
-      text={'Cancel'}
-    />,
-  ];
+  const data = React.useMemo(
+    () => [
+      <BottomSheetMenuItem
+        key={0}
+        id={'1'}
+        initState={'enabled'}
+        text={'Private Chat'}
+      />,
+      <BottomSheetMenuItem
+        key={1}
+        id={'2'}
+        initState={'enabled'}
+        text={'Translate'}
+      />,
+      <BottomSheetMenuItem
+        key={2}
+        id={'3'}
+        initState={'enabled'}
+        text={'Deleted'}
+      />,
+      <BottomSheetMenuItem
+        key={3}
+        id={'4'}
+        initState={'enabled'}
+        text={'Muted'}
+      />,
+      <BottomSheetMenuItem
+        key={4}
+        id={'5'}
+        initState={'warned'}
+        text={'Report'}
+      />,
+      <View
+        key={6}
+        style={{
+          height: 8,
+          width: '100%',
+          backgroundColor: getColor('divider'),
+        }}
+      />,
+      <BottomSheetMenuItem
+        key={5}
+        id={'6'}
+        initState={'enabled'}
+        text={'Cancel'}
+      />,
+    ],
+    [getColor]
+  );
+  const data2 = React.useMemo(() => data.slice(1, data.length), [data]);
+  const count = React.useRef(0);
   return (
     <View>
       <BottomSheetMenu
@@ -83,9 +88,11 @@ export function TestBottomSheetMenu() {
         <Pressable
           style={{ height: 60, backgroundColor: 'yellow' }}
           onPress={() => {
-            if (ref.current.startShow) {
-              ref.current.startShow();
-            }
+            // ref.current?.startShow?.();
+            ref.current?.startShowWithInit?.(
+              count.current % 2 === 0 ? data : data2
+            );
+            // ++count.current;
           }}
         >
           <Text>{'show bottom sheet menu'}</Text>

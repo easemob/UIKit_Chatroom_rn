@@ -14,7 +14,9 @@ import { Text } from '../../ui/Text';
 import { gMaxItemCount } from './BottomSheetMenu.const';
 import { useGetItems } from './BottomSheetMenu.hooks';
 
-export type BottomSheetMenuRef = ModalRef & {};
+export type BottomSheetMenuRef = ModalRef & {
+  startShowWithInit: (initItems: React.ReactElement[]) => void;
+};
 export type BottomSheetMenuProps = {
   onRequestModalClose: () => void;
   title: string;
@@ -35,7 +37,7 @@ export const BottomSheetMenu = React.forwardRef<
   const { colors } = usePaletteContext();
   const { bottom } = useSafeAreaInsets();
   const modalRef = React.useRef<ModalRef>({} as any);
-  const { items } = useGetItems(initItems);
+  const { items, updateItems } = useGetItems(initItems);
   const { getColor } = useColors({
     bg1: {
       light: colors.neutral[98],
@@ -51,21 +53,39 @@ export const BottomSheetMenu = React.forwardRef<
     },
   });
   useIsLoadedCheck(BottomSheetMenu.name);
+  const isShow = React.useRef(false);
 
   React.useImperativeHandle(
     ref,
     () => {
       return {
         startHide: (onFinished?: () => void) => {
+          isShow.current = false;
           modalRef?.current?.startHide?.(onFinished);
         },
         startShow: () => {
+          isShow.current = true;
           modalRef?.current?.startShow?.();
+        },
+        startShowWithInit: (initItems: React.ReactElement[]) => {
+          if (initItems !== items) {
+            isShow.current = true;
+            updateItems(initItems);
+          } else {
+            isShow.current = true;
+            modalRef?.current?.startShow?.();
+          }
         },
       };
     },
-    []
+    [items, updateItems]
   );
+
+  React.useEffect(() => {
+    if (isShow.current === true) {
+      modalRef?.current?.startShow?.();
+    }
+  }, [items]);
 
   if (initItems.length > gMaxItemCount) {
     throw new UIKitError({ code: ErrorCode.max_count });

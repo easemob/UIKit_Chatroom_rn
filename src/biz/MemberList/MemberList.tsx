@@ -9,7 +9,9 @@ import { TabPage } from '../../ui/TabPage';
 import { gAspectRatio } from './MemberList.const';
 import { MemberListParticipants } from './MemberList.parts';
 
-export type MemberListRef = SimulativeModalRef & {};
+export type MemberListRef = SimulativeModalRef & {
+  startShowWithInit: () => void;
+};
 
 export type MemberListProps = {};
 
@@ -43,6 +45,10 @@ export const MemberList = React.forwardRef<MemberListRef, MemberListProps>(
           },
           startHide: (onFinished?: () => void) => {
             modalRef.current.startHide(onFinished);
+          },
+          startShowWithInit: () => {
+            modalRef.current.startShow();
+            // todo: clear pre member list, and init current member list
           },
         };
       },
