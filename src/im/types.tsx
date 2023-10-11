@@ -11,7 +11,7 @@ export interface ChatroomServiceListener {
     recalledUserId: String
   ): void;
   onGlobalNotifyReceived?(roomId: String, notifyMessage: ChatMessage): void;
-  onUserJoined?(roomId: String, user: UserInfo): void;
+  onUserJoined?(roomId: String, user: UserServiceData): void;
   onUserLeave?(roomId: String, userId: String): void;
   onAnnouncementUpdate?(roomId: String, announcement: String): void;
   onUserBeKicked?(roomId: String, reason: number): void;
@@ -33,20 +33,25 @@ export interface ChatroomService {
   clearListener(): void;
   join(roomId: String, userId: String): Promise<void>;
   leave(roomId: String, userId: String): Promise<void>;
-  addMember(roomId: String, userId: String): void;
-  removeMember(roomId: String, userId: String): void;
+  kickMember(roomId: String, userId: String): void;
   fetchMembers(roomId: String, pageSize: number): Promise<string[]>;
   fetchMutedMembers(roomId: String, pageSize: number): Promise<string[]>;
   fetchAnnouncement(roomId: String): Promise<string | undefined>;
   updateAnnouncement(roomId: String, announcement: string): Promise<void>;
-  updateMemberInfo(
+  updateMemberState(
     roomId: String,
     userId: String,
     op: ChatroomMemberOperateType
   ): Promise<void>;
-  sendMessage(params: {
+  sendTextMessage(params: {
     roomId: String;
     content: string;
+    mentionIds?: string[];
+  }): Promise<void>;
+  sendCustomMessage(params: {
+    roomId: String;
+    eventType: string;
+    eventParams: Record<string, string>;
     mentionIds?: string[];
   }): Promise<void>;
   recallMessage(messageId: string): Promise<void>;
@@ -54,7 +59,7 @@ export interface ChatroomService {
   translateMessage(message: ChatMessage): Promise<ChatMessage>;
 }
 
-export type Gift = {
+export type GiftServiceData = {
   id: string;
   name: string;
   price: string;
@@ -63,21 +68,21 @@ export type Gift = {
   effect: string;
   selected: boolean;
   sendedThenClose: boolean;
-  sendedFromUser?: UserInfo;
+  sender?: UserServiceData;
 };
 
 export interface GiftServiceListener {
-  receiveGift?(gift: Gift): void;
+  receiveGift?(gift: GiftServiceData): void;
 }
 
 export interface GiftService {
   addListener(listener: GiftServiceListener): void;
   removeListener(listener: GiftServiceListener): void;
   clearListener(): void;
-  sendGift(gift: Gift): Promise<void>;
+  sendGift(gift: GiftServiceData): Promise<void>;
 }
 
-export type UserInfo = {
+export type UserServiceData = {
   userId: string;
   nickName: string;
   avatarURL: string;
@@ -93,16 +98,16 @@ export interface UserService {
   addListener(listener: UserServiceListener): void;
   removeListener(listener: UserServiceListener): void;
   clearListener(): void;
-  addUserInfo(users: UserInfo[]): void;
-  getUserInfo(userId: string): UserInfo | undefined;
-  getUserInfos(userIds: string[]): UserInfo[];
+  addUserInfo(users: UserServiceData[]): void;
+  getUserInfo(userId: string): UserServiceData | undefined;
+  getUserInfos(userIds: string[]): UserServiceData[];
   /**
    * Get user information. Throws exception object {@link UIKitError} on failure. If you use synchronous return, you can use `await getUserInfo('John')`, if you use asynchronous return, you can use `getUserInfo('John').then().catch()`.
    */
-  fetchUserInfosFromServer(userIds: string[]): Promise<UserInfo[]>;
+  fetchUserInfosFromServer(userIds: string[]): Promise<UserServiceData[]>;
   removeUserInfo(userId: string): void;
-  updateUserInfo(user: UserInfo): void;
-  uploadMyselfUserInfoToServer(user: UserInfo): Promise<void>;
+  updateUserInfo(user: UserServiceData): void;
+  uploadMyselfUserInfoToServer(user: UserServiceData): Promise<void>;
 }
 
 export enum DisconnectReasonType {

@@ -1,4 +1,8 @@
-import type { Gift, GiftService, GiftServiceListener } from './types';
+import type {
+  GiftService,
+  GiftServiceData,
+  GiftServiceListener,
+} from './types';
 
 export class GiftServiceImpl implements GiftService {
   addListener(_listener: GiftServiceListener): void {
@@ -10,7 +14,7 @@ export class GiftServiceImpl implements GiftService {
   clearListener(): void {
     throw new Error('Method not implemented.');
   }
-  sendGift(_gift: Gift): Promise<void> {
+  sendGift(_gift: GiftServiceData): Promise<void> {
     throw new Error('Method not implemented.');
   }
 }

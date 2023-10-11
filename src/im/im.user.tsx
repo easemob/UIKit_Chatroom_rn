@@ -1,4 +1,8 @@
-import type { UserInfo, UserService, UserServiceListener } from './types';
+import type {
+  UserService,
+  UserServiceData,
+  UserServiceListener,
+} from './types';
 
 export class UserServiceImpl implements UserService {
   addListener(_listener: UserServiceListener): void {
@@ -10,25 +14,25 @@ export class UserServiceImpl implements UserService {
   clearListener(): void {
     throw new Error('Method not implemented.');
   }
-  addUserInfo(_users: UserInfo[]): void {
+  addUserInfo(_users: UserServiceData[]): void {
     throw new Error('Method not implemented.');
   }
-  getUserInfo(_userId: string): UserInfo | undefined {
+  getUserInfo(_userId: string): UserServiceData | undefined {
     throw new Error('Method not implemented.');
   }
-  getUserInfos(_userIds: string[]): UserInfo[] {
+  getUserInfos(_userIds: string[]): UserServiceData[] {
     throw new Error('Method not implemented.');
   }
-  fetchUserInfosFromServer(_userIds: string[]): Promise<UserInfo[]> {
+  fetchUserInfosFromServer(_userIds: string[]): Promise<UserServiceData[]> {
     throw new Error('Method not implemented.');
   }
   removeUserInfo(_userId: string): void {
     throw new Error('Method not implemented.');
   }
-  updateUserInfo(_user: UserInfo): void {
+  updateUserInfo(_user: UserServiceData): void {
     throw new Error('Method not implemented.');
   }
-  uploadMyselfUserInfoToServer(_user: UserInfo): Promise<void> {
+  uploadMyselfUserInfoToServer(_user: UserServiceData): Promise<void> {
     throw new Error('Method not implemented.');
   }
 }

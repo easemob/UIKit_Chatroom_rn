@@ -13,10 +13,7 @@ export class ChatroomServiceImpl implements ChatroomService {
   leave(_roomId: String, _userId: String): Promise<void> {
     throw new Error('Method not implemented.');
   }
-  addMember(_roomId: String, _userId: String): void {
-    throw new Error('Method not implemented.');
-  }
-  removeMember(_roomId: String, _userId: String): void {
+  kickMember(_roomId: String, _userId: String): void {
     throw new Error('Method not implemented.');
   }
   fetchMembers(_roomId: String, _pageSize: number): Promise<string[]> {
@@ -31,17 +28,25 @@ export class ChatroomServiceImpl implements ChatroomService {
   updateAnnouncement(_roomId: String, _announcement: string): Promise<void> {
     throw new Error('Method not implemented.');
   }
-  updateMemberInfo(
+  updateMemberState(
     _roomId: String,
     _userId: String,
     _op: ChatroomMemberOperateType
   ): Promise<void> {
     throw new Error('Method not implemented.');
   }
-  sendMessage(_params: {
+  sendTextMessage(_params: {
     roomId: String;
     content: string;
     mentionIds?: string[] | undefined;
+  }): Promise<void> {
+    throw new Error('Method not implemented.');
+  }
+  sendCustomMessage(_params: {
+    roomId: String;
+    eventType: string;
+    eventParams: Record<string, string>;
+    mentionIds?: string[];
   }): Promise<void> {
     throw new Error('Method not implemented.');
   }
