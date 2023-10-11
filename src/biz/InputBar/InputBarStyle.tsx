@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ErrorCode, UIKitError } from '../../error';
 import { useColors } from '../../hook';
@@ -20,6 +21,7 @@ export type InputBarStyleProps = {
 export function InputBarStyle(props: InputBarStyleProps) {
   const { onClickInput, first, after } = props;
   const { colors } = usePaletteContext();
+  const { bottom } = useSafeAreaInsets();
   const { getColor } = useColors({
     backgroundColor: {
       light: colors.barrage[2],
@@ -36,7 +38,14 @@ export function InputBarStyle(props: InputBarStyleProps) {
   }
 
   return (
-    <View style={styles.container}>
+    <View
+      style={[
+        styles.container,
+        {
+          paddingBottom: bottom,
+        },
+      ]}
+    >
       {first ? <View style={styles.button}>{first}</View> : null}
 
       <View

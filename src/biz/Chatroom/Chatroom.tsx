@@ -1,7 +1,8 @@
 import type { ErrorInfo } from 'react';
 import * as React from 'react';
+import type { ViewStyle } from 'react-native';
+import type { StyleProp } from 'react-native';
 import { View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { InputBar, InputBarProps, InputBarRef } from '../InputBar';
 import { MessageList, MessageListRef } from '../MessageList';
@@ -9,7 +10,9 @@ import { MessageList, MessageListRef } from '../MessageList';
 export type ChatroomProps = Omit<
   InputBarProps,
   'onInputBarWillShow' | 'onInputBarWillHide' | 'onSend'
-> & {};
+> & {
+  containerStyle?: StyleProp<ViewStyle>;
+};
 type ChatroomState = {
   isInputBarShow: boolean;
 };
@@ -33,9 +36,9 @@ export class Chatroom extends React.Component<ChatroomProps, ChatroomState> {
   }
 
   render(): React.ReactNode {
-    const { ...others } = this.props;
+    const { containerStyle, ...others } = this.props;
     return (
-      <SafeAreaView style={{ flex: 1 }}>
+      <View style={[{ flex: 1 }, containerStyle]}>
         <MessageList
           ref={this.messageRef}
           onRequestCloseInputBar={() => {
@@ -62,7 +65,7 @@ export class Chatroom extends React.Component<ChatroomProps, ChatroomState> {
           }}
           {...others}
         />
-      </SafeAreaView>
+      </View>
     );
   }
 }

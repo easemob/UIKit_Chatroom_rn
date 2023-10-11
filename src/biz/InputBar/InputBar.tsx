@@ -184,7 +184,7 @@ export const InputBar = React.forwardRef<InputBarRef, InputBarProps>(function (
                     if (isClosedEmoji.current === true) {
                       setEmojiHeight(0);
                     } else {
-                      setEmojiHeight(keyboardHeight - bottom);
+                      setEmojiHeight(keyboardHeight);
                     }
                   }}
                   onChangeText={setValue}
@@ -241,6 +241,7 @@ export const InputBar = React.forwardRef<InputBarRef, InputBarProps>(function (
           backgroundColor: getColor('backgroundColor'),
           height: emojiHeight,
           // overflow: 'hidden',
+          paddingBottom: bottom,
         }}
       >
         <EmojiListMemo

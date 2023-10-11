@@ -14,16 +14,16 @@ export function DelButton(params: {
   const b = (
     <View
       style={{
-        ...shadow.style.small[0],
         //  WARN  (ADVICE) View #3647 of type RCTView has a shadow set but cannot calculate shadow efficiently. Consider setting a background color to fix this, or apply the shadow to a more specific component.
-        backgroundColor: getColor('backgroundColor'),
+        // backgroundColor: getColor('backgroundColor'),
+        ...shadow.style.small[0],
       }}
     >
       <View
         style={{
-          ...shadow.style.small[1],
           //  WARN  (ADVICE) View #3645 of type RCTView has a shadow set but cannot calculate shadow efficiently. Consider setting a background color to fix this, or apply the shadow to a more specific component.
-          backgroundColor: getColor('backgroundColor'),
+          // backgroundColor: getColor('backgroundColor'),
+          ...shadow.style.small[1],
         }}
       >
         <View
