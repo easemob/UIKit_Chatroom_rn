@@ -31,9 +31,7 @@ export class Chatroom extends React.Component<ChatroomProps, ChatroomState> {
 
   componentDidMount?(): void {}
   componentWillUnmount?(): void {}
-  componentDidCatch?(error: Error, errorInfo: ErrorInfo): void {
-    console.log('test:componentDidCatch:', error, errorInfo);
-  }
+  componentDidCatch?(_error: Error, _errorInfo: ErrorInfo): void {}
 
   render(): React.ReactNode {
     const { containerStyle, ...others } = this.props;

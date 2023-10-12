@@ -22,7 +22,6 @@ export type EmojiListProps = {
 };
 
 export function EmojiList(props: EmojiListProps) {
-  console.log('test:EmojiList');
   const { colors } = usePaletteContext();
   const { width: winWidth } = useWindowDimensions();
   const { getColor } = useColors({
@@ -35,8 +34,6 @@ export function EmojiList(props: EmojiListProps) {
   const getUnitSize = () => {
     return winWidth / 7 - 1;
   };
-  const s = React.useRef(colors);
-  console.log('test:x:', s.current === colors);
   return (
     <View
       style={[
@@ -65,7 +62,6 @@ export function EmojiList(props: EmojiListProps) {
                 >
                   <TouchableOpacity
                     onPress={() => {
-                      console.log('test:EmojiList:onPress:');
                       onFace?.(v);
                     }}
                   >
@@ -91,10 +87,8 @@ const EmojiListCompare = (
     prevProps.onFace === nextProps.onFace &&
     prevProps.style === nextProps.style
   ) {
-    console.log('test:EmojiListCompare:true');
     return true;
   }
-  console.log('test:EmojiListCompare:');
   return false;
 };
 

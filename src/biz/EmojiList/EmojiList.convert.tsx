@@ -23,9 +23,7 @@ function toCodePointText(text: string): string {
       new RegExp(keyTmp, 'g'),
       _emoji.convert.fromCodePoint(key.substring(2))
     );
-    console.log('test:key:', key, keyTmp);
   }
-  console.log('test:toCodePointText:', text, tmp);
   return tmp;
 }
 

@@ -82,7 +82,6 @@ export const InputBar = React.forwardRef<InputBarRef, InputBarProps>(function (
     face?: string
   ) => {
     if (op) {
-      console.log('test:setValue:', text, value, op, face, rawValue.current);
       if (op === 'add_face') {
         rawValue.current += face;
         _setValue(value + emoji.convert.fromCodePoint(face!.substring(2)));
@@ -101,7 +100,6 @@ export const InputBar = React.forwardRef<InputBarRef, InputBarProps>(function (
         _setValue(value.substring(0, value.length - 1));
       }
     } else {
-      console.log('test:setValue:', text, value, op, face, rawValue.current);
       if (value !== text) {
         if (value.length > text.length) {
           rawValue.current = rawValue.current.substring(
