@@ -42,6 +42,7 @@ export function PaletteContextProvider({
 }
 
 export function usePaletteContext(): Palette {
+  console.log('test:', usePaletteContext.name, usePaletteContext.caller.name);
   const palette = React.useContext(PaletteContext);
   if (!palette) throw Error(`${PaletteContext.displayName} is not provided`);
   return palette;
@@ -80,4 +81,11 @@ export function createPalette(params: createPaletteParams): Palette {
       medium: generateMediumCornerRadius(),
     } as CornerRadiusPalette,
   } as Palette;
+}
+
+export function useCreatePalette(params: createPaletteParams) {
+  const palette = React.useMemo(() => createPalette(params), [params]);
+  return {
+    createPalette: () => palette,
+  };
 }

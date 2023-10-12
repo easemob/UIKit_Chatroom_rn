@@ -6,12 +6,12 @@ import { DispatchContextProvider } from '../dispatch';
 import { I18nContextProvider, StringSetType } from '../i18n';
 import { IMContextProvider } from '../im';
 import {
-  createLightTheme,
-  createPresetPalette,
   Palette,
   PaletteContextProvider,
   Theme,
   ThemeContextProvider,
+  useLightTheme,
+  usePresetPalette,
 } from '../theme';
 
 export type ContainerProps = React.PropsWithChildren<{
@@ -23,6 +23,7 @@ export type ContainerProps = React.PropsWithChildren<{
 }>;
 
 export function Container(props: ContainerProps) {
+  console.log('test:Container');
   const {
     appKey,
     children,
@@ -31,8 +32,8 @@ export function Container(props: ContainerProps) {
     palette,
     theme,
   } = props;
-  const _palette = createPresetPalette();
-  const light = createLightTheme(palette ?? _palette);
+  const _palette = usePresetPalette();
+  const light = useLightTheme(palette ?? _palette);
 
   return (
     <DispatchContextProvider>

@@ -1,5 +1,17 @@
-import { createPalette } from './palette';
+import * as React from 'react';
+
+import { createPalette, useCreatePalette } from './palette';
 import type { Palette } from './types';
+
+const presetParams = {
+  colors: {
+    primary: 203,
+    secondary: 155,
+    error: 350,
+    neutral: 203,
+    neutralSpecial: 220,
+  },
+};
 
 /**
  * Create a theme object.
@@ -34,13 +46,11 @@ import type { Palette } from './types';
  * @returns The dark theme.
  */
 export function createPresetPalette(): Palette {
-  return createPalette({
-    colors: {
-      primary: 203,
-      secondary: 155,
-      error: 350,
-      neutral: 203,
-      neutralSpecial: 220,
-    },
-  });
+  return createPalette(presetParams);
+}
+
+export function usePresetPalette(): Palette {
+  const params = React.useMemo(() => presetParams, []);
+  const { createPalette } = useCreatePalette(params);
+  return createPalette();
 }

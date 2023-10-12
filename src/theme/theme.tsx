@@ -1,8 +1,7 @@
 import * as React from 'react';
 
-import { ErrorCode, UIKitError } from '../error';
-import { createDarkTheme } from './theme.dark';
-import { createLightTheme } from './theme.light';
+import { generateButton } from './generate.button';
+import { generateShadow } from './generate.shadow';
 import type { createThemeParams, Theme } from './types';
 
 const ThemeContext = React.createContext<Theme | undefined>(undefined);
@@ -24,15 +23,22 @@ export function useThemeContext(): Theme {
 
 export function createTheme(params: createThemeParams): Theme {
   const { palette, themeType } = params;
-  switch (themeType) {
-    case 'light':
-      return createDarkTheme(palette);
-    case 'dark':
-      return createLightTheme(palette);
-    default:
-      throw new UIKitError({
-        code: ErrorCode.enum,
-        extra: `ThemeType: ${themeType}`,
-      });
-  }
+  return {
+    style: themeType,
+    button: generateButton({
+      palette: palette,
+      themeType: themeType,
+    }),
+    shadow: generateShadow({
+      palette: palette,
+      themeType: themeType,
+    }),
+  };
+}
+
+export function useCreateTheme(params: createThemeParams) {
+  const theme = React.useMemo(() => createTheme(params), [params]);
+  return {
+    createTheme: () => theme,
+  };
 }

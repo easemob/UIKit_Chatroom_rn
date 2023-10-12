@@ -6,7 +6,6 @@ import {
 } from 'react-native-safe-area-context';
 
 import { ErrorCode, UIKitError } from '../../error';
-import { useIsLoadedCheck } from '../../hook';
 import { useColors } from '../../hook';
 import { usePaletteContext } from '../../theme';
 import { Modal, ModalRef } from '../../ui/Modal';
@@ -52,7 +51,6 @@ export const BottomSheetMenu = React.forwardRef<
       dark: colors.neutral[6],
     },
   });
-  useIsLoadedCheck(BottomSheetMenu.name);
   const isShow = React.useRef(false);
 
   React.useImperativeHandle(

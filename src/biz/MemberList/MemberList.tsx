@@ -2,7 +2,7 @@ import * as React from 'react';
 import { StyleProp, useWindowDimensions, View, ViewStyle } from 'react-native';
 
 import { g_mask_color } from '../../const';
-import { useColors, useIsLoadedCheck } from '../../hook';
+import { useColors } from '../../hook';
 import { usePaletteContext } from '../../theme';
 import { SimulativeModal, SimulativeModalRef } from '../../ui/Modal';
 import { TabPage } from '../../ui/TabPage';
@@ -35,8 +35,6 @@ export const MemberList = React.forwardRef<MemberListRef, MemberListProps>(
         dark: colors.neutral[3],
       },
     });
-
-    useIsLoadedCheck(`${MemberList.name}`);
 
     React.useImperativeHandle(
       ref,

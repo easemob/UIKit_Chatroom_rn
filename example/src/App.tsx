@@ -8,9 +8,9 @@ import * as React from 'react';
 import { View } from 'react-native';
 import {
   Container,
-  createDarkTheme,
-  createLightTheme,
-  createPresetPalette,
+  useDarkTheme,
+  useLightTheme,
+  usePresetPalette,
 } from 'react-native-chat-room';
 
 import { AppDev } from './__dev__/AppDev';
@@ -23,9 +23,9 @@ const Root = createNativeStackNavigator<RootParamsList>();
 
 export function App() {
   const [initialRouteName] = React.useState('TopMenu' as RootParamsName);
-  const palette = createPresetPalette();
-  const dark = createDarkTheme(palette);
-  const light = createLightTheme(palette);
+  const palette = usePresetPalette();
+  const dark = useDarkTheme(palette);
+  const light = useLightTheme(palette);
 
   const formatNavigationState = (
     state: NavigationState | undefined,

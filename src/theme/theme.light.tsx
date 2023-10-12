@@ -1,17 +1,15 @@
-import { generateButton } from './generate.button';
-import { generateShadow } from './generate.shadow';
-import type { Palette, Theme } from './types';
+import * as React from 'react';
+
+import { createTheme, useCreateTheme } from './theme';
+import type { Palette, Theme, ThemeType } from './types';
 
 export function createLightTheme(palette: Palette): Theme {
-  return {
-    style: 'light',
-    button: generateButton({
-      palette: palette,
-      themeType: 'light',
-    }),
-    shadow: generateShadow({
-      palette: palette,
-      themeType: 'light',
-    }),
-  };
+  return createTheme({ palette, themeType: 'light' });
+}
+export function useLightTheme(palette: Palette): Theme {
+  const params = React.useMemo(() => {
+    return { palette, themeType: 'light' as ThemeType };
+  }, [palette]);
+  const { createTheme } = useCreateTheme(params);
+  return createTheme();
 }

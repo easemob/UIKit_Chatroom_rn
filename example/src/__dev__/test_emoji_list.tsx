@@ -9,7 +9,10 @@ import {
   createPresetPalette,
   EmojiList,
   EmojiListMemo,
+  useCompare,
+  useDarkTheme,
   useForceUpdate,
+  usePresetPalette,
 } from 'react-native-chat-room';
 
 export function TestEmojiList() {
@@ -42,44 +45,57 @@ export function TestEmojiList() {
   );
 }
 
-export function TestEmojiList2() {
-  console.log('test:TestEmojiList2:');
-  // const { updater } = useForceUpdate();
-  const [, updater] = React.useState(0);
+export function TestEmojiList22() {
+  const { updater } = useForceUpdate();
+  // const [, updater] = React.useState(0);
   // const count = React.useRef(0);
 
-  const pal = createPresetPalette();
-  const dark = createDarkTheme(pal);
-  const light = createLightTheme(pal);
-
   const onFace = React.useCallback(() => {
-    console.log('test:TestEmojiList2:onFace:');
-    updater((pre) => pre + 1);
-  }, []);
-  const s = React.useRef(pal);
-  console.log('test:TestEmojiList2:s:', s.current === pal);
+    console.log('test:TestEmojiList22:onFace:');
+    // updater((pre) => pre + 1);
+    updater();
+  }, [updater]);
+
+  return (
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: 'green',
+        paddingTop: 100,
+        // left: 100,
+      }}
+    >
+      <TouchableOpacity
+        style={{ height: 60, width: '100%', backgroundColor: 'red' }}
+        onPress={() => {
+          // updater((pre) => pre + 1);
+          updater();
+        }}
+      >
+        <Text>{'test emoji list'}</Text>
+      </TouchableOpacity>
+      <View style={{ height: 100 }} />
+      <EmojiListMemo onFace={onFace} />
+    </View>
+  );
+}
+
+export function TestEmojiList2() {
+  console.log('test:TestEmojiList2:');
+
+  // const pal = createPresetPalette();
+  // const dark = createDarkTheme(pal);
+  // const light = createLightTheme(pal);
+  const pal = usePresetPalette();
+  const dark = useDarkTheme(pal);
+  const light = useDarkTheme(pal);
+  useCompare(pal);
+  useCompare(dark);
+  useCompare(light);
 
   return (
     <Container appKey={'sdf'} palette={pal} theme={light ? light : dark}>
-      <View
-        style={{
-          flex: 1,
-          backgroundColor: 'green',
-          paddingTop: 100,
-          // left: 100,
-        }}
-      >
-        <TouchableOpacity
-          style={{ height: 60, width: '100%', backgroundColor: 'red' }}
-          onPress={() => {
-            updater((pre) => pre + 1);
-          }}
-        >
-          <Text>{'test emoji list'}</Text>
-        </TouchableOpacity>
-        <View style={{ height: 100 }} />
-        <EmojiListMemo onFace={onFace} />
-      </View>
+      <TestEmojiList22 />
     </Container>
   );
 }
