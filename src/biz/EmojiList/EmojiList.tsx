@@ -22,6 +22,7 @@ export type EmojiListProps = {
 };
 
 export function EmojiList(props: EmojiListProps) {
+  console.log('test:EmojiList');
   const { colors } = usePaletteContext();
   const { width: winWidth } = useWindowDimensions();
   const { getColor } = useColors({
@@ -34,6 +35,8 @@ export function EmojiList(props: EmojiListProps) {
   const getUnitSize = () => {
     return winWidth / 7 - 1;
   };
+  const s = React.useRef(colors);
+  console.log('test:x:', s.current === colors);
   return (
     <View
       style={[
@@ -48,7 +51,7 @@ export function EmojiList(props: EmojiListProps) {
         <View style={styles.group}>
           <View style={styles.list}>
             {FACE_ASSETS.map((v, i) => {
-              const r = emoji.convert.fromCodePoint(v);
+              const r = emoji.convert.fromCodePoint(v.substring(2));
               return (
                 <View
                   key={i}
@@ -62,6 +65,7 @@ export function EmojiList(props: EmojiListProps) {
                 >
                   <TouchableOpacity
                     onPress={() => {
+                      console.log('test:EmojiList:onPress:');
                       onFace?.(v);
                     }}
                   >
@@ -79,6 +83,21 @@ export function EmojiList(props: EmojiListProps) {
   );
 }
 
+const EmojiListCompare = (
+  prevProps: Readonly<EmojiListProps>,
+  nextProps: Readonly<EmojiListProps>
+) => {
+  if (
+    prevProps.onFace === nextProps.onFace &&
+    prevProps.style === nextProps.style
+  ) {
+    console.log('test:EmojiListCompare:true');
+    return true;
+  }
+  console.log('test:EmojiListCompare:');
+  return false;
+};
+
 const styles = StyleSheet.create({
   group: { alignItems: 'center', flex: 1 },
   title: {
@@ -94,4 +113,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export const EmojiListMemo = React.memo(EmojiList);
+export const EmojiListMemo = React.memo(EmojiList, EmojiListCompare);

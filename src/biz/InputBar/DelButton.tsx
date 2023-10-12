@@ -56,3 +56,5 @@ export function DelButton(params: {
     return b;
   }
 }
+
+export const DelButtonMemo = React.memo(DelButton);

@@ -17,7 +17,7 @@ import { KeyboardAvoidingView } from '../../ui/Keyboard';
 import { TextInput } from '../../ui/TextInput';
 import { timeoutTask } from '../../utils';
 import { EmojiListMemo, FACE_ASSETS_UTF16 } from '../EmojiList';
-import { DelButton } from './DelButton';
+import { DelButtonMemo } from './DelButton';
 import { InputBarStyle, InputBarStyleProps } from './InputBarStyle';
 
 export type InputBarRef = {
@@ -74,7 +74,47 @@ export const InputBar = React.forwardRef<InputBarRef, InputBarProps>(function (
 
   const [iconName, setIconName] = React.useState<IconNameType>('face');
 
-  const [value, setValue] = React.useState('');
+  const [value, _setValue] = React.useState('');
+  const rawValue = React.useRef('');
+  const setValue = (
+    text: string,
+    op?: 'add_face' | 'del_face' | 'del_c',
+    face?: string
+  ) => {
+    if (op) {
+      console.log('test:setValue:', text, value, op, face, rawValue.current);
+      if (op === 'add_face') {
+        rawValue.current += face;
+        _setValue(value + emoji.convert.fromCodePoint(face!.substring(2)));
+      } else if (op === 'del_face') {
+        const rawFace = emoji.convert.toCodePoint(face!);
+        rawValue.current = rawValue.current.substring(
+          0,
+          rawValue.current.length - rawFace.length - 2
+        );
+        _setValue(value.substring(0, value.length - 2));
+      } else if (op === 'del_c') {
+        rawValue.current = rawValue.current.substring(
+          0,
+          rawValue.current.length - 1
+        );
+        _setValue(value.substring(0, value.length - 1));
+      }
+    } else {
+      console.log('test:setValue:', text, value, op, face, rawValue.current);
+      if (value !== text) {
+        if (value.length > text.length) {
+          rawValue.current = rawValue.current.substring(
+            0,
+            rawValue.current.length - (value.length - text.length)
+          );
+        } else {
+          rawValue.current += text.substring(value.length);
+        }
+      }
+      _setValue(text);
+    }
+  };
 
   const closeKeyboard = () => {
     Keyboard.dismiss();
@@ -247,27 +287,31 @@ export const InputBar = React.forwardRef<InputBarRef, InputBarProps>(function (
         <EmojiListMemo
           style={{ flex: 1, marginBottom: 8 }}
           onFace={(face) => {
-            setValue(value + emoji.convert.fromCodePoint(face));
+            // setValue(value + emoji.convert.fromCodePoint(face));
+            setValue(value, 'add_face', face);
           }}
         />
-        <DelButton
+        <DelButtonMemo
           getColor={getColor}
           emojiHeight={emojiHeight}
           onClicked={() => {
             if (value.length >= 2) {
-              const isFace = value.substring(value.length - 2);
+              const face = value.substring(value.length - 2);
               let lastIsFace = false;
               FACE_ASSETS_UTF16.forEach((v) => {
-                if (isFace === v) {
+                if (face === v) {
                   lastIsFace = true;
-                  setValue(value.substring(0, value.length - 2));
+                  // setValue(value.substring(0, value.length - 2));
+                  setValue(value, 'del_face', face);
                 }
               });
               if (lastIsFace === false) {
-                setValue(value.substring(0, value.length - 1));
+                // setValue(value.substring(0, value.length - 1));
+                setValue(value, 'del_c');
               }
             } else if (value.length > 0) {
-              setValue(value.substring(0, value.length - 1));
+              // setValue(value.substring(0, value.length - 1));
+              setValue(value, 'del_c');
             }
           }}
         />
