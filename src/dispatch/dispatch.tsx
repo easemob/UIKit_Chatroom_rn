@@ -4,7 +4,9 @@ import { ErrorCode, UIKitError } from '../error';
 import { asyncTask } from '../utils';
 import type { DispatchApi, DispatchInit, Listener } from './types';
 
-const DispatchContext = React.createContext<DispatchApi | undefined>(undefined);
+export const DispatchContext = React.createContext<DispatchApi | undefined>(
+  undefined
+);
 DispatchContext.displayName = 'UIKitDispatchContext';
 
 type DispatchContextProps = React.PropsWithChildren<{ value?: DispatchInit }>;

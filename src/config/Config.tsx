@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import type { Config } from './types';
 
-const ConfigContext = React.createContext<Config | undefined>(undefined);
+export const ConfigContext = React.createContext<Config | undefined>(undefined);
 ConfigContext.displayName = 'UIKitConfigContext';
 
 type ConfigContextProps = React.PropsWithChildren<{ value: Config }>;

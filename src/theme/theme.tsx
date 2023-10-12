@@ -4,7 +4,7 @@ import { generateButton } from './generate.button';
 import { generateShadow } from './generate.shadow';
 import type { createThemeParams, Theme } from './types';
 
-const ThemeContext = React.createContext<Theme | undefined>(undefined);
+export const ThemeContext = React.createContext<Theme | undefined>(undefined);
 ThemeContext.displayName = 'UIKitThemeContext';
 
 type ThemeContextProps = React.PropsWithChildren<{ value: Theme }>;

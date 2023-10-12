@@ -27,7 +27,9 @@ import type {
   Palette,
 } from './types';
 
-const PaletteContext = React.createContext<Palette | undefined>(undefined);
+export const PaletteContext = React.createContext<Palette | undefined>(
+  undefined
+);
 PaletteContext.displayName = 'UIKitPaletteContextContext';
 
 type PaletteContextProps = React.PropsWithChildren<{ value: Palette }>;

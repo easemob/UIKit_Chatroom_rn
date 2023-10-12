@@ -4,7 +4,7 @@ import { createStringSet } from './StringSet';
 import { TranslateImpl } from './Translate';
 import type { I18nInit, I18nTr } from './types';
 
-const I18nContext = React.createContext<I18nTr | undefined>(undefined);
+export const I18nContext = React.createContext<I18nTr | undefined>(undefined);
 I18nContext.displayName = 'UIKitI18nContext';
 
 type I18nContextProps = React.PropsWithChildren<{ value: I18nInit }>;

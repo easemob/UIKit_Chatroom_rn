@@ -6,7 +6,7 @@ import { GiftServiceImpl } from './im.gift';
 import { UserServiceImpl } from './im.user';
 import type { IMService, IMServiceInit } from './types';
 
-const IMContext = React.createContext<IMService | undefined>(undefined);
+export const IMContext = React.createContext<IMService | undefined>(undefined);
 IMContext.displayName = 'UIKitIMContext';
 
 type IMContextProps = React.PropsWithChildren<{ value: IMServiceInit }>;
