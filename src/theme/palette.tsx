@@ -42,7 +42,7 @@ export function PaletteContextProvider({
 }
 
 export function usePaletteContext(): Palette {
-  console.log('test:', usePaletteContext.name, usePaletteContext.caller.name);
+  // console.log('test:', usePaletteContext.name, usePaletteContext.caller.name);
   const palette = React.useContext(PaletteContext);
   if (!palette) throw Error(`${PaletteContext.displayName} is not provided`);
   return palette;

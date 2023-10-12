@@ -134,3 +134,15 @@ export function IconButton(props: IconButtonProps) {
     </Pressable>
   );
 }
+
+const IconButtonCompare = (
+  prevProps: Readonly<IconButtonProps>,
+  nextProps: Readonly<IconButtonProps>
+) => {
+  if (prevProps.iconName !== nextProps.iconName) {
+    return false;
+  }
+  return true;
+};
+
+export const IconButtonMemo = React.memo(IconButton, IconButtonCompare);

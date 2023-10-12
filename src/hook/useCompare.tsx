@@ -1,6 +1,9 @@
 import * as React from 'react';
 
-export function useCompare(object: any, callerName?: string) {
+export function useCompare(
+  object: any,
+  others?: { callerName?: string; objectName?: string }
+) {
   const ref = React.useRef(object);
   const getObjectName = React.useCallback((object: any) => {
     const objectType = typeof object;
@@ -30,8 +33,8 @@ export function useCompare(object: any, callerName?: string) {
 
   const log = `{
     toolName: '${useCompare.name}',
-    objectName: '${getObjectName(object)}',
-    callerName: '${callerName ?? useCompare?.caller?.name}',
+    objectName: '${others?.objectName ?? getObjectName(object)}',
+    callerName: '${others?.callerName ?? useCompare?.caller?.name}',
     equalResult: '${ref.current === object}',
   }`;
   if (ref.current !== object) {

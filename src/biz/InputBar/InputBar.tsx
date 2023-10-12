@@ -7,17 +7,17 @@ import {
   View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import emoji from 'twemoji';
 
 import type { IconNameType } from '../../assets';
 import { useColors, useKeyboardHeight } from '../../hook';
 import { usePaletteContext, useThemeContext } from '../../theme';
-import { IconButton } from '../../ui/Button';
+import { IconButtonMemo } from '../../ui/Button';
 import { KeyboardAvoidingView } from '../../ui/Keyboard';
 import { TextInput } from '../../ui/TextInput';
 import { timeoutTask } from '../../utils';
-import { EmojiListMemo, FACE_ASSETS_UTF16 } from '../EmojiList';
+import { EmojiListMemo } from '../EmojiList';
 import { DelButtonMemo } from './DelButton';
+import { useInputValue } from './InputBar.hooks';
 import { InputBarStyle, InputBarStyleProps } from './InputBarStyle';
 
 export type InputBarRef = {
@@ -74,45 +74,7 @@ export const InputBar = React.forwardRef<InputBarRef, InputBarProps>(function (
 
   const [iconName, setIconName] = React.useState<IconNameType>('face');
 
-  const [value, _setValue] = React.useState('');
-  const rawValue = React.useRef('');
-  const setValue = (
-    text: string,
-    op?: 'add_face' | 'del_face' | 'del_c',
-    face?: string
-  ) => {
-    if (op) {
-      if (op === 'add_face') {
-        rawValue.current += face;
-        _setValue(value + emoji.convert.fromCodePoint(face!.substring(2)));
-      } else if (op === 'del_face') {
-        const rawFace = emoji.convert.toCodePoint(face!);
-        rawValue.current = rawValue.current.substring(
-          0,
-          rawValue.current.length - rawFace.length - 2
-        );
-        _setValue(value.substring(0, value.length - 2));
-      } else if (op === 'del_c') {
-        rawValue.current = rawValue.current.substring(
-          0,
-          rawValue.current.length - 1
-        );
-        _setValue(value.substring(0, value.length - 1));
-      }
-    } else {
-      if (value !== text) {
-        if (value.length > text.length) {
-          rawValue.current = rawValue.current.substring(
-            0,
-            rawValue.current.length - (value.length - text.length)
-          );
-        } else {
-          rawValue.current += text.substring(value.length);
-        }
-      }
-      _setValue(text);
-    }
-  };
+  const { value, valueRef, setValue, onFace, onDel } = useInputValue();
 
   const closeKeyboard = () => {
     Keyboard.dismiss();
@@ -120,6 +82,11 @@ export const InputBar = React.forwardRef<InputBarRef, InputBarProps>(function (
 
   const setEmojiHeight = (h: number) => {
     _setEmojiHeight(h);
+  };
+
+  const _onSend = () => {
+    onSend?.(valueRef.current);
+    inputRef.current?.clear();
   };
 
   React.useImperativeHandle(ref, () => {
@@ -231,7 +198,7 @@ export const InputBar = React.forwardRef<InputBarRef, InputBarProps>(function (
                 />
               </View>
             </View>
-            <IconButton
+            <IconButtonMemo
               style={{
                 width: 30,
                 height: 30,
@@ -253,7 +220,7 @@ export const InputBar = React.forwardRef<InputBarRef, InputBarProps>(function (
               }}
               iconName={iconName}
             />
-            <IconButton
+            <IconButtonMemo
               style={{
                 width: 30,
                 height: 30,
@@ -265,10 +232,7 @@ export const InputBar = React.forwardRef<InputBarRef, InputBarProps>(function (
                 alignSelf: 'flex-end',
                 margin: 6,
               }}
-              onPress={() => {
-                onSend?.(value);
-                inputRef.current?.clear();
-              }}
+              onPress={_onSend}
               iconName={'airplane'}
             />
           </View>
@@ -282,36 +246,11 @@ export const InputBar = React.forwardRef<InputBarRef, InputBarProps>(function (
           paddingBottom: bottom,
         }}
       >
-        <EmojiListMemo
-          style={{ flex: 1, marginBottom: 8 }}
-          onFace={(face) => {
-            // setValue(value + emoji.convert.fromCodePoint(face));
-            setValue(value, 'add_face', face);
-          }}
-        />
+        <EmojiListMemo style={{ flex: 1, marginBottom: 8 }} onFace={onFace} />
         <DelButtonMemo
           getColor={getColor}
           emojiHeight={emojiHeight}
-          onClicked={() => {
-            if (value.length >= 2) {
-              const face = value.substring(value.length - 2);
-              let lastIsFace = false;
-              FACE_ASSETS_UTF16.forEach((v) => {
-                if (face === v) {
-                  lastIsFace = true;
-                  // setValue(value.substring(0, value.length - 2));
-                  setValue(value, 'del_face', face);
-                }
-              });
-              if (lastIsFace === false) {
-                // setValue(value.substring(0, value.length - 1));
-                setValue(value, 'del_c');
-              }
-            } else if (value.length > 0) {
-              // setValue(value.substring(0, value.length - 1));
-              setValue(value, 'del_c');
-            }
-          }}
+          onClicked={onDel}
         />
       </View>
     </>

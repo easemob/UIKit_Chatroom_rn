@@ -4,11 +4,12 @@ import { ColorValue, Platform, View } from 'react-native';
 import { useThemeContext } from '../../theme';
 import { IconButton } from '../../ui/Button';
 
-export function DelButton(params: {
+type DelButtonProps = {
   getColor: (key: string) => ColorValue | undefined;
   emojiHeight: number;
   onClicked: () => void;
-}) {
+};
+export function DelButton(params: DelButtonProps) {
   const { getColor, emojiHeight, onClicked } = params;
   const { shadow } = useThemeContext();
   const b = (
@@ -42,6 +43,7 @@ export function DelButton(params: {
               height: 40,
             }}
             onPress={onClicked}
+            frequencyInterval={200}
           />
         </View>
       </View>
@@ -57,4 +59,14 @@ export function DelButton(params: {
   }
 }
 
-export const DelButtonMemo = React.memo(DelButton);
+const DelButtonCompare = (
+  prevProps: Readonly<DelButtonProps>,
+  nextProps: Readonly<DelButtonProps>
+) => {
+  if (prevProps.emojiHeight !== nextProps.emojiHeight) {
+    return false;
+  }
+  return true;
+};
+
+export const DelButtonMemo = React.memo(DelButton, DelButtonCompare);

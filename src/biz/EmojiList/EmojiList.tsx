@@ -11,7 +11,7 @@ import {
 import emoji from 'twemoji';
 
 import { FACE_ASSETS } from '../../assets';
-import { useColors } from '../../hook';
+import { useColors, useCompare } from '../../hook';
 import { usePaletteContext } from '../../theme';
 import { Text } from '../../ui/Text';
 import { gAspectRatio } from './EmojiList.const';
@@ -22,7 +22,6 @@ export type EmojiListProps = {
 };
 
 export function EmojiList(props: EmojiListProps) {
-  console.log('test:', EmojiList.name);
   const { colors } = usePaletteContext();
   const { width: winWidth } = useWindowDimensions();
   const { getColor } = useColors({
@@ -35,6 +34,7 @@ export function EmojiList(props: EmojiListProps) {
   const getUnitSize = () => {
     return winWidth / 7 - 1;
   };
+  useCompare(getColor);
   return (
     <View
       style={[
@@ -81,16 +81,10 @@ export function EmojiList(props: EmojiListProps) {
 }
 
 const EmojiListCompare = (
-  prevProps: Readonly<EmojiListProps>,
-  nextProps: Readonly<EmojiListProps>
+  _prevProps: Readonly<EmojiListProps>,
+  _nextProps: Readonly<EmojiListProps>
 ) => {
-  if (
-    prevProps.onFace === nextProps.onFace &&
-    prevProps.style === nextProps.style
-  ) {
-    return true;
-  }
-  return false;
+  return true;
 };
 
 const styles = StyleSheet.create({
