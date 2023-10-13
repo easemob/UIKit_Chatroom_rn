@@ -15,9 +15,13 @@ import {
 
 import { AppDev } from './__dev__/AppDev';
 import type { RootParamsList, RootParamsName } from './routes';
-import { ChatroomListScreen, LoginListScreen, TopMenuScreen } from './screens';
-import { ChatroomScreen } from './screens/ChatroomScreen';
-import { ReportScreen } from './screens/ReportScreen';
+import {
+  ChatroomListScreen,
+  ChatroomScreen,
+  LoginListScreen,
+  ReportScreen,
+  TopMenuScreen,
+} from './screens';
 
 const Root = createNativeStackNavigator<RootParamsList>();
 
