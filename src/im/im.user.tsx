@@ -5,6 +5,11 @@ import type {
 } from './types';
 
 export class UserServiceImpl implements UserService {
+  _listeners?: Set<UserServiceListener>;
+  constructor(params: {}) {
+    const {} = params;
+    this._listeners = new Set();
+  }
   addListener(_listener: UserServiceListener): void {
     throw new Error('Method not implemented.');
   }

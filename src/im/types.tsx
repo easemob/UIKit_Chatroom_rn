@@ -130,6 +130,7 @@ export interface ClientServiceListener {
 }
 
 export interface ClientService {
+  destructor(): void;
   addListener(listener: ClientServiceListener): void;
   removeListener(listener: ClientServiceListener): void;
   clearListener(): void;
@@ -140,7 +141,7 @@ export interface ClientService {
     userAvatarURL?: string;
   }): Promise<void>;
   logout(): Promise<void>;
-  currentUser(): string | undefined;
+  currentUserId(): string | undefined;
   getClientInstance(): ChatClient;
 }
 

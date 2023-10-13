@@ -22,7 +22,10 @@ export function IMContextProvider({ value, children }: IMContextProps) {
   return (
     <IMContext.Provider
       value={{
-        client: CreateClientService({}),
+        client: CreateClientService({
+          appKey: value.appKey,
+          debugMode: value.debugMode,
+        }),
         gift: CreateGiftService({}),
         chatroom: CreateChatroomService({}),
         user: CreateUserService({}),
@@ -44,9 +47,12 @@ export function CreateChatroomService(params: {}) {
   return new ChatroomServiceImpl();
 }
 
-export function CreateClientService(params: {}) {
-  const {} = params;
-  return new ClientServiceImpl();
+export function CreateClientService(params: {
+  appKey: string;
+  debugMode?: boolean;
+  autoLogin?: boolean;
+}) {
+  return new ClientServiceImpl(params);
 }
 
 export function CreateGiftService(params: {}) {
@@ -55,6 +61,5 @@ export function CreateGiftService(params: {}) {
 }
 
 export function CreateUserService(params: {}) {
-  const {} = params;
-  return new UserServiceImpl();
+  return new UserServiceImpl(params);
 }
