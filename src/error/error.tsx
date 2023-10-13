@@ -1,5 +1,6 @@
-import { ErrorCode } from './code';
-import { ErrorDescription } from './desc';
+import type { ErrorCode } from './code';
+import type { ErrorDescription } from './desc';
+import { getDescription } from './error.impl';
 
 export class UIKitError extends Error {
   code: ErrorCode;
@@ -11,7 +12,7 @@ export class UIKitError extends Error {
   }) {
     super(params.extra, params.options);
     this.code = params.code;
-    this.desc = this._desc(this.code);
+    this.desc = getDescription(this.code);
 
     // if (Error.captureStackTrace) {
     //   Error.captureStackTrace(this, UIKitError);
@@ -19,33 +20,6 @@ export class UIKitError extends Error {
     //   this.stack = new Error(this.toString()).stack;
     // }
     // console.log(this.stack);
-  }
-
-  private _desc(code: ErrorCode): ErrorDescription {
-    let ret = ErrorDescription.none;
-    switch (code) {
-      case ErrorCode.none:
-        ret = ErrorDescription.none;
-        break;
-      case ErrorCode.common:
-        ret = ErrorDescription.common;
-        break;
-      case ErrorCode.enum:
-        ret = ErrorDescription.enum;
-        break;
-      case ErrorCode.existed:
-        ret = ErrorDescription.existed;
-        break;
-      case ErrorCode.params:
-        ret = ErrorDescription.params;
-        break;
-      case ErrorCode.max_count:
-        ret = ErrorDescription.max_count;
-        break;
-      default:
-        break;
-    }
-    return ret;
   }
 
   public toString(): string {
