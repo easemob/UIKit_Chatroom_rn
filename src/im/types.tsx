@@ -6,17 +6,19 @@ import type { UIKitError } from '../error';
 export interface ChatroomServiceListener {
   onMessageReceived?(roomId: string, message: ChatMessage): void;
   onMessageRecalled?(
-    roomId: String,
+    roomId: string,
     message: ChatMessage,
-    recalledUserId: String
+    recalledUserId: string
   ): void;
-  onGlobalNotifyReceived?(roomId: String, notifyMessage: ChatMessage): void;
-  onUserJoined?(roomId: String, user: UserServiceData): void;
-  onUserLeave?(roomId: String, userId: String): void;
-  onAnnouncementUpdate?(roomId: String, announcement: String): void;
-  onUserBeKicked?(roomId: String, reason: number): void;
-  onUserMuted?(roomId: String, userId: String, operatorId: String): void;
-  onUserUnmuted?(roomId: String, userId: String, operatorId: String): void;
+  onGlobalNotifyReceived?(roomId: string, notifyMessage: ChatMessage): void;
+  onUserJoined?(roomId: string, user: UserServiceData): void;
+  onUserLeave?(roomId: string, userId: string): void;
+  onAnnouncementUpdate?(roomId: string, announcement: string): void;
+  onUserBeKicked?(roomId: string, reason: number): void;
+  onUserMuted?(roomId: string, userId: string[], operatorId: string): void;
+  onUserUnmuted?(roomId: string, userId: string[], operatorId: string): void;
+  onUserAdmin?(roomId: string, userId: string, operatorId: string): void;
+  onUserUnAmin?(roomId: string, userId: string, operatorId: string): void;
 }
 
 export type ChatroomMemberOperateType =
@@ -28,28 +30,29 @@ export type ChatroomMemberOperateType =
   | 'unadmin';
 
 export interface ChatroomService {
+  destructor(): void;
   addListener(listener: ChatroomServiceListener): void;
   removeListener(listener: ChatroomServiceListener): void;
   clearListener(): void;
-  join(roomId: String, userId: String): Promise<void>;
-  leave(roomId: String, userId: String): Promise<void>;
-  kickMember(roomId: String, userId: String): void;
-  fetchMembers(roomId: String, pageSize: number): Promise<string[]>;
-  fetchMutedMembers(roomId: String, pageSize: number): Promise<string[]>;
-  fetchAnnouncement(roomId: String): Promise<string | undefined>;
-  updateAnnouncement(roomId: String, announcement: string): Promise<void>;
+  join(roomId: string, userId: string): Promise<void>;
+  leave(roomId: string, userId: string): Promise<void>;
+  kickMember(roomId: string, userId: string): void;
+  fetchMembers(roomId: string, pageSize: number): Promise<string[]>;
+  fetchMutedMembers(roomId: string, pageSize: number): Promise<string[]>;
+  fetchAnnouncement(roomId: string): Promise<string | undefined>;
+  updateAnnouncement(roomId: string, announcement: string): Promise<void>;
   updateMemberState(
-    roomId: String,
-    userId: String,
+    roomId: string,
+    userId: string,
     op: ChatroomMemberOperateType
   ): Promise<void>;
   sendTextMessage(params: {
-    roomId: String;
+    roomId: string;
     content: string;
     mentionIds?: string[];
   }): Promise<void>;
   sendCustomMessage(params: {
-    roomId: String;
+    roomId: string;
     eventType: string;
     eventParams: Record<string, string>;
     mentionIds?: string[];
@@ -86,27 +89,15 @@ export type UserServiceData = {
   userId: string;
   nickName: string;
   avatarURL: string;
-  gender: boolean;
+  gender: number;
   identify: string;
 };
 
-export interface UserServiceListener {
-  onUserLoginOtherDevice?(deviceName: string): void;
-}
-
 export interface UserService {
-  addListener(listener: UserServiceListener): void;
-  removeListener(listener: UserServiceListener): void;
-  clearListener(): void;
-  addUserInfo(users: UserServiceData[]): void;
-  getUserInfo(userId: string): UserServiceData | undefined;
-  getUserInfos(userIds: string[]): UserServiceData[];
   /**
    * Get user information. Throws exception object {@link UIKitError} on failure. If you use synchronous return, you can use `await getUserInfo('John')`, if you use asynchronous return, you can use `getUserInfo('John').then().catch()`.
    */
   fetchUserInfosFromServer(userIds: string[]): Promise<UserServiceData[]>;
-  removeUserInfo(userId: string): void;
-  updateUserInfo(user: UserServiceData): void;
   uploadMyselfUserInfoToServer(user: UserServiceData): Promise<void>;
 }
 

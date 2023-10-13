@@ -12,4 +12,6 @@ export enum ErrorDescription {
   network_error = 'A network error occurred.',
 
   ui_error = 'An error occurred in the UI.',
+
+  not_impl = 'The code has not been implemented yet and is under development.',
 }

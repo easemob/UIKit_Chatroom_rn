@@ -34,6 +34,9 @@ export function getDescription(code: ErrorCode): ErrorDescription {
     case ErrorCode.ui_error:
       ret = ErrorDescription.ui_error;
       break;
+    case ErrorCode.not_impl:
+      ret = ErrorDescription.not_impl;
+      break;
     default:
       break;
   }

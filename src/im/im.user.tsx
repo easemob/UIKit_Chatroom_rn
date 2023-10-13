@@ -1,43 +1,40 @@
-import type {
-  UserService,
-  UserServiceData,
-  UserServiceListener,
-} from './types';
+import { ChatClient } from 'react-native-chat-sdk';
+
+import type { UserService, UserServiceData } from './types';
 
 export class UserServiceImpl implements UserService {
-  _listeners?: Set<UserServiceListener>;
   constructor(params: {}) {
     const {} = params;
-    this._listeners = new Set();
   }
-  addListener(_listener: UserServiceListener): void {
-    throw new Error('Method not implemented.');
+  async fetchUserInfosFromServer(
+    userIds: string[]
+  ): Promise<UserServiceData[]> {
+    const list = await ChatClient.getInstance().userManager.fetchUserInfoById(
+      userIds
+    );
+    if (list) {
+      const ret: UserServiceData[] = [];
+      for (const item of list) {
+        ret.push({
+          userId: item[1].userId,
+          nickName: item[1].nickName ?? '',
+          avatarURL: item[1].avatarUrl ?? '',
+          gender: item[1].gender ?? 0,
+          identify: JSON.parse(item[1].ext ?? '')?.identify ?? '',
+        });
+      }
+      return ret;
+    }
+    return [];
   }
-  removeListener(_listener: UserServiceListener): void {
-    throw new Error('Method not implemented.');
-  }
-  clearListener(): void {
-    throw new Error('Method not implemented.');
-  }
-  addUserInfo(_users: UserServiceData[]): void {
-    throw new Error('Method not implemented.');
-  }
-  getUserInfo(_userId: string): UserServiceData | undefined {
-    throw new Error('Method not implemented.');
-  }
-  getUserInfos(_userIds: string[]): UserServiceData[] {
-    throw new Error('Method not implemented.');
-  }
-  fetchUserInfosFromServer(_userIds: string[]): Promise<UserServiceData[]> {
-    throw new Error('Method not implemented.');
-  }
-  removeUserInfo(_userId: string): void {
-    throw new Error('Method not implemented.');
-  }
-  updateUserInfo(_user: UserServiceData): void {
-    throw new Error('Method not implemented.');
-  }
-  uploadMyselfUserInfoToServer(_user: UserServiceData): Promise<void> {
-    throw new Error('Method not implemented.');
+  uploadMyselfUserInfoToServer(user: UserServiceData): Promise<void> {
+    const p = {
+      userId: user.userId,
+      nickName: user.nickName,
+      avatarUrl: user.avatarURL,
+      gender: user.gender,
+      ext: { identify: user.identify }.toString(),
+    };
+    return ChatClient.getInstance().userManager.updateOwnUserInfo(p);
   }
 }

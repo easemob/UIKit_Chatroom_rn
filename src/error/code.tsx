@@ -16,4 +16,5 @@ export enum ErrorCode {
   ui_error = 3000,
 
   // dev error 10000 start
+  not_impl = 10000,
 }
