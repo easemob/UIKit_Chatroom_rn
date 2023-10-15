@@ -6,7 +6,9 @@ import {
   Icon,
   seqId,
   useColors,
+  useCompare,
   useDispatchContext,
+  useLifecycle,
   usePaletteContext,
 } from 'react-native-chat-room';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -42,7 +44,11 @@ export function ChatroomScreen(props: Props) {
 
   const [pageY, setPageY] = React.useState(0);
   const { addListener, removeListener } = useDispatchContext();
+  useCompare(count);
 
+  useLifecycle();
+
+  // !!! ERROR  Warning: React has detected a change in the order of Hooks called by HeaderConfig. This will lead to bugs and errors if not fixed. For more information, read the Rules of Hooks: https://reactjs.org/link/rules-of-hooks
   React.useEffect(() => {
     navigation.setOptions({
       headerRight: HeaderRight,
