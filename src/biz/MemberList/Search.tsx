@@ -33,11 +33,12 @@ export function Search(props: SearchProps) {
   });
   return (
     <View
-      style={{
-        // flex: 1,
-        // paddingTop: 100,
-        backgroundColor: 'yellow',
-      }}
+      style={
+        {
+          // flex: 1,
+          // paddingTop: 100,
+        }
+      }
     >
       <View
         style={{

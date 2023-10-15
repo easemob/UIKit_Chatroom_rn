@@ -39,6 +39,7 @@ export const InputBar = React.forwardRef<InputBarRef, InputBarProps>(function (
     onInputBarWillShow,
     onSend,
     keyboardVerticalOffset = 0,
+    onLayout,
     ...others
   } = props;
   const { bottom } = useSafeAreaInsets();
@@ -116,6 +117,7 @@ export const InputBar = React.forwardRef<InputBarRef, InputBarProps>(function (
             }
           });
         }}
+        onLayout={onLayout}
         {...others}
       />
     );
@@ -168,7 +170,6 @@ export const InputBar = React.forwardRef<InputBarRef, InputBarProps>(function (
                   }}
                   containerStyle={{
                     width: '100%',
-                    // backgroundColor: 'red',
                     minHeight: 22,
                   }}
                   onFocus={() => {

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View } from 'react-native';
+import { Text as RNText, View } from 'react-native';
 import {
   createDarkTheme,
   createLightTheme,
@@ -9,9 +9,16 @@ import {
   ThemeContextProvider,
 } from 'react-native-chat-room';
 
-function TextComponent(): React.JSX.Element {
+export function TextComponent(): React.JSX.Element {
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+    <View
+      style={{
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'green',
+      }}
+    >
       <Text
         textType={'large'}
         paletteType={'headline'}
@@ -28,6 +35,46 @@ function TextComponent(): React.JSX.Element {
   );
 }
 
+export function TextComponent2(): React.JSX.Element {
+  return (
+    <View
+      style={{
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'green',
+      }}
+    >
+      <View
+        style={{
+          backgroundColor: 'blue',
+        }}
+      >
+        <Text
+          textType={'large'}
+          paletteType={'headline'}
+          style={{ fontSize: 40 }}
+        >
+          headline - large
+        </Text>
+      </View>
+      <RNText
+        style={[
+          {
+            fontFamily: undefined,
+            fontSize: 20,
+            fontWeight: '600',
+            lineHeight: 28,
+          },
+          { fontSize: 40 },
+        ]}
+      >
+        RN headline - large
+      </RNText>
+    </View>
+  );
+}
+
 export default function test_text() {
   const palette = createPresetPalette();
   const light = createLightTheme(palette);
@@ -36,7 +83,7 @@ export default function test_text() {
   return (
     <ThemeContextProvider value={theme}>
       <PaletteContextProvider value={palette}>
-        <TextComponent />
+        <TextComponent2 />
       </PaletteContextProvider>
     </ThemeContextProvider>
   );

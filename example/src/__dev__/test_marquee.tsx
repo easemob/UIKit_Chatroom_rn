@@ -5,6 +5,7 @@ import { Text, TouchableOpacity, View } from 'react-native';
 import {
   createDarkTheme,
   createPresetPalette,
+  // Icon,
   Marquee,
   MarqueeRef,
   PaletteContextProvider,
@@ -14,6 +15,7 @@ import {
 let count = 1;
 
 export function TestMarquee() {
+  console.log('test:TestMarquee');
   const ref = React.useRef<MarqueeRef>({} as any);
   const pal = createPresetPalette();
   const light = createDarkTheme(pal);
@@ -47,13 +49,50 @@ export function TestMarquee() {
               ++count;
             }}
           >
-            <Text>{'Start Scrolling'}</Text>
+            <Text>{'add marquee task'}</Text>
           </TouchableOpacity>
           <View style={{ height: 100 }} />
           <Marquee
             ref={ref}
-            width={200}
-            containerStyle={{ top: 100, left: 100 }}
+            containerStyle={
+              {
+                // top: 100,
+                // left: 100,
+                // height: 30,
+                // width: 250,
+              }
+            }
+            textStyle={
+              {
+                // fontSize: 30,
+                // lineHeight: undefined,
+              }
+            }
+            // icon={
+            //   <View
+            //     style={{
+            //       height: 20,
+            //       width: 20,
+            //       backgroundColor: 'red',
+            //       position: 'absolute',
+            //       justifyContent: 'center',
+            //       alignItems: 'center',
+            //     }}
+            //   >
+            //     <Icon
+            //       name={'archives_xmark'}
+            //       style={[
+            //         {
+            //           // paddingLeft: 4,
+            //           tintColor: 'white',
+            //           height: 14,
+            //           width: 14,
+            //           backgroundColor: 'red',
+            //         },
+            //       ]}
+            //     />
+            //   </View>
+            // }
           />
         </View>
       </ThemeContextProvider>

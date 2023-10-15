@@ -130,7 +130,6 @@ export function TabPageHeader(props: TabPageHeaderProps) {
                 {
                   height: gHeaderHeight,
                   width: unitWidth - unitWidth * 0.1,
-                  // backgroundColor: 'yellow',
                   justifyContent: 'center',
                   alignItems: 'center',
                 },

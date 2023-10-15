@@ -96,7 +96,6 @@ export function SimulativeModal(props: SimulativeModalProps) {
           position: 'absolute',
           width: width,
           height: height,
-          // backgroundColor: 'red',
           display: modalVisible === true ? 'flex' : 'none',
           // opacity: modalVisible === true ? 1 : 0,
         },
@@ -130,7 +129,6 @@ export function SimulativeModal(props: SimulativeModalProps) {
             justifyContent: 'flex-end',
             opacity: modalVisible === true ? backgroundOpacity : 0,
             transform: [{ translateY: translateY }],
-            // backgroundColor: 'red',
           },
           modalStyle,
         ]}

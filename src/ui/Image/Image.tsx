@@ -38,3 +38,9 @@ export function Image(props: ImageProps) {
     />
   );
 }
+
+const ImageCompare = () => {
+  return true;
+};
+
+export const ImageMemo = React.memo(Image, ImageCompare);

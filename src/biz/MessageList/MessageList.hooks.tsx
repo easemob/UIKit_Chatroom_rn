@@ -173,7 +173,7 @@ export function useMessageListApi(params: {
   };
 
   const _scrollToEnd = () => {
-    listRef.current?.scrollToEnd();
+    listRef.current?.scrollToEnd?.();
   };
 
   const _onEndReached = () => {

@@ -1,12 +1,11 @@
 import * as React from 'react';
-import type { ViewStyle } from 'react-native';
-import type { StyleProp } from 'react-native';
+import type { StyleProp, ViewStyle } from 'react-native';
 import { FlatList, ListRenderItemInfo, View } from 'react-native';
 
 import { Queue } from '../../utils';
 import {
+  gGiftFloatingListHeight,
   gItemInterval,
-  gListHeight,
   gListWidth,
   gTimeoutTask,
 } from './GiftFloating.const';
@@ -19,6 +18,7 @@ export type GiftFloatingRef = {
   pushTask: (task: GiftFloatingTask) => void;
 };
 export type GiftFloatingProps = {
+  visible?: boolean;
   containerStyle?: StyleProp<ViewStyle>;
 };
 
@@ -29,7 +29,7 @@ export const GiftFloating = React.forwardRef<
   props: GiftFloatingProps,
   ref?: React.ForwardedRef<GiftFloatingRef>
 ) {
-  const { containerStyle } = props;
+  const { containerStyle, visible = true } = props;
 
   const dataRef = React.useRef<GiftFloatingItem[]>([]);
   const [data, setData] = React.useState<GiftFloatingItem[]>(dataRef.current);
@@ -103,14 +103,18 @@ export const GiftFloating = React.forwardRef<
     []
   );
 
+  if (visible === false) {
+    return null;
+  }
+
   return (
     <View
       style={[
         containerStyle,
         {
-          height: gListHeight,
+          height: gGiftFloatingListHeight,
           width: gListWidth,
-          // backgroundColor: 'gray',
+          // backgroundColor: '#ffd700',
         },
       ]}
     >

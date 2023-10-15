@@ -23,7 +23,6 @@ export type ContainerProps = React.PropsWithChildren<{
 }>;
 
 export function Container(props: ContainerProps) {
-  console.log('test:Container');
   const {
     appKey,
     children,

@@ -1,6 +1,10 @@
 import * as React from 'react';
-import { useWindowDimensions } from 'react-native';
-import { FlatList, ListRenderItemInfo, View } from 'react-native';
+import {
+  FlatList,
+  ListRenderItemInfo,
+  useWindowDimensions,
+  View,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Image } from '../../ui/Image';

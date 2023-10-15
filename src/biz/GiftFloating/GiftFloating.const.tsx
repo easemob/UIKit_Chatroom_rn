@@ -2,7 +2,7 @@ import { Easing, Platform } from 'react-native';
 
 export const gScaleFactor = 36 / 44;
 
-export const gListHeight = 84;
+export const gGiftFloatingListHeight = 84;
 export const gItemHeight = 44;
 export const gItemWidth = 227;
 export const gItemBorderRadius = 22;

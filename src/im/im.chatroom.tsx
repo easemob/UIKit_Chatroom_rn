@@ -6,8 +6,8 @@ import {
   ChatRoom,
   ChatRoomEventListener,
 } from 'react-native-chat-sdk';
-import { ErrorCode, UIKitError } from 'src/error';
 
+import { ErrorCode, UIKitError } from '../error';
 import type {
   ChatroomMemberOperateType,
   ChatroomService,

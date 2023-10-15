@@ -1,40 +1,18 @@
 import * as React from 'react';
 
+import { useGetObjectName } from './useGetObjectName';
+
 export function useCompare(
   object: any,
   others?: { callerName?: string; objectName?: string }
 ) {
   const ref = React.useRef(object);
-  const getObjectName = React.useCallback((object: any) => {
-    const objectType = typeof object;
-    if (
-      objectType === 'bigint' ||
-      objectType === 'boolean' ||
-      objectType === 'number' ||
-      objectType === 'string'
-    ) {
-      return object;
-    } else if (objectType === 'function') {
-      return object?.name;
-    } else if (objectType === 'object') {
-      try {
-        const r = JSON.stringify(object);
-        return r;
-      } catch (error) {
-        return object;
-      }
-    } else if (objectType === 'symbol') {
-      const s = object as Symbol;
-      return s.toString();
-    } else {
-      return object;
-    }
-  }, []);
+  const { getObjectName } = useGetObjectName();
 
   const log = `{
     toolName: '${useCompare.name}',
-    objectName: '${others?.objectName ?? getObjectName(object)}',
     callerName: '${others?.callerName ?? useCompare?.caller?.name}',
+    objectName: '${others?.objectName ?? getObjectName(object)}',
     equalResult: '${ref.current === object}',
   }`;
   if (ref.current !== object) {

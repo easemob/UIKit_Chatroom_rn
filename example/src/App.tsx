@@ -51,66 +51,68 @@ export function App() {
   };
 
   return (
-    <Container appKey={'sdf'} palette={palette} theme={light ? light : dark}>
-      <NavigationContainer
-        onStateChange={(state: NavigationState | undefined) => {
-          const rr: string[] & string[][] = [];
-          formatNavigationState(state, rr);
-          console.log(
-            'test:onStateChange:',
-            JSON.stringify(rr, undefined, '  ')
-          );
-          // console.log('test:onStateChange:o:', JSON.stringify(state));
-        }}
-        onUnhandledAction={(action: NavigationAction) => {
-          console.log('test:onUnhandledAction:', action);
-        }}
-        onReady={() => {
-          console.log('test:onReady:');
-        }}
-        fallback={
-          <View style={{ height: 100, width: 100, backgroundColor: 'red' }} />
-        }
-      >
-        <Root.Navigator initialRouteName={initialRouteName}>
-          <Root.Screen
-            name={'TopMenu'}
-            options={{
-              headerShown: true,
-            }}
-            component={TopMenuScreen}
-          />
-          <Root.Screen
-            name={'LoginList'}
-            options={{
-              headerShown: true,
-            }}
-            component={LoginListScreen}
-          />
-          <Root.Screen
-            name={'ChatroomList'}
-            options={{
-              headerShown: true,
-            }}
-            component={ChatroomListScreen}
-          />
-          <Root.Screen
-            name={'TestChatroom'}
-            options={{
-              headerShown: true,
-            }}
-            component={ChatroomScreen}
-          />
-          <Root.Screen
-            name={'TestReport'}
-            options={{
-              headerShown: true,
-            }}
-            component={ReportScreen}
-          />
-        </Root.Navigator>
-      </NavigationContainer>
-    </Container>
+    <React.StrictMode>
+      <Container appKey={'sdf'} palette={palette} theme={light ? light : dark}>
+        <NavigationContainer
+          onStateChange={(state: NavigationState | undefined) => {
+            const rr: string[] & string[][] = [];
+            formatNavigationState(state, rr);
+            console.log(
+              'dev:onStateChange:',
+              JSON.stringify(rr, undefined, '  ')
+            );
+            // console.log('onStateChange:o:', JSON.stringify(state));
+          }}
+          onUnhandledAction={(action: NavigationAction) => {
+            console.log('dev:onUnhandledAction:', action);
+          }}
+          onReady={() => {
+            console.log('dev:onReady:');
+          }}
+          fallback={
+            <View style={{ height: 100, width: 100, backgroundColor: 'red' }} />
+          }
+        >
+          <Root.Navigator initialRouteName={initialRouteName}>
+            <Root.Screen
+              name={'TopMenu'}
+              options={{
+                headerShown: true,
+              }}
+              component={TopMenuScreen}
+            />
+            <Root.Screen
+              name={'LoginList'}
+              options={{
+                headerShown: true,
+              }}
+              component={LoginListScreen}
+            />
+            <Root.Screen
+              name={'ChatroomList'}
+              options={{
+                headerShown: true,
+              }}
+              component={ChatroomListScreen}
+            />
+            <Root.Screen
+              name={'TestChatroom'}
+              options={{
+                headerShown: true,
+              }}
+              component={ChatroomScreen}
+            />
+            <Root.Screen
+              name={'TestReport'}
+              options={{
+                headerShown: true,
+              }}
+              component={ReportScreen}
+            />
+          </Root.Navigator>
+        </NavigationContainer>
+      </Container>
+    </React.StrictMode>
   );
 }
 

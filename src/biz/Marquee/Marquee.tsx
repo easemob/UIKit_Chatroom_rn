@@ -1,20 +1,22 @@
 import * as React from 'react';
 import {
   Animated,
-  ImageStyle,
+  ColorValue,
   StyleProp,
+  // Text as RNText,
   TextStyle,
   useWindowDimensions,
   View,
   ViewStyle,
 } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 
-import type { IconNameType } from '../../assets';
-import { useColors } from '../../hook';
+import { useCheckType, useColors, useGetStyleSize } from '../../hook';
 import { usePaletteContext } from '../../theme';
 import { Icon } from '../../ui/Image';
 import { PresetCalcTextWidth, Text } from '../../ui/Text';
 import { Queue } from '../../utils';
+import { gMarqueeHeight } from './Marquee.const';
 import { createCompose } from './Marquee.hooks';
 import type { MarqueeTask } from './types';
 
@@ -23,16 +25,11 @@ export type MarqueeRef = {
 };
 
 export type MarqueeProps = {
-  height?: number;
-  width?: number;
-  speed?: number;
+  visible?: boolean;
+  playSpeed?: number;
   containerStyle?: StyleProp<ViewStyle>;
-  contentStyle?: StyleProp<TextStyle>;
-  contentContainerStyle?: StyleProp<TextStyle>;
-  icon?: {
-    iconName?: IconNameType;
-    iconStyle?: StyleProp<ImageStyle>;
-  };
+  textStyle?: StyleProp<TextStyle>;
+  icon?: React.ReactElement;
   onFinished?: () => void;
 };
 
@@ -41,18 +38,15 @@ export const Marquee = React.forwardRef<MarqueeRef, MarqueeProps>(function (
   ref?: React.ForwardedRef<MarqueeRef>
 ) {
   const {
-    width: marqueeWidth,
-    height: marqueeHeight = 20,
-    speed,
+    visible = true,
+    playSpeed,
     containerStyle,
-    contentStyle,
-    contentContainerStyle,
-    icon,
+    textStyle,
     onFinished,
   } = props;
-
-  const { colors } = usePaletteContext();
-  const { getColor } = useColors({
+  const { getViewStyleSize } = useGetStyleSize();
+  const { colors, lineGradient } = usePaletteContext();
+  const { getColor, getColors } = useColors({
     color: {
       light: colors.barrage[100],
       dark: colors.barrage[100],
@@ -61,16 +55,32 @@ export const Marquee = React.forwardRef<MarqueeRef, MarqueeProps>(function (
       light: colors.error[7],
       dark: colors.error[7],
     },
+    backgroundColor3: {
+      light: ['hsla(350, 100%, 70%, 0)', colors.error[7]],
+      dark: ['hsla(350, 100%, 70%, 0)', colors.error[7]],
+    },
     tintColor: {
       light: colors.neutral[98],
       dark: colors.neutral[98],
     },
   });
+  const { start, end } = lineGradient.leftToRight;
+
+  const containerSize = getViewStyleSize(containerStyle);
+  const { checkType } = useCheckType();
+  if (containerSize?.height) {
+    checkType(containerSize.height, 'number');
+  }
+  if (containerSize?.width) {
+    checkType(containerSize.width, 'number');
+  }
+
+  const { width: winWidth } = useWindowDimensions();
+  const containerWidth = (containerSize?.width ?? winWidth) as number;
+  const containerHeight = (containerSize?.height ?? gMarqueeHeight) as number;
 
   const [contentWidth, setContentWidth] = React.useState(0);
-  const { width: winWidth } = useWindowDimensions();
-  const width = marqueeWidth ?? winWidth;
-  const [content, setContent] = React.useState(' ');
+  const [content, setContent] = React.useState('1234567890');
   const [isShow, setIsShow] = React.useState(false);
   const isSameContent = React.useRef(false);
 
@@ -105,10 +115,10 @@ export const Marquee = React.forwardRef<MarqueeRef, MarqueeProps>(function (
     createCompose({
       x: x,
       startX: 0,
-      endX: width - w,
+      endX: containerWidth - w,
       contentWidth: w,
-      width: width,
-      speed: speed,
+      width: containerWidth,
+      speed: playSpeed,
     }).compose(() => {
       preTask.current = curTask.current;
       curTask.current = undefined;
@@ -135,25 +145,36 @@ export const Marquee = React.forwardRef<MarqueeRef, MarqueeProps>(function (
     []
   );
 
+  if (visible === false) {
+    return null;
+  }
+
   return (
     <View
       style={[
-        containerStyle,
         {
-          width: width,
+          width: containerWidth,
+          height: containerHeight,
           justifyContent: 'center',
           alignItems: 'flex-start',
           overflow: 'scroll',
-          paddingLeft: marqueeHeight,
+          // paddingLeft: containerHeight,
           borderRadius: 10,
-          paddingHorizontal: 4,
+          paddingHorizontal: 10,
           display: isShow ? 'flex' : 'none',
+          backgroundColor: getColor('backgroundColor'),
+          // backgroundColor: '#ffd700',
         },
+        containerStyle,
       ]}
     >
       <PresetCalcTextWidth
         content={content}
-        textProps={{ textType: 'small', paletteType: 'body' }}
+        textProps={{
+          textType: 'small',
+          paletteType: 'body',
+          style: textStyle,
+        }}
         onWidth={(w: number) => {
           setContentWidth(w);
           if (curTask.current === undefined) {
@@ -168,51 +189,93 @@ export const Marquee = React.forwardRef<MarqueeRef, MarqueeProps>(function (
       <Animated.View
         style={[
           {
-            height: marqueeHeight,
+            // height: containerHeight,
             width: contentWidth,
-            justifyContent: 'center',
-            borderTopRightRadius: 10,
-            borderBottomRightRadius: 10,
-            paddingHorizontal: 4,
+            // justifyContent: 'center',
+            // borderTopRightRadius: 10,
+            // borderBottomRightRadius: 10,
+            // paddingHorizontal: 4,
+            marginLeft: containerHeight,
             backgroundColor: getColor('backgroundColor'),
             transform: [{ translateX: x }],
           },
-          contentContainerStyle,
         ]}
       >
         <Text
           textType={'small'}
           paletteType={'body'}
           numberOfLines={1}
-          style={[{ color: getColor('color') }, contentStyle]}
+          style={[{ color: getColor('color') }, textStyle]}
         >
           {content}
         </Text>
       </Animated.View>
-      <View
+      <MarqueeIcon
+        getColor={getColor}
+        containerHeight={containerHeight}
+        {...props}
+      />
+      <LinearGradient
+        colors={getColors('backgroundColor3') as (string | number)[]}
+        start={end}
+        end={start}
         style={{
-          height: marqueeHeight,
-          width: marqueeHeight,
-          backgroundColor: getColor('backgroundColor'),
           position: 'absolute',
-          justifyContent: 'center',
-          alignItems: 'center',
+          // backgroundColor: getColor('backgroundColor'),
+          height: containerHeight,
+          width: containerHeight / 2,
+          left: containerHeight,
         }}
-      >
-        <Icon
-          name={icon?.iconName ?? 'spkeaker_n_vertical_bar'}
-          style={[
-            {
-              marginLeft: 4,
-              tintColor: getColor('tintColor'),
-              height: 16,
-              width: 16,
-              backgroundColor: getColor('backgroundColor'),
-            },
-            icon?.iconStyle,
-          ]}
-        />
-      </View>
+      />
+      <LinearGradient
+        colors={getColors('backgroundColor3') as (string | number)[]}
+        start={start}
+        end={end}
+        style={{
+          position: 'absolute',
+          // backgroundColor: getColor('backgroundColor'),
+          height: containerHeight,
+          width: containerHeight / 2,
+          right: 0,
+        }}
+      />
     </View>
   );
 });
+
+const MarqueeIcon = ({
+  containerHeight,
+  icon,
+  getColor,
+}: MarqueeProps & {
+  containerHeight: number;
+  getColor: (key: string) => ColorValue | undefined;
+}) => {
+  return icon ? (
+    <>{icon}</>
+  ) : (
+    <View
+      style={{
+        height: containerHeight,
+        width: containerHeight,
+        backgroundColor: getColor('backgroundColor'),
+        position: 'absolute',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
+    >
+      <Icon
+        name={'spkeaker_n_vertical_bar'}
+        style={[
+          {
+            marginLeft: 4,
+            tintColor: getColor('tintColor'),
+            height: 16,
+            width: 16,
+            backgroundColor: getColor('backgroundColor'),
+          },
+        ]}
+      />
+    </View>
+  );
+};
