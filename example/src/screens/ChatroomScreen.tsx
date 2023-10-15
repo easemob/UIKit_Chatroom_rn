@@ -4,19 +4,25 @@ import { Platform, TouchableOpacity, View } from 'react-native';
 import {
   Chatroom,
   Icon,
+  seqId,
   useColors,
+  useDispatchContext,
   usePaletteContext,
 } from 'react-native-chat-room';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { BackgroundImageMemo } from '../BackgroundImage';
+import { ChatroomTestMenu, ChatroomTestMenuRef } from '../ChatroomTestMenu';
 import type { RootScreenParamsList } from '../routes';
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;
 export function ChatroomScreen(props: Props) {
-  const {} = props;
+  const { navigation } = props;
   const insets = useSafeAreaInsets();
   const testRef = React.useRef<View>({} as any);
+  const menuRef = React.useRef<ChatroomTestMenuRef>({} as any);
+  const chatroomRef = React.useRef<Chatroom>({} as any);
+  const count = React.useRef(0);
   console.log('test:ChatroomScreen:', insets);
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
@@ -33,33 +39,82 @@ export function ChatroomScreen(props: Props) {
       dark: colors.barrage[8],
     },
   });
+
+  const [pageY, setPageY] = React.useState(0);
+  const { addListener, removeListener } = useDispatchContext();
+
+  React.useEffect(() => {
+    navigation.setOptions({
+      headerRight: HeaderRight,
+      // headerShadowVisible: false,
+      // headerBackTitleVisible: false,
+    });
+  }, [navigation]);
+
+  React.useEffect(() => {
+    const cb = () => {
+      console.log('test:onPress:');
+      menuRef?.current?.startShow?.();
+    };
+    addListener(`_$${HeaderRight.name}`, cb);
+    return () => {
+      removeListener(`_$${HeaderRight.name}`, cb);
+    };
+  }, [addListener, removeListener]);
+
+  const addGiftFloatingTask = () => {
+    chatroomRef?.current?.getGiftFloatingRef()?.pushTask({
+      model: {
+        id: seqId('_gf').toString(),
+        nickName: 'NickName',
+        giftCount: 1,
+        giftIcon: 'http://notext.png',
+        content: 'send Agoraship',
+      },
+    });
+  };
+  const addMarqueeTask = () => {
+    const content =
+      'For several generations, stories from Africa have traditionally been passed down by word of mouth. ';
+    const content2 = "I'm fine.";
+    chatroomRef?.current?.getMarqueeRef()?.pushTask?.({
+      model: {
+        id: count.current.toString(),
+        content: count.current % 2 === 0 ? content : content2,
+      },
+    });
+    ++count.current;
+  };
+
   return (
     <View
       ref={testRef}
       style={{ flex: 1 }}
-      // onLayout={(e) => {
-      //   console.log('test:onLayout:', e.nativeEvent.layout);
-      //   testRef.current?.measure(
-      //     (
-      //       x: number,
-      //       y: number,
-      //       width: number,
-      //       height: number,
-      //       pageX: number,
-      //       pageY: number
-      //     ) => {
-      //       console.log('Sub:Sub:measure:', x, y, width, height, pageX, pageY);
-      //     }
-      //   );
-      //   testRef.current?.measureInWindow(
-      //     (x: number, y: number, width: number, height: number) => {
-      //       console.log('Sub:Sub:measureInWindow:', x, y, width, height);
-      //     }
-      //   );
-      // }}
+      onLayout={(e) => {
+        console.log('test:onLayout:', e.nativeEvent.layout);
+        testRef.current?.measure(
+          (
+            x: number,
+            y: number,
+            width: number,
+            height: number,
+            pageX: number,
+            pageY: number
+          ) => {
+            console.log('Sub:Sub:measure:', x, y, width, height, pageX, pageY);
+            setPageY(pageY);
+          }
+        );
+        testRef.current?.measureInWindow(
+          (x: number, y: number, width: number, height: number) => {
+            console.log('Sub:Sub:measureInWindow:', x, y, width, height);
+          }
+        );
+      }}
     >
       {/* <BackgroundImageMemo /> */}
       <Chatroom
+        ref={chatroomRef}
         // messageList={{
         //   props: {
         //     visible: true,
@@ -79,6 +134,7 @@ export function ChatroomScreen(props: Props) {
         //   },
         // }}
         backgroundView={<BackgroundImageMemo />}
+        // backgroundView={<View style={{ flex: 1, backgroundColor: 'blue' }} />}
         // marquee={{
         //   props: {
         //     visible: true,
@@ -90,7 +146,7 @@ export function ChatroomScreen(props: Props) {
         // }}
         input={{
           props: {
-            keyboardVerticalOffset: Platform.OS === 'ios' ? 94 : 0,
+            keyboardVerticalOffset: Platform.OS === 'ios' ? pageY : 0,
             after: [
               <TouchableOpacity
                 style={{
@@ -146,6 +202,29 @@ export function ChatroomScreen(props: Props) {
           }}
         /> */}
       </Chatroom>
+      <ChatroomTestMenu
+        ref={menuRef}
+        onRequestModalClose={() => {
+          menuRef?.current?.startHide?.();
+        }}
+        addGiftFloatingTask={addGiftFloatingTask}
+        addMarqueeTask={addMarqueeTask}
+      />
     </View>
   );
 }
+
+const HeaderRight = () => {
+  const { emit } = useDispatchContext();
+  return (
+    <View>
+      <TouchableOpacity
+        onPress={() => {
+          emit(`_$${HeaderRight.name}`, {});
+        }}
+      >
+        <Icon name={'plus_in_circle'} style={{ width: 20, height: 20 }} />
+      </TouchableOpacity>
+    </View>
+  );
+};

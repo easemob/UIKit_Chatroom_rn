@@ -68,6 +68,22 @@ export class Chatroom extends React.Component<ChatroomProps, ChatroomState> {
     };
   }
 
+  /**
+   * fot test
+   * @returns
+   */
+  getMarqueeRef() {
+    return this.marqueeRef?.current;
+  }
+
+  /**
+   * fot test
+   * @returns
+   */
+  getGiftFloatingRef() {
+    return this.giftRef?.current;
+  }
+
   _getMessageListTop() {
     const mh = gMessageListHeight;
     const ih = gInputBarStyleHeight;
