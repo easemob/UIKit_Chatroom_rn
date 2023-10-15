@@ -66,7 +66,7 @@ export const InputBar = React.forwardRef<InputBarRef, InputBarProps>(function (
 
   const keyboardHeight = useKeyboardHeight();
 
-  const [isStyle, setIsStyle] = React.useState(true);
+  const [isStyle, _setIsStyle] = React.useState(true);
   const inputRef = React.useRef<RNTextInput>({} as any);
 
   const isClosedEmoji = React.useRef(true);
@@ -81,7 +81,29 @@ export const InputBar = React.forwardRef<InputBarRef, InputBarProps>(function (
     Keyboard.dismiss();
   };
 
+  const setIsStyle = (isStyle: boolean) => {
+    if (isStyle === false) {
+      LayoutAnimation.configureNext({
+        duration: 250, // from keyboard event
+        update: {
+          duration: 10,
+          type: Platform.OS === 'ios' ? 'easeIn' : 'easeIn',
+        },
+      });
+    }
+    _setIsStyle(isStyle);
+  };
+
   const setEmojiHeight = (h: number) => {
+    if (h === 0) {
+      LayoutAnimation.configureNext({
+        duration: 250, // from keyboard event
+        update: {
+          duration: 250,
+          type: Platform.OS === 'ios' ? 'keyboard' : 'easeIn',
+        },
+      });
+    }
     _setEmojiHeight(h);
   };
 
@@ -96,41 +118,40 @@ export const InputBar = React.forwardRef<InputBarRef, InputBarProps>(function (
         isClosedEmoji.current = true;
         isClosedKeyboard.current = true;
         setIsStyle(true);
+        setEmojiHeight(0);
         onInputBarWillHide?.();
         closeKeyboard();
       },
     };
   });
 
-  if (isStyle === true) {
-    return (
-      <InputBarStyle
-        onClickInput={() => {
-          isClosedEmoji.current = false;
-          isClosedKeyboard.current = false;
-          setIsStyle(false);
-          setIconName('face');
-          onInputBarWillShow?.();
-          timeoutTask(() => {
-            if (inputRef.current?.focus) {
-              inputRef.current?.focus();
-            }
-          });
-        }}
-        onLayout={onLayout}
-        {...others}
-      />
-    );
-  }
   return (
     <>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         keyboardVerticalOffset={keyboardVerticalOffset}
       >
+        <InputBarStyle
+          onClickInput={() => {
+            isClosedEmoji.current = false;
+            isClosedKeyboard.current = false;
+            setIsStyle(false);
+            setIconName('face');
+            onInputBarWillShow?.();
+            timeoutTask(() => {
+              if (inputRef.current?.focus) {
+                inputRef.current?.focus();
+              }
+            });
+          }}
+          onLayout={onLayout}
+          isShow={isStyle}
+          {...others}
+        />
         <View
           style={{
             backgroundColor: getColor('backgroundColor'),
+            display: isStyle === false ? 'flex' : 'none',
           }}
         >
           <View
@@ -241,10 +262,12 @@ export const InputBar = React.forwardRef<InputBarRef, InputBarProps>(function (
       </KeyboardAvoidingView>
       <View
         style={{
-          backgroundColor: getColor('backgroundColor'),
+          backgroundColor:
+            emojiHeight === 0 ? undefined : getColor('backgroundColor'),
           height: emojiHeight,
           // overflow: 'hidden',
           paddingBottom: bottom,
+          // display: isStyle === false ? 'flex' : 'none',
         }}
       >
         <EmojiListMemo style={{ flex: 1, marginBottom: 8 }} onFace={onFace} />

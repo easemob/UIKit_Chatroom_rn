@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { LayoutChangeEvent, StyleSheet, View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ErrorCode, UIKitError } from '../../error';
 import { useColors } from '../../hook';
@@ -17,12 +16,12 @@ export type InputBarStyleProps = {
   first?: React.ReactNode;
   after?: React.ReactNode[];
   onLayout?: ((event: LayoutChangeEvent) => void) | undefined;
+  isShow?: boolean;
 };
 
 export function InputBarStyle(props: InputBarStyleProps) {
-  const { onClickInput, first, after, onLayout } = props;
+  const { onClickInput, first, after, onLayout, isShow } = props;
   const { colors } = usePaletteContext();
-  const { bottom } = useSafeAreaInsets();
   const { getColor } = useColors({
     backgroundColor: {
       light: colors.barrage[2],
@@ -44,7 +43,8 @@ export function InputBarStyle(props: InputBarStyleProps) {
         styles.container,
         {
           // paddingBottom: bottom,
-          marginBottom: bottom,
+          // marginBottom: bottom,
+          display: isShow === true ? 'flex' : 'none',
         },
       ]}
       onLayout={onLayout}

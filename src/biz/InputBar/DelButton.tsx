@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ColorValue, Platform, View } from 'react-native';
+import { ColorValue, View } from 'react-native';
 
 import { useThemeContext } from '../../theme';
 import { IconButton } from '../../ui/Button';
@@ -49,14 +49,10 @@ export function DelButton(params: DelButtonProps) {
       </View>
     </View>
   );
-  if (Platform.OS === 'ios') {
-    return b;
-  } else {
-    if (emojiHeight === 0) {
-      return null;
-    }
-    return b;
+  if (emojiHeight === 0) {
+    return null;
   }
+  return b;
 }
 
 const DelButtonCompare = (

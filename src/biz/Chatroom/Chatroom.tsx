@@ -127,7 +127,15 @@ export class Chatroom extends React.Component<ChatroomProps, ChatroomState> {
       backgroundView,
     } = this.props;
     return (
-      <View style={[{ flex: 1 }, containerStyle]}>
+      <View
+        style={[
+          {
+            flex: 1,
+            // justifyContent: 'flex-end',
+          },
+          containerStyle,
+        ]}
+      >
         <View
           style={{
             flex: 1,
