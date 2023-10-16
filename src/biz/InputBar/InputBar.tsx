@@ -99,7 +99,7 @@ export const InputBar = React.forwardRef<InputBarRef, InputBarProps>(function (
       LayoutAnimation.configureNext({
         duration: 250, // from keyboard event
         update: {
-          duration: 250,
+          duration: 10,
           type: Platform.OS === 'ios' ? 'keyboard' : 'easeIn',
         },
       });
