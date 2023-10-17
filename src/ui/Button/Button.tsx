@@ -1,10 +1,12 @@
 import * as React from 'react';
 import {
   GestureResponderEvent,
+  ImageStyle,
   Pressable,
   PressableProps,
   PressableStateCallbackType,
   StyleProp,
+  TextStyle,
   View,
   ViewStyle,
 } from 'react-native';
@@ -39,7 +41,9 @@ export type ButtonProps = Omit<PressableProps, 'style'> & {
     | 'text-icon'
     | 'loading';
   text?: string;
+  textStyle?: StyleProp<TextStyle>;
   icon?: IconNameType;
+  iconStyle?: StyleProp<ImageStyle>;
   preventHighFrequencyClicks?: boolean;
   frequencyInterval?: number;
 };
@@ -118,7 +122,7 @@ export function Button(props: ButtonProps) {
 }
 
 const ButtonContent = (props: ButtonProps): React.JSX.Element => {
-  const { contentType, text, icon } = props;
+  const { contentType, text, icon, textStyle, iconStyle } = props;
   const buttonSize = useGetButtonSizeStyle(props);
   const buttonState = useGetButtonStateStyle(props);
   switch (contentType) {
@@ -133,11 +137,14 @@ const ButtonContent = (props: ButtonProps): React.JSX.Element => {
                 tintColor: buttonState.color,
                 // backgroundColor: buttonState.backgroundColor,
               },
+              iconStyle,
             ]}
             name={icon ?? 'star_fill'}
           />
           <View style={{ width: 4 }} />
-          <Text style={[buttonSize.text, { color: buttonState.color }]}>
+          <Text
+            style={[buttonSize.text, { color: buttonState.color }, textStyle]}
+          >
             {text}
           </Text>
         </View>
@@ -152,20 +159,25 @@ const ButtonContent = (props: ButtonProps): React.JSX.Element => {
               tintColor: buttonState.color,
               // backgroundColor: buttonState.backgroundColor,
             },
+            iconStyle,
           ]}
           name={icon ?? 'star_fill'}
         />
       );
     case 'only-text':
       return (
-        <Text style={[buttonSize.text, { color: buttonState.color }]}>
+        <Text
+          style={[buttonSize.text, { color: buttonState.color }, textStyle]}
+        >
           {text}
         </Text>
       );
     case 'text-icon':
       return (
         <View style={{ flexDirection: 'row' }}>
-          <Text style={[buttonSize.text, { color: buttonState.color }]}>
+          <Text
+            style={[buttonSize.text, { color: buttonState.color }, textStyle]}
+          >
             {text}
           </Text>
           <Icon
@@ -176,6 +188,7 @@ const ButtonContent = (props: ButtonProps): React.JSX.Element => {
                 tintColor: buttonState.color,
                 // backgroundColor: buttonState.backgroundColor,
               },
+              iconStyle,
             ]}
             name={icon ?? 'star_fill'}
           />

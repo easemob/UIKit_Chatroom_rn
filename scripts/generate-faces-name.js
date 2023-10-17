@@ -39,7 +39,7 @@ const generateFaces = (_faceDir) => {
   const r = result.map((value) => {
     return value.toString();
   });
-  console.log('test:1:', r);
+  console.log('js:r:', r);
 
   const exportString = `
 // This file is generated automatically. Please do not edit it manually. If necessary, you can run the 'scripts/bundle-icons.js' script to generate it again.\n

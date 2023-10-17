@@ -1,7 +1,17 @@
 import * as React from 'react';
-import type { LayoutChangeEvent, StyleProp, ViewStyle } from 'react-native';
-import { FlatList, ListRenderItemInfo, View } from 'react-native';
+import {
+  FlatList,
+  LayoutChangeEvent,
+  ListRenderItemInfo,
+  StyleProp,
+  View,
+  ViewStyle,
+} from 'react-native';
 
+import { useDispatchContext } from '../../dispatch';
+import { useColors } from '../../hook';
+import { usePaletteContext } from '../../theme';
+import { BorderButton } from '../../ui/Button';
 import { timeoutTask } from '../../utils';
 import {
   gMessageListHeight,
@@ -39,8 +49,15 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
       visible = true,
       onLayout,
     } = props;
-    const { data, addTextMessage, listRef, scrollToEnd, onEndReached } =
-      useMessageListApi({ onLongPress: onLongPressItem, onUnreadCount });
+    const {
+      data,
+      addTextMessage,
+      listRef,
+      scrollToEnd,
+      onEndReached,
+      onScroll,
+      scrollToLastMessage,
+    } = useMessageListApi({ onLongPress: onLongPressItem, onUnreadCount });
 
     React.useImperativeHandle(
       ref,
@@ -86,10 +103,10 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
           keyExtractor={(item: MessageListItemProps) => {
             return item.id;
           }}
-          onEndReached={() => {
-            onEndReached();
-          }}
+          onEndReached={onEndReached}
+          onScroll={onScroll}
         />
+        <NewMsgButton onPress={scrollToLastMessage} />
       </View>
     );
   }
@@ -103,3 +120,55 @@ export const MessageListMemo = React.memo(MessageList);
 //     return <MessageListItem {...item} />;
 //   }
 // );
+
+const NewMsgButton = ({ onPress }: { onPress: () => void }) => {
+  const { colors } = usePaletteContext();
+  const { getColor } = useColors({
+    text: {
+      light: colors.primary[5],
+      dark: colors.primary[6],
+    },
+    bg: {
+      light: colors.neutral[98],
+      dark: colors.neutral[1],
+    },
+  });
+  const [text, setText] = React.useState('99+ new message(s)');
+  const { addListener, removeListener } = useDispatchContext();
+
+  React.useEffect(() => {
+    const getText = (count: number) => {
+      const n = count > 99 ? '99+' : count.toString();
+      const content = count === 0 ? '' : `${n} new message(s)`;
+      setText(content);
+    };
+    addListener(`_$${NewMsgButton.name}`, getText);
+    return () => {
+      removeListener(`_$${NewMsgButton.name}`, getText);
+    };
+  }, [addListener, removeListener]);
+  return (
+    <BorderButton
+      style={{
+        position: 'absolute',
+        width: 181,
+        height: 26,
+        // borderRadius: 24,
+        bottom: 0,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: getColor('bg'),
+        borderWidth: 0,
+        display: text.length === 0 ? 'none' : 'flex',
+      }}
+      textStyle={{ color: getColor('text') }}
+      iconStyle={{ tintColor: getColor('text') }}
+      sizesType={'small'}
+      radiusType={'large'}
+      contentType={'icon-text'}
+      icon={'chevron_down_small'}
+      text={text}
+      onPress={onPress}
+    />
+  );
+};

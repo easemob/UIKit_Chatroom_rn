@@ -59,7 +59,6 @@ export function ChatroomScreen(props: Props) {
 
   React.useEffect(() => {
     const cb = () => {
-      console.log('test:onPress:');
       menuRef?.current?.startShow?.();
     };
     addListener(`_$${HeaderRight.name}`, cb);

@@ -1,5 +1,11 @@
 import * as React from 'react';
-import { FlatList, Keyboard, Platform } from 'react-native';
+import {
+  FlatList,
+  Keyboard,
+  NativeScrollEvent,
+  NativeSyntheticEvent,
+  Platform,
+} from 'react-native';
 
 import { useDispatchContext } from '../../dispatch';
 import { seqId } from '../../utils';
@@ -129,6 +135,8 @@ export function useMessageListApi(params: {
   const [data, setData] = React.useState<MessageListItemProps[]>(
     dataRef.current
   );
+  // const unreadCount = React.useRef(0);
+  const { emit } = useDispatchContext();
 
   // If idle for more than three seconds, the oldest messages will be cleared.
   const clearTask = React.useRef<NodeJS.Timeout | undefined>();
@@ -180,11 +188,23 @@ export function useMessageListApi(params: {
     needScroll.current = true;
   };
 
+  const _onScroll = (_event: NativeSyntheticEvent<NativeScrollEvent>) => {
+    needScroll.current = false;
+  };
+
+  const _scrollToLastMessage = () => {
+    needScroll.current = true;
+    emit(`_$NewMsgButton`, 0);
+    _scrollToEnd();
+  };
+
   return {
     data: data,
     listRef: listRef,
     addTextMessage: _addTextMessage,
     scrollToEnd: _scrollToEnd,
     onEndReached: _onEndReached,
+    onScroll: _onScroll,
+    scrollToLastMessage: _scrollToLastMessage,
   };
 }
