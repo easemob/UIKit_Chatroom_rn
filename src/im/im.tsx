@@ -1,9 +1,7 @@
 import React from 'react';
 
-import { ChatroomServiceImpl } from './im.chatroom';
-import { ClientServiceImpl } from './im.client';
-import { GiftServiceImpl } from './im.gift';
-import { UserServiceImpl } from './im.user';
+import { useCompare } from '../hook';
+import { getIMService, IMServiceImpl } from './im.impl';
 import type { IMService, IMServiceInit } from './types';
 
 export const IMContext = React.createContext<IMService | undefined>(undefined);
@@ -13,53 +11,21 @@ type IMContextProps = React.PropsWithChildren<{ value: IMServiceInit }>;
 
 export function IMContextProvider({ value, children }: IMContextProps) {
   const {} = value;
-  // const s = ChatClient.getInstance();
-  // s.init(new ChatOptions({ appKey: appKey, debugModel: debugMode }))
-  //   .then()
-  //   .catch((e) => {
-  //     throw e;
-  //   });
-  return (
-    <IMContext.Provider
-      value={{
-        client: CreateClientService({
-          appKey: value.appKey,
-          debugMode: value.debugMode,
-        }),
-        gift: CreateGiftService({}),
-        chatroom: CreateChatroomService({}),
-        user: CreateUserService({}),
-      }}
-    >
-      {children}
-    </IMContext.Provider>
-  );
+  const im = getIMService() as IMServiceImpl;
+  useCompare(im);
+  im.init({
+    appKey: value.appKey,
+    debugMode: value.debugMode,
+    autoLogin: false,
+  });
+  return <IMContext.Provider value={im}>{children}</IMContext.Provider>;
 }
 
+/**
+ * It cannot be unpacked and used, otherwise this object cannot be found.
+ */
 export function useIIMContext(): IMService {
   const im = React.useContext(IMContext);
   if (!im) throw Error(`${IMContext.displayName} is not provided`);
   return im;
-}
-
-export function CreateChatroomService(params: {}) {
-  const {} = params;
-  return new ChatroomServiceImpl();
-}
-
-export function CreateClientService(params: {
-  appKey: string;
-  debugMode?: boolean;
-  autoLogin?: boolean;
-}) {
-  return new ClientServiceImpl(params);
-}
-
-export function CreateGiftService(params: {}) {
-  const {} = params;
-  return new GiftServiceImpl();
-}
-
-export function CreateUserService(params: {}) {
-  return new UserServiceImpl(params);
 }

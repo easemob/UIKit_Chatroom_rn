@@ -19,9 +19,12 @@ import {
   ChatroomListScreen,
   ChatroomScreen,
   LoginListScreen,
+  LoginScreen,
   ReportScreen,
   TopMenuScreen,
 } from './screens';
+
+const env = require('./env');
 
 const Root = createNativeStackNavigator<RootParamsList>();
 
@@ -52,7 +55,12 @@ export function App() {
 
   return (
     <React.StrictMode>
-      <Container appKey={'sdf'} palette={palette} theme={light ? light : dark}>
+      <Container
+        appKey={env.appKey}
+        isDevMode={env.isDevMode}
+        palette={palette}
+        theme={light ? light : dark}
+      >
         <NavigationContainer
           onStateChange={(state: NavigationState | undefined) => {
             const rr: string[] & string[][] = [];
@@ -80,6 +88,13 @@ export function App() {
                 headerShown: true,
               }}
               component={TopMenuScreen}
+            />
+            <Root.Screen
+              name={'Login'}
+              options={{
+                headerShown: true,
+              }}
+              component={LoginScreen}
             />
             <Root.Screen
               name={'LoginList'}

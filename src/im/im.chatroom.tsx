@@ -205,7 +205,11 @@ export class ChatroomServiceImpl implements ChatroomService {
     roomId: string;
     content: string;
     mentionIds?: string[] | undefined;
-    result: (params: { isOk: boolean; message?: ChatMessage }) => void;
+    result: (params: {
+      isOk: boolean;
+      message?: ChatMessage;
+      reason?: string;
+    }) => void;
   }): Promise<void> {
     const { roomId, content, result } = params;
     const msg = ChatMessage.createTextMessage(
@@ -228,7 +232,11 @@ export class ChatroomServiceImpl implements ChatroomService {
     eventType: string;
     eventParams: Record<string, string>;
     mentionIds?: string[];
-    result: (params: { isOk: boolean; message?: ChatMessage }) => void;
+    result: (params: {
+      isOk: boolean;
+      message?: ChatMessage;
+      reason?: string;
+    }) => void;
   }): Promise<void> {
     const { roomId, eventType, eventParams, result } = params;
     const msg = ChatMessage.createCustomMessage(

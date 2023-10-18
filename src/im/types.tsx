@@ -1,16 +1,16 @@
-import type { ChatClient, ChatMessage } from 'react-native-chat-sdk';
+import type { ChatClient, ChatMessage, ChatRoom } from 'react-native-chat-sdk';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import type { UIKitError } from '../error';
 
 export interface ChatroomServiceListener {
-  onMessageReceived?(roomId: string, message: ChatMessage): void;
-  onMessageRecalled?(
-    roomId: string,
-    message: ChatMessage,
-    recalledUserId: string
-  ): void;
-  onGlobalNotifyReceived?(roomId: string, notifyMessage: ChatMessage): void;
+  // onMessageReceived?(roomId: string, message: ChatMessage): void;
+  // onMessageRecalled?(
+  //   roomId: string,
+  //   message: ChatMessage,
+  //   recalledUserId: string
+  // ): void;
+  // onGlobalNotifyReceived?(roomId: string, notifyMessage: ChatMessage): void;
   onUserJoined?(roomId: string, user: UserServiceData): void;
   onUserLeave?(roomId: string, userId: string): void;
   onAnnouncementUpdate?(roomId: string, announcement: string): void;
@@ -87,10 +87,10 @@ export interface GiftService {
 
 export type UserServiceData = {
   userId: string;
-  nickName: string;
-  avatarURL: string;
-  gender: number;
-  identify: string;
+  nickName?: string;
+  avatarURL?: string;
+  gender?: number;
+  identify?: string;
 };
 
 export interface UserService {
@@ -136,11 +136,127 @@ export interface ClientService {
   getClientInstance(): ChatClient;
 }
 
+// export interface IMServiceListener {
+//   onConnected?(): void;
+//   onDisconnected?(reason: DisconnectReasonType): void;
+
+//   onUserJoined?(roomId: string, user: UserServiceData): void;
+//   onUserLeave?(roomId: string, userId: string): void;
+//   onAnnouncementUpdate?(roomId: string, announcement: string): void;
+//   onUserBeKicked?(roomId: string, reason: number): void;
+//   onUserMuted?(roomId: string, userId: string[], operatorId: string): void;
+//   onUserUnmuted?(roomId: string, userId: string[], operatorId: string): void;
+//   onUserAdmin?(roomId: string, userId: string, operatorId: string): void;
+//   onUserUnAmin?(roomId: string, userId: string, operatorId: string): void;
+
+//   onMessageReceived?(roomId: string, message: ChatMessage): void;
+//   onMessageRecalled?(
+//     roomId: string,
+//     message: ChatMessage,
+//     recalledUserId: string
+//   ): void;
+//   onGlobalNotifyReceived?(roomId: string, notifyMessage: ChatMessage): void;
+// }
+
+export interface MessageServiceListener {
+  onMessageReceived?(roomId: string, message: ChatMessage): void;
+  onMessageRecalled?(roomId: string, message: ChatMessage): void;
+  onGlobalNotifyReceived?(roomId: string, notifyMessage: ChatMessage): void;
+}
+
+export type IMServiceListener = ClientServiceListener &
+  ChatroomServiceListener &
+  MessageServiceListener;
+
 export interface IMService {
-  chatroom: ChatroomService;
-  client: ClientService;
-  gift: GiftService;
-  user: UserService;
+  addListener(listener: IMServiceListener): void;
+  removeListener(listener: IMServiceListener): void;
+  clearListener(): void;
+
+  /**
+   * If the built-in method is not enough, you can get the original IM object through this method.
+   */
+  get client(): ChatClient;
+
+  login(params: {
+    userId: string;
+    userToken: string;
+    userNickname?: string;
+    userAvatarURL?: string;
+    result: (params: { isOk: boolean }) => void;
+  }): Promise<void>;
+  logout(): Promise<void>;
+
+  currentUserId(): string | undefined;
+
+  getUserInfo(id: string): UserServiceData | undefined;
+  getUserInfos(ids: string[]): UserServiceData[];
+  updateUserInfo(user: UserServiceData): void;
+  fetchUserInfos(ids: string[]): Promise<UserServiceData[]>;
+  updateSelfInfo(self: UserServiceData): Promise<void>;
+
+  join(roomId: string, info?: ChatRoom): Promise<void>;
+  leave(roomId: string): Promise<void>;
+  kickMember(roomId: string, userId: string): void;
+  fetchMembers(
+    roomId: string,
+    pageSize: number,
+    cursor?: string
+  ): Promise<string[]>;
+  fetchMutedMembers(roomId: string, pageSize: number): Promise<string[]>;
+  fetchAnnouncement(roomId: string): Promise<string | undefined>;
+  updateAnnouncement(roomId: string, announcement: string): Promise<void>;
+  updateMemberState(
+    roomId: string,
+    userId: string,
+    op: ChatroomMemberOperateType
+  ): Promise<void>;
+
+  sendText(params: {
+    roomId: string;
+    content: string;
+    mentionIds?: string[];
+    result: (params: {
+      isOk: boolean;
+      message?: ChatMessage;
+      reason?: string;
+    }) => void;
+  }): Promise<void>;
+  sendGift(params: {
+    roomId: string;
+    gift: GiftServiceData;
+    mentionIds?: string[];
+    result: (params: {
+      isOk: boolean;
+      message?: ChatMessage;
+      reason?: string;
+    }) => void;
+  }): Promise<void>;
+  sendJoinCmd(params: {
+    roomId: string;
+    mentionIds?: string[];
+    result: (params: {
+      isOk: boolean;
+      message?: ChatMessage;
+      reason?: string;
+    }) => void;
+  }): Promise<void>;
+  recallMessage(messageId: string): Promise<void>;
+  reportMessage(params: {
+    messageId: string;
+    tag: string;
+    reason: string;
+  }): Promise<void>;
+  /**
+   * ref: https://learn.microsoft.com/en-us/azure/ai-services/translator/language-support
+   * @param message the message object.
+   * @param languagesCode the language code.
+   * @returns the translated message.
+   */
+  translateMessage(
+    message: ChatMessage,
+    languagesCode: string
+  ): Promise<ChatMessage>;
 }
 
 export type IMServiceInit = {

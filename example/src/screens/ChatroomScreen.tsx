@@ -20,12 +20,11 @@ import type { RootScreenParamsList } from '../routes';
 type Props = NativeStackScreenProps<RootScreenParamsList>;
 export function ChatroomScreen(props: Props) {
   const { navigation } = props;
-  const insets = useSafeAreaInsets();
+  const {} = useSafeAreaInsets();
   const testRef = React.useRef<View>({} as any);
   const menuRef = React.useRef<ChatroomTestMenuRef>({} as any);
   const chatroomRef = React.useRef<Chatroom>({} as any);
   const count = React.useRef(0);
-  console.log('test:ChatroomScreen:', insets);
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     bg: {
@@ -95,8 +94,7 @@ export function ChatroomScreen(props: Props) {
     <View
       ref={testRef}
       style={{ flex: 1 }}
-      onLayout={(e) => {
-        console.log('test:onLayout:', e.nativeEvent.layout);
+      onLayout={() => {
         testRef.current?.measure(
           (
             x: number,

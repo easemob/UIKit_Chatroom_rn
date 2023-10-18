@@ -8,6 +8,7 @@ import {
   ViewStyle,
 } from 'react-native';
 
+import { IMContext, IMService } from '../../im';
 import {
   GiftFloating,
   GiftFloatingProps,
@@ -50,12 +51,16 @@ type ChatroomState = {
   isInputBarShow: boolean;
 };
 
-export class Chatroom extends React.Component<ChatroomProps, ChatroomState> {
+export class ChatroomBase extends React.Component<
+  ChatroomProps,
+  ChatroomState
+> {
   inputBarRef?: React.RefObject<InputBarRef>;
   messageRef?: React.RefObject<MessageListRef>;
   marqueeRef?: React.RefObject<MarqueeRef>;
   menuRef?: React.RefObject<MessageContextMenuRef>;
   giftRef?: React.RefObject<GiftFloatingRef>;
+  im?: IMService;
   constructor(props: ChatroomProps) {
     super(props);
     this.inputBarRef = React.createRef();
@@ -132,7 +137,18 @@ export class Chatroom extends React.Component<ChatroomProps, ChatroomState> {
   componentWillUnmount?(): void {}
   componentDidCatch?(_error: Error, _errorInfo: React.ErrorInfo): void {}
 
-  render(): React.ReactNode {
+  render() {
+    return (
+      <IMContext.Consumer>
+        {(value) => {
+          this.im = value;
+          return this._render();
+        }}
+      </IMContext.Consumer>
+    );
+  }
+
+  _render(): React.ReactNode {
     const {
       containerStyle,
       messageList,

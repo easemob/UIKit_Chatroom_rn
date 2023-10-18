@@ -1,19 +1,20 @@
 import * as React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import {
+  Container,
   createDarkTheme,
   createLightTheme,
   createPresetPalette,
-  PaletteContextProvider,
-  ThemeContextProvider,
   useCompare,
   useLifecycle,
 } from 'react-native-chat-room';
 
 export function TestComponent() {
-  useLifecycle((state) => {
+  const cb = (state: any) => {
     console.log('test:TestComponent:useLifecycle:', state);
-  });
+  };
+  useLifecycle(cb);
+  useCompare(cb);
   return (
     <View style={{ width: 100, height: 100, backgroundColor: 'red' }}>
       <Text>{'test use life cycle'}</Text>
@@ -23,7 +24,7 @@ export function TestComponent() {
 
 export function TestComponent2() {
   const cb = React.useCallback((state) => {
-    console.log('test:TestComponent:useLifecycle:', state);
+    console.log('test:TestComponent2:useLifecycle:', state);
   }, []);
   useLifecycle(cb);
   useCompare(cb);
@@ -52,7 +53,7 @@ export function TestUseLifecycle(): React.JSX.Element {
       >
         <Text>{'click me change visible'}</Text>
       </TouchableOpacity>
-      {isShow === true ? <TestComponent2 /> : null}
+      {isShow === true ? <TestComponent /> : null}
     </View>
   );
 }
@@ -63,10 +64,8 @@ export default function test_use_lifecycle() {
   const dark = createDarkTheme(palette);
   const theme = light ? light : dark;
   return (
-    <ThemeContextProvider value={theme}>
-      <PaletteContextProvider value={palette}>
-        <TestUseLifecycle />
-      </PaletteContextProvider>
-    </ThemeContextProvider>
+    <Container appKey={'sdf'} palette={palette} theme={theme}>
+      <TestUseLifecycle />
+    </Container>
   );
 }

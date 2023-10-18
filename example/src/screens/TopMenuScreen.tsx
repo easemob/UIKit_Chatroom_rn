@@ -45,6 +45,8 @@ export function TopMenuScreen(props: Props) {
                   navigation.push('ChatroomList', {});
                 } else if (v === 'TestReport') {
                   navigation.push('TestReport', {});
+                } else if (v === 'Login') {
+                  navigation.push('Login', {});
                 }
               }}
             >

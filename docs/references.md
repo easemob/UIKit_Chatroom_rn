@@ -3,3 +3,4 @@
 [expo color gradient](https://docs.expo.dev/versions/latest/sdk/linear-gradient/#start)
 [shadow helper](https://ethercreative.github.io/react-native-shadow-generator/)
 [yoga layout helper](https://yogalayout.com/)
+[icon resource](https://www.iconfinder.com/)
