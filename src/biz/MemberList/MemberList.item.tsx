@@ -8,9 +8,12 @@ import { IconButton } from '../../ui/Button';
 import { Icon } from '../../ui/Image';
 import { Text } from '../../ui/Text';
 import { Avatar } from '../Avatar';
+import { gMemberListItemHeight } from './MemberList.const';
+import type { MemberListIteModel } from './types';
 
 export type MemberListItemProps = {
   id: string;
+  userInfo: MemberListIteModel;
 };
 
 export function MemberListItem(props: MemberListItemProps) {
@@ -25,11 +28,15 @@ export function MemberListItem(props: MemberListItemProps) {
       dark: colors.neutral[98],
     },
     color2: {
-      light: colors.neutral[5],
-      dark: colors.neutral[6],
+      light: colors.neutral[6],
+      dark: colors.neutral[5],
+    },
+    color3: {
+      light: colors.neutral[9],
+      dark: colors.neutral[2],
     },
   });
-  const { id } = props;
+  const { id, userInfo } = props;
   return (
     <View
       key={id}
@@ -37,6 +44,7 @@ export function MemberListItem(props: MemberListItemProps) {
         backgroundColor: getColor('backgroundColor'),
         paddingHorizontal: 10,
         width: '100%',
+        height: gMemberListItemHeight,
       }}
     >
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -51,7 +59,11 @@ export function MemberListItem(props: MemberListItemProps) {
         />
 
         <View style={{ width: 12 }} />
-        <Avatar url={'https://note?'} size={40} borderRadius={40} />
+        <Avatar
+          url={userInfo.avatarURL ?? 'https://no-existed?'}
+          size={40}
+          borderRadius={40}
+        />
         <View style={{ width: 12 }} />
         <View style={{ marginVertical: 10 }}>
           <Text
@@ -61,9 +73,9 @@ export function MemberListItem(props: MemberListItemProps) {
               color: getColor('color'),
             }}
           >
-            {'NickName'}
+            {userInfo?.nickName ?? userInfo.userId}
           </Text>
-          <Text
+          {/* <Text
             textType={'medium'}
             paletteType={'body'}
             style={{
@@ -71,7 +83,7 @@ export function MemberListItem(props: MemberListItemProps) {
             }}
           >
             {'Role'}
-          </Text>
+          </Text> */}
         </View>
         <View style={{ flex: 1 }} />
         <IconButton
@@ -86,9 +98,8 @@ export function MemberListItem(props: MemberListItemProps) {
       </View>
       <View
         style={{
-          // height: 0.5,
-          borderBottomWidth: g_flatlist_border_bottom_width,
           backgroundColor: getColor('color2'),
+          height: g_flatlist_border_bottom_width,
           marginLeft: 50,
         }}
       />

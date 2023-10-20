@@ -40,7 +40,13 @@ export function Container(props: ContainerProps) {
         <ThemeContextProvider value={theme ?? light}>
           <I18nContextProvider value={{ stringSetType: Language ?? 'en' }}>
             <IMContextProvider value={{ appKey, debugMode: isDevMode }}>
-              <ConfigContextProvider value={{ isDevMode }}>
+              <ConfigContextProvider
+                value={{
+                  isDevMode,
+                  enableCompare: false,
+                  enableCheckType: false,
+                }}
+              >
                 <SafeAreaProvider>{children}</SafeAreaProvider>
               </ConfigContextProvider>
             </IMContextProvider>

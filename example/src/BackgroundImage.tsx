@@ -6,7 +6,10 @@ import * as assert from './assert';
 export const BackgroundImage = () => {
   const { style } = useThemeContext();
   return (
-    <View style={[StyleSheet.absoluteFill, { position: 'absolute' }]}>
+    <View
+      style={[StyleSheet.absoluteFill, { position: 'absolute' }]}
+      onTouchEnd={() => {}}
+    >
       <ImageBackground
         resizeMode={'cover'}
         source={style === 'light' ? assert.lightImage : assert.darkImage}

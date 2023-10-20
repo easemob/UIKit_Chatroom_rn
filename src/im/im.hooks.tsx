@@ -1,9 +1,9 @@
 import { useLifecycle } from '../hook';
-import { useIIMContext } from './im';
+import { useIMContext } from './im';
 import type { IMServiceListener } from './types';
 
 export function useIMListener(listener: IMServiceListener) {
-  const im = useIIMContext();
+  const im = useIMContext();
   useLifecycle((state) => {
     if (state === 'load') {
       im.addListener(listener);

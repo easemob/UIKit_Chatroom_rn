@@ -37,6 +37,44 @@ export function getDescription(code: ErrorCode): ErrorDescription {
     case ErrorCode.not_impl:
       ret = ErrorDescription.not_impl;
       break;
+
+    case ErrorCode.msg_send_error:
+      ret = ErrorDescription.msg_send_error;
+      break;
+    case ErrorCode.msg_recall_error:
+      ret = ErrorDescription.msg_recall_error;
+      break;
+    case ErrorCode.msg_translate_error:
+      ret = ErrorDescription.msg_translate_error;
+      break;
+    case ErrorCode.msg_report_error:
+      ret = ErrorDescription.msg_report_error;
+      break;
+
+    case ErrorCode.room_join_error:
+      ret = ErrorDescription.room_join_error;
+      break;
+    case ErrorCode.room_leave_error:
+      ret = ErrorDescription.room_leave_error;
+      break;
+    case ErrorCode.room_kick_member_error:
+      ret = ErrorDescription.room_kick_member_error;
+      break;
+    case ErrorCode.room_mute_member_error:
+      ret = ErrorDescription.room_mute_member_error;
+      break;
+    case ErrorCode.room_unmute_member_error:
+      ret = ErrorDescription.room_unmute_member_error;
+      break;
+    case ErrorCode.room_fetch_member_list_error:
+      ret = ErrorDescription.room_fetch_member_list_error;
+      break;
+    case ErrorCode.room_fetch_member_info_error:
+      ret = ErrorDescription.room_fetch_member_info_error;
+      break;
+    case ErrorCode.room_fetch_room_list_error:
+      ret = ErrorDescription.room_fetch_room_list_error;
+      break;
     default:
       break;
   }

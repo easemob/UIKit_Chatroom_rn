@@ -4,7 +4,7 @@ import { useGetObjectName } from './useGetObjectName';
 
 const ExpectedType = typeof {};
 
-export function useCheckType() {
+export function useCheckType(params?: { enabled?: boolean }) {
   const { getObjectName } = useGetObjectName();
   const ret = React.useMemo(() => {
     return {
@@ -13,6 +13,9 @@ export function useCheckType() {
         expectedType: typeof ExpectedType,
         others?: { callerName?: string; objectName?: string }
       ) => {
+        if (params?.enabled === false) {
+          return;
+        }
         const log = `{
           toolName: '${useCheckType.name}',
           callerName: '${others?.callerName ?? useCheckType?.caller?.name}',
@@ -27,6 +30,6 @@ export function useCheckType() {
         }
       },
     };
-  }, [getObjectName]);
+  }, [getObjectName, params?.enabled]);
   return ret;
 }

@@ -4,10 +4,14 @@ import { useGetObjectName } from './useGetObjectName';
 
 export function useCompare(
   object: any,
-  others?: { callerName?: string; objectName?: string }
+  others?: { callerName?: string; objectName?: string; enabled?: boolean }
 ) {
   const ref = React.useRef(object);
   const { getObjectName } = useGetObjectName();
+
+  if (others?.enabled === false) {
+    return;
+  }
 
   const log = `{
     toolName: '${useCompare.name}',

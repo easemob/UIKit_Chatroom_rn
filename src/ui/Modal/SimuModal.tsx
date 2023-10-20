@@ -47,7 +47,7 @@ export type SimulativeModalProps = Omit<ViewProps, 'style'> & {
       ) => boolean)
     | undefined;
   onFinished?: () => void;
-  containerStyle?: StyleProp<ViewStyle> | undefined;
+  maskStyle?: StyleProp<ViewStyle> | undefined;
 };
 
 /**
@@ -64,7 +64,7 @@ export function SimulativeModal(props: SimulativeModalProps) {
     propsRef,
     onStartShouldSetPanResponder,
     onFinished,
-    containerStyle,
+    maskStyle,
     ...others
   } = props;
   const { translateY, startShow, startHide, backgroundOpacity } =
@@ -99,7 +99,7 @@ export function SimulativeModal(props: SimulativeModalProps) {
           display: modalVisible === true ? 'flex' : 'none',
           // opacity: modalVisible === true ? 1 : 0,
         },
-        containerStyle,
+        maskStyle,
       ]}
     >
       <TouchableWithoutFeedback

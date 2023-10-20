@@ -11,6 +11,7 @@ import {
 import emoji from 'twemoji';
 
 import { FACE_ASSETS } from '../../assets';
+import { useConfigContext } from '../../config';
 import { useColors, useCompare } from '../../hook';
 import { usePaletteContext } from '../../theme';
 import { Text } from '../../ui/Text';
@@ -34,7 +35,8 @@ export function EmojiList(props: EmojiListProps) {
   const getUnitSize = () => {
     return winWidth / 7 - 1;
   };
-  useCompare(getColor);
+  const { enableCompare } = useConfigContext();
+  useCompare(getColor, { enabled: enableCompare });
   return (
     <View
       style={[

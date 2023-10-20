@@ -1,11 +1,7 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
 import { Switch, Text, TouchableOpacity, View } from 'react-native';
-import {
-  TextInput,
-  useIIMContext,
-  useIMListener,
-} from 'react-native-chat-room';
+import { TextInput, useIMContext, useIMListener } from 'react-native-chat-room';
 
 import type { RootScreenParamsList } from '../routes';
 
@@ -13,7 +9,7 @@ type Props = NativeStackScreenProps<RootScreenParamsList>;
 export function LoginScreen(props: Props) {
   const {} = props;
   const account = require('../env').account as { id: string; token: string }[];
-  const im = useIIMContext();
+  const im = useIMContext();
   useIMListener({
     onConnected: () => {
       setS2('onConnected');
@@ -24,6 +20,7 @@ export function LoginScreen(props: Props) {
   });
   const [s, setS] = React.useState<'' | 'success' | 'failed' | 'logouted'>('');
   const [s2, setS2] = React.useState<string>('');
+  const [reason, setReason] = React.useState<string>('');
   const [id, setId] = React.useState(account[0]?.id);
   const [isPass, setIsPass] = React.useState(false);
   const [token, setToken] = React.useState(account[0]?.token);
@@ -34,7 +31,9 @@ export function LoginScreen(props: Props) {
           {'Note: Click id to try to log in.'}
         </Text>
         <Text style={{ color: 'red' }}>{`connect state: ${s2}.`}</Text>
-        <Text style={{ color: 'red' }}>{`login state: ${s}.`}</Text>
+        <Text
+          style={{ color: 'red' }}
+        >{`login state: ${s}. reason: ${reason}`}</Text>
       </View>
 
       <View style={{ height: 10 }} />
@@ -76,8 +75,11 @@ export function LoginScreen(props: Props) {
               userNickname: id,
               userAvatarURL:
                 'https://cdn4.iconfinder.com/data/icons/small-n-flat/24/cat-512.png',
-              result: ({ isOk }) => {
+              result: ({ isOk, error }) => {
                 setS(isOk === true ? 'success' : 'failed');
+                if (error) {
+                  setReason(error.toString());
+                }
               },
             });
           }
@@ -103,9 +105,11 @@ export function LoginScreen(props: Props) {
           im.logout()
             .then(() => {
               setS('logouted');
+              setReason('');
             })
-            .catch(() => {
+            .catch((e) => {
               setS('failed');
+              setReason(e?.toString() ?? '');
             });
         }}
       >

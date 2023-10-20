@@ -14,7 +14,7 @@ export function ReportScreen(props: Props) {
       <Report
         ref={ref}
         data={data}
-        containerStyle={{ transform: [{ translateY: -94 }] }} // !!! Correct the offset.
+        maskStyle={{ transform: [{ translateY: -94 }] }} // !!! Correct the offset.
       />
       <View
         style={{

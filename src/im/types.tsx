@@ -1,6 +1,10 @@
-import type { ChatClient, ChatMessage, ChatRoom } from 'react-native-chat-sdk';
+import type {
+  ChatClient,
+  ChatCursorResult,
+  ChatMessage,
+  ChatRoom,
+} from 'react-native-chat-sdk';
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import type { UIKitError } from '../error';
 
 export interface ChatroomServiceListener {
@@ -116,8 +120,8 @@ export enum DisconnectReasonType {
 }
 
 export interface ClientServiceListener {
-  onConnected(): void;
-  onDisconnected(reason: DisconnectReasonType): void;
+  onConnected?(): void;
+  onDisconnected?(reason: DisconnectReasonType): void;
 }
 
 export interface ClientService {
@@ -168,6 +172,8 @@ export type IMServiceListener = ClientServiceListener &
   ChatroomServiceListener &
   MessageServiceListener;
 
+export type RoomState = 'joining' | 'joined' | 'leaving' | 'leaved';
+
 export interface IMService {
   addListener(listener: IMServiceListener): void;
   removeListener(listener: IMServiceListener): void;
@@ -183,26 +189,33 @@ export interface IMService {
     userToken: string;
     userNickname?: string;
     userAvatarURL?: string;
-    result: (params: { isOk: boolean }) => void;
+    result: (params: { isOk: boolean; error?: UIKitError }) => void;
   }): Promise<void>;
   logout(): Promise<void>;
+  loginState(): Promise<'logged' | 'noLogged'>;
 
-  currentUserId(): string | undefined;
+  get userId(): string | undefined;
 
   getUserInfo(id: string): UserServiceData | undefined;
   getUserInfos(ids: string[]): UserServiceData[];
-  updateUserInfo(user: UserServiceData): void;
+  updateUserInfo(user: UserServiceData): UserServiceData;
   fetchUserInfos(ids: string[]): Promise<UserServiceData[]>;
   updateSelfInfo(self: UserServiceData): Promise<void>;
+  getNoExisted(ids: string[]): string[];
 
-  join(roomId: string, info?: ChatRoom): Promise<void>;
-  leave(roomId: string): Promise<void>;
+  get roomId(): string | undefined;
+  get ownerId(): string | undefined;
+  get roomState(): RoomState;
+
+  fetchChatroomList(pageNum: number): Promise<ChatRoom[]>;
+  joinRoom(roomId: string, room: { ownerId: string }): Promise<void>;
+  leaveRoom(roomId: string): Promise<void>;
   kickMember(roomId: string, userId: string): void;
   fetchMembers(
     roomId: string,
     pageSize: number,
     cursor?: string
-  ): Promise<string[]>;
+  ): Promise<ChatCursorResult<string>>;
   fetchMutedMembers(roomId: string, pageSize: number): Promise<string[]>;
   fetchAnnouncement(roomId: string): Promise<string | undefined>;
   updateAnnouncement(roomId: string, announcement: string): Promise<void>;
@@ -219,7 +232,7 @@ export interface IMService {
     result: (params: {
       isOk: boolean;
       message?: ChatMessage;
-      reason?: string;
+      error?: UIKitError;
     }) => void;
   }): Promise<void>;
   sendGift(params: {
@@ -229,7 +242,7 @@ export interface IMService {
     result: (params: {
       isOk: boolean;
       message?: ChatMessage;
-      reason?: string;
+      error?: UIKitError;
     }) => void;
   }): Promise<void>;
   sendJoinCmd(params: {
@@ -238,7 +251,7 @@ export interface IMService {
     result: (params: {
       isOk: boolean;
       message?: ChatMessage;
-      reason?: string;
+      error?: UIKitError;
     }) => void;
   }): Promise<void>;
   recallMessage(messageId: string): Promise<void>;

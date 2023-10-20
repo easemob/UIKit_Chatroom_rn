@@ -14,4 +14,18 @@ export enum ErrorDescription {
   ui_error = 'An error occurred in the UI.',
 
   not_impl = 'The code has not been implemented yet and is under development.',
+
+  msg_send_error = 'message send failed.',
+  msg_recall_error = 'message recall failed.',
+  msg_translate_error = 'message translate failed.',
+  msg_report_error = 'message report failed.',
+
+  room_join_error = 'join chatroom failed.',
+  room_leave_error = 'leave chatroom failed.',
+  room_kick_member_error = 'kick member in chatroom is failed.',
+  room_mute_member_error = 'mute member in chatroom is failed.',
+  room_unmute_member_error = 'unmute member in chatroom is failed.',
+  room_fetch_member_list_error = 'fetch member list in chatroom is failed.',
+  room_fetch_member_info_error = 'fetch member detail in chatroom is failed.',
+  room_fetch_room_list_error = 'fetch room list in chatroom is failed.',
 }

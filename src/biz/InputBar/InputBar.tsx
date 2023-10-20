@@ -95,15 +95,15 @@ export const InputBar = React.forwardRef<InputBarRef, InputBarProps>(function (
   };
 
   const setEmojiHeight = (h: number) => {
-    if (h === 0) {
-      LayoutAnimation.configureNext({
-        duration: 250, // from keyboard event
-        update: {
-          duration: 10,
-          type: Platform.OS === 'ios' ? 'keyboard' : 'easeIn',
-        },
-      });
-    }
+    // if (h === 0) {
+    //   LayoutAnimation.configureNext({
+    //     duration: 250, // from keyboard event
+    //     update: {
+    //       duration: 10,
+    //       type: Platform.OS === 'ios' ? 'keyboard' : 'easeIn',
+    //     },
+    //   });
+    // }
     _setEmojiHeight(h);
   };
 

@@ -9,6 +9,20 @@ export enum ErrorCode {
   init_error = 1000,
   login_error,
 
+  msg_send_error = 1100,
+  msg_recall_error,
+  msg_translate_error,
+  msg_report_error,
+
+  room_join_error = 1200,
+  room_leave_error,
+  room_kick_member_error,
+  room_mute_member_error,
+  room_unmute_member_error,
+  room_fetch_member_list_error,
+  room_fetch_member_info_error,
+  room_fetch_room_list_error,
+
   // network error 2000 start
   network_error = 2000,
 

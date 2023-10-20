@@ -4,15 +4,16 @@ import { getDescription } from './error.impl';
 
 export class UIKitError extends Error {
   code: ErrorCode;
-  desc: ErrorDescription;
+  desc: ErrorDescription | string;
   constructor(params: {
     code: ErrorCode;
+    desc?: string;
     extra?: string;
     options?: ErrorOptions;
   }) {
     super(params.extra, params.options);
     this.code = params.code;
-    this.desc = getDescription(this.code);
+    this.desc = params.desc ?? getDescription(this.code);
 
     // if (Error.captureStackTrace) {
     //   Error.captureStackTrace(this, UIKitError);

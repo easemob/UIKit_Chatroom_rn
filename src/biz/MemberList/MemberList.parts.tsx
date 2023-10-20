@@ -2,7 +2,6 @@ import * as React from 'react';
 import {
   FlatList,
   ListRenderItemInfo,
-  PanResponder,
   Platform,
   StatusBar,
   useWindowDimensions,
@@ -10,36 +9,36 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import type { SimulativeModalRef } from '../../ui/Modal';
+import type { PropsWithError, PropsWithTest } from '../types';
 import {
   gAspectRatio,
   gBottomSheetHeaderHeight,
   gTabHeaderHeight,
 } from './MemberList.const';
+import { useMemberListAPI, usePanHandlers } from './MemberList.hooks';
 import { MemberListItemMemo, MemberListItemProps } from './MemberList.item';
 import { SearchStyle } from './SearchStyle';
 
-export type MemberListParticipantsRef = SimulativeModalRef & {};
-
 export type MemberListParticipantsProps = {
   requestUseScrollGesture?: (finished: boolean) => void;
-};
+  memberType: 'member' | 'muted';
+} & PropsWithTest &
+  PropsWithError;
 
 export function MemberListParticipants(props: MemberListParticipantsProps) {
-  const { requestUseScrollGesture } = props;
-  const dataRef = React.useRef<MemberListItemProps[]>([
-    { id: '1' },
-    { id: '2' },
-    { id: '3' },
-    { id: '4' },
-    { id: '5' },
-    { id: '6' },
-    { id: '7' },
-    { id: '8' },
-    { id: '9' },
-  ]);
-  const [data] = React.useState<MemberListItemProps[]>(dataRef.current);
-  const isScrollingRef = React.useRef(false);
+  const { requestUseScrollGesture, testMode, onError, memberType } = props;
+  const {
+    data,
+    muter,
+    onRefresh,
+    refreshing,
+    onEndReached,
+    onViewableItemsChanged,
+    viewabilityConfigRef,
+  } = useMemberListAPI({
+    testMode,
+    onError,
+  });
   const ref = React.useRef<FlatList<MemberListItemProps>>({} as any);
   const { width: winWidth } = useWindowDimensions();
   const { bottom } = useSafeAreaInsets();
@@ -49,38 +48,16 @@ export function MemberListParticipants(props: MemberListParticipantsProps) {
     gTabHeaderHeight -
     bottom -
     (StatusBar.currentHeight ?? 0);
-
-  const r = React.useRef(
-    PanResponder.create({
-      onStartShouldSetPanResponder: () => {
-        if (isScrollingRef.current === false) {
-          isScrollingRef.current = true;
-          requestUseScrollGesture?.(false);
-        }
-        if (isScrollingRef.current === true) {
-          return false;
-        }
-        return true;
-      },
-      onMoveShouldSetPanResponder: () => {
-        if (isScrollingRef.current === false) {
-          isScrollingRef.current = true;
-          requestUseScrollGesture?.(false);
-        }
-        if (isScrollingRef.current === true) {
-          return false;
-        }
-        return true;
-      },
-    })
-  ).current;
+  const { panHandlers, isScrollingRef } = usePanHandlers({
+    requestUseScrollGesture,
+  });
 
   return (
     <View
       style={{
         height: height,
       }}
-      {...r.panHandlers}
+      {...panHandlers}
     >
       <SearchStyle
         onPress={() => {
@@ -89,26 +66,33 @@ export function MemberListParticipants(props: MemberListParticipantsProps) {
       />
       <FlatList
         ref={ref}
-        data={data}
+        data={memberType === 'member' ? data : muter}
+        refreshing={refreshing}
+        onRefresh={onRefresh}
         renderItem={(info: ListRenderItemInfo<MemberListItemProps>) => {
           const { item } = info;
-          return <MemberListItemMemo id={item.id} />;
+          return <MemberListItemMemo {...item} />;
         }}
         keyExtractor={(item: MemberListItemProps) => {
           return item.id;
         }}
         onMomentumScrollEnd={() => {
+          console.log('test:onMomentumScrollEnd:');
           if (Platform.OS !== 'ios') {
             isScrollingRef.current = false;
             requestUseScrollGesture?.(true);
           }
         }}
         onResponderEnd={() => {
+          console.log('test:onResponderEnd:');
           if (Platform.OS === 'ios') {
             isScrollingRef.current = false;
             requestUseScrollGesture?.(true);
           }
         }}
+        onEndReached={onEndReached}
+        viewabilityConfig={viewabilityConfigRef.current}
+        onViewableItemsChanged={onViewableItemsChanged}
       />
     </View>
   );

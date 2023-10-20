@@ -6,11 +6,11 @@ import {
   Icon,
   seqId,
   useColors,
-  useCompare,
   useDispatchContext,
   useLifecycle,
   usePaletteContext,
 } from 'react-native-chat-room';
+import type { ChatRoom } from 'react-native-chat-sdk';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { BackgroundImageMemo } from '../BackgroundImage';
@@ -19,7 +19,8 @@ import type { RootScreenParamsList } from '../routes';
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;
 export function ChatroomScreen(props: Props) {
-  const { navigation } = props;
+  const { navigation, route } = props;
+  const room = (route.params as any).params.room as ChatRoom;
   const {} = useSafeAreaInsets();
   const testRef = React.useRef<View>({} as any);
   const menuRef = React.useRef<ChatroomTestMenuRef>({} as any);
@@ -43,7 +44,6 @@ export function ChatroomScreen(props: Props) {
 
   const [pageY, setPageY] = React.useState(0);
   const { addListener, removeListener } = useDispatchContext();
-  useCompare(count);
 
   useLifecycle();
 
@@ -90,6 +90,10 @@ export function ChatroomScreen(props: Props) {
     ++count.current;
   };
 
+  const showMemberList = () => {
+    chatroomRef?.current?.getMemberListRef()?.startShow();
+  };
+
   return (
     <View
       ref={testRef}
@@ -97,20 +101,28 @@ export function ChatroomScreen(props: Props) {
       onLayout={() => {
         testRef.current?.measure(
           (
-            x: number,
-            y: number,
-            width: number,
-            height: number,
-            pageX: number,
+            _x: number,
+            _y: number,
+            _width: number,
+            _height: number,
+            _pageX: number,
             pageY: number
           ) => {
-            console.log('Sub:Sub:measure:', x, y, width, height, pageX, pageY);
+            // console.log(
+            //   'Sub:Sub:measure:',
+            //   _x,
+            //   _y,
+            //   _width,
+            //   _height,
+            //   _pageX,
+            //   pageY
+            // );
             setPageY(pageY);
           }
         );
         testRef.current?.measureInWindow(
-          (x: number, y: number, width: number, height: number) => {
-            console.log('Sub:Sub:measureInWindow:', x, y, width, height);
+          (_x: number, _y: number, _width: number, _height: number) => {
+            // console.log('Sub:Sub:measureInWindow:', _x, _y, _width, _height);
           }
         );
       }}
@@ -118,6 +130,7 @@ export function ChatroomScreen(props: Props) {
       {/* <BackgroundImageMemo /> */}
       <Chatroom
         ref={chatroomRef}
+        // containerStyle={{ transform: [{ translateY: -pageY }] }}
         // messageList={{
         //   props: {
         //     visible: true,
@@ -189,6 +202,11 @@ export function ChatroomScreen(props: Props) {
             ],
           },
         }}
+        roomId={room.roomId}
+        ownerId={room.owner}
+        onError={(e) => {
+          console.log('test:ChatroomScreen:error', e.toString());
+        }}
       >
         {/* <Pressable
           style={{
@@ -212,6 +230,7 @@ export function ChatroomScreen(props: Props) {
         }}
         addGiftFloatingTask={addGiftFloatingTask}
         addMarqueeTask={addMarqueeTask}
+        showMemberList={showMemberList}
       />
     </View>
   );

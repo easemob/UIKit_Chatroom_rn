@@ -1,5 +1,6 @@
 import {
   ChatClient,
+  ChatCursorResult,
   ChatMessage,
   ChatMessageChatType,
   ChatMessageStatusCallback,
@@ -8,51 +9,26 @@ import {
 } from 'react-native-chat-sdk';
 
 import { ErrorCode, UIKitError } from '../error';
-import { ChatroomServiceImpl } from './im.chatroom';
-import { ClientServiceImpl } from './im.client';
 import {
   custom_msg_event_type_gift,
   custom_msg_event_type_join,
 } from './im.const';
-import { GiftServiceImpl } from './im.gift';
-import { UserServiceImpl } from './im.user';
 import {
   ChatroomMemberOperateType,
   DisconnectReasonType,
   GiftServiceData,
   IMService,
   IMServiceListener,
+  RoomState,
   UserServiceData,
 } from './types';
-
-export function CreateChatroomService(params: {}) {
-  const {} = params;
-  return new ChatroomServiceImpl();
-}
-
-export function CreateClientService(params: {
-  appKey: string;
-  debugMode?: boolean;
-  autoLogin?: boolean;
-}) {
-  return new ClientServiceImpl(params);
-}
-
-export function CreateGiftService(params: {}) {
-  const {} = params;
-  return new GiftServiceImpl();
-}
-
-export function CreateUserService(params: {}) {
-  return new UserServiceImpl(params);
-}
 
 export abstract class IMServiceImpl implements IMService {
   _listeners: Set<IMServiceListener>;
   _userMap: Map<string, UserServiceData>;
-  _muterMap: Map<string, boolean>;
   _currentRoomId?: string;
   _currentOwnerId?: string;
+  _roomState: RoomState;
 
   // static _instance?: IMServiceImpl;
   // public static getInstance(): IMService {
@@ -67,8 +43,8 @@ export abstract class IMServiceImpl implements IMService {
 
   constructor() {
     this._userMap = new Map();
-    this._muterMap = new Map();
     this._listeners = new Set();
+    this._roomState = 'leaved';
   }
 
   init(params: {
@@ -96,18 +72,27 @@ export abstract class IMServiceImpl implements IMService {
     this._listeners.clear();
   }
 
-  abstract _updateMember(user: UserServiceData): void;
+  abstract _updateMember(user: UserServiceData): UserServiceData;
   abstract _removeMember(userId: string): void;
   abstract _clearMember(): void;
 
-  abstract _updateMuter(userId: string, isMuted: boolean): void;
-  abstract _removeMuter(userId: string): void;
-  abstract _clearMuter(): void;
-
   abstract _setRoomId(roomId: string | undefined): void;
+  get roomId() {
+    return this._currentRoomId;
+  }
   abstract _setOwner(ownerId: string): void;
-  abstract _join(roomId: string, ownerId?: string): void;
+  get ownerId() {
+    return this._currentOwnerId;
+  }
+  abstract _setRoomState(s: RoomState): void;
+  get roomState() {
+    return this._roomState;
+  }
+
+  abstract _join(roomId: string, ownerId: string): void;
   abstract _leave(roomId: string): void;
+  abstract _onJoined(roomId: string, ownerId?: string): void;
+  abstract _onLeaved(roomId: string): void;
 
   get client(): ChatClient {
     return ChatClient.getInstance();
@@ -118,7 +103,7 @@ export abstract class IMServiceImpl implements IMService {
     userToken: string;
     userNickname?: string | undefined;
     userAvatarURL?: string | undefined;
-    result: (params: { isOk: boolean }) => void;
+    result: (params: { isOk: boolean; error?: UIKitError }) => void;
   }): Promise<void> {
     const { userId, userToken, userNickname, userAvatarURL, result } = params;
     if (userToken.startsWith('00')) {
@@ -137,8 +122,19 @@ export abstract class IMServiceImpl implements IMService {
 
           result?.({ isOk: true });
         })
-        .catch(() => {
-          result?.({ isOk: true });
+        .catch((e) => {
+          if (e.code === 200) {
+            this.client.getCurrentUsername();
+            result?.({ isOk: true });
+          } else {
+            result?.({
+              isOk: false,
+              error: new UIKitError({
+                code: ErrorCode.login_error,
+                extra: JSON.stringify(e),
+              }),
+            });
+          }
         });
     } else {
       return this.client
@@ -156,15 +152,29 @@ export abstract class IMServiceImpl implements IMService {
 
           result?.({ isOk: true });
         })
-        .catch(() => {
-          result?.({ isOk: true });
+        .catch((e) => {
+          if (e.code === 200) {
+            result?.({ isOk: true });
+          } else {
+            result?.({
+              isOk: false,
+              error: new UIKitError({
+                code: ErrorCode.login_error,
+                extra: JSON.stringify(e),
+              }),
+            });
+          }
         });
     }
   }
   logout(): Promise<void> {
     return this.client.logout();
   }
-  currentUserId(): string | undefined {
+  async loginState(): Promise<'logged' | 'noLogged'> {
+    const r = await this.client.isLoginBefore();
+    return r === true ? 'logged' : 'noLogged';
+  }
+  get userId(): string | undefined {
     return this.client.currentUserName as string | undefined;
   }
   getUserInfo(id: string): UserServiceData | undefined {
@@ -179,8 +189,8 @@ export abstract class IMServiceImpl implements IMService {
         return v !== undefined;
       }) as UserServiceData[];
   }
-  updateUserInfo(user: UserServiceData): void {
-    this._updateMember(user);
+  updateUserInfo(user: UserServiceData): UserServiceData {
+    return this._updateMember(user);
   }
   async fetchUserInfos(ids: string[]): Promise<UserServiceData[]> {
     const list = await this.client.userManager.fetchUserInfoById(ids);
@@ -209,13 +219,26 @@ export abstract class IMServiceImpl implements IMService {
     };
     return this.client.userManager.updateOwnUserInfo(p);
   }
-  join(roomId: string, info?: ChatRoom): Promise<void> {
-    this._join(roomId, info?.owner);
-    return this.client.roomManager.joinChatRoom(roomId);
+  getNoExisted(ids: string[]): string[] {
+    return ids.filter((v) => {
+      return !this._userMap.has(v);
+    });
   }
-  leave(roomId: string): Promise<void> {
+  async fetchChatroomList(pageNum: number): Promise<ChatRoom[]> {
+    const r = await this.client.roomManager.fetchPublicChatRoomsFromServer(
+      pageNum
+    );
+    return r.list ?? [];
+  }
+  async joinRoom(roomId: string, room: { ownerId: string }): Promise<void> {
+    this._join(roomId, room.ownerId);
+    await this.client.roomManager.joinChatRoom(roomId);
+    this._onJoined(roomId);
+  }
+  async leaveRoom(roomId: string): Promise<void> {
     this._leave(roomId);
-    return this.client.roomManager.leaveChatRoom(roomId);
+    await this.client.roomManager.leaveChatRoom(roomId);
+    this._onLeaved(roomId);
   }
   kickMember(roomId: string, userId: string): void {
     this.client.roomManager.removeChatRoomMembers(roomId, [userId]);
@@ -224,13 +247,12 @@ export abstract class IMServiceImpl implements IMService {
     roomId: string,
     pageSize: number,
     cursor?: string
-  ): Promise<string[]> {
-    const result = await this.client.roomManager.fetchChatRoomMembers(
+  ): Promise<ChatCursorResult<string>> {
+    return this.client.roomManager.fetchChatRoomMembers(
       roomId,
       cursor,
       pageSize
     );
-    return result.list ?? [];
   }
   fetchMutedMembers(roomId: string, pageSize: number): Promise<string[]> {
     return this.client.roomManager.fetchChatRoomMuteList(roomId, pageSize);
@@ -264,7 +286,7 @@ export abstract class IMServiceImpl implements IMService {
     result: (params: {
       isOk: boolean;
       message?: ChatMessage;
-      reason?: string;
+      error?: UIKitError;
     }) => void;
   }): Promise<void> {
     return this._sendTextMessage(params);
@@ -276,7 +298,7 @@ export abstract class IMServiceImpl implements IMService {
     result: (params: {
       isOk: boolean;
       message?: ChatMessage;
-      reason?: string;
+      error?: UIKitError;
     }) => void;
   }): Promise<void> {
     return this._sendCustomMessage({
@@ -293,7 +315,7 @@ export abstract class IMServiceImpl implements IMService {
     result: (params: {
       isOk: boolean;
       message?: ChatMessage;
-      reason?: string;
+      error?: UIKitError;
     }) => void;
   }): Promise<void> {
     return this._sendCustomMessage({
@@ -312,13 +334,19 @@ export abstract class IMServiceImpl implements IMService {
     result: (params: {
       isOk: boolean;
       message?: ChatMessage;
-      reason?: string;
+      error?: UIKitError;
     }) => void;
   }): Promise<void> {
     const { roomId, content, mentionIds, result } = params;
-    const curUserId = this.currentUserId();
+    const curUserId = this.userId;
     if (curUserId === undefined) {
-      result({ isOk: false, reason: 'not login' });
+      result({
+        isOk: false,
+        error: new UIKitError({
+          code: ErrorCode.msg_send_error,
+          extra: 'Not logged in yet.',
+        }),
+      });
       return new Promise(() => {});
     }
     const user = this._userMap.get(curUserId);
@@ -333,8 +361,14 @@ export abstract class IMServiceImpl implements IMService {
     msg.receiverList = mentionIds;
     msg.attributes = user;
     return this.client.chatManager.sendMessage(msg, {
-      onError: (_localMsgId: string) => {
-        result({ isOk: false });
+      onError: (_localMsgId, error) => {
+        result({
+          isOk: false,
+          error: new UIKitError({
+            code: ErrorCode.msg_send_error,
+            extra: `${error.code}: ${error.description}`,
+          }),
+        });
       },
       onSuccess: (message: ChatMessage) => {
         result({ isOk: true, message });
@@ -349,13 +383,19 @@ export abstract class IMServiceImpl implements IMService {
     result: (params: {
       isOk: boolean;
       message?: ChatMessage;
-      reason?: string;
+      error?: UIKitError;
     }) => void;
   }): Promise<void> {
     const { roomId, eventType, eventParams, result } = params;
-    const curUserId = this.currentUserId();
+    const curUserId = this.userId;
     if (curUserId === undefined) {
-      result({ isOk: false, reason: 'not login' });
+      result({
+        isOk: false,
+        error: new UIKitError({
+          code: ErrorCode.msg_send_error,
+          extra: 'Not logged in yet.',
+        }),
+      });
       return new Promise(() => {});
     }
     const user = this._userMap.get(curUserId);
@@ -369,8 +409,14 @@ export abstract class IMServiceImpl implements IMService {
       { params: eventParams }
     );
     return this.client.chatManager.sendMessage(msg, {
-      onError: (_localMsgId: string) => {
-        result({ isOk: false });
+      onError: (_localMsgId, error) => {
+        result({
+          isOk: false,
+          error: new UIKitError({
+            code: ErrorCode.msg_send_error,
+            extra: `${error.code}: ${error.description}`,
+          }),
+        });
       },
       onSuccess: (message: ChatMessage) => {
         result({ isOk: true, message });
@@ -413,64 +459,68 @@ export class IMServicePrivateImpl extends IMServiceImpl {
     this.client.addConnectionListener({
       onConnected: () => {
         this._listeners.forEach((v) => {
-          v.onConnected();
+          v.onConnected?.();
         });
       },
       onDisconnected: () => {
         this._listeners.forEach((v) => {
-          v.onDisconnected(DisconnectReasonType.others);
+          v.onDisconnected?.(DisconnectReasonType.others);
         });
       },
       onTokenWillExpire: () => {
         this._listeners.forEach((v) => {
-          v.onDisconnected(DisconnectReasonType.token_will_expire);
+          v.onDisconnected?.(DisconnectReasonType.token_will_expire);
         });
       },
       onTokenDidExpire: () => {
         this._listeners.forEach((v) => {
-          v.onDisconnected(DisconnectReasonType.token_did_expire);
+          v.onDisconnected?.(DisconnectReasonType.token_did_expire);
         });
       },
       onAppActiveNumberReachLimit: () => {
         this._listeners.forEach((v) => {
-          v.onDisconnected(DisconnectReasonType.app_active_number_reach_limit);
+          v.onDisconnected?.(
+            DisconnectReasonType.app_active_number_reach_limit
+          );
         });
       },
       onUserDidLoginFromOtherDevice: () => {
         this._listeners.forEach((v) => {
-          v.onDisconnected(
+          v.onDisconnected?.(
             DisconnectReasonType.user_did_login_from_other_device
           );
         });
       },
       onUserDidRemoveFromServer: () => {
         this._listeners.forEach((v) => {
-          v.onDisconnected(DisconnectReasonType.user_did_remove_from_server);
+          v.onDisconnected?.(DisconnectReasonType.user_did_remove_from_server);
         });
       },
       onUserDidForbidByServer: () => {
         this._listeners.forEach((v) => {
-          v.onDisconnected(DisconnectReasonType.user_did_forbid_by_server);
+          v.onDisconnected?.(DisconnectReasonType.user_did_forbid_by_server);
         });
       },
       onUserDidChangePassword: () => {
         this._listeners.forEach((v) => {
-          v.onDisconnected(DisconnectReasonType.user_did_change_password);
+          v.onDisconnected?.(DisconnectReasonType.user_did_change_password);
         });
       },
       onUserDidLoginTooManyDevice: () => {
         this._listeners.forEach((v) => {
-          v.onDisconnected(DisconnectReasonType.user_did_login_too_many_device);
+          v.onDisconnected?.(
+            DisconnectReasonType.user_did_login_too_many_device
+          );
         });
       },
       onUserKickedByOtherDevice: () => {
         this._listeners.forEach((v) => {
-          v.onDisconnected(DisconnectReasonType.user_kicked_by_other_device);
+          v.onDisconnected?.(DisconnectReasonType.user_kicked_by_other_device);
         });
       },
       onUserAuthenticationFailed: () => {
         this._listeners.forEach((v) => {
-          v.onDisconnected(DisconnectReasonType.user_authentication_failed);
+          v.onDisconnected?.(DisconnectReasonType.user_authentication_failed);
         });
       },
     });
@@ -607,13 +657,15 @@ export class IMServicePrivateImpl extends IMServiceImpl {
     });
   }
 
-  _updateMember(user: UserServiceData): void {
+  _updateMember(user: UserServiceData): UserServiceData {
     if (this._userMap.has(user.userId)) {
       const old = this._userMap.get(user.userId);
       const n = { ...old, ...user };
       this._userMap.set(user.userId, n);
+      return n;
     } else {
       this._userMap.set(user.userId, user);
+      return user;
     }
   }
   _removeMember(userId: string): void {
@@ -623,34 +675,40 @@ export class IMServicePrivateImpl extends IMServiceImpl {
     this._userMap.clear();
   }
 
-  _updateMuter(userId: string, isMuted: boolean): void {
-    this._muterMap.set(userId, isMuted);
-  }
-  _removeMuter(userId: string): void {
-    this._muterMap.delete(userId);
-  }
-  _clearMuter(): void {
-    this._muterMap.clear();
-  }
-
   _setRoomId(roomId: string | undefined): void {
     this._currentRoomId = roomId;
   }
   _setOwner(ownerId: string | undefined): void {
     this._currentOwnerId = ownerId;
   }
+  _setRoomState(s: RoomState): void {
+    this._roomState = s;
+  }
 
-  _join(roomId: string, ownerId?: string): void {
+  _join(roomId: string, ownerId: string): void {
+    this._setRoomState('joining');
     this._setRoomId(roomId);
-    if (ownerId) {
-      this._setOwner(ownerId);
-    }
+    this._setOwner(ownerId);
   }
   _leave(_roomId: string): void {
+    this._setRoomState('leaving');
     this._setRoomId(undefined);
     this._setOwner(undefined);
     this._clearMember();
-    this._clearMuter();
+  }
+  _onJoined(roomId: string, _ownerId?: string): void {
+    this._setRoomState('joined');
+    this._listeners.forEach((v) => {
+      v.onUserJoined?.(roomId, {
+        userId: this.client.currentUserName,
+      } as UserServiceData);
+    });
+  }
+  _onLeaved(roomId: string): void {
+    this._setRoomState('leaved');
+    this._listeners.forEach((v) => {
+      v.onUserLeave?.(roomId, this.client.currentUserName);
+    });
   }
 }
 

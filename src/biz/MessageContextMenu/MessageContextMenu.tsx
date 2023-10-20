@@ -9,12 +9,15 @@ import {
   BottomSheetMenuProps,
   BottomSheetMenuRef,
 } from '../BottomSheetMenu';
+import type { PropsWithError, PropsWithTest } from '../types';
 
 export type MessageContextMenuRef = BottomSheetMenuRef;
 export type MessageContextMenuProps = Omit<
   BottomSheetMenuProps,
   'title' | 'initItems'
->;
+> &
+  PropsWithTest &
+  PropsWithError;
 
 export const MessageContextMenu = React.forwardRef<
   MessageContextMenuRef,

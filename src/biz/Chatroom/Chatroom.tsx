@@ -8,7 +8,8 @@ import {
   ViewStyle,
 } from 'react-native';
 
-import { IMContext, IMService } from '../../im';
+import type { UIKitError } from '../../error';
+import { IMContext, IMService, IMServiceListener } from '../../im';
 import {
   GiftFloating,
   GiftFloatingProps,
@@ -18,40 +19,51 @@ import { gGiftFloatingListHeight } from '../GiftFloating/GiftFloating.const'; //
 import { InputBar, InputBarProps, InputBarRef } from '../InputBar';
 import { gInputBarStyleHeight } from '../InputBar/InputBar.const';
 import { Marquee, MarqueeProps, MarqueeRef } from '../Marquee';
+import { MemberList, MemberListRef } from '../MemberList';
 import {
   MessageContextMenu,
   MessageContextMenuRef,
 } from '../MessageContextMenu';
 import { MessageList, MessageListProps, MessageListRef } from '../MessageList';
 import { gMessageListHeight } from '../MessageList/MessageList.const'; // for test
+import type { PropsWithError, PropsWithTest } from '../types';
 
-export type ChatroomProps = React.PropsWithChildren<{
-  containerStyle?: StyleProp<ViewStyle>;
-  input?: {
-    props?: Omit<
-      InputBarProps,
-      'onInputBarWillShow' | 'onInputBarWillHide' | 'onSend'
-    >;
-  };
-  messageList?: {
-    props?: Omit<
-      MessageListProps,
-      'onRequestCloseInputBar' | 'isInputBarShow' | 'onLongPressItem'
-    >;
-  };
-  marquee?: {
-    props?: MarqueeProps;
-  };
-  gift?: {
-    props?: GiftFloatingProps;
-  };
-  backgroundView?: React.ReactElement;
-}>;
+type ChatroomData = {
+  roomId: string;
+  ownerId: string;
+};
+export type ChatroomProps = React.PropsWithChildren<
+  {
+    containerStyle?: StyleProp<ViewStyle>;
+    input?: {
+      props?: Omit<
+        InputBarProps,
+        'onInputBarWillShow' | 'onInputBarWillHide' | 'onSend'
+      >;
+    };
+    messageList?: {
+      props?: Omit<
+        MessageListProps,
+        'onRequestCloseInputBar' | 'isInputBarShow' | 'onLongPressItem'
+      >;
+    };
+    marquee?: {
+      props?: MarqueeProps;
+    };
+    gift?: {
+      props?: GiftFloatingProps;
+    };
+    backgroundView?: React.ReactElement;
+  } & ChatroomData &
+    PropsWithTest &
+    PropsWithError
+>;
 type ChatroomState = {
   isInputBarShow: boolean;
+  pageY: number;
 };
 
-export class ChatroomBase extends React.Component<
+export abstract class ChatroomBase extends React.PureComponent<
   ChatroomProps,
   ChatroomState
 > {
@@ -60,7 +72,10 @@ export class ChatroomBase extends React.Component<
   marqueeRef?: React.RefObject<MarqueeRef>;
   menuRef?: React.RefObject<MessageContextMenuRef>;
   giftRef?: React.RefObject<GiftFloatingRef>;
+  memberRef?: React.RefObject<MemberListRef>;
+  containerRef?: React.RefObject<View>;
   im?: IMService;
+  listener?: IMServiceListener;
   constructor(props: ChatroomProps) {
     super(props);
     this.inputBarRef = React.createRef();
@@ -68,8 +83,11 @@ export class ChatroomBase extends React.Component<
     this.marqueeRef = React.createRef();
     this.menuRef = React.createRef();
     this.giftRef = React.createRef();
+    this.memberRef = React.createRef();
+    this.containerRef = React.createRef();
     this.state = {
       isInputBarShow: false,
+      pageY: 0,
     };
   }
 
@@ -88,6 +106,20 @@ export class ChatroomBase extends React.Component<
   getGiftFloatingRef() {
     return this.giftRef?.current;
   }
+
+  getMemberListRef() {
+    return this.memberRef?.current;
+  }
+
+  abstract joinRoom(params: {
+    roomId: string;
+    ownerId: string;
+    result: (params: { isOk: boolean; error?: UIKitError }) => void;
+  }): void;
+  abstract leaveRoom(params: {
+    roomId: string;
+    result: (params: { isOk: boolean; error?: UIKitError }) => void;
+  }): void;
 
   _getMessageListTop() {
     const mh = gMessageListHeight;
@@ -160,6 +192,7 @@ export class ChatroomBase extends React.Component<
     } = this.props;
     return (
       <View
+        ref={this.containerRef}
         style={[
           {
             flex: 1,
@@ -167,6 +200,20 @@ export class ChatroomBase extends React.Component<
           },
           containerStyle,
         ]}
+        onLayout={() => {
+          this.containerRef?.current?.measure(
+            (
+              _x: number,
+              _y: number,
+              _width: number,
+              _height: number,
+              _pageX: number,
+              pageY: number
+            ) => {
+              this.setState({ pageY: pageY });
+            }
+          );
+        }}
       >
         <View
           style={{
@@ -235,6 +282,11 @@ export class ChatroomBase extends React.Component<
             // todo:
           }}
           {...input?.props}
+        />
+
+        <MemberList
+          ref={this.memberRef}
+          maskStyle={{ transform: [{ translateY: -this.state.pageY }] }}
         />
 
         <MessageContextMenu

@@ -6,7 +6,9 @@ import { useColors } from '../../hook';
 import { usePaletteContext } from '../../theme';
 import { SimulativeModal, SimulativeModalRef } from '../../ui/Modal';
 import { TabPage } from '../../ui/TabPage';
+import type { PropsWithError, PropsWithTest } from '../types';
 import { gAspectRatio } from './MemberList.const';
+import { useMemberListAPI } from './MemberList.hooks';
 import { MemberListParticipants } from './MemberList.parts';
 
 export type MemberListRef = SimulativeModalRef & {
@@ -14,12 +16,13 @@ export type MemberListRef = SimulativeModalRef & {
 };
 
 export type MemberListProps = {
-  containerStyle?: StyleProp<ViewStyle> | undefined;
-};
+  maskStyle?: StyleProp<ViewStyle> | undefined;
+} & PropsWithTest &
+  PropsWithError;
 
 export const MemberList = React.forwardRef<MemberListRef, MemberListProps>(
   function (props: MemberListProps, ref?: React.ForwardedRef<MemberListRef>) {
-    const { containerStyle } = props;
+    const { maskStyle, testMode, onError } = props;
     const modalRef = React.useRef<SimulativeModalRef>({} as any);
     const { width: winWidth } = useWindowDimensions();
     const height = winWidth / gAspectRatio;
@@ -35,6 +38,7 @@ export const MemberList = React.forwardRef<MemberListRef, MemberListProps>(
         dark: colors.neutral[3],
       },
     });
+    const { isOwner } = useMemberListAPI({ testMode, onError });
 
     React.useImperativeHandle(
       ref,
@@ -70,7 +74,7 @@ export const MemberList = React.forwardRef<MemberListRef, MemberListProps>(
         // onRequestModalClose={() => {
         //   ref.current.startHide();
         // }}
-        containerStyle={containerStyle}
+        maskStyle={maskStyle}
       >
         <View
           style={{
@@ -94,20 +98,17 @@ export const MemberList = React.forwardRef<MemberListRef, MemberListProps>(
           <TabPage
             header={{
               HeaderProps: {
-                titles: ['Participants', 'Muted'],
+                titles: getTabItemTitles(isOwner),
               },
             }}
             body={{
               BodyProps: {
-                children: [
-                  <MemberListParticipants
-                    key={'1'}
-                    requestUseScrollGesture={(finished) => {
-                      isUsePanResponder.current = finished;
-                    }}
-                  />,
-                  <View key={'2'} />,
-                ],
+                children: getTabItemBodies({
+                  isOwner,
+                  isUsePanResponder,
+                  testMode,
+                  onError,
+                }),
               },
             }}
             headerPosition="up"
@@ -117,3 +118,64 @@ export const MemberList = React.forwardRef<MemberListRef, MemberListProps>(
     );
   }
 );
+
+const getTabItemBodies = ({
+  isOwner,
+  isUsePanResponder,
+  testMode,
+  onError,
+}: {
+  isOwner: boolean;
+  isUsePanResponder: React.MutableRefObject<boolean>;
+} & PropsWithTest &
+  PropsWithError) => {
+  if (isOwner === true) {
+    return [
+      <MemberListParticipants
+        key={'1'}
+        memberType={'member'}
+        requestUseScrollGesture={(finished) => {
+          isUsePanResponder.current = finished;
+        }}
+        testMode={testMode}
+        onError={onError}
+      />,
+      <MemberListParticipants
+        key={'2'}
+        memberType={'muted'}
+        requestUseScrollGesture={(finished) => {
+          isUsePanResponder.current = finished;
+        }}
+        testMode={testMode}
+        onError={onError}
+      />,
+    ];
+  }
+  return [
+    <MemberListParticipants
+      key={'1'}
+      memberType={'member'}
+      requestUseScrollGesture={(finished) => {
+        isUsePanResponder.current = finished;
+      }}
+      testMode={testMode}
+      onError={onError}
+    />,
+  ];
+};
+
+const getTabItemTitles = (isOwner: boolean) => {
+  if (isOwner === true) {
+    return ['Participants', 'Muted'];
+  }
+  return ['Participants'];
+};
+
+const MemberListCompare = (
+  prevProps: MemberListProps,
+  nextProps: MemberListProps
+) => {
+  return prevProps === nextProps;
+};
+
+export const MemberListMemo = React.memo(MemberList, MemberListCompare);

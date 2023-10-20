@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
+import { useConfigContext } from '../../config';
 import { useCheckType, useColors, useGetStyleSize } from '../../hook';
 import { usePaletteContext } from '../../theme';
 import { Icon } from '../../ui/Image';
@@ -67,7 +68,8 @@ export const Marquee = React.forwardRef<MarqueeRef, MarqueeProps>(function (
   const { start, end } = lineGradient.leftToRight;
 
   const containerSize = getViewStyleSize(containerStyle);
-  const { checkType } = useCheckType();
+  const { enableCheckType } = useConfigContext();
+  const { checkType } = useCheckType({ enabled: enableCheckType });
   if (containerSize?.height) {
     checkType(containerSize.height, 'number');
   }

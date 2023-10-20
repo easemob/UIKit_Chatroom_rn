@@ -13,6 +13,7 @@ import { useColors } from '../../hook';
 import { usePaletteContext } from '../../theme';
 import { BorderButton } from '../../ui/Button';
 import { timeoutTask } from '../../utils';
+import type { PropsWithError, PropsWithTest } from '../types';
 import {
   gMessageListHeight,
   gMessageListMarginBottom,
@@ -38,7 +39,8 @@ export type MessageListProps = {
   containerStyle?: StyleProp<ViewStyle>;
   backgroundStyle?: StyleProp<ViewStyle>;
   onLayout?: ((event: LayoutChangeEvent) => void) | undefined;
-};
+} & PropsWithTest &
+  PropsWithError;
 
 export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
   function (props: MessageListProps, ref?: React.ForwardedRef<MessageListRef>) {

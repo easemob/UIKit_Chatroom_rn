@@ -6,6 +6,7 @@ import { useColors } from '../../hook';
 import { usePaletteContext } from '../../theme';
 import { SimulativeModal, SimulativeModalRef } from '../../ui/Modal';
 import { TabPage } from '../../ui/TabPage';
+import type { PropsWithError, PropsWithTest } from '../types';
 import { ReportList } from './ReportList';
 import { gAspectRatio } from './ReportList.const';
 import type { ReportItemModel } from './types';
@@ -13,14 +14,15 @@ import type { ReportItemModel } from './types';
 export type ReportRef = SimulativeModalRef & {};
 export type ReportProps = {
   data: ReportItemModel[];
-  containerStyle?: StyleProp<ViewStyle> | undefined;
-};
+  maskStyle?: StyleProp<ViewStyle> | undefined;
+} & PropsWithTest &
+  PropsWithError;
 
 export const Report = React.forwardRef<ReportRef, ReportProps>(function (
   props: ReportProps,
   ref?: React.ForwardedRef<ReportRef>
 ) {
-  const { data, containerStyle } = props;
+  const { data, maskStyle } = props;
   const modalRef = React.useRef<SimulativeModalRef>({} as any);
   const { width: winWidth } = useWindowDimensions();
   const height = winWidth / gAspectRatio;
@@ -67,7 +69,7 @@ export const Report = React.forwardRef<ReportRef, ReportProps>(function (
       // onRequestModalClose={() => {
       //   ref.current.startHide();
       // }}
-      containerStyle={containerStyle}
+      maskStyle={maskStyle}
     >
       <View
         style={{

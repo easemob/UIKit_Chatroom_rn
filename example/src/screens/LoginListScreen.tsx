@@ -1,7 +1,7 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
-import { useIIMContext } from 'react-native-chat-room';
+import { useIMContext } from 'react-native-chat-room';
 
 import type { RootScreenParamsList } from '../routes';
 
@@ -9,15 +9,18 @@ type Props = NativeStackScreenProps<RootScreenParamsList>;
 export function LoginListScreen(props: Props) {
   const {} = props;
   const account = require('../env').account as { id: string; token: string }[];
-  const im = useIIMContext();
+  const im = useIMContext();
   const [s, setS] = React.useState<'' | 'success' | 'failed' | 'logouted'>('');
+  const [reason, setReason] = React.useState<string>('');
   return (
     <View style={{ flex: 1 }}>
       <View>
         <Text style={{ color: 'red' }}>
           {'Note: Click id to try to log in.'}
         </Text>
-        <Text style={{ color: 'red' }}>{`login state: ${s}.`}</Text>
+        <Text
+          style={{ color: 'red' }}
+        >{`login state: ${s}. reason: ${reason}`}</Text>
       </View>
       <TouchableOpacity
         style={{
@@ -34,9 +37,11 @@ export function LoginListScreen(props: Props) {
           im.logout()
             .then(() => {
               setS('logouted');
+              setReason('');
             })
-            .catch(() => {
+            .catch((e) => {
               setS('failed');
+              setReason(e?.toString() ?? '');
             });
         }}
       >
@@ -68,8 +73,11 @@ export function LoginListScreen(props: Props) {
                   userNickname: v.id,
                   userAvatarURL:
                     'https://cdn4.iconfinder.com/data/icons/small-n-flat/24/cat-512.png',
-                  result: ({ isOk }) => {
+                  result: ({ isOk, error }) => {
                     setS(isOk === true ? 'success' : 'failed');
+                    if (error) {
+                      setReason(error.toString());
+                    }
                   },
                 });
               }}
