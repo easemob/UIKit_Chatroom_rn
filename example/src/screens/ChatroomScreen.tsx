@@ -202,6 +202,13 @@ export function ChatroomScreen(props: Props) {
             ],
           },
         }}
+        memberList={{
+          props: {
+            onSearch: (memberType) => {
+              navigation.push('TestSearchMember', { params: { memberType } });
+            },
+          },
+        }}
         roomId={room.roomId}
         ownerId={room.owner}
         onError={(e) => {

@@ -11,9 +11,13 @@ import { Avatar } from '../Avatar';
 import { gMemberListItemHeight } from './MemberList.const';
 import type { MemberListIteModel } from './types';
 
+export type MemberListItemActions = {
+  onClicked?: () => void;
+};
 export type MemberListItemProps = {
   id: string;
   userInfo: MemberListIteModel;
+  actions?: MemberListItemActions;
 };
 
 export function MemberListItem(props: MemberListItemProps) {
@@ -36,7 +40,7 @@ export function MemberListItem(props: MemberListItemProps) {
       dark: colors.neutral[2],
     },
   });
-  const { id, userInfo } = props;
+  const { id, userInfo, actions } = props;
   return (
     <View
       key={id}
@@ -60,7 +64,12 @@ export function MemberListItem(props: MemberListItemProps) {
 
         <View style={{ width: 12 }} />
         <Avatar
-          url={userInfo.avatarURL ?? 'https://no-existed?'}
+          url={
+            userInfo.avatarURL === undefined ||
+            userInfo.avatarURL.trim().length === 0
+              ? 'https://no-existed?'
+              : userInfo.avatarURL
+          }
           size={40}
           borderRadius={40}
         />
@@ -73,7 +82,10 @@ export function MemberListItem(props: MemberListItemProps) {
               color: getColor('color'),
             }}
           >
-            {userInfo?.nickName ?? userInfo.userId}
+            {userInfo.nickName === undefined ||
+            userInfo.nickName.trim().length === 0
+              ? userInfo.userId
+              : userInfo.nickName}
           </Text>
           {/* <Text
             textType={'medium'}
@@ -94,6 +106,7 @@ export function MemberListItem(props: MemberListItemProps) {
             height: 24,
             margin: 4,
           }}
+          onPress={actions?.onClicked}
         />
       </View>
       <View

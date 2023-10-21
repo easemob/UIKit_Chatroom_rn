@@ -14,11 +14,11 @@ import {
   custom_msg_event_type_join,
 } from './im.const';
 import {
-  ChatroomMemberOperateType,
   DisconnectReasonType,
   GiftServiceData,
   IMService,
   IMServiceListener,
+  RoomMemberOperate,
   RoomState,
   UserServiceData,
 } from './types';
@@ -26,6 +26,7 @@ import {
 export abstract class IMServiceImpl implements IMService {
   _listeners: Set<IMServiceListener>;
   _userMap: Map<string, UserServiceData>;
+  _muters: Map<string, number>;
   _currentRoomId?: string;
   _currentOwnerId?: string;
   _roomState: RoomState;
@@ -43,6 +44,7 @@ export abstract class IMServiceImpl implements IMService {
 
   constructor() {
     this._userMap = new Map();
+    this._muters = new Map();
     this._listeners = new Set();
     this._roomState = 'leaved';
   }
@@ -75,6 +77,7 @@ export abstract class IMServiceImpl implements IMService {
   abstract _updateMember(user: UserServiceData): UserServiceData;
   abstract _removeMember(userId: string): void;
   abstract _clearMember(): void;
+  abstract _clearMuter(): void;
 
   abstract _setRoomId(roomId: string | undefined): void;
   get roomId() {
@@ -89,6 +92,7 @@ export abstract class IMServiceImpl implements IMService {
     return this._roomState;
   }
 
+  abstract _reset(): void;
   abstract _join(roomId: string, ownerId: string): void;
   abstract _leave(roomId: string): void;
   abstract _onJoined(roomId: string, ownerId?: string): void;
@@ -177,6 +181,14 @@ export abstract class IMServiceImpl implements IMService {
   get userId(): string | undefined {
     return this.client.currentUserName as string | undefined;
   }
+  getMuter(id: string): number | undefined {
+    return this._muters.get(id);
+  }
+  updateMuter(ids: string[]): void {
+    for (const id of ids) {
+      this._muters.set(id, -1);
+    }
+  }
   getUserInfo(id: string): UserServiceData | undefined {
     return this._userMap.get(id);
   }
@@ -189,20 +201,30 @@ export abstract class IMServiceImpl implements IMService {
         return v !== undefined;
       }) as UserServiceData[];
   }
-  updateUserInfo(user: UserServiceData): UserServiceData {
-    return this._updateMember(user);
+  updateUserInfos(users: UserServiceData[]): void {
+    for (const user of users) {
+      this._updateMember(user);
+    }
   }
   async fetchUserInfos(ids: string[]): Promise<UserServiceData[]> {
     const list = await this.client.userManager.fetchUserInfoById(ids);
     if (list) {
       const ret: UserServiceData[] = [];
       for (const item of list) {
+        let identify;
+        try {
+          if (item[1].ext && item[1].ext?.length > 0) {
+            identify = JSON.parse(item[1].ext)?.identify;
+          }
+        } catch (error) {
+          console.warn('fetchUserInfos:', error);
+        }
         ret.push({
           userId: item[1].userId,
-          nickName: item[1].nickName ?? '',
-          avatarURL: item[1].avatarUrl ?? '',
+          nickName: item[1].nickName ?? undefined,
+          avatarURL: item[1].avatarUrl ?? undefined,
           gender: item[1].gender ?? 0,
-          identify: JSON.parse(item[1].ext ?? '')?.identify ?? '',
+          identify: identify,
         });
       }
       return ret;
@@ -224,6 +246,13 @@ export abstract class IMServiceImpl implements IMService {
       return !this._userMap.has(v);
     });
   }
+  getIncludes(key: string): UserServiceData[] {
+    return Array.from(this._userMap, (v) => {
+      return v[1];
+    }).filter((v) => {
+      return v.userId.includes(key);
+    });
+  }
   async fetchChatroomList(pageNum: number): Promise<ChatRoom[]> {
     const r = await this.client.roomManager.fetchPublicChatRoomsFromServer(
       pageNum
@@ -240,8 +269,14 @@ export abstract class IMServiceImpl implements IMService {
     await this.client.roomManager.leaveChatRoom(roomId);
     this._onLeaved(roomId);
   }
-  kickMember(roomId: string, userId: string): void {
-    this.client.roomManager.removeChatRoomMembers(roomId, [userId]);
+  resetRoom(roomId: string): void {
+    if (roomId === this.roomId) {
+      this._setRoomState('leaved');
+      this._reset();
+    }
+  }
+  kickMember(roomId: string, userId: string): Promise<void> {
+    return this.client.roomManager.removeChatRoomMembers(roomId, [userId]);
   }
   async fetchMembers(
     roomId: string,
@@ -269,7 +304,7 @@ export abstract class IMServiceImpl implements IMService {
   updateMemberState(
     roomId: string,
     userId: string,
-    op: ChatroomMemberOperateType
+    op: RoomMemberOperate
   ): Promise<void> {
     if (op === 'mute') {
       return this.client.roomManager.muteChatRoomMembers(roomId, [userId]);
@@ -674,6 +709,9 @@ export class IMServicePrivateImpl extends IMServiceImpl {
   _clearMember(): void {
     this._userMap.clear();
   }
+  _clearMuter(): void {
+    this._muters.clear();
+  }
 
   _setRoomId(roomId: string | undefined): void {
     this._currentRoomId = roomId;
@@ -685,16 +723,23 @@ export class IMServicePrivateImpl extends IMServiceImpl {
     this._roomState = s;
   }
 
+  _reset(): void {
+    this._setRoomId(undefined);
+    this._setOwner(undefined);
+    this._clearMember();
+    this._clearMuter();
+  }
+
   _join(roomId: string, ownerId: string): void {
+    if (this.roomState === 'leaving' || this.roomState === 'joining') {
+      this._reset();
+    }
     this._setRoomState('joining');
     this._setRoomId(roomId);
     this._setOwner(ownerId);
   }
   _leave(_roomId: string): void {
     this._setRoomState('leaving');
-    this._setRoomId(undefined);
-    this._setOwner(undefined);
-    this._clearMember();
   }
   _onJoined(roomId: string, _ownerId?: string): void {
     this._setRoomState('joined');
@@ -709,6 +754,7 @@ export class IMServicePrivateImpl extends IMServiceImpl {
     this._listeners.forEach((v) => {
       v.onUserLeave?.(roomId, this.client.currentUserName);
     });
+    this._reset();
   }
 }
 

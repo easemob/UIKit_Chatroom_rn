@@ -7,62 +7,46 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { useColors } from '../../hook';
+import { usePaletteContext } from '../../theme';
 import { Image } from '../../ui/Image';
-import { gSearchTimeout } from './MemberList.const';
+import type { PropsWithError, PropsWithTest } from '../types';
+import { useSearchMemberListAPI } from './MemberList.hooks';
 import { MemberListItemMemo, MemberListItemProps } from './MemberList.item';
 import { Search } from './Search';
+import type { MemberListType } from './types';
 
-export type SearchMemberProps = {};
+export type SearchMemberProps = {
+  memberType: MemberListType;
+  onRequestClose: () => void;
+} & PropsWithTest &
+  PropsWithError;
 
-export function SearchMember() {
-  const dataRef = React.useRef<MemberListItemProps[]>([
-    { id: '1' },
-    { id: '2' },
-    { id: '3' },
-    { id: '4' },
-    { id: '5' },
-    { id: '6' },
-    { id: '7' },
-    { id: '8' },
-    { id: '9' },
-    { id: '10' },
-    { id: '11' },
-    { id: '12' },
-    { id: '13' },
-    { id: '14' },
-    { id: '15' },
-    { id: '16' },
-    { id: '17' },
-    { id: '18' },
-    { id: '19' },
-    { id: '20' },
-    { id: '21' },
-  ]);
-  const [data, setData] = React.useState<MemberListItemProps[]>(
-    dataRef.current
-  );
+export function SearchMember(props: SearchMemberProps) {
+  const { onRequestClose, memberType } = props;
   const [value, setValue] = React.useState('');
-  const ds = React.useRef<NodeJS.Timeout | undefined>();
-
-  const execSearch = (key: string) => {
-    const ret = dataRef.current.filter((v) => {
-      return v.id.includes(key) === true;
-    });
-    setData([...ret]);
-  };
-
-  const deferSearch = async (text: string) => {
-    if (ds.current) {
-      clearTimeout(ds.current);
-      ds.current = undefined;
-    }
-    ds.current = setTimeout(() => {
-      execSearch(text);
-    }, gSearchTimeout);
-  };
+  const { colors } = usePaletteContext();
+  const { getColor } = useColors({
+    backgroundColor: {
+      light: colors.neutral[98],
+      dark: colors.neutral[1],
+    },
+    backgroundColor2: {
+      light: colors.neutral[8],
+      dark: colors.neutral[3],
+    },
+  });
+  const { _data, deferSearch } = useSearchMemberListAPI({
+    memberType,
+  });
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView
+      style={{
+        flex: 1,
+        backgroundColor: getColor('backgroundColor'),
+      }}
+    >
       <Search
         value={value}
         onChangeText={(v) => {
@@ -70,14 +54,14 @@ export function SearchMember() {
           deferSearch(v);
         }}
         onCancel={function () {
-          // todo: go back
+          onRequestClose();
         }}
       />
       <FlatList
-        data={data}
+        data={_data}
         renderItem={(info: ListRenderItemInfo<MemberListItemProps>) => {
           const { item } = info;
-          return <MemberListItemMemo id={item.id} />;
+          return <MemberListItemMemo {...item} />;
         }}
         keyExtractor={(item: MemberListItemProps) => {
           return item.id;

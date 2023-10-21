@@ -1,14 +1,20 @@
 import * as React from 'react';
 import { PanResponder, ViewToken } from 'react-native';
+import type { ChatMessage } from 'react-native-chat-sdk/lib/typescript/common/ChatMessage';
 
 import { useDispatchContext, useDispatchListener } from '../../dispatch';
 import { ErrorCode, UIKitError } from '../../error';
 import { useDelayExecTask } from '../../hook';
-import { useIMContext, useIMListener } from '../../im';
+import { useIMContext, useIMListener, UserServiceData } from '../../im';
 import { wait } from '../../utils';
 import type { PropsWithError, PropsWithTest } from '../types';
-import { gMaxMuterSize, gMemberPerPageSize } from './MemberList.const';
+import {
+  gMaxMuterSize,
+  gMemberPerPageSize,
+  gSearchTimeout,
+} from './MemberList.const';
 import type { MemberListItemProps } from './MemberList.item';
+import type { MemberListType } from './types';
 
 export function usePanHandlers(params: {
   requestUseScrollGesture: ((finished: boolean) => void) | undefined;
@@ -45,11 +51,28 @@ export function usePanHandlers(params: {
   };
 }
 
-type useMemberListAPIProps = PropsWithTest & PropsWithError;
-export function useMemberListAPI(props: useMemberListAPIProps) {
-  const { onError } = props;
+export function useIsOwner() {
   const im = useIMContext();
-  console.log('test:useMemberListAPI:', im.userId === im.ownerId);
+  const isOwner = im.userId === im.ownerId;
+  return {
+    isOwner,
+  };
+}
+
+export function useRoomState() {
+  const im = useIMContext();
+  return {
+    roomState: im.roomState,
+  };
+}
+
+type useMemberListAPIProps = PropsWithTest & PropsWithError;
+export function useMemberListAPI(
+  props: useMemberListAPIProps & { memberType: MemberListType }
+) {
+  const { onError, memberType } = props;
+  const im = useIMContext();
+  console.log('test:useMemberListAPI:', im.userId === im.ownerId, memberType);
 
   const isOwner = im.userId === im.ownerId;
   const memberCursor = React.useRef('');
@@ -58,14 +81,13 @@ export function useMemberListAPI(props: useMemberListAPIProps) {
   // const dataRef = React.useRef(new Map<string, MemberListItemProps>());
   const [data, setData] = React.useState<MemberListItemProps[]>([]);
 
-  const muterRef = React.useRef<MemberListItemProps[]>([]);
-  const [muter, setMuter] = React.useState<MemberListItemProps[]>([]);
+  const muterRef = React.useRef<string[]>([]);
 
   const [refreshing, setRefreshing] = React.useState(false);
 
   const { emit } = useDispatchContext();
   useDispatchListener(
-    `_$${useMemberListAPI.name}_fetchMemberInfo`,
+    `_$${useMemberListAPI.name}_${memberType}_fetchMemberInfo`,
     (ids: string[]) => {
       _fetchMemberInfo(ids);
     }
@@ -88,122 +110,204 @@ export function useMemberListAPI(props: useMemberListAPIProps) {
         const ids = info.viewableItems.map((v) => {
           return (v.item as MemberListItemProps).userInfo.userId;
         });
-        emit(`_$${useMemberListAPI.name}_fetchMemberInfo`, ids);
+        emit(`_$${useMemberListAPI.name}_${memberType}_fetchMemberInfo`, ids);
       },
-      [emit]
+      [emit, memberType]
     )
   );
-  // const requestUserInfoTimeout = React.useRef<NodeJS.Timeout | undefined>();
 
-  // // !!!  ERROR  Invariant Violation: Changing onViewableItemsChanged on the fly is not supported
-  // const onViewableItemsChanged = React.useCallback(
-  //   (info: { viewableItems: Array<ViewToken>; changed: Array<ViewToken> }) => {
-  //     console.log(
-  //       'test:onViewableItemsChanged:',
-  //       info.viewableItems.map((v) => {
-  //         console.log('test:zuoyu:10:', v.item);
-  //       })
-  //     );
-  //     if (requestUserInfoTimeout.current) {
-  //       clearTimeout(requestUserInfoTimeout.current);
-  //     }
-  //     requestUserInfoTimeout.current = setTimeout(() => {
-  //       console.log('test:zuoyu:11:', info.viewableItems.length);
-  //     }, 1000);
-  //   },
-  //   []
-  // );
+  const _addData = (userId?: string) => {
+    if (userId === undefined) {
+      return false;
+    }
+    if (dataRef.current.map((v) => v.userInfo.userId).includes(userId)) {
+      return false;
+    }
+    const user = im.getUserInfo(userId);
+    dataRef.current.push({
+      id: userId,
+      userInfo: { userId: userId, ...user },
+      actions: {
+        onClicked: () => {
+          const isMuted = _isMuter(userId);
+          emit(
+            `_$${useMemberListAPI.name}_memberListContextMenu`,
+            memberType, // current mute list
+            isOwner, // current user role
+            userId, // current member id
+            isMuted // current member mute state
+          );
+        },
+      },
+    });
+    return true;
+  };
 
-  useIMListener({
-    onUserJoined: (roomId, user) => {
-      if (im.roomId === roomId) {
-        _refreshMembers(() => {
-          const list10 = dataRef.current.slice(0, 9).map((v) => {
-            return v.userInfo.userId;
+  const _updateData = (userInfo?: UserServiceData) => {
+    if (userInfo === undefined) {
+      return false;
+    }
+    for (const data of dataRef.current) {
+      if (data.userInfo.userId === userInfo.userId) {
+        data.userInfo = userInfo;
+        return true;
+      }
+    }
+    return false;
+  };
+
+  const _addDataList = (userIds: string[]) => {
+    let ret = false;
+    for (const id of userIds) {
+      const r = _addData(id);
+      if (r === true) {
+        ret = true;
+      }
+    }
+    return ret;
+  };
+
+  const _updateDataList = (userInfos?: UserServiceData[]) => {
+    if (userInfos === undefined) {
+      return false;
+    }
+    let ret = false;
+    for (const data of userInfos) {
+      const r = _updateData(data);
+      if (r === true) {
+        ret = true;
+      }
+    }
+    return ret;
+  };
+
+  const _removeData = (userId?: string) => {
+    if (userId === undefined) {
+      return false;
+    }
+    for (let index = 0; index < dataRef.current.length; index++) {
+      const element = dataRef.current[index];
+      if (element?.userInfo.userId === userId) {
+        dataRef.current.splice(index, 1);
+        return true;
+      }
+    }
+    return false;
+  };
+
+  const _updateUI = (isNeedUpdate: boolean) => {
+    if (isNeedUpdate === true) {
+      setData([...dataRef.current]);
+    }
+  };
+
+  useMemberListener({
+    onUpdateInfo: (roomId, userInfo) => {
+      if (roomId === im.roomId) {
+        im.updateUserInfos([userInfo]);
+        _updateUI(_updateData(userInfo));
+      }
+    },
+    onUserJoined: (roomId, userId) => {
+      if (roomId === im.roomId) {
+        if (im.userId !== userId) {
+          _updateUI(_addData(userId));
+        } else {
+          _refreshMembers(() => {
+            const list10 = dataRef.current.slice(0, 19).map((v) => {
+              return v.userInfo.userId;
+            });
+            _fetchMemberInfo(list10);
           });
-          _fetchMemberInfo(list10);
-        });
-        if (im.userId === user.userId) {
-          // todo: request member list
-          if (im.ownerId === im.userId) {
-            // todo: request mute member list
-            // setIsOwner(true);
+          if (isOwner === true) {
             _fetchMuter(() => {
               if (muterRef.current.length > 0) {
-                const list10 = muter.slice(0, 9).map((v) => {
-                  return v.userInfo.userId;
-                });
+                const list10 = muterRef.current.slice(0, 19);
                 _fetchMemberInfo(list10);
               }
             });
-          } else {
-            // setIsOwner(false);
           }
-        } else {
-          // todo: add member to cache
         }
       }
     },
+    onUserLeave: (roomId, userId) => {
+      if (roomId === im.roomId) {
+        _updateUI(_removeData(userId));
+      }
+    },
+    onUserBeKicked: (roomId, reason) => {
+      console.log('dev:onUserBeKicked', reason);
+      // todo: Internal: Clean up resources. External notifications kicked. Typical: Re-entering the chat room, prompting that the room has been exited, etc.
+      im.resetRoom(roomId);
+    },
   });
 
+  const _isMuter = (memberId: string) => {
+    return im.getMuter(memberId) !== undefined;
+  };
+
   const _refreshMembers = (onFinished?: () => void) => {
-    if (im.roomState === 'joined') {
-      dataRef.current = [];
-      memberCursor.current = '';
-      im.fetchMembers(im.roomId!, gMemberPerPageSize, memberCursor.current)
-        .then((r) => {
-          memberCursor.current = r.cursor;
-          if (r.list) {
-            for (const memberId of r.list) {
-              const user = im.getUserInfo(memberId);
-              dataRef.current.push({
-                id: memberId,
-                userInfo: { userId: memberId, ...user },
-              });
+    if (memberType === 'member') {
+      if (im.roomState === 'joined') {
+        dataRef.current = [];
+        memberCursor.current = '';
+        im.fetchMembers(im.roomId!, gMemberPerPageSize, memberCursor.current)
+          .then((r) => {
+            memberCursor.current = r.cursor;
+            if (r.list) {
+              _updateUI(_addDataList(r.list));
             }
-          }
-          setData([...dataRef.current]);
-          onFinished?.();
-        })
-        .catch((e) => {
-          onFinished?.();
-          onError?.(
-            new UIKitError({
-              code: ErrorCode.room_fetch_member_list_error,
-              extra: e.toString(),
-            })
-          );
-        });
-    } else {
-      onFinished?.();
+            onFinished?.();
+          })
+          .catch((e) => {
+            onFinished?.();
+            onError?.(
+              new UIKitError({
+                code: ErrorCode.room_fetch_member_list_error,
+                extra: e.toString(),
+              })
+            );
+          });
+      } else {
+        onFinished?.();
+      }
+    } else if (memberType === 'muted') {
+      if (im.roomState === 'joined') {
+        dataRef.current = [];
+        memberCursor.current = '';
+        im.fetchMutedMembers(im.roomId!, gMaxMuterSize)
+          .then((r) => {
+            im.updateMuter(r ?? []);
+            muterRef.current = r ?? [];
+            if (r) {
+              _updateUI(_addDataList(r));
+            }
+            onFinished?.();
+          })
+          .catch((e) => {
+            onFinished?.();
+            onError?.(
+              new UIKitError({
+                code: ErrorCode.room_fetch_mute_member_list_error,
+                extra: e.toString(),
+              })
+            );
+          });
+      } else {
+        onFinished?.();
+      }
     }
   };
 
   const _loadMoreMembers = () => {
+    if (memberType !== 'member') {
+      return;
+    }
     if (im.roomState === 'joined') {
       im.fetchMembers(im.roomId!, gMemberPerPageSize, memberCursor.current)
         .then((r) => {
           memberCursor.current = r.cursor;
-          let isNeedUpdate = false;
-          if (r.list) {
-            const dup = dataRef.current.map((v) => v.userInfo.userId);
-
-            for (const memberId of r.list) {
-              const user = im.getUserInfo(memberId);
-              // !!! Remove duplicates
-              if (dup.includes(memberId)) {
-                continue;
-              }
-              isNeedUpdate = true;
-              dataRef.current.push({
-                id: memberId,
-                userInfo: { userId: memberId, ...user },
-              });
-            }
-          }
-          if (isNeedUpdate === true) {
-            setData([...dataRef.current]);
-          }
+          _updateUI(_addDataList(r?.list ?? []));
         })
         .catch((e) => {
           onError?.(
@@ -220,29 +324,8 @@ export function useMemberListAPI(props: useMemberListAPIProps) {
     if (im.roomState === 'joined') {
       im.fetchUserInfos(im.getNoExisted(ids))
         .then((list) => {
-          for (const d of list) {
-            const n = im.updateUserInfo(d);
-            for (let index = 0; index < dataRef.current.length; index++) {
-              const l = dataRef.current[index];
-              if (l?.userInfo.userId === n.userId) {
-                l.userInfo = n;
-                break;
-              }
-            }
-            for (let index = 0; index < muterRef.current.length; index++) {
-              const l = muterRef.current[index];
-              if (l?.userInfo.userId === n.userId) {
-                l.userInfo = n;
-                break;
-              }
-            }
-          }
-          if (list.length > 0) {
-            setData([...dataRef.current]);
-            if (isOwner === true) {
-              setMuter([...muterRef.current]);
-            }
-          }
+          im.updateUserInfos(list ?? []);
+          _updateUI(_updateDataList(list));
         })
         .catch((e) => {
           onError?.(
@@ -256,20 +339,14 @@ export function useMemberListAPI(props: useMemberListAPIProps) {
   };
 
   const _fetchMuter = (onFinished?: () => void) => {
+    if (memberType === 'muted') {
+      return;
+    }
     if (im.roomState === 'joined') {
       im.fetchMutedMembers(im.roomId!, gMaxMuterSize)
         .then((r) => {
-          if (r) {
-            muterRef.current = [];
-            for (const muterId of r) {
-              const user = im.getUserInfo(muterId);
-              muterRef.current.push({
-                id: muterId,
-                userInfo: { userId: muterId, ...user },
-              });
-            }
-          }
-          setMuter([...muterRef.current]);
+          im.updateMuter(r ?? []);
+          muterRef.current = r ?? [];
           onFinished?.();
         })
         .catch((e) => {
@@ -287,6 +364,7 @@ export function useMemberListAPI(props: useMemberListAPIProps) {
   };
 
   const _onRefresh = () => {
+    im.getIncludes('8');
     setRefreshing(true);
     _refreshMembers(() => {
       wait(1000).then(() => {
@@ -299,14 +377,136 @@ export function useMemberListAPI(props: useMemberListAPIProps) {
     _loadMoreMembers();
   };
 
+  const _muteMember = (memberId: string, isMuted: boolean) => {
+    if (im.roomState === 'joined') {
+      im.updateMemberState(
+        im.roomId!,
+        memberId,
+        isMuted === true ? 'mute' : 'unmute'
+      ).catch((e) => {
+        onError?.(
+          new UIKitError({
+            code: ErrorCode.room_mute_member_error,
+            extra: e.toString(),
+          })
+        );
+      });
+    }
+  };
+  const _removeMember = (memberId: string) => {
+    if (im.roomState === 'joined') {
+      im.kickMember(im.roomId!, memberId).catch((e) => {
+        onError?.(
+          new UIKitError({
+            code: ErrorCode.room_kick_member_error,
+            extra: e.toString(),
+          })
+        );
+      });
+    }
+  };
+
   return {
     data: data,
-    muter: muter,
-    isOwner: isOwner,
+    muter: muterRef.current,
     refreshing: refreshing,
     onRefresh: _onRefresh,
     onEndReached: _onEndReached,
     viewabilityConfigRef: viewabilityConfigRef,
     onViewableItemsChanged: delayExecTask,
+    muteMember: _muteMember,
+    removeMember: _removeMember,
   };
+}
+
+export function useSearchMemberListAPI(props: { memberType: MemberListType }) {
+  const { memberType } = props;
+  // const ds = React.useRef<NodeJS.Timeout | undefined>();
+  const im = useIMContext();
+
+  const [data, setData] = React.useState<MemberListItemProps[]>([]);
+
+  const { isOwner } = useIsOwner();
+  const { emit } = useDispatchContext();
+
+  const _isMuter = (memberId: string) => {
+    return im.getMuter(memberId) !== undefined;
+  };
+
+  const _execSearch = (key: string) => {
+    const r = im.getIncludes(key);
+    const rr = r.map((v) => {
+      return {
+        id: v.userId,
+        userInfo: v,
+        actions: {
+          onClicked: () => {
+            const isMuted = _isMuter(v.userId);
+            emit(
+              `_$${useMemberListAPI.name}_memberListContextMenu`,
+              memberType, // current mute list
+              isOwner, // current user role
+              v.userId, // current member id
+              isMuted // current member mute state
+            );
+          },
+        },
+      } as MemberListItemProps;
+    });
+    setData([...rr]);
+  };
+
+  // const _deferSearch = async (text: string) => {
+  //   if (ds.current) {
+  //     clearTimeout(ds.current);
+  //     ds.current = undefined;
+  //   }
+  //   ds.current = setTimeout(() => {
+  //     _execSearch(text);
+  //   }, gSearchTimeout);
+  // };
+
+  const { delayExecTask } = useDelayExecTask(gSearchTimeout, _execSearch);
+
+  return {
+    _data: data,
+    deferSearch: delayExecTask,
+  };
+}
+
+export function userInfoFromMessage(
+  msg: ChatMessage
+): UserServiceData | undefined {
+  const userInfo = msg.attributes as UserServiceData;
+  if (userInfo?.userId) {
+    return userInfo;
+  }
+  return undefined;
+}
+
+type useMemberListenerProps = {
+  onUpdateInfo?: (roomId: string, userInfo: UserServiceData) => void;
+  onUserJoined?: (roomId: string, userId: string) => void;
+  onUserLeave?: (roomId: string, userId: string) => void;
+  onUserBeKicked?: (roomId: string, reason: number) => void;
+};
+export function useMemberListener(props: useMemberListenerProps) {
+  const { onUpdateInfo, onUserJoined, onUserLeave, onUserBeKicked } = props;
+  useIMListener({
+    onMessageReceived: (roomId, message) => {
+      const userInfo = userInfoFromMessage(message);
+      if (userInfo) {
+        onUpdateInfo?.(roomId, userInfo);
+      }
+    },
+    onUserJoined: (roomId, user) => {
+      onUserJoined?.(roomId, user.userId);
+    },
+    onUserLeave: (roomId, userId) => {
+      onUserLeave?.(roomId, userId);
+    },
+    onUserBeKicked: (roomId, reason) => {
+      onUserBeKicked?.(roomId, reason);
+    },
+  });
 }

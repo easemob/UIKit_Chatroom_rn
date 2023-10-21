@@ -69,6 +69,9 @@ export function getDescription(code: ErrorCode): ErrorDescription {
     case ErrorCode.room_fetch_member_list_error:
       ret = ErrorDescription.room_fetch_member_list_error;
       break;
+    case ErrorCode.room_fetch_mute_member_list_error:
+      ret = ErrorDescription.room_fetch_mute_member_list_error;
+      break;
     case ErrorCode.room_fetch_member_info_error:
       ret = ErrorDescription.room_fetch_member_info_error;
       break;

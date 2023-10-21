@@ -19,12 +19,14 @@ import { gGiftFloatingListHeight } from '../GiftFloating/GiftFloating.const'; //
 import { InputBar, InputBarProps, InputBarRef } from '../InputBar';
 import { gInputBarStyleHeight } from '../InputBar/InputBar.const';
 import { Marquee, MarqueeProps, MarqueeRef } from '../Marquee';
-import { MemberList, MemberListRef } from '../MemberList';
+import { MemberList, MemberListProps, MemberListRef } from '../MemberList';
 import {
   MessageContextMenu,
   MessageContextMenuRef,
-} from '../MessageContextMenu';
-import { MessageList, MessageListProps, MessageListRef } from '../MessageList';
+  MessageList,
+  MessageListProps,
+  MessageListRef,
+} from '../MessageList';
 import { gMessageListHeight } from '../MessageList/MessageList.const'; // for test
 import type { PropsWithError, PropsWithTest } from '../types';
 
@@ -53,6 +55,9 @@ export type ChatroomProps = React.PropsWithChildren<
     gift?: {
       props?: GiftFloatingProps;
     };
+    memberList?: {
+      props?: MemberListProps;
+    };
     backgroundView?: React.ReactElement;
   } & ChatroomData &
     PropsWithTest &
@@ -78,6 +83,7 @@ export abstract class ChatroomBase extends React.PureComponent<
   listener?: IMServiceListener;
   constructor(props: ChatroomProps) {
     super(props);
+
     this.inputBarRef = React.createRef();
     this.messageRef = React.createRef();
     this.marqueeRef = React.createRef();
@@ -85,6 +91,7 @@ export abstract class ChatroomBase extends React.PureComponent<
     this.giftRef = React.createRef();
     this.memberRef = React.createRef();
     this.containerRef = React.createRef();
+
     this.state = {
       isInputBarShow: false,
       pageY: 0,
@@ -189,6 +196,9 @@ export abstract class ChatroomBase extends React.PureComponent<
       gift,
       children,
       backgroundView,
+      memberList,
+      onError,
+      testMode,
     } = this.props;
     return (
       <View
@@ -287,6 +297,9 @@ export abstract class ChatroomBase extends React.PureComponent<
         <MemberList
           ref={this.memberRef}
           maskStyle={{ transform: [{ translateY: -this.state.pageY }] }}
+          onError={onError}
+          testMode={testMode}
+          {...memberList?.props}
         />
 
         <MessageContextMenu

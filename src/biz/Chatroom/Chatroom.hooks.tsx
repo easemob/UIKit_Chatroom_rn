@@ -15,9 +15,7 @@ export class Chatroom extends ChatroomBase {
 
   async init() {
     this.listener = {
-      onUserJoined: (roomId, user) => {
-        console.log('test:onUserJoined:', roomId, user);
-      },
+      onUserJoined: (_roomId, _user) => {},
     };
     this.im?.addListener(this.listener);
     const r = await this.im?.loginState();
@@ -54,7 +52,7 @@ export class Chatroom extends ChatroomBase {
     ownerId: string;
     result: (params: { isOk: boolean; error?: UIKitError }) => void;
   }): void {
-    if (this.im?.roomState === 'joined' || this.im?.roomState === 'joining') {
+    if (this.im?.roomState === 'joined') {
       params?.result({
         isOk: true,
         error: new UIKitError({

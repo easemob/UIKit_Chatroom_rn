@@ -18,7 +18,7 @@ export type BottomSheetMenuRef = ModalRef & {
 };
 export type BottomSheetMenuProps = {
   onRequestModalClose: () => void;
-  title: string;
+  title?: string;
   /**
    * The maximum number should not exceed 6.
    */
@@ -115,17 +115,19 @@ export const BottomSheetMenu = React.forwardRef<
           }}
         />
 
-        <View style={{ paddingVertical: 13, paddingHorizontal: 16 }}>
-          <Text
-            textType={'medium'}
-            paletteType={'body'}
-            style={{
-              color: getColor('c1'),
-            }}
-          >
-            {title}
-          </Text>
-        </View>
+        {title ? (
+          <View style={{ paddingVertical: 13, paddingHorizontal: 16 }}>
+            <Text
+              textType={'medium'}
+              paletteType={'body'}
+              style={{
+                color: getColor('c1'),
+              }}
+            >
+              {title}
+            </Text>
+          </View>
+        ) : null}
 
         {items}
 

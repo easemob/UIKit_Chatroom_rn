@@ -21,6 +21,7 @@ import {
   LoginListScreen,
   LoginScreen,
   ReportScreen,
+  SearchMemberScreen,
   TopMenuScreen,
 } from './screens';
 
@@ -123,6 +124,14 @@ export function App() {
                 headerShown: true,
               }}
               component={ReportScreen}
+            />
+            <Root.Screen
+              name={'TestSearchMember'}
+              options={{
+                headerShown: false,
+                presentation: 'modal',
+              }}
+              component={SearchMemberScreen}
             />
           </Root.Navigator>
         </NavigationContainer>

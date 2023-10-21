@@ -26,6 +26,7 @@ export enum ErrorDescription {
   room_mute_member_error = 'mute member in chatroom is failed.',
   room_unmute_member_error = 'unmute member in chatroom is failed.',
   room_fetch_member_list_error = 'fetch member list in chatroom is failed.',
+  room_fetch_mute_member_list_error = 'fetch mute member list in chatroom is failed.',
   room_fetch_member_info_error = 'fetch member detail in chatroom is failed.',
   room_fetch_room_list_error = 'fetch room list in chatroom is failed.',
 }

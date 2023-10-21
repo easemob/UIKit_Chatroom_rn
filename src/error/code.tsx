@@ -20,6 +20,7 @@ export enum ErrorCode {
   room_mute_member_error,
   room_unmute_member_error,
   room_fetch_member_list_error,
+  room_fetch_mute_member_list_error,
   room_fetch_member_info_error,
   room_fetch_room_list_error,
 

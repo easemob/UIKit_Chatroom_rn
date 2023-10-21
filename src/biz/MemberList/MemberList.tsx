@@ -8,8 +8,9 @@ import { SimulativeModal, SimulativeModalRef } from '../../ui/Modal';
 import { TabPage } from '../../ui/TabPage';
 import type { PropsWithError, PropsWithTest } from '../types';
 import { gAspectRatio } from './MemberList.const';
-import { useMemberListAPI } from './MemberList.hooks';
+import { useIsOwner } from './MemberList.hooks';
 import { MemberListParticipants } from './MemberList.parts';
+import type { MemberListType } from './types';
 
 export type MemberListRef = SimulativeModalRef & {
   startShowWithInit: () => void;
@@ -17,13 +18,14 @@ export type MemberListRef = SimulativeModalRef & {
 
 export type MemberListProps = {
   maskStyle?: StyleProp<ViewStyle> | undefined;
+  onSearch?: (memberType: MemberListType) => void;
 } & PropsWithTest &
   PropsWithError;
 
 export const MemberList = React.forwardRef<MemberListRef, MemberListProps>(
   function (props: MemberListProps, ref?: React.ForwardedRef<MemberListRef>) {
-    const { maskStyle, testMode, onError } = props;
-    const modalRef = React.useRef<SimulativeModalRef>({} as any);
+    const { maskStyle, testMode, onError, onSearch } = props;
+    const simuModalRef = React.useRef<SimulativeModalRef>({} as any);
     const { width: winWidth } = useWindowDimensions();
     const height = winWidth / gAspectRatio;
     const isUsePanResponder = React.useRef(true);
@@ -38,20 +40,20 @@ export const MemberList = React.forwardRef<MemberListRef, MemberListProps>(
         dark: colors.neutral[3],
       },
     });
-    const { isOwner } = useMemberListAPI({ testMode, onError });
+    const { isOwner } = useIsOwner();
 
     React.useImperativeHandle(
       ref,
       () => {
         return {
           startShow: () => {
-            modalRef.current.startShow();
+            simuModalRef.current.startShow();
           },
           startHide: (onFinished?: () => void) => {
-            modalRef.current.startHide(onFinished);
+            simuModalRef.current.startHide(onFinished);
           },
           startShowWithInit: () => {
-            modalRef.current.startShow();
+            simuModalRef.current.startShow();
             // todo: clear pre member list, and init current member list
           },
         };
@@ -59,9 +61,70 @@ export const MemberList = React.forwardRef<MemberListRef, MemberListProps>(
       []
     );
 
+    const getTabItemBodies = ({
+      isOwner,
+      isUsePanResponder,
+      testMode,
+      onError,
+    }: {
+      isOwner: boolean;
+      isUsePanResponder: React.MutableRefObject<boolean>;
+    } & PropsWithTest &
+      PropsWithError) => {
+      if (isOwner === true) {
+        return [
+          <MemberListParticipants
+            key={'1'}
+            memberType={'member'}
+            requestUseScrollGesture={(finished) => {
+              isUsePanResponder.current = finished;
+            }}
+            testMode={testMode}
+            onError={onError}
+            onSearch={() => {
+              onSearch?.('member');
+            }}
+          />,
+          <MemberListParticipants
+            key={'2'}
+            memberType={'muted'}
+            requestUseScrollGesture={(finished) => {
+              isUsePanResponder.current = finished;
+            }}
+            testMode={testMode}
+            onError={onError}
+            onSearch={() => {
+              onSearch?.('muted');
+            }}
+          />,
+        ];
+      }
+      return [
+        <MemberListParticipants
+          key={'1'}
+          memberType={'member'}
+          requestUseScrollGesture={(finished) => {
+            isUsePanResponder.current = finished;
+          }}
+          testMode={testMode}
+          onError={onError}
+          onSearch={() => {
+            onSearch?.('member');
+          }}
+        />,
+      ];
+    };
+
+    const getTabItemTitles = (isOwner: boolean) => {
+      if (isOwner === true) {
+        return ['Participants', 'Muted'];
+      }
+      return ['Participants'];
+    };
+
     return (
       <SimulativeModal
-        propsRef={modalRef}
+        propsRef={simuModalRef}
         modalAnimationType="slide"
         backgroundColor={g_mask_color}
         backgroundTransparent={false}
@@ -118,58 +181,6 @@ export const MemberList = React.forwardRef<MemberListRef, MemberListProps>(
     );
   }
 );
-
-const getTabItemBodies = ({
-  isOwner,
-  isUsePanResponder,
-  testMode,
-  onError,
-}: {
-  isOwner: boolean;
-  isUsePanResponder: React.MutableRefObject<boolean>;
-} & PropsWithTest &
-  PropsWithError) => {
-  if (isOwner === true) {
-    return [
-      <MemberListParticipants
-        key={'1'}
-        memberType={'member'}
-        requestUseScrollGesture={(finished) => {
-          isUsePanResponder.current = finished;
-        }}
-        testMode={testMode}
-        onError={onError}
-      />,
-      <MemberListParticipants
-        key={'2'}
-        memberType={'muted'}
-        requestUseScrollGesture={(finished) => {
-          isUsePanResponder.current = finished;
-        }}
-        testMode={testMode}
-        onError={onError}
-      />,
-    ];
-  }
-  return [
-    <MemberListParticipants
-      key={'1'}
-      memberType={'member'}
-      requestUseScrollGesture={(finished) => {
-        isUsePanResponder.current = finished;
-      }}
-      testMode={testMode}
-      onError={onError}
-    />,
-  ];
-};
-
-const getTabItemTitles = (isOwner: boolean) => {
-  if (isOwner === true) {
-    return ['Participants', 'Muted'];
-  }
-  return ['Participants'];
-};
 
 const MemberListCompare = (
   prevProps: MemberListProps,
