@@ -1,3 +1,5 @@
+import type { ChatMessage } from 'react-native-chat-sdk';
+
 import type { IconNameType } from '../../assets';
 
 export type TextContent = {
@@ -37,5 +39,6 @@ export type MessageListItemProps = {
   basic: MessageListItemBasic;
   content: MessageListItemContent;
   action?: MessageListItemOp;
+  msg?: ChatMessage;
 };
 export type MessageListItemModel = Omit<MessageListItemProps, 'action'>;

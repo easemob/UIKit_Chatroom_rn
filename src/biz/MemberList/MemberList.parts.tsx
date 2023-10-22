@@ -9,7 +9,6 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { useDispatchListener } from '../../dispatch';
 // import {
 //   Modal,
 //   ModalRef,
@@ -17,11 +16,7 @@ import { useDispatchListener } from '../../dispatch';
 //   // SimulativeModalRef,
 // } from '../../ui/Modal';
 import type { PropsWithError, PropsWithTest } from '../types';
-import {
-  MemberContextMenu,
-  MemberContextMenuRef,
-  useGetItems,
-} from './MemberContextMenu';
+import { MemberContextMenuWrapper } from './MemberContextMenu';
 import {
   gAspectRatio,
   gBottomSheetHeaderHeight,
@@ -37,12 +32,20 @@ export type MemberListParticipantsProps = {
   requestUseScrollGesture?: (finished: boolean) => void;
   memberType: MemberListType;
   onSearch?: (memberType: MemberListType) => void;
+  onNoMoreMember?: () => void;
 } & PropsWithTest &
   PropsWithError;
 
 export function MemberListParticipants(props: MemberListParticipantsProps) {
-  const { requestUseScrollGesture, testMode, onError, memberType, onSearch } =
-    props;
+  const {
+    requestUseScrollGesture,
+    testMode,
+    onError,
+    memberType,
+    onSearch,
+    onNoMoreMember,
+  } = props;
+
   const {
     data,
     onRefresh,
@@ -56,6 +59,7 @@ export function MemberListParticipants(props: MemberListParticipantsProps) {
     testMode,
     onError,
     memberType,
+    onNoMoreMember,
   });
   const ref = React.useRef<FlatList<MemberListItemProps>>({} as any);
   const { width: winWidth } = useWindowDimensions();
@@ -66,6 +70,7 @@ export function MemberListParticipants(props: MemberListParticipantsProps) {
     gTabHeaderHeight -
     bottom -
     (StatusBar.currentHeight ?? 0);
+
   const { panHandlers, isScrollingRef } = usePanHandlers({
     requestUseScrollGesture,
   });
@@ -114,7 +119,7 @@ export function MemberListParticipants(props: MemberListParticipantsProps) {
           onViewableItemsChanged={onViewableItemsChanged}
         />
       </View>
-      <MemberContextMenuFC
+      <MemberContextMenuWrapper
         {...props}
         removeMember={removeMember}
         muteMember={muteMember}
@@ -147,54 +152,3 @@ export function MemberListParticipants(props: MemberListParticipantsProps) {
     </>
   );
 }
-
-const MemberContextMenuFC = (
-  props: PropsWithTest &
-    PropsWithError & {
-      memberType: MemberListType;
-      muteMember: (memberId: string, isMuted: boolean) => void;
-      removeMember: (memberId: string) => void;
-    }
-) => {
-  const { muteMember, removeMember } = props;
-  const menuRef = React.useRef<MemberContextMenuRef>({} as any);
-  const { getItems } = useGetItems();
-  useDispatchListener(
-    `_$useMemberListAPI_memberListContextMenu`,
-    (
-      _memberType: MemberListType, // current mute list
-      isOwner: boolean, // current user role
-      userId: string // current member id
-      // isMuted: boolean // current member mute state
-    ) => {
-      if (isOwner === true) {
-        menuRef.current?.startShowWithInit(
-          getItems({
-            list: ['Mute', 'Remove'],
-            onClicked: (type) => {
-              if (type === 'Mute') {
-                muteMember(userId, true);
-              } else if (type === 'Unmute') {
-                muteMember(userId, false);
-              } else if (type === 'Remove') {
-                removeMember(userId);
-              }
-            },
-            onRequestModalClose: () => {
-              menuRef?.current?.startHide?.();
-            },
-          })
-        );
-      }
-    }
-  );
-  return (
-    <MemberContextMenu
-      ref={menuRef}
-      list={[]}
-      onRequestModalClose={() => {
-        menuRef?.current?.startHide?.();
-      }}
-    />
-  );
-};

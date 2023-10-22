@@ -10,14 +10,18 @@ export function LoginScreen(props: Props) {
   const {} = props;
   const account = require('../env').account as { id: string; token: string }[];
   const im = useIMContext();
-  useIMListener({
-    onConnected: () => {
-      setS2('onConnected');
-    },
-    onDisconnected: (type) => {
-      setS2(`onDisconnected: ${type}`);
-    },
-  });
+  useIMListener(
+    React.useMemo(() => {
+      return {
+        onConnected: () => {
+          setS2('onConnected');
+        },
+        onDisconnected: (type) => {
+          setS2(`onDisconnected: ${type}`);
+        },
+      };
+    }, [])
+  );
   const [s, setS] = React.useState<'' | 'success' | 'failed' | 'logouted'>('');
   const [s2, setS2] = React.useState<string>('');
   const [reason, setReason] = React.useState<string>('');

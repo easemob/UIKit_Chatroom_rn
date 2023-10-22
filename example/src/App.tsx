@@ -61,6 +61,7 @@ export function App() {
         isDevMode={env.isDevMode}
         palette={palette}
         theme={light ? light : dark}
+        roomOption={{ marquee: { isVisible: false } }}
       >
         <NavigationContainer
           onStateChange={(state: NavigationState | undefined) => {

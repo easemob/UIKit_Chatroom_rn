@@ -8,6 +8,7 @@ import {
   ViewStyle,
 } from 'react-native';
 
+import { Config, ConfigContext } from '../../config';
 import type { UIKitError } from '../../error';
 import { IMContext, IMService, IMServiceListener } from '../../im';
 import {
@@ -20,13 +21,7 @@ import { InputBar, InputBarProps, InputBarRef } from '../InputBar';
 import { gInputBarStyleHeight } from '../InputBar/InputBar.const';
 import { Marquee, MarqueeProps, MarqueeRef } from '../Marquee';
 import { MemberList, MemberListProps, MemberListRef } from '../MemberList';
-import {
-  MessageContextMenu,
-  MessageContextMenuRef,
-  MessageList,
-  MessageListProps,
-  MessageListRef,
-} from '../MessageList';
+import { MessageList, MessageListProps, MessageListRef } from '../MessageList';
 import { gMessageListHeight } from '../MessageList/MessageList.const'; // for test
 import type { PropsWithError, PropsWithTest } from '../types';
 
@@ -75,11 +70,11 @@ export abstract class ChatroomBase extends React.PureComponent<
   inputBarRef?: React.RefObject<InputBarRef>;
   messageRef?: React.RefObject<MessageListRef>;
   marqueeRef?: React.RefObject<MarqueeRef>;
-  menuRef?: React.RefObject<MessageContextMenuRef>;
   giftRef?: React.RefObject<GiftFloatingRef>;
   memberRef?: React.RefObject<MemberListRef>;
   containerRef?: React.RefObject<View>;
   im?: IMService;
+  config?: Config;
   listener?: IMServiceListener;
   constructor(props: ChatroomProps) {
     super(props);
@@ -87,7 +82,6 @@ export abstract class ChatroomBase extends React.PureComponent<
     this.inputBarRef = React.createRef();
     this.messageRef = React.createRef();
     this.marqueeRef = React.createRef();
-    this.menuRef = React.createRef();
     this.giftRef = React.createRef();
     this.memberRef = React.createRef();
     this.containerRef = React.createRef();
@@ -179,9 +173,16 @@ export abstract class ChatroomBase extends React.PureComponent<
   render() {
     return (
       <IMContext.Consumer>
-        {(value) => {
-          this.im = value;
-          return this._render();
+        {(im) => {
+          this.im = im;
+          return (
+            <ConfigContext.Consumer>
+              {(config) => {
+                this.config = config;
+                return this._render();
+              }}
+            </ConfigContext.Consumer>
+          );
         }}
       </IMContext.Consumer>
     );
@@ -197,8 +198,6 @@ export abstract class ChatroomBase extends React.PureComponent<
       children,
       backgroundView,
       memberList,
-      onError,
-      testMode,
     } = this.props;
     return (
       <View
@@ -248,9 +247,6 @@ export abstract class ChatroomBase extends React.PureComponent<
 
           <MessageList
             ref={this.messageRef}
-            onLongPressItem={() => {
-              this.menuRef?.current?.startShow?.();
-            }}
             containerStyle={[
               {
                 position: 'absolute',
@@ -260,53 +256,49 @@ export abstract class ChatroomBase extends React.PureComponent<
             {...messageList?.props}
           />
 
-          <GiftFloating
-            ref={this.giftRef}
-            containerStyle={{
-              left: 16,
-              position: 'absolute',
-              // bottom: this._getGiftTop(), // The keyboard will push the component up.
-              top: this._getGiftTop() - 8 - 8,
-            }}
-            {...gift?.props}
-          />
+          {this.config?.roomOption.gift.isVisible === true ? (
+            <GiftFloating
+              ref={this.giftRef}
+              containerStyle={{
+                left: 16,
+                position: 'absolute',
+                // bottom: this._getGiftTop(), // The keyboard will push the component up.
+                top: this._getGiftTop() - 8 - 8,
+              }}
+              {...gift?.props}
+            />
+          ) : null}
 
-          <Marquee
-            ref={this.marqueeRef}
-            containerStyle={{
-              position: 'absolute',
-              marginTop: 8,
-              marginHorizontal: 8,
-              width: Dimensions.get('window').width - 16,
-            }}
-            {...marquee?.props}
-          />
+          {this.config?.roomOption.marquee.isVisible === true ? (
+            <Marquee
+              ref={this.marqueeRef}
+              containerStyle={{
+                position: 'absolute',
+                marginTop: 8,
+                marginHorizontal: 8,
+                width: Dimensions.get('window').width - 16,
+              }}
+              {...marquee?.props}
+            />
+          ) : null}
 
           {children}
         </View>
 
         <InputBar
           ref={this.inputBarRef}
-          onSend={(content) => {
-            this.messageRef?.current?.addNewMessage?.(content);
+          onSended={(content, message) => {
+            this.messageRef?.current?.addNewMessage?.(content, message);
             // todo:
           }}
+          // closeAfterSend={true}
           {...input?.props}
         />
 
         <MemberList
           ref={this.memberRef}
           maskStyle={{ transform: [{ translateY: -this.state.pageY }] }}
-          onError={onError}
-          testMode={testMode}
           {...memberList?.props}
-        />
-
-        <MessageContextMenu
-          ref={this.menuRef}
-          onRequestModalClose={() => {
-            this.menuRef?.current?.startHide?.();
-          }}
         />
       </View>
     );

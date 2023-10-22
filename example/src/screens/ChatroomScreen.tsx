@@ -7,7 +7,7 @@ import {
   seqId,
   useColors,
   useDispatchContext,
-  useLifecycle,
+  useIMListener,
   usePaletteContext,
 } from 'react-native-chat-room';
 import type { ChatRoom } from 'react-native-chat-sdk';
@@ -45,7 +45,15 @@ export function ChatroomScreen(props: Props) {
   const [pageY, setPageY] = React.useState(0);
   const { addListener, removeListener } = useDispatchContext();
 
-  useLifecycle();
+  useIMListener(
+    React.useMemo(() => {
+      return {
+        onError: (params) => {
+          console.log('ChatroomScreen:onError:', JSON.stringify(params));
+        },
+      };
+    }, [])
+  );
 
   // !!! ERROR  Warning: React has detected a change in the order of Hooks called by HeaderConfig. This will lead to bugs and errors if not fixed. For more information, read the Rules of Hooks: https://reactjs.org/link/rules-of-hooks
   React.useEffect(() => {
@@ -212,7 +220,7 @@ export function ChatroomScreen(props: Props) {
         roomId={room.roomId}
         ownerId={room.owner}
         onError={(e) => {
-          console.log('test:ChatroomScreen:error', e.toString());
+          console.log('ChatroomScreen:onError:2', e.toString());
         }}
       >
         {/* <Pressable

@@ -1,6 +1,9 @@
 import * as React from 'react';
+import type { ChatMessage } from 'react-native-chat-sdk';
 import emoji from 'twemoji';
 
+import { ErrorCode, UIKitError } from '../../error';
+import { useIMContext } from '../../im';
 import { FACE_ASSETS_UTF16 } from '../EmojiList';
 
 export function useInputValue() {
@@ -76,11 +79,50 @@ export function useInputValue() {
       setValue(valueRef.current, 'del_c');
     }
   };
+  const _clear = () => {
+    valueRef.current = '';
+    rawValue.current = '';
+    _setValue(valueRef.current);
+  };
+  const _getRawValue = () => {
+    return rawValue.current;
+  };
   return {
     value: _value,
     setValue: setValue,
     valueRef: valueRef,
     onFace: _onFace,
     onDel: _onDel,
+    clear: _clear,
+    getRawValue: _getRawValue,
+  };
+}
+
+export function useInputBarApi(params: {
+  onSended: (msg: ChatMessage) => void;
+}) {
+  const { onSended } = params;
+  const im = useIMContext();
+  const _sendText = (content: string) => {
+    if (im.roomState === 'joined') {
+      im.sendText({
+        roomId: im.roomId!,
+        content: content,
+        result: ({ isOk, message, error }) => {
+          if (isOk === true) {
+            onSended?.(message!);
+          } else {
+            im.sendError({ error: error!, from: useInputBarApi.caller.name });
+          }
+        },
+      });
+    } else {
+      im.sendError({
+        error: new UIKitError({ code: ErrorCode.room_join_error }),
+      });
+    }
+  };
+  return {
+    onSend: _sendText,
   };
 }

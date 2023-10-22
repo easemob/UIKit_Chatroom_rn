@@ -73,9 +73,14 @@ export interface MessageServiceListener {
   onGlobalNotifyReceived?(roomId: string, notifyMessage: ChatMessage): void;
 }
 
+export interface ErrorServiceListener {
+  onError?(params: { error: UIKitError; from?: string; extra?: any }): void;
+}
+
 export type IMServiceListener = ClientServiceListener &
   ChatroomServiceListener &
-  MessageServiceListener;
+  MessageServiceListener &
+  ErrorServiceListener;
 
 export interface IMService {
   addListener(listener: IMServiceListener): void;
@@ -145,7 +150,7 @@ export interface IMService {
       message?: ChatMessage;
       error?: UIKitError;
     }) => void;
-  }): Promise<void>;
+  }): void;
   sendGift(params: {
     roomId: string;
     gift: GiftServiceData;
@@ -155,7 +160,7 @@ export interface IMService {
       message?: ChatMessage;
       error?: UIKitError;
     }) => void;
-  }): Promise<void>;
+  }): void;
   sendJoinCmd(params: {
     roomId: string;
     mentionIds?: string[];
@@ -164,7 +169,7 @@ export interface IMService {
       message?: ChatMessage;
       error?: UIKitError;
     }) => void;
-  }): Promise<void>;
+  }): void;
   recallMessage(messageId: string): Promise<void>;
   reportMessage(params: {
     messageId: string;
@@ -181,6 +186,8 @@ export interface IMService {
     message: ChatMessage,
     languagesCode: string
   ): Promise<ChatMessage>;
+
+  sendError(params: { error: UIKitError; from?: string; extra?: any }): void;
 }
 
 export type IMServiceInit = {

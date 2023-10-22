@@ -11,13 +11,21 @@ import {
 } from '../BottomSheetMenu';
 import type { PropsWithError, PropsWithTest } from '../types';
 
+export type MessageContextMenuItemType =
+  | 'Private Chat'
+  | 'Translate'
+  | 'Delete'
+  | 'Report';
 export type MessageContextMenuRef = BottomSheetMenuRef;
 export type MessageContextMenuProps = Omit<
   BottomSheetMenuProps,
   'title' | 'initItems'
 > &
   PropsWithTest &
-  PropsWithError;
+  PropsWithError & {
+    list: MessageContextMenuItemType[];
+    onClicked?: (type: MessageContextMenuItemType) => void;
+  };
 
 export const MessageContextMenu = React.forwardRef<
   MessageContextMenuRef,
@@ -27,14 +35,8 @@ export const MessageContextMenu = React.forwardRef<
   ref?: React.ForwardedRef<MessageContextMenuRef>
 ) {
   const { onRequestModalClose, ...others } = props;
-  const { colors } = usePaletteContext();
-  const { getColor } = useColors({
-    divider: {
-      light: colors.neutral[9],
-      dark: colors.neutral[0],
-    },
-  });
   const menuRef = React.useRef<BottomSheetMenuRef>({} as any);
+  const { getItems } = useGetItems();
 
   React.useImperativeHandle(
     ref,
@@ -54,55 +56,6 @@ export const MessageContextMenu = React.forwardRef<
     []
   );
 
-  const data = React.useMemo(
-    () => [
-      <BottomSheetMenuItem
-        key={0}
-        id={'1'}
-        initState={'enabled'}
-        text={'Private Chat'}
-      />,
-      <BottomSheetMenuItem
-        key={1}
-        id={'2'}
-        initState={'enabled'}
-        text={'Translate'}
-      />,
-      <BottomSheetMenuItem
-        key={2}
-        id={'3'}
-        initState={'enabled'}
-        text={'Deleted'}
-      />,
-      <BottomSheetMenuItem
-        key={3}
-        id={'4'}
-        initState={'enabled'}
-        text={'Muted'}
-      />,
-      <BottomSheetMenuItem
-        key={4}
-        id={'5'}
-        initState={'warned'}
-        text={'Report'}
-      />,
-      <View
-        key={6}
-        style={{
-          height: 8,
-          width: '100%',
-          backgroundColor: getColor('divider'),
-        }}
-      />,
-      <BottomSheetMenuItem
-        key={5}
-        id={'6'}
-        initState={'enabled'}
-        text={'Cancel'}
-      />,
-    ],
-    [getColor]
-  );
   return (
     <BottomSheetMenu
       ref={menuRef}
@@ -110,8 +63,78 @@ export const MessageContextMenu = React.forwardRef<
         onRequestModalClose?.();
       }}
       title={'test'}
-      initItems={data}
+      initItems={getItems(props)}
       {...others}
     />
   );
 });
+
+export function useGetItems() {
+  const { colors } = usePaletteContext();
+  const { getColor } = useColors({
+    divider: {
+      light: colors.neutral[9],
+      dark: colors.neutral[0],
+    },
+  });
+  const getItems = React.useCallback(
+    (props: MessageContextMenuProps) => {
+      const { list, onClicked, onRequestModalClose } = props;
+      const d = list
+        .map((v, i) => {
+          if (v === 'Private Chat' || v === 'Translate' || v === 'Delete') {
+            return (
+              <BottomSheetMenuItem
+                key={i}
+                id={i.toString()}
+                initState={'enabled'}
+                text={v}
+                onPress={() => {
+                  onClicked?.(v);
+                }}
+              />
+            );
+          } else if (v === 'Report') {
+            return (
+              <BottomSheetMenuItem
+                key={i}
+                id={i.toString()}
+                initState={'warned'}
+                text={v}
+                onPress={() => {
+                  onClicked?.(v);
+                }}
+              />
+            );
+          } else {
+            return null;
+          }
+        })
+        .filter((v) => v !== null) as React.JSX.Element[];
+
+      const data = [
+        ...d,
+        <View
+          key={6}
+          style={{
+            height: 8,
+            width: '100%',
+            backgroundColor: getColor('divider'),
+          }}
+        />,
+        <BottomSheetMenuItem
+          key={5}
+          id={'6'}
+          initState={'enabled'}
+          text={'Cancel'}
+          onPress={onRequestModalClose}
+        />,
+      ];
+      return data;
+    },
+    [getColor]
+  );
+  return {
+    getItems,
+  };
+}

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-import { ConfigContextProvider } from '../config';
+import { ConfigContextProvider, RoomOption } from '../config';
 import { DispatchContextProvider } from '../dispatch';
 import { I18nContextProvider, StringSetType } from '../i18n';
 import { IMContextProvider } from '../im';
@@ -13,6 +13,10 @@ import {
   useLightTheme,
   usePresetPalette,
 } from '../theme';
+import type { PartialDeep } from '../types';
+import { mergeObjects } from '../utils';
+
+type PartialRoomOption = PartialDeep<RoomOption>;
 
 export type ContainerProps = React.PropsWithChildren<{
   appKey: string;
@@ -20,6 +24,7 @@ export type ContainerProps = React.PropsWithChildren<{
   Language?: StringSetType;
   palette?: Palette;
   theme?: Theme;
+  roomOption?: PartialRoomOption;
 }>;
 
 export function Container(props: ContainerProps) {
@@ -30,6 +35,7 @@ export function Container(props: ContainerProps) {
     isDevMode = false,
     palette,
     theme,
+    roomOption,
   } = props;
   const _palette = usePresetPalette();
   const light = useLightTheme(palette ?? _palette);
@@ -45,6 +51,20 @@ export function Container(props: ContainerProps) {
                   isDevMode,
                   enableCompare: false,
                   enableCheckType: false,
+                  roomOption: mergeObjects<RoomOption>(
+                    roomOption ?? ({} as PartialDeep<RoomOption>),
+                    {
+                      marquee: {
+                        isVisible: true,
+                      },
+                      gift: {
+                        isVisible: true,
+                      },
+                      messageList: {
+                        isVisibleGift: true,
+                      },
+                    } as RoomOption
+                  ),
                 }}
               >
                 <SafeAreaProvider>{children}</SafeAreaProvider>

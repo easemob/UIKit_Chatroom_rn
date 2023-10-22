@@ -72,6 +72,8 @@ export function ChatroomFC() {
           ],
         },
       }}
+      roomId={'test'}
+      ownerId={'test'}
     />
   );
 }

@@ -1,19 +1,22 @@
 import * as React from 'react';
 import { View } from 'react-native';
 import {
+  Container,
   createDarkTheme,
   createLightTheme,
   createPresetPalette,
-  PaletteContextProvider,
   SearchMember,
-  ThemeContextProvider,
 } from 'react-native-chat-room';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 export function SearchMemberComponent(): React.JSX.Element {
   return (
     <View style={{ flex: 1 }}>
-      <SearchMember />
+      <SearchMember
+        memberType={'member'}
+        onRequestClose={function (): void {
+          console.log('test:onRequestClose');
+        }}
+      />
     </View>
   );
 }
@@ -24,12 +27,8 @@ export default function test_member_search() {
   const dark = createDarkTheme(palette);
   const theme = light ? light : dark;
   return (
-    <SafeAreaProvider>
-      <ThemeContextProvider value={theme}>
-        <PaletteContextProvider value={palette}>
-          <SearchMemberComponent />
-        </PaletteContextProvider>
-      </ThemeContextProvider>
-    </SafeAreaProvider>
+    <Container appKey="sdf" palette={palette} theme={theme}>
+      <SearchMemberComponent />
+    </Container>
   );
 }

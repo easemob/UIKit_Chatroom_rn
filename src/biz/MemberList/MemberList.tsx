@@ -19,12 +19,13 @@ export type MemberListRef = SimulativeModalRef & {
 export type MemberListProps = {
   maskStyle?: StyleProp<ViewStyle> | undefined;
   onSearch?: (memberType: MemberListType) => void;
+  onNoMoreMember?: () => void;
 } & PropsWithTest &
   PropsWithError;
 
 export const MemberList = React.forwardRef<MemberListRef, MemberListProps>(
   function (props: MemberListProps, ref?: React.ForwardedRef<MemberListRef>) {
-    const { maskStyle, testMode, onError, onSearch } = props;
+    const { maskStyle, testMode, onError, onSearch, onNoMoreMember } = props;
     const simuModalRef = React.useRef<SimulativeModalRef>({} as any);
     const { width: winWidth } = useWindowDimensions();
     const height = winWidth / gAspectRatio;
@@ -84,6 +85,7 @@ export const MemberList = React.forwardRef<MemberListRef, MemberListProps>(
             onSearch={() => {
               onSearch?.('member');
             }}
+            onNoMoreMember={onNoMoreMember}
           />,
           <MemberListParticipants
             key={'2'}
@@ -96,6 +98,7 @@ export const MemberList = React.forwardRef<MemberListRef, MemberListProps>(
             onSearch={() => {
               onSearch?.('muted');
             }}
+            onNoMoreMember={onNoMoreMember}
           />,
         ];
       }
@@ -111,6 +114,7 @@ export const MemberList = React.forwardRef<MemberListRef, MemberListProps>(
           onSearch={() => {
             onSearch?.('member');
           }}
+          onNoMoreMember={onNoMoreMember}
         />,
       ];
     };
@@ -161,13 +165,13 @@ export const MemberList = React.forwardRef<MemberListRef, MemberListProps>(
           <TabPage
             header={{
               HeaderProps: {
-                titles: getTabItemTitles(isOwner),
+                titles: getTabItemTitles(isOwner()),
               },
             }}
             body={{
               BodyProps: {
                 children: getTabItemBodies({
-                  isOwner,
+                  isOwner: isOwner(),
                   isUsePanResponder,
                   testMode,
                   onError,

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { View } from 'react-native';
 
+import { useDispatchListener } from '../../dispatch';
 import { useColors } from '../../hook';
 import { usePaletteContext } from '../../theme';
 import {
@@ -10,6 +11,7 @@ import {
   BottomSheetMenuRef,
 } from '../BottomSheetMenu';
 import type { PropsWithError, PropsWithTest } from '../types';
+import type { MemberListType } from './types';
 
 export type MemberContextMenuRef = BottomSheetMenuRef;
 export type MemberContextMenuProps = Omit<
@@ -130,3 +132,83 @@ export function useGetItems() {
     getItems,
   };
 }
+
+export const MemberContextMenuWrapper = (
+  props: PropsWithTest &
+    PropsWithError & {
+      memberType: MemberListType;
+      muteMember: (memberId: string, isMuted: boolean) => void;
+      removeMember: (memberId: string) => void;
+    }
+) => {
+  const { muteMember, removeMember, memberType } = props;
+  const menuRef = React.useRef<MemberContextMenuRef>({} as any);
+  const { getItems } = useGetItems();
+  const listener = React.useRef(
+    (
+      _memberType: MemberListType, // current mute list
+      isOwner: boolean, // current user role
+      userId: string // current member id
+      // isMuted: boolean // current member mute state
+    ) => {
+      if (isOwner === true) {
+        if (_memberType === 'member') {
+          if (memberType === _memberType) {
+            menuRef.current?.startShowWithInit(
+              getItems({
+                list: ['Mute', 'Remove'],
+                onClicked: (type) => {
+                  if (type === 'Mute') {
+                    muteMember(userId, true);
+                  } else if (type === 'Unmute') {
+                    muteMember(userId, false);
+                  } else if (type === 'Remove') {
+                    removeMember(userId);
+                  }
+                  menuRef?.current?.startHide?.();
+                },
+                onRequestModalClose: () => {
+                  menuRef?.current?.startHide?.();
+                },
+              })
+            );
+          }
+        } else if (_memberType === 'muted') {
+          if (memberType === _memberType) {
+            menuRef.current?.startShowWithInit(
+              getItems({
+                list: ['Unmute'],
+                onClicked: (type) => {
+                  if (type === 'Mute') {
+                    muteMember(userId, true);
+                  } else if (type === 'Unmute') {
+                    muteMember(userId, false);
+                  } else if (type === 'Remove') {
+                    removeMember(userId);
+                  }
+                  menuRef?.current?.startHide?.();
+                },
+                onRequestModalClose: () => {
+                  menuRef?.current?.startHide?.();
+                },
+              })
+            );
+          }
+        }
+      }
+    }
+  );
+  useDispatchListener(
+    `_$useMemberListAPI_memberListContextMenu`,
+    listener.current
+  );
+  return (
+    <MemberContextMenu
+      ref={menuRef}
+      list={[]}
+      onRequestModalClose={() => {
+        menuRef?.current?.startHide?.();
+      }}
+    />
+  );
+};

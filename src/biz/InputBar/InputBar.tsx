@@ -6,6 +6,7 @@ import {
   TextInput as RNTextInput,
   View,
 } from 'react-native';
+import type { ChatMessage } from 'react-native-chat-sdk';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import type { IconNameType } from '../../assets';
@@ -17,7 +18,7 @@ import { TextInput } from '../../ui/TextInput';
 import { timeoutTask } from '../../utils';
 import { EmojiListMemo } from '../EmojiList';
 import { DelButtonMemo } from './DelButton';
-import { useInputValue } from './InputBar.hooks';
+import { useInputBarApi, useInputValue } from './InputBar.hooks';
 import { InputBarStyle, InputBarStyleProps } from './InputBarStyle';
 
 export type InputBarRef = {
@@ -26,8 +27,10 @@ export type InputBarRef = {
 export type InputBarProps = Omit<InputBarStyleProps, 'onClickInput'> & {
   onInputBarWillShow?: () => void;
   onInputBarWillHide?: () => void;
-  onSend: (content: string) => void;
+  onSend?: (content: string) => void;
+  onSended?: (content: string, message: ChatMessage) => void;
   keyboardVerticalOffset?: number;
+  closeAfterSend?: boolean;
 };
 
 export const InputBar = React.forwardRef<InputBarRef, InputBarProps>(function (
@@ -37,9 +40,10 @@ export const InputBar = React.forwardRef<InputBarRef, InputBarProps>(function (
   const {
     onInputBarWillHide,
     onInputBarWillShow,
-    onSend,
+    onSended,
     keyboardVerticalOffset = 0,
     onLayout,
+    closeAfterSend = false,
     ...others
   } = props;
   const { bottom } = useSafeAreaInsets();
@@ -75,11 +79,19 @@ export const InputBar = React.forwardRef<InputBarRef, InputBarProps>(function (
 
   const [iconName, setIconName] = React.useState<IconNameType>('face');
 
-  const { value, valueRef, setValue, onFace, onDel } = useInputValue();
+  const { value, valueRef, setValue, onFace, onDel, getRawValue } =
+    useInputValue();
+  const { onSend } = useInputBarApi({
+    onSended: (msg) => {
+      onSended?.(valueRef.current, msg);
+    },
+  });
 
   const closeKeyboard = () => {
     Keyboard.dismiss();
   };
+
+  // const onSended = () => {};
 
   const setIsStyle = (isStyle: boolean) => {
     if (isStyle === false) {
@@ -108,19 +120,27 @@ export const InputBar = React.forwardRef<InputBarRef, InputBarProps>(function (
   };
 
   const _onSend = () => {
-    onSend?.(valueRef.current);
+    // onSend?.(valueRef.current);
+    onSend(getRawValue());
     inputRef.current?.clear();
+    if (closeAfterSend === true) {
+      _close();
+    }
+  };
+
+  const _close = () => {
+    isClosedEmoji.current = true;
+    isClosedKeyboard.current = true;
+    setIsStyle(true);
+    setEmojiHeight(0);
+    onInputBarWillHide?.();
+    closeKeyboard();
   };
 
   React.useImperativeHandle(ref, () => {
     return {
       close: () => {
-        isClosedEmoji.current = true;
-        isClosedKeyboard.current = true;
-        setIsStyle(true);
-        setEmojiHeight(0);
-        onInputBarWillHide?.();
-        closeKeyboard();
+        _close();
       },
     };
   });

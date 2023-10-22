@@ -7,13 +7,18 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
+import type { ChatMessage } from 'react-native-chat-sdk';
 
-import { useDispatchContext } from '../../dispatch';
+import { useDispatchListener } from '../../dispatch';
 import { useColors } from '../../hook';
 import { usePaletteContext } from '../../theme';
 import { BorderButton } from '../../ui/Button';
-import { timeoutTask } from '../../utils';
 import type { PropsWithError, PropsWithTest } from '../types';
+import { useGetItems } from './MessageContextMenu';
+import {
+  MessageContextMenu,
+  MessageContextMenuRef,
+} from './MessageContextMenu';
 import {
   gMessageListHeight,
   gMessageListMarginBottom,
@@ -28,7 +33,7 @@ export type MessageListRef = {
   /**
    * The message comes from the input box. Automatically scroll to the bottom.
    */
-  addNewMessage: (content: string) => void;
+  addNewMessage: (content: string, message?: ChatMessage) => void;
   scrollToEnd: () => void;
 };
 
@@ -49,8 +54,28 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
       onUnreadCount,
       containerStyle,
       visible = true,
-      onLayout,
+      onLayout: onLayoutProps,
     } = props;
+    const { getItems } = useGetItems();
+    const _onLongPress = (item: MessageListItemModel) => {
+      menuRef?.current?.startShowWithInit?.(
+        getItems({
+          list: ['Translate', 'Delete', 'Report'],
+          onClicked: (type) => {
+            if (type === 'Delete') {
+              deleteMessage(item.msg);
+            } else if (type === 'Report') {
+              reportMessage(item.msg);
+            } else if (type === 'Translate') {
+              translateMessage(item.msg);
+            }
+          },
+          onRequestModalClose: () => {
+            menuRef?.current?.startHide?.();
+          },
+        })
+      );
+    };
     const {
       data,
       addTextMessage,
@@ -59,15 +84,27 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
       onEndReached,
       onScroll,
       scrollToLastMessage,
-    } = useMessageListApi({ onLongPress: onLongPressItem, onUnreadCount });
+      onScrollBeginDrag,
+      onScrollEndDrag,
+      onMomentumScrollEnd,
+      onLayout,
+      translateMessage,
+      deleteMessage,
+      reportMessage,
+    } = useMessageListApi({
+      onLongPress: onLongPressItem ?? _onLongPress,
+      onUnreadCount,
+      onLayoutProps,
+    });
+
+    const menuRef = React.useRef<MessageContextMenuRef>({} as any);
 
     React.useImperativeHandle(
       ref,
       () => {
         return {
-          addNewMessage: (content: string) => {
-            addTextMessage(content);
-            timeoutTask(() => scrollToEnd());
+          addNewMessage: (content: string, message?: ChatMessage) => {
+            addTextMessage(content, message);
           },
           scrollToEnd: () => {
             scrollToEnd();
@@ -82,34 +119,46 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
     }
 
     return (
-      <View
-        style={[
-          {
-            marginLeft: gMessageListMarginLeft,
-            marginBottom: gMessageListMarginBottom,
-            width: gMessageListWidth,
-            height: gMessageListHeight,
-            // backgroundColor: '#ffd700',
-          },
-          containerStyle,
-        ]}
-        onLayout={onLayout}
-      >
-        <FlatList
-          ref={listRef}
-          data={data}
-          renderItem={(info: ListRenderItemInfo<MessageListItemProps>) => {
-            return <MessageListItemMemo {...info.item} />;
+      <>
+        <View
+          style={[
+            {
+              marginLeft: gMessageListMarginLeft,
+              marginBottom: gMessageListMarginBottom,
+              width: gMessageListWidth,
+              height: gMessageListHeight,
+              // backgroundColor: '#ffd700',
+            },
+            containerStyle,
+          ]}
+          onLayout={onLayout}
+        >
+          <FlatList
+            ref={listRef}
+            data={data}
+            renderItem={(info: ListRenderItemInfo<MessageListItemProps>) => {
+              return <MessageListItemMemo {...info.item} />;
+            }}
+            // renderItem={RenderItemMemo}
+            keyExtractor={(item: MessageListItemProps) => {
+              return item.id;
+            }}
+            onEndReached={onEndReached}
+            onScroll={onScroll}
+            onScrollBeginDrag={onScrollBeginDrag}
+            onScrollEndDrag={onScrollEndDrag}
+            onMomentumScrollEnd={onMomentumScrollEnd}
+          />
+          <UnreadButton onPress={scrollToLastMessage} />
+        </View>
+        <MessageContextMenu
+          ref={menuRef}
+          onRequestModalClose={() => {
+            menuRef?.current?.startHide?.();
           }}
-          // renderItem={RenderItemMemo}
-          keyExtractor={(item: MessageListItemProps) => {
-            return item.id;
-          }}
-          onEndReached={onEndReached}
-          onScroll={onScroll}
+          list={[]}
         />
-        <NewMsgButton onPress={scrollToLastMessage} />
-      </View>
+      </>
     );
   }
 );
@@ -123,7 +172,7 @@ export const MessageListMemo = React.memo(MessageList);
 //   }
 // );
 
-const NewMsgButton = ({ onPress }: { onPress: () => void }) => {
+const UnreadButton = ({ onPress }: { onPress: () => void }) => {
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     text: {
@@ -135,20 +184,17 @@ const NewMsgButton = ({ onPress }: { onPress: () => void }) => {
       dark: colors.neutral[1],
     },
   });
-  const [text, setText] = React.useState('99+ new message(s)');
-  const { addListener, removeListener } = useDispatchContext();
+  const [text, setText] = React.useState('');
 
-  React.useEffect(() => {
-    const getText = (count: number) => {
+  useDispatchListener(
+    `_$useMessageListApi_updateUnreadCount`,
+    (count: number) => {
       const n = count > 99 ? '99+' : count.toString();
       const content = count === 0 ? '' : `${n} new message(s)`;
       setText(content);
-    };
-    addListener(`_$${NewMsgButton.name}`, getText);
-    return () => {
-      removeListener(`_$${NewMsgButton.name}`, getText);
-    };
-  }, [addListener, removeListener]);
+    }
+  );
+
   return (
     <BorderButton
       style={{

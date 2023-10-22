@@ -1,11 +1,16 @@
 import * as React from 'react';
 import { PanResponder, ViewToken } from 'react-native';
-import type { ChatMessage } from 'react-native-chat-sdk/lib/typescript/common/ChatMessage';
+import type { ChatMessage } from 'react-native-chat-sdk';
 
 import { useDispatchContext, useDispatchListener } from '../../dispatch';
 import { ErrorCode, UIKitError } from '../../error';
 import { useDelayExecTask } from '../../hook';
-import { useIMContext, useIMListener, UserServiceData } from '../../im';
+import {
+  IMServiceListener,
+  useIMContext,
+  useIMListener,
+  UserServiceData,
+} from '../../im';
 import { wait } from '../../utils';
 import type { PropsWithError, PropsWithTest } from '../types';
 import {
@@ -53,9 +58,9 @@ export function usePanHandlers(params: {
 
 export function useIsOwner() {
   const im = useIMContext();
-  const isOwner = im.userId === im.ownerId;
+  const isOwner = () => im.userId === im.ownerId;
   return {
-    isOwner,
+    isOwner: isOwner,
   };
 }
 
@@ -68,13 +73,16 @@ export function useRoomState() {
 
 type useMemberListAPIProps = PropsWithTest & PropsWithError;
 export function useMemberListAPI(
-  props: useMemberListAPIProps & { memberType: MemberListType }
+  props: useMemberListAPIProps & {
+    memberType: MemberListType;
+    onNoMoreMember?: () => void;
+  }
 ) {
-  const { onError, memberType } = props;
+  const { memberType, onNoMoreMember } = props;
   const im = useIMContext();
   console.log('test:useMemberListAPI:', im.userId === im.ownerId, memberType);
 
-  const isOwner = im.userId === im.ownerId;
+  const { isOwner } = useIsOwner();
   const memberCursor = React.useRef('');
 
   const dataRef = React.useRef<MemberListItemProps[]>([]);
@@ -130,10 +138,11 @@ export function useMemberListAPI(
       actions: {
         onClicked: () => {
           const isMuted = _isMuter(userId);
+          console.log('test:zuoyu:_addData:', im.userId, im.ownerId, isOwner());
           emit(
             `_$${useMemberListAPI.name}_memberListContextMenu`,
             memberType, // current mute list
-            isOwner, // current user role
+            isOwner(), // current user role
             userId, // current member id
             isMuted // current member mute state
           );
@@ -201,11 +210,13 @@ export function useMemberListAPI(
     }
   };
 
+  const testCount = React.useRef(0);
   useMemberListener({
     onUpdateInfo: (roomId, userInfo) => {
       if (roomId === im.roomId) {
+        ++testCount.current;
         im.updateUserInfos([userInfo]);
-        _updateUI(_updateData(userInfo));
+        // _updateUI(_updateData(userInfo));
       }
     },
     onUserJoined: (roomId, userId) => {
@@ -219,7 +230,7 @@ export function useMemberListAPI(
             });
             _fetchMemberInfo(list10);
           });
-          if (isOwner === true) {
+          if (isOwner() === true) {
             _fetchMuter(() => {
               if (muterRef.current.length > 0) {
                 const list10 = muterRef.current.slice(0, 19);
@@ -261,12 +272,13 @@ export function useMemberListAPI(
           })
           .catch((e) => {
             onFinished?.();
-            onError?.(
-              new UIKitError({
+            im.sendError({
+              error: new UIKitError({
                 code: ErrorCode.room_fetch_member_list_error,
                 extra: e.toString(),
-              })
-            );
+              }),
+              from: useMemberListAPI?.caller?.name,
+            });
           });
       } else {
         onFinished?.();
@@ -286,12 +298,13 @@ export function useMemberListAPI(
           })
           .catch((e) => {
             onFinished?.();
-            onError?.(
-              new UIKitError({
+            im.sendError({
+              error: new UIKitError({
                 code: ErrorCode.room_fetch_mute_member_list_error,
                 extra: e.toString(),
-              })
-            );
+              }),
+              from: useMemberListAPI?.caller?.name,
+            });
           });
       } else {
         onFinished?.();
@@ -307,15 +320,20 @@ export function useMemberListAPI(
       im.fetchMembers(im.roomId!, gMemberPerPageSize, memberCursor.current)
         .then((r) => {
           memberCursor.current = r.cursor;
-          _updateUI(_addDataList(r?.list ?? []));
+          const isNeedUpdate = _addDataList(r?.list ?? []);
+          _updateUI(isNeedUpdate);
+          if (isNeedUpdate === false) {
+            onNoMoreMember?.();
+          }
         })
         .catch((e) => {
-          onError?.(
-            new UIKitError({
+          im.sendError({
+            error: new UIKitError({
               code: ErrorCode.room_fetch_member_list_error,
               extra: e.toString(),
-            })
-          );
+            }),
+            from: useMemberListAPI?.caller?.name,
+          });
         });
     }
   };
@@ -328,12 +346,13 @@ export function useMemberListAPI(
           _updateUI(_updateDataList(list));
         })
         .catch((e) => {
-          onError?.(
-            new UIKitError({
+          im.sendError({
+            error: new UIKitError({
               code: ErrorCode.room_fetch_member_info_error,
               extra: e.toString(),
-            })
-          );
+            }),
+            from: useMemberListAPI?.caller?.name,
+          });
         });
     }
   };
@@ -351,12 +370,13 @@ export function useMemberListAPI(
         })
         .catch((e) => {
           onFinished?.();
-          onError?.(
-            new UIKitError({
-              code: ErrorCode.room_fetch_member_info_error,
+          im.sendError({
+            error: new UIKitError({
+              code: ErrorCode.room_fetch_mute_member_list_error,
               extra: e.toString(),
-            })
-          );
+            }),
+            from: useMemberListAPI?.caller?.name,
+          });
         });
     } else {
       onFinished?.();
@@ -384,24 +404,26 @@ export function useMemberListAPI(
         memberId,
         isMuted === true ? 'mute' : 'unmute'
       ).catch((e) => {
-        onError?.(
-          new UIKitError({
+        im.sendError({
+          error: new UIKitError({
             code: ErrorCode.room_mute_member_error,
             extra: e.toString(),
-          })
-        );
+          }),
+          from: useMemberListAPI?.caller?.name,
+        });
       });
     }
   };
   const _removeMember = (memberId: string) => {
     if (im.roomState === 'joined') {
       im.kickMember(im.roomId!, memberId).catch((e) => {
-        onError?.(
-          new UIKitError({
+        im.sendError({
+          error: new UIKitError({
             code: ErrorCode.room_kick_member_error,
             extra: e.toString(),
-          })
-        );
+          }),
+          from: useMemberListAPI?.caller?.name,
+        });
       });
     }
   };
@@ -445,7 +467,7 @@ export function useSearchMemberListAPI(props: { memberType: MemberListType }) {
             emit(
               `_$${useMemberListAPI.name}_memberListContextMenu`,
               memberType, // current mute list
-              isOwner, // current user role
+              isOwner(), // current user role
               v.userId, // current member id
               isMuted // current member mute state
             );
@@ -456,21 +478,14 @@ export function useSearchMemberListAPI(props: { memberType: MemberListType }) {
     setData([...rr]);
   };
 
-  // const _deferSearch = async (text: string) => {
-  //   if (ds.current) {
-  //     clearTimeout(ds.current);
-  //     ds.current = undefined;
-  //   }
-  //   ds.current = setTimeout(() => {
-  //     _execSearch(text);
-  //   }, gSearchTimeout);
-  // };
-
-  const { delayExecTask } = useDelayExecTask(gSearchTimeout, _execSearch);
+  const { delayExecTask: _deferSearch } = useDelayExecTask(
+    gSearchTimeout,
+    _execSearch
+  );
 
   return {
     _data: data,
-    deferSearch: delayExecTask,
+    deferSearch: _deferSearch,
   };
 }
 
@@ -492,7 +507,7 @@ type useMemberListenerProps = {
 };
 export function useMemberListener(props: useMemberListenerProps) {
   const { onUpdateInfo, onUserJoined, onUserLeave, onUserBeKicked } = props;
-  useIMListener({
+  const msgListener = React.useRef<IMServiceListener>({
     onMessageReceived: (roomId, message) => {
       const userInfo = userInfoFromMessage(message);
       if (userInfo) {
@@ -509,4 +524,5 @@ export function useMemberListener(props: useMemberListenerProps) {
       onUserBeKicked?.(roomId, reason);
     },
   });
+  useIMListener(msgListener.current);
 }

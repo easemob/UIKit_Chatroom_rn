@@ -9,6 +9,7 @@ import {
 } from 'react-native-chat-sdk';
 
 import { ErrorCode, UIKitError } from '../error';
+import { asyncTask } from '../utils';
 import {
   custom_msg_event_type_gift,
   custom_msg_event_type_join,
@@ -26,7 +27,7 @@ import {
 export abstract class IMServiceImpl implements IMService {
   _listeners: Set<IMServiceListener>;
   _userMap: Map<string, UserServiceData>;
-  _muters: Map<string, number>;
+  _muterMap: Map<string, number>;
   _currentRoomId?: string;
   _currentOwnerId?: string;
   _roomState: RoomState;
@@ -44,7 +45,7 @@ export abstract class IMServiceImpl implements IMService {
 
   constructor() {
     this._userMap = new Map();
-    this._muters = new Map();
+    this._muterMap = new Map();
     this._listeners = new Set();
     this._roomState = 'leaved';
   }
@@ -182,11 +183,11 @@ export abstract class IMServiceImpl implements IMService {
     return this.client.currentUserName as string | undefined;
   }
   getMuter(id: string): number | undefined {
-    return this._muters.get(id);
+    return this._muterMap.get(id);
   }
   updateMuter(ids: string[]): void {
     for (const id of ids) {
-      this._muters.set(id, -1);
+      this._muterMap.set(id, -1);
     }
   }
   getUserInfo(id: string): UserServiceData | undefined {
@@ -237,7 +238,7 @@ export abstract class IMServiceImpl implements IMService {
       nickName: self.nickName,
       avatarUrl: self.avatarURL,
       gender: self.gender,
-      ext: { identify: self.identify }.toString(),
+      ext: JSON.stringify({ identify: self.identify }),
     };
     return this.client.userManager.updateOwnUserInfo(p);
   }
@@ -323,7 +324,7 @@ export abstract class IMServiceImpl implements IMService {
       message?: ChatMessage;
       error?: UIKitError;
     }) => void;
-  }): Promise<void> {
+  }): void {
     return this._sendTextMessage(params);
   }
   sendGift(params: {
@@ -335,7 +336,7 @@ export abstract class IMServiceImpl implements IMService {
       message?: ChatMessage;
       error?: UIKitError;
     }) => void;
-  }): Promise<void> {
+  }): void {
     return this._sendCustomMessage({
       roomId: params.roomId,
       eventType: custom_msg_event_type_gift,
@@ -352,7 +353,7 @@ export abstract class IMServiceImpl implements IMService {
       message?: ChatMessage;
       error?: UIKitError;
     }) => void;
-  }): Promise<void> {
+  }): void {
     return this._sendCustomMessage({
       roomId: params.roomId,
       eventType: custom_msg_event_type_join,
@@ -371,7 +372,7 @@ export abstract class IMServiceImpl implements IMService {
       message?: ChatMessage;
       error?: UIKitError;
     }) => void;
-  }): Promise<void> {
+  }): void {
     const { roomId, content, mentionIds, result } = params;
     const curUserId = this.userId;
     if (curUserId === undefined) {
@@ -382,7 +383,7 @@ export abstract class IMServiceImpl implements IMService {
           extra: 'Not logged in yet.',
         }),
       });
-      return new Promise(() => {});
+      return;
     }
     const user = this._userMap.get(curUserId);
     if (user === undefined) {
@@ -395,20 +396,30 @@ export abstract class IMServiceImpl implements IMService {
     );
     msg.receiverList = mentionIds;
     msg.attributes = user;
-    return this.client.chatManager.sendMessage(msg, {
-      onError: (_localMsgId, error) => {
+    this.client.chatManager
+      .sendMessage(msg, {
+        onError: (_localMsgId, error) => {
+          result({
+            isOk: false,
+            error: new UIKitError({
+              code: ErrorCode.msg_send_error,
+              extra: `${error.code}: ${error.description}`,
+            }),
+          });
+        },
+        onSuccess: (message: ChatMessage) => {
+          result({ isOk: true, message });
+        },
+      } as ChatMessageStatusCallback)
+      .catch((e) => {
         result({
           isOk: false,
           error: new UIKitError({
             code: ErrorCode.msg_send_error,
-            extra: `${error.code}: ${error.description}`,
+            extra: `${e.code}: ${e.description}`,
           }),
         });
-      },
-      onSuccess: (message: ChatMessage) => {
-        result({ isOk: true, message });
-      },
-    } as ChatMessageStatusCallback);
+      });
   }
   _sendCustomMessage(params: {
     roomId: string;
@@ -420,8 +431,8 @@ export abstract class IMServiceImpl implements IMService {
       message?: ChatMessage;
       error?: UIKitError;
     }) => void;
-  }): Promise<void> {
-    const { roomId, eventType, eventParams, result } = params;
+  }): void {
+    const { roomId, eventType, eventParams, mentionIds, result } = params;
     const curUserId = this.userId;
     if (curUserId === undefined) {
       result({
@@ -431,11 +442,7 @@ export abstract class IMServiceImpl implements IMService {
           extra: 'Not logged in yet.',
         }),
       });
-      return new Promise(() => {});
-    }
-    const user = this._userMap.get(curUserId);
-    if (user === undefined) {
-      throw new UIKitError({ code: ErrorCode.existed });
+      return;
     }
     const msg = ChatMessage.createCustomMessage(
       roomId,
@@ -443,20 +450,36 @@ export abstract class IMServiceImpl implements IMService {
       ChatMessageChatType.ChatRoom,
       { params: eventParams }
     );
-    return this.client.chatManager.sendMessage(msg, {
-      onError: (_localMsgId, error) => {
+    const user = this._userMap.get(curUserId);
+    if (user === undefined) {
+      throw new UIKitError({ code: ErrorCode.existed });
+    }
+    msg.receiverList = mentionIds;
+    msg.attributes = user;
+    this.client.chatManager
+      .sendMessage(msg, {
+        onError: (_localMsgId, error) => {
+          result({
+            isOk: false,
+            error: new UIKitError({
+              code: ErrorCode.msg_send_error,
+              extra: `${error.code}: ${error.description}`,
+            }),
+          });
+        },
+        onSuccess: (message: ChatMessage) => {
+          result({ isOk: true, message });
+        },
+      } as ChatMessageStatusCallback)
+      .catch((e) => {
         result({
           isOk: false,
           error: new UIKitError({
             code: ErrorCode.msg_send_error,
-            extra: `${error.code}: ${error.description}`,
+            extra: `${e.code}: ${e.description}`,
           }),
         });
-      },
-      onSuccess: (message: ChatMessage) => {
-        result({ isOk: true, message });
-      },
-    } as ChatMessageStatusCallback);
+      });
   }
   recallMessage(messageId: string): Promise<void> {
     return this.client.chatManager.recallMessage(messageId);
@@ -474,6 +497,11 @@ export abstract class IMServiceImpl implements IMService {
     languagesCode: string
   ): Promise<ChatMessage> {
     return this.client.chatManager.translateMessage(message, [languagesCode]);
+  }
+  sendError(params: { error: UIKitError; from?: string; extra?: any }): void {
+    this._listeners.forEach((v) => {
+      asyncTask(() => v.onError?.(params));
+    });
   }
   // destructor() {}
 }
@@ -710,7 +738,7 @@ export class IMServicePrivateImpl extends IMServiceImpl {
     this._userMap.clear();
   }
   _clearMuter(): void {
-    this._muters.clear();
+    this._muterMap.clear();
   }
 
   _setRoomId(roomId: string | undefined): void {
