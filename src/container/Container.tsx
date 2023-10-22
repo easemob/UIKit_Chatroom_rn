@@ -14,7 +14,7 @@ import {
   usePresetPalette,
 } from '../theme';
 import type { PartialDeep } from '../types';
-import { mergeObjects } from '../utils';
+import { getSystemLanguage, mergeObjects } from '../utils';
 
 type PartialRoomOption = PartialDeep<RoomOption>;
 
@@ -40,11 +40,20 @@ export function Container(props: ContainerProps) {
   const _palette = usePresetPalette();
   const light = useLightTheme(palette ?? _palette);
 
+  const getLanguage = (): StringSetType => {
+    if (Language) return Language;
+    const systemLanguage = getSystemLanguage();
+    if (systemLanguage.includes('zh_CN')) {
+      return 'cn';
+    }
+    return 'en';
+  };
+
   return (
     <DispatchContextProvider>
       <PaletteContextProvider value={palette ?? _palette}>
         <ThemeContextProvider value={theme ?? light}>
-          <I18nContextProvider value={{ stringSetType: Language ?? 'en' }}>
+          <I18nContextProvider value={{ stringSetType: getLanguage() }}>
             <IMContextProvider value={{ appKey, debugMode: isDevMode }}>
               <ConfigContextProvider
                 value={{

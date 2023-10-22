@@ -167,7 +167,6 @@ export function useMessageListApi(params: {
   const { delayExecTask: _startClearTask } = useDelayExecTask(
     gIdleTimeout,
     () => {
-      console.log('test:zuoyu:222:');
       if (dataRef.current.length > gMaxMessageCount) {
         dataRef.current.splice(0, dataRef.current.length - gMaxMessageCount);
         _updateUI(true);

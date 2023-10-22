@@ -138,7 +138,6 @@ export function useMemberListAPI(
       actions: {
         onClicked: () => {
           const isMuted = _isMuter(userId);
-          console.log('test:zuoyu:_addData:', im.userId, im.ownerId, isOwner());
           emit(
             `_$${useMemberListAPI.name}_memberListContextMenu`,
             memberType, // current mute list
