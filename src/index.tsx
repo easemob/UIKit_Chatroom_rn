@@ -40,6 +40,7 @@ export * from './hook';
 export * from './i18n';
 export * from './im';
 export * from './theme';
+export * from './ui/Alert';
 export * from './ui/Button';
 export * from './ui/Image';
 export * from './ui/Keyboard';

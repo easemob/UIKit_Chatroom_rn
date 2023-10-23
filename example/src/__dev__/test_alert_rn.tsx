@@ -23,6 +23,19 @@ export function TestAlertComponent(): React.JSX.Element {
           ]);
         }}
       />
+      <View
+        style={{ height: 100, width: 100, backgroundColor: 'orange' }}
+        onTouchEnd={() => {
+          Alert.prompt('Alert Title', 'My Alert Msg', [
+            {
+              text: 'Cancel',
+              onPress: () => console.log('Cancel Pressed'),
+              style: 'cancel',
+            },
+            { text: 'OK', onPress: () => console.log('OK Pressed') },
+          ]);
+        }}
+      />
     </View>
   );
 }
