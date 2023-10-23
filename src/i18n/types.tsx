@@ -4,7 +4,10 @@ export interface StringSet {
   [key: string]: StringSetValueType;
 }
 
-export type StringSetType = 'en' | 'cn';
+/**
+ * https://learn.microsoft.com/en-us/azure/ai-services/translator/language-support
+ */
+export type StringSetType = 'en' | 'zh-Hans';
 
 export interface I18nInit {
   stringSetType: StringSetType;
@@ -13,4 +16,5 @@ export interface I18nInit {
 
 export interface I18nTr {
   tr(key: string, ...args: any[]): string;
+  currentLanguage: () => StringSetType;
 }

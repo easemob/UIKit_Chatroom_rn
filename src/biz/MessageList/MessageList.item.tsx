@@ -96,7 +96,9 @@ export function MessageListItem(props: MessageListItemProps) {
           <View
             style={{
               flexDirection: 'row',
-              alignItems: type === 'text' ? 'flex-start' : 'center',
+              alignItems: type === 'text' ? 'center' : 'center',
+              // backgroundColor: '#fff8dc',
+              alignSelf: 'flex-start',
             }}
             onLayout={(e) => {
               headerWidth.current = e.nativeEvent.layout.width;
@@ -111,7 +113,11 @@ export function MessageListItem(props: MessageListItemProps) {
             }}
           >
             {isVisibleTime === true ? (
-              <View style={{ marginRight: 4, alignSelf: 'center' }}>
+              <View
+                style={{
+                  marginRight: 4,
+                }}
+              >
                 <Text
                   textType={'medium'}
                   paletteType={'body'}
@@ -126,7 +132,11 @@ export function MessageListItem(props: MessageListItemProps) {
 
             {isVisibleTag === true ? (
               basic.tag ? (
-                <View style={{ marginRight: 4, alignSelf: 'center' }}>
+                <View
+                  style={{
+                    marginRight: 4,
+                  }}
+                >
                   <DefaultIconImage
                     size={18}
                     borderRadius={0}
@@ -140,14 +150,17 @@ export function MessageListItem(props: MessageListItemProps) {
               <View
                 style={{
                   marginRight: 4,
-                  alignSelf: 'center',
                 }}
               >
                 <Avatar url={basic.avatar} size={18} borderRadius={18} />
               </View>
             ) : null}
 
-            <View style={{ marginRight: 4, alignSelf: 'center' }}>
+            <View
+              style={{
+                marginRight: 4,
+              }}
+            >
               <Text
                 textType={'medium'}
                 paletteType={'label'}

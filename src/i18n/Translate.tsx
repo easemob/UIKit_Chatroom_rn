@@ -9,6 +9,7 @@ export interface Translate {
 
 export class TranslateImpl implements Translate {
   map: Map<string, StringSetValueType>;
+  language: StringSetType;
   tr(key: string, ...args: any[]): string {
     const r = this.map.get(key);
     if (r) {
@@ -20,8 +21,12 @@ export class TranslateImpl implements Translate {
     }
     return key;
   }
+  currentLanguage(): StringSetType {
+    return this.language;
+  }
   constructor(params: { func: CreateStringSet; type: StringSetType }) {
     this.map = new Map();
+    this.language = params.type;
     const stringSet = params.func(params.type);
     const keys = Object.keys(stringSet);
     for (const key of keys) {

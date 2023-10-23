@@ -288,6 +288,7 @@ export abstract class ChatroomBase extends React.PureComponent<
         <InputBar
           ref={this.inputBarRef}
           onSended={(content, message) => {
+            console.log('test:onSended:', content, message);
             this.messageRef?.current?.addNewMessage?.(content, message);
             // todo:
           }}

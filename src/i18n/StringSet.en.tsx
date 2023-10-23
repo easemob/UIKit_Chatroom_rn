@@ -25,6 +25,8 @@ export function createStringSetEn(): StringSet {
 
     'Send': 'Send',
 
+    'self': 'self',
+
     'delete_button_click_popups_title': 'Delete Message',
     'delete_button_click_popups_content':
       'The message will be deleted and cannot been seen by others.',

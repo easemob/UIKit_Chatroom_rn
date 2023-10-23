@@ -21,9 +21,11 @@ export function createStringSetCn(): StringSet {
 
     'Search': '搜素',
 
-    "Let's Chat!": '让我们聊天!',
+    "Let's Chat!": '让我们聊天！',
 
     'Send': '发送',
+
+    'self': '自己',
 
     'delete_button_click_popups_title': '删除消息',
     'delete_button_click_popups_content': '该消息将被删除且其他人无法看到',

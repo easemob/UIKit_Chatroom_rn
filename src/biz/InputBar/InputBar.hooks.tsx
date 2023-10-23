@@ -123,6 +123,6 @@ export function useInputBarApi(params: {
     }
   };
   return {
-    onSend: _sendText,
+    sendText: _sendText,
   };
 }

@@ -44,7 +44,7 @@ export function Container(props: ContainerProps) {
     if (Language) return Language;
     const systemLanguage = getSystemLanguage();
     if (systemLanguage.includes('zh_CN')) {
-      return 'cn';
+      return 'zh-Hans';
     }
     return 'en';
   };

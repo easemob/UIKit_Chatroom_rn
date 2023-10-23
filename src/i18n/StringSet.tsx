@@ -6,7 +6,7 @@ export function createStringSet(type: StringSetType): StringSet {
   switch (type) {
     case 'en':
       return createStringSetEn();
-    case 'cn':
+    case 'zh-Hans':
       return createStringSetCn();
     default:
       break;

@@ -69,6 +69,7 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
             } else if (type === 'Translate') {
               translateMessage(item.msg);
             }
+            menuRef?.current?.startHide?.();
           },
           onRequestModalClose: () => {
             menuRef?.current?.startHide?.();

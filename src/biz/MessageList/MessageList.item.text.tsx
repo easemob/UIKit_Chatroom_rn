@@ -14,7 +14,7 @@ export function MessageListTextItem(props: MessageListItemProps) {
   const c = content as TextContent;
   const contentWidth = React.useRef(0);
   const unitSpaceWidth = React.useRef(3.5);
-  const [text, setText] = React.useState(c.text);
+  const [space, setSpace] = React.useState('');
   const translateX = React.useRef(new Animated.Value(0)).current;
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
@@ -23,6 +23,7 @@ export function MessageListTextItem(props: MessageListItemProps) {
       dark: colors.neutral[98],
     },
   });
+  console.log('test:zuoyu:MessageListTextItem:', c.text);
   React.useEffect(() => {
     const listener = (cId: string, width: number, headerWidth: number) => {
       if (props.id === cId) {
@@ -42,7 +43,7 @@ export function MessageListTextItem(props: MessageListItemProps) {
           )
             .fill(' ')
             .join('');
-          setText(spacesString + c.text);
+          setSpace(spacesString);
         }
       }
     };
@@ -80,7 +81,7 @@ export function MessageListTextItem(props: MessageListItemProps) {
           },
         ]}
       >
-        {text}
+        {space + c.text}
       </Animated.Text>
     </>
   );

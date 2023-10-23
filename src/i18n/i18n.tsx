@@ -16,7 +16,9 @@ export function I18nContextProvider({ value, children }: I18nContextProps) {
     t.addCustom({ stringSet, type: stringSetType });
   }
   return (
-    <I18nContext.Provider value={{ tr: t.tr.bind(t) }}>
+    <I18nContext.Provider
+      value={{ tr: t.tr.bind(t), currentLanguage: t.currentLanguage.bind(t) }}
+    >
       {children}
     </I18nContext.Provider>
   );

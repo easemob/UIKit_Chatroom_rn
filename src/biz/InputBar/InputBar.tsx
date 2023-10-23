@@ -79,19 +79,18 @@ export const InputBar = React.forwardRef<InputBarRef, InputBarProps>(function (
 
   const [iconName, setIconName] = React.useState<IconNameType>('face');
 
-  const { value, valueRef, setValue, onFace, onDel, getRawValue } =
+  const { value, valueRef, setValue, onFace, onDel, getRawValue, clear } =
     useInputValue();
-  const { onSend } = useInputBarApi({
+  const { sendText } = useInputBarApi({
     onSended: (msg) => {
       onSended?.(valueRef.current, msg);
+      clear();
     },
   });
 
   const closeKeyboard = () => {
     Keyboard.dismiss();
   };
-
-  // const onSended = () => {};
 
   const setIsStyle = (isStyle: boolean) => {
     if (isStyle === false) {
@@ -120,11 +119,13 @@ export const InputBar = React.forwardRef<InputBarRef, InputBarProps>(function (
   };
 
   const _onSend = () => {
-    // onSend?.(valueRef.current);
-    onSend(getRawValue());
-    inputRef.current?.clear();
+    const content = getRawValue();
+    if (content.length > 0) {
+      sendText(content);
+    }
+
     if (closeAfterSend === true) {
-      _close();
+      timeoutTask(_close);
     }
   };
 

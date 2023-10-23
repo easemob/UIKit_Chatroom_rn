@@ -18,6 +18,7 @@ import { useConfigContext } from '../../config';
 import { useDispatchContext } from '../../dispatch';
 import { ErrorCode, UIKitError } from '../../error';
 import { useDelayExecTask } from '../../hook';
+import { useI18nContext } from '../../i18n';
 import {
   custom_msg_event_type_gift,
   GiftServiceData,
@@ -25,14 +26,10 @@ import {
   useIMContext,
   useIMListener,
 } from '../../im';
-import { getSystemLanguage, seqId, timeoutTask } from '../../utils';
+import { seqId, timeoutTask } from '../../utils';
 import { emoji } from '../EmojiList';
 import { gIdleTimeout, gMaxMessageCount } from './MessageList.const';
-import type {
-  MessageListItemModel,
-  MessageListItemProps,
-  TextContent,
-} from './types';
+import type { MessageListItemModel, MessageListItemProps } from './types';
 
 export const useKeyboardOnAndroid = (isInputBarShow: boolean) => {
   const { addListener, removeListener, emit } = useDispatchContext();
@@ -178,6 +175,7 @@ export function useMessageListApi(params: {
   const userScrollGestureRef = React.useRef(false);
 
   const im = useIMContext();
+  const { tr, currentLanguage } = useI18nContext();
   const { roomOption } = useConfigContext();
 
   const msgListener = React.useRef<IMServiceListener>({
@@ -248,7 +246,7 @@ export function useMessageListApi(params: {
       id: `${seqId('_msg')}`,
       basic: {
         timestamp: Date.now(),
-        nickName: 'self',
+        nickName: tr('self'),
       },
       action: {
         onStartPress: () => {},
@@ -362,7 +360,7 @@ export function useMessageListApi(params: {
 
   const _translateMessage = (msg?: ChatMessage) => {
     if (msg) {
-      im.translateMessage(msg, getSystemLanguage())
+      im.translateMessage(msg, currentLanguage())
         .then((r) => {
           // todo: update ui
           for (const item of dataRef.current) {
@@ -372,10 +370,11 @@ export function useMessageListApi(params: {
                   item.type === 'text' &&
                   r.body.type === ChatMessageType.TXT
                 ) {
-                  const key = getSystemLanguage();
+                  const key = currentLanguage();
                   const body = r.body as ChatTextMessageBody;
                   const t = body.translations?.[key] as string;
-                  (item.content as TextContent).text = t;
+                  // (item.content as TextContent).text = t; // !!! Unable to trigger update.
+                  item.content = { ...item.content, text: t };
                   _updateUI(true);
                 }
                 break;
