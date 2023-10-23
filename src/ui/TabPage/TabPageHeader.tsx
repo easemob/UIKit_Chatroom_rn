@@ -3,7 +3,7 @@ import {
   Animated,
   StyleProp,
   TextStyle,
-  TouchableOpacity,
+  // TouchableOpacity,
   useWindowDimensions,
   View,
   ViewStyle,
@@ -124,7 +124,7 @@ export function TabPageHeader(props: TabPageHeaderProps) {
       >
         {titles.map((v, i) => {
           return (
-            <TouchableOpacity
+            <View
               key={i}
               style={[
                 {
@@ -135,7 +135,7 @@ export function TabPageHeader(props: TabPageHeaderProps) {
                 },
                 content?.containerStyle,
               ]}
-              onPress={() => {
+              onTouchEnd={() => {
                 onClicked?.(i);
               }}
             >
@@ -153,7 +153,7 @@ export function TabPageHeader(props: TabPageHeaderProps) {
               >
                 {v}
               </Text>
-            </TouchableOpacity>
+            </View>
           );
         })}
       </View>
