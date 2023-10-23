@@ -8,13 +8,13 @@ import { SimulativeModal, SimulativeModalRef } from '../../ui/Modal';
 import { TabPage } from '../../ui/TabPage';
 import type { PropsWithError, PropsWithTest } from '../types';
 import { ReportList } from './ReportList';
-import { gAspectRatio } from './ReportList.const';
 import type { ReportItemModel } from './types';
 
 export type ReportRef = SimulativeModalRef & {};
 export type ReportProps = {
   data: ReportItemModel[];
   maskStyle?: StyleProp<ViewStyle> | undefined;
+  containerStyle?: StyleProp<ViewStyle>;
 } & PropsWithTest &
   PropsWithError;
 
@@ -22,10 +22,10 @@ export const Report = React.forwardRef<ReportRef, ReportProps>(function (
   props: ReportProps,
   ref?: React.ForwardedRef<ReportRef>
 ) {
-  const { data, maskStyle } = props;
+  const { data, maskStyle, containerStyle } = props;
   const modalRef = React.useRef<SimulativeModalRef>({} as any);
-  const { width: winWidth } = useWindowDimensions();
-  const height = winWidth / gAspectRatio;
+  const { height: winHeight } = useWindowDimensions();
+  const height = (winHeight * 3) / 5;
   const isUsePanResponder = React.useRef(true);
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
@@ -72,14 +72,17 @@ export const Report = React.forwardRef<ReportRef, ReportProps>(function (
       maskStyle={maskStyle}
     >
       <View
-        style={{
-          height: height,
-          backgroundColor: getColor('backgroundColor'),
-          alignItems: 'center',
-          width: '100%',
-          borderTopRightRadius: 16,
-          borderTopLeftRadius: 16,
-        }}
+        style={[
+          {
+            height: height,
+            backgroundColor: getColor('backgroundColor'),
+            alignItems: 'center',
+            width: '100%',
+            borderTopRightRadius: 16,
+            borderTopLeftRadius: 16,
+          },
+          containerStyle,
+        ]}
       >
         <View
           style={{

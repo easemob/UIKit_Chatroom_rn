@@ -8,7 +8,6 @@ import { usePaletteContext } from '../../theme';
 import { SimulativeModal, SimulativeModalRef } from '../../ui/Modal';
 import { TabPage } from '../../ui/TabPage';
 import type { PropsWithError, PropsWithTest } from '../types';
-import { gAspectRatio } from './MemberList.const';
 import { useIsOwner } from './MemberList.hooks';
 import { MemberListParticipants } from './MemberList.parts';
 import type { MemberListType } from './types';
@@ -21,15 +20,23 @@ export type MemberListProps = {
   maskStyle?: StyleProp<ViewStyle> | undefined;
   onSearch?: (memberType: MemberListType) => void;
   onNoMoreMember?: () => void;
+  containerStyle?: StyleProp<ViewStyle>;
 } & PropsWithTest &
   PropsWithError;
 
 export const MemberList = React.forwardRef<MemberListRef, MemberListProps>(
   function (props: MemberListProps, ref?: React.ForwardedRef<MemberListRef>) {
-    const { maskStyle, testMode, onError, onSearch, onNoMoreMember } = props;
-    const simuModalRef = React.useRef<SimulativeModalRef>({} as any);
-    const { width: winWidth } = useWindowDimensions();
-    const height = winWidth / gAspectRatio;
+    const {
+      maskStyle,
+      testMode,
+      onError,
+      onSearch,
+      onNoMoreMember,
+      containerStyle,
+    } = props;
+    const modalRef = React.useRef<SimulativeModalRef>({} as any);
+    const { height: winHeight } = useWindowDimensions();
+    const height = (winHeight * 3) / 5;
     const isUsePanResponder = React.useRef(true);
     const { colors } = usePaletteContext();
     const { getColor } = useColors({
@@ -50,13 +57,13 @@ export const MemberList = React.forwardRef<MemberListRef, MemberListProps>(
       () => {
         return {
           startShow: () => {
-            simuModalRef.current.startShow();
+            modalRef.current.startShow();
           },
           startHide: (onFinished?: () => void) => {
-            simuModalRef.current.startHide(onFinished);
+            modalRef.current.startHide(onFinished);
           },
           startShowWithInit: () => {
-            simuModalRef.current.startShow();
+            modalRef.current.startShow();
             // todo: clear pre member list, and init current member list
           },
         };
@@ -130,7 +137,7 @@ export const MemberList = React.forwardRef<MemberListRef, MemberListProps>(
 
     return (
       <SimulativeModal
-        propsRef={simuModalRef}
+        propsRef={modalRef}
         modalAnimationType="slide"
         backgroundColor={g_mask_color}
         backgroundTransparent={false}
@@ -146,14 +153,17 @@ export const MemberList = React.forwardRef<MemberListRef, MemberListProps>(
         maskStyle={maskStyle}
       >
         <View
-          style={{
-            height: height,
-            backgroundColor: getColor('backgroundColor'),
-            alignItems: 'center',
-            width: '100%',
-            borderTopRightRadius: 16,
-            borderTopLeftRadius: 16,
-          }}
+          style={[
+            {
+              height: height,
+              backgroundColor: getColor('backgroundColor'),
+              alignItems: 'center',
+              width: '100%',
+              borderTopRightRadius: 16,
+              borderTopLeftRadius: 16,
+            },
+            containerStyle,
+          ]}
         >
           <View
             style={{
