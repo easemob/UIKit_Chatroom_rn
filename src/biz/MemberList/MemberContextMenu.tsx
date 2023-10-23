@@ -3,6 +3,7 @@ import { View } from 'react-native';
 
 import { useDispatchListener } from '../../dispatch';
 import { useColors } from '../../hook';
+import { useI18nContext } from '../../i18n';
 import { usePaletteContext } from '../../theme';
 import {
   BottomSheetMenu,
@@ -71,6 +72,7 @@ export function useGetItems() {
       dark: colors.neutral[0],
     },
   });
+  const { tr } = useI18nContext();
   const getItems = React.useCallback(
     (props: MemberContextMenuProps) => {
       const { list, onClicked, onRequestModalClose } = props;
@@ -82,7 +84,7 @@ export function useGetItems() {
                 key={i}
                 id={i.toString()}
                 initState={'enabled'}
-                text={v}
+                text={tr(v)}
                 onPress={() => {
                   onClicked?.(v);
                 }}
@@ -94,7 +96,7 @@ export function useGetItems() {
                 key={i}
                 id={i.toString()}
                 initState={'warned'}
-                text={v}
+                text={tr(v)}
                 onPress={() => {
                   onClicked?.(v);
                 }}
@@ -120,13 +122,13 @@ export function useGetItems() {
           key={5}
           id={'6'}
           initState={'enabled'}
-          text={'Cancel'}
+          text={tr('Cancel')}
           onPress={onRequestModalClose}
         />,
       ];
       return data;
     },
-    [getColor]
+    [getColor, tr]
   );
   return {
     getItems,

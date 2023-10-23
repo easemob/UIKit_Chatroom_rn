@@ -3,6 +3,7 @@ import { StyleProp, useWindowDimensions, View, ViewStyle } from 'react-native';
 
 import { g_mask_color } from '../../const';
 import { useColors } from '../../hook';
+import { useI18nContext } from '../../i18n';
 import { usePaletteContext } from '../../theme';
 import { SimulativeModal, SimulativeModalRef } from '../../ui/Modal';
 import { TabPage } from '../../ui/TabPage';
@@ -42,6 +43,7 @@ export const MemberList = React.forwardRef<MemberListRef, MemberListProps>(
       },
     });
     const { isOwner } = useIsOwner();
+    const { tr } = useI18nContext();
 
     React.useImperativeHandle(
       ref,
@@ -121,9 +123,9 @@ export const MemberList = React.forwardRef<MemberListRef, MemberListProps>(
 
     const getTabItemTitles = (isOwner: boolean) => {
       if (isOwner === true) {
-        return ['Participants', 'Muted'];
+        return [tr('Participants'), tr('Muted')];
       }
-      return ['Participants'];
+      return [tr('Participants')];
     };
 
     return (

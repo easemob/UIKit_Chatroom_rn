@@ -4,6 +4,7 @@ import { LinearGradient } from 'react-native-linear-gradient';
 
 import { ICON_ASSETS } from '../../assets';
 import { useColors } from '../../hook';
+import { useI18nContext } from '../../i18n';
 import { usePaletteContext } from '../../theme';
 import { DefaultImage, Icon } from '../../ui/Image';
 import { Text } from '../../ui/Text';
@@ -129,6 +130,7 @@ function GiftListSelectedItem(props: GiftListItemProps) {
       dark: colors.neutral[98],
     },
   });
+  const { tr } = useI18nContext();
   return (
     <View
       style={{
@@ -194,7 +196,7 @@ function GiftListSelectedItem(props: GiftListItemProps) {
               color: getColor('color2'),
             }}
           >
-            {'Send'}
+            {tr('Send')}
           </Text>
         </TouchableOpacity>
       </LinearGradient>

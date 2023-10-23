@@ -3,6 +3,7 @@ import { LayoutChangeEvent, StyleSheet, View } from 'react-native';
 
 import { ErrorCode, UIKitError } from '../../error';
 import { useColors } from '../../hook';
+import { useI18nContext } from '../../i18n';
 import { usePaletteContext } from '../../theme';
 import { Icon } from '../../ui/Image';
 import { Text } from '../../ui/Text';
@@ -32,6 +33,7 @@ export function InputBarStyle(props: InputBarStyleProps) {
       dark: colors.barrage[8],
     },
   });
+  const { tr } = useI18nContext();
 
   if (after && after?.length > 3) {
     throw new UIKitError({ code: ErrorCode.params, extra: 'after count > 3' });
@@ -86,7 +88,7 @@ export function InputBarStyle(props: InputBarStyleProps) {
               color: getColor('tintColor'),
             }}
           >
-            {'Input'}
+            {tr("Let's Chat!")}
           </Text>
         </View>
       </View>

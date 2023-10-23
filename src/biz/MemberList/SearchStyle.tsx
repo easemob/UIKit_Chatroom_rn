@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Pressable, View } from 'react-native';
 
 import { useColors } from '../../hook';
+import { useI18nContext } from '../../i18n';
 import { usePaletteContext } from '../../theme';
 import { Icon } from '../../ui/Image';
 import { Text } from '../../ui/Text';
@@ -18,6 +19,7 @@ export function SearchStyle({ onPress }: { onPress: () => void }) {
       dark: colors.neutral[4],
     },
   });
+  const { tr } = useI18nContext();
   return (
     <View
       style={{
@@ -54,7 +56,7 @@ export function SearchStyle({ onPress }: { onPress: () => void }) {
               color: getColor('color'),
             }}
           >
-            {'Search'}
+            {tr('Search')}
           </Text>
         </View>
       </Pressable>

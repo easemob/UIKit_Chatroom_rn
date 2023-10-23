@@ -11,8 +11,19 @@ export function createStringSetCn(): StringSet {
     'Translate': '翻译',
     'Delete': '删除',
     'Mute': '禁言',
+    'Unmute': '解除',
     'Report': '举报',
     'Cancel': '取消',
+    'Remove': '移除',
+
+    'Participants': '成员列表',
+    'Muted': '禁言列表',
+
+    'Search': '搜素',
+
+    "Let's Chat!": '让我们聊天!',
+
+    'Send': '发送',
 
     'delete_button_click_popups_title': '删除消息',
     'delete_button_click_popups_content': '该消息将被删除且其他人无法看到',

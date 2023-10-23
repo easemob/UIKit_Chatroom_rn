@@ -11,8 +11,19 @@ export function createStringSetEn(): StringSet {
     'Translate': 'Translate',
     'Delete': 'Delete',
     'Mute': 'Mute',
+    'Unmute': 'Unmute',
     'Report': 'Report',
     'Cancel': 'Cancel',
+    'Remove': 'Remove',
+
+    'Participants': 'Participants',
+    'Muted': 'Muted',
+
+    'Search': 'Search',
+
+    "Let's Chat!": "Let's Chat!",
+
+    'Send': 'Send',
 
     'delete_button_click_popups_title': 'Delete Message',
     'delete_button_click_popups_content':
