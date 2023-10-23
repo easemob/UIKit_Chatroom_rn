@@ -57,7 +57,7 @@ export function ChatroomListScreen(props: Props) {
                 marginVertical: 4,
                 backgroundColor: '#fff8dc',
                 justifyContent: 'center',
-                alignItems: 'center',
+                // alignItems: 'center',
                 borderRadius: 8,
                 alignSelf: 'center',
               }}
@@ -67,7 +67,9 @@ export function ChatroomListScreen(props: Props) {
                 });
               }}
             >
-              <Text style={{ color: '#8fbc8f', fontSize: 20 }}>{item.id}</Text>
+              <Text style={{ color: '#8fbc8f', fontSize: 20 }}>
+                {`${item.id}:${item.room.roomName ?? item.id}`}
+              </Text>
             </TouchableOpacity>
           );
         }}

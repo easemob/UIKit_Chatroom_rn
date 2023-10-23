@@ -47,6 +47,8 @@ export function TopMenuScreen(props: Props) {
                   navigation.push('TestReport', {});
                 } else if (v === 'Login') {
                   navigation.push('Login', {});
+                } else if (v === 'Config') {
+                  navigation.push('Config', {});
                 }
               }}
             >

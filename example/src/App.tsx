@@ -5,7 +5,7 @@ import {
 } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as React from 'react';
-import { View } from 'react-native';
+import { DeviceEventEmitter, View } from 'react-native';
 import {
   Container,
   useDarkTheme,
@@ -18,6 +18,7 @@ import type { RootParamsList, RootParamsName } from './routes';
 import {
   ChatroomListScreen,
   ChatroomScreen,
+  ConfigScreen,
   LoginListScreen,
   LoginScreen,
   ReportScreen,
@@ -34,6 +35,7 @@ export function App() {
   const palette = usePresetPalette();
   const dark = useDarkTheme(palette);
   const light = useLightTheme(palette);
+  const [theme, setTheme] = React.useState(light);
 
   const formatNavigationState = (
     state: NavigationState | undefined,
@@ -54,13 +56,27 @@ export function App() {
     }
   };
 
+  React.useEffect(() => {
+    const ret = DeviceEventEmitter.addListener('example_change_theme', (e) => {
+      console.log('test:zuoyu:', e);
+      if (e === 'dark') {
+        setTheme(dark);
+      } else {
+        setTheme(light);
+      }
+    });
+    return () => {
+      ret.remove();
+    };
+  }, [dark, light]);
+
   return (
     <React.StrictMode>
       <Container
         appKey={env.appKey}
         isDevMode={env.isDevMode}
         palette={palette}
-        theme={light ? light : dark}
+        theme={theme}
         roomOption={{ marquee: { isVisible: false } }}
       >
         <NavigationContainer
@@ -133,6 +149,13 @@ export function App() {
                 presentation: 'modal',
               }}
               component={SearchMemberScreen}
+            />
+            <Root.Screen
+              name={'Config'}
+              options={{
+                headerShown: true,
+              }}
+              component={ConfigScreen}
             />
           </Root.Navigator>
         </NavigationContainer>
