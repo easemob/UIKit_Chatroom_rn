@@ -2,12 +2,12 @@ import * as React from 'react';
 import { TouchableOpacity, View } from 'react-native';
 import { LinearGradient } from 'react-native-linear-gradient';
 
-import { ICON_ASSETS } from '../../assets';
 import { useColors } from '../../hook';
 import { useI18nContext } from '../../i18n';
 import { usePaletteContext } from '../../theme';
-import { DefaultImage, Icon } from '../../ui/Image';
+import { Icon } from '../../ui/Image';
 import { Text } from '../../ui/Text';
+import { GiftIcon } from '../GiftIcon';
 import {
   gItemButtonHeight,
   gItemGiftSize,
@@ -69,11 +69,7 @@ function GiftListNoSelectedItem(props: GiftListItemProps) {
         onSelected?.(gift.giftId);
       }}
     >
-      <DefaultImage
-        defaultSource={ICON_ASSETS.gift_color('3x')}
-        source={{ uri: gift.giftIcon }}
-        style={{ width: gItemGiftSize, height: gItemGiftSize }}
-      />
+      <GiftIcon url={gift.giftIcon} size={gItemGiftSize} borderRadius={0} />
       <View style={{ height: 4 }} />
       <View>
         <Text
@@ -152,11 +148,7 @@ function GiftListSelectedItem(props: GiftListItemProps) {
           alignItems: 'center',
         }}
       >
-        <DefaultImage
-          defaultSource={ICON_ASSETS.gift_color('3x')}
-          source={{ uri: gift.giftIcon }}
-          style={{ width: gItemGiftSize, height: gItemGiftSize }}
-        />
+        <GiftIcon url={gift.giftIcon} size={gItemGiftSize} borderRadius={0} />
         <View style={{ flexDirection: 'row' }}>
           <Icon name={'agora_dollar'} style={{ width: 14, height: 14 }} />
           <Text

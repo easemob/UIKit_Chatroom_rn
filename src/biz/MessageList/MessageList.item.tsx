@@ -124,11 +124,7 @@ export function MessageListItem(props: MessageListItemProps) {
               />
             </View>
             <View>
-              <Avatar
-                url={basic.avatar ?? 'http://www.sdf.com/x'}
-                size={18}
-                borderRadius={18}
-              />
+              <Avatar url={basic.avatar} size={18} borderRadius={18} />
             </View>
             <View style={{ marginRight: 4 }}>
               <Text

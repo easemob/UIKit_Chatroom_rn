@@ -5,7 +5,7 @@ import { g_flatlist_border_bottom_width } from '../../const';
 import { useColors } from '../../hook';
 import { usePaletteContext } from '../../theme';
 import { IconButton } from '../../ui/Button';
-import { Icon } from '../../ui/Image';
+import { Image } from '../../ui/Image';
 import { Text } from '../../ui/Text';
 import { Avatar } from '../Avatar';
 import { gMemberListItemHeight } from './MemberList.const';
@@ -52,27 +52,20 @@ export function MemberListItem(props: MemberListItemProps) {
       }}
     >
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-        <Icon
-          name={'crown1'}
-          style={{
-            width: 22,
-            height: 22,
-            tintColor: 'orange',
-            margin: 4,
-          }}
-        />
+        {userInfo?.identify ? (
+          <Image
+            style={{
+              width: 22,
+              height: 22,
+              // tintColor: 'orange',
+              margin: 4,
+            }}
+            source={{ uri: userInfo.identify, cache: 'default' }}
+          />
+        ) : null}
 
         <View style={{ width: 12 }} />
-        <Avatar
-          url={
-            userInfo.avatarURL === undefined ||
-            userInfo.avatarURL.trim().length === 0
-              ? 'https://no-existed?'
-              : userInfo.avatarURL
-          }
-          size={40}
-          borderRadius={40}
-        />
+        <Avatar url={userInfo.avatarURL} size={40} borderRadius={40} />
         <View style={{ width: 12 }} />
         <View style={{ marginVertical: 10 }}>
           <Text

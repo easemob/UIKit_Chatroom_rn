@@ -1,12 +1,11 @@
 import * as React from 'react';
 import { Animated, StyleSheet, View } from 'react-native';
 
-import { ICON_ASSETS } from '../../assets';
 import { useColors } from '../../hook';
 import { usePaletteContext } from '../../theme';
-import { DefaultImage } from '../../ui/Image';
 import { Text } from '../../ui/Text';
 import { Avatar } from '../Avatar';
+import { GiftIcon } from '../GiftIcon';
 import { gItemBorderRadius, gItemMaxWidth } from './GiftFloating.const';
 import { GiftFloatingItem, useAnimation } from './GiftFloating.item.hooks';
 
@@ -62,14 +61,7 @@ export function GiftFloatingItemFC(props: GiftFloatingItemFCProps) {
         ]}
       >
         <View>
-          <Avatar
-            url={
-              item.gift.avatar ??
-              'https://cdn4.iconfinder.com/data/icons/animal-6/100/1-512.png'
-            }
-            size={36}
-            borderRadius={36}
-          />
+          <Avatar url={item.gift.avatar} size={36} borderRadius={36} />
         </View>
 
         <View
@@ -92,15 +84,7 @@ export function GiftFloatingItemFC(props: GiftFloatingItemFCProps) {
           </Text>
         </View>
 
-        <DefaultImage
-          defaultSource={ICON_ASSETS.gift_color('3x')}
-          source={{
-            uri:
-              item.gift.giftIcon ??
-              'https://cdn4.iconfinder.com/data/icons/animal-6/100/1-512.png',
-          }}
-          style={{ width: 40, height: 40 }}
-        />
+        <GiftIcon url={item.gift.giftIcon} borderRadius={0} size={40} />
 
         <View style={{ padding: 2, paddingHorizontal: 6 }}>
           <Text style={styles.dig}>x{item.gift.giftCount ?? 1}</Text>
