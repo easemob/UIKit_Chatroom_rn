@@ -25,12 +25,13 @@ export type ReportListRef = SimulativeModalRef & {};
 export type ReportListProps = {
   requestUseScrollGesture?: (finished: boolean) => void;
   onCancel: () => void;
+  onReport: (result: ReportItemModel[]) => void;
   data: ReportItemModel[];
 };
 
 export function ReportList(props: ReportListProps) {
-  const { requestUseScrollGesture, onCancel, data: itemData } = props;
-  const { data, onUpdate, report } = useReportListApi(itemData);
+  const { requestUseScrollGesture, onCancel, data: propData, onReport } = props;
+  const { data, onUpdate } = useReportListApi(propData);
   const { isScrollingRef, handles } = useScrollGesture(requestUseScrollGesture);
   const ref = React.useRef<FlatList<ReportListItemProps>>({} as any);
   const { width: winWidth } = useWindowDimensions();
@@ -104,7 +105,7 @@ export function ReportList(props: ReportListProps) {
           text={'Report'}
           style={{ width: '42%', height: 40 }}
           onPress={() => {
-            report();
+            onReport?.(data.map((v) => v.data));
           }}
         />
       </View>

@@ -23,7 +23,6 @@ export function MessageListTextItem(props: MessageListItemProps) {
       dark: colors.neutral[98],
     },
   });
-  console.log('test:zuoyu:MessageListTextItem:', c.text);
   React.useEffect(() => {
     const listener = (cId: string, width: number, headerWidth: number) => {
       if (props.id === cId) {

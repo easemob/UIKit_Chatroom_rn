@@ -13,6 +13,8 @@ import { useDispatchListener } from '../../dispatch';
 import { useColors } from '../../hook';
 import { usePaletteContext } from '../../theme';
 import { BorderButton } from '../../ui/Button';
+import { seqId } from '../../utils';
+import { Report, ReportItemModel, ReportProps, ReportRef } from '../Report';
 import type { PropsWithError, PropsWithTest } from '../types';
 import { useGetItems } from './MessageContextMenu';
 import {
@@ -44,6 +46,8 @@ export type MessageListProps = {
   containerStyle?: StyleProp<ViewStyle>;
   backgroundStyle?: StyleProp<ViewStyle>;
   onLayout?: ((event: LayoutChangeEvent) => void) | undefined;
+
+  reportProps?: ReportProps;
 } & PropsWithTest &
   PropsWithError;
 
@@ -55,6 +59,7 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
       containerStyle,
       visible = true,
       onLayout: onLayoutProps,
+      reportProps,
     } = props;
     const { getItems } = useGetItems();
     const _onLongPress = (item: MessageListItemModel) => {
@@ -64,12 +69,15 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
           onClicked: (type) => {
             if (type === 'Delete') {
               deleteMessage(item.msg);
+              menuRef?.current?.startHide?.();
             } else if (type === 'Report') {
-              reportMessage(item.msg);
+              menuRef?.current?.startHide?.(() => {
+                // todo : report
+              });
             } else if (type === 'Translate') {
               translateMessage(item.msg);
+              menuRef?.current?.startHide?.();
             }
-            menuRef?.current?.startHide?.();
           },
           onRequestModalClose: () => {
             menuRef?.current?.startHide?.();
@@ -99,6 +107,7 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
     });
 
     const menuRef = React.useRef<MessageContextMenuRef>({} as any);
+    const reportRef = React.useRef<ReportRef>({} as any);
 
     React.useImperativeHandle(
       ref,
@@ -114,6 +123,24 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
       },
       [addTextMessage, scrollToEnd]
     );
+
+    const getReportData = React.useMemo(() => {
+      if (reportProps?.data) {
+        return reportProps.data;
+      }
+      return reportDefaultData;
+    }, [reportProps?.data]);
+
+    const getOnReport = React.useMemo(() => {
+      if (reportProps?.onReport) {
+        return { onReport: reportProps.onReport };
+      }
+      return {
+        onReport: (result: ReportItemModel[]) => {
+          reportMessage(result);
+        },
+      };
+    }, [reportMessage, reportProps?.onReport]);
 
     if (visible === false) {
       return null;
@@ -158,6 +185,12 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
             menuRef?.current?.startHide?.();
           }}
           list={[]}
+        />
+        <Report
+          ref={reportRef}
+          {...reportProps}
+          onReport={getOnReport.onReport}
+          data={getReportData}
         />
       </>
     );
@@ -221,3 +254,36 @@ const UnreadButton = ({ onPress }: { onPress: () => void }) => {
     />
   );
 };
+
+const reportDefaultData: ReportItemModel[] = [
+  {
+    id: seqId('_rp').toString(),
+    title: 'Unwelcome commercial content or spam',
+    checked: true,
+  },
+  {
+    id: seqId('_rp').toString(),
+    title: 'Pornographic or explicit content',
+    checked: false,
+  },
+  {
+    id: seqId('_rp').toString(),
+    title: 'Child abuse',
+    checked: false,
+  },
+  {
+    id: seqId('_rp').toString(),
+    title: 'Hate speech or graphic violence',
+    checked: false,
+  },
+  {
+    id: seqId('_rp').toString(),
+    title: 'Promote terrorism',
+    checked: false,
+  },
+  {
+    id: seqId('_rp').toString(),
+    title: 'Harassment or bullying',
+    checked: false,
+  },
+];

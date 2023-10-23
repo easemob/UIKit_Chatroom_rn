@@ -15,6 +15,7 @@ export type ReportProps = {
   data: ReportItemModel[];
   maskStyle?: StyleProp<ViewStyle> | undefined;
   containerStyle?: StyleProp<ViewStyle>;
+  onReport: (result: ReportItemModel[]) => void;
 } & PropsWithTest &
   PropsWithError;
 
@@ -22,7 +23,7 @@ export const Report = React.forwardRef<ReportRef, ReportProps>(function (
   props: ReportProps,
   ref?: React.ForwardedRef<ReportRef>
 ) {
-  const { data, maskStyle, containerStyle } = props;
+  const { data, maskStyle, containerStyle, onReport } = props;
   const modalRef = React.useRef<SimulativeModalRef>({} as any);
   const { height: winHeight } = useWindowDimensions();
   const height = (winHeight * 3) / 5;
@@ -110,6 +111,7 @@ export const Report = React.forwardRef<ReportRef, ReportProps>(function (
                   onCancel={() => {
                     modalRef.current?.startHide?.();
                   }}
+                  onReport={onReport}
                   data={data}
                 />,
               ],

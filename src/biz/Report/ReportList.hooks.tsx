@@ -70,14 +70,9 @@ export function useReportListApi(itemData: ReportItemModel[]) {
     setData([...dataRef.current]);
   };
 
-  const _report = () => {
-    // todo:
-  };
-
   return {
     data: data,
     onUpdate: _onUpdate,
-    report: _report,
   };
 }
 

@@ -58,7 +58,6 @@ export function App() {
 
   React.useEffect(() => {
     const ret = DeviceEventEmitter.addListener('example_change_theme', (e) => {
-      console.log('test:zuoyu:', e);
       if (e === 'dark') {
         setTheme(dark);
       } else {

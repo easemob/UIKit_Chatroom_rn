@@ -28,6 +28,7 @@ import {
 } from '../../im';
 import { seqId, timeoutTask } from '../../utils';
 import { emoji } from '../EmojiList';
+import type { ReportItemModel } from '../Report';
 import { gIdleTimeout, gMaxMessageCount } from './MessageList.const';
 import type { MessageListItemModel, MessageListItemProps } from './types';
 
@@ -418,27 +419,29 @@ export function useMessageListApi(params: {
         });
     }
   };
-  const _reportMessage = (msg?: ChatMessage) => {
-    if (msg) {
-      // todo:
-      im.reportMessage({
-        messageId: msg.msgId,
-        tag: '',
-        reason: '',
-      })
-        .then(() => {
-          // todo: test
-        })
-        .catch((e) => {
-          im.sendError({
-            error: new UIKitError({
-              code: ErrorCode.msg_report_error,
-              extra: e.toString(),
-            }),
-            from: useMessageListApi?.caller?.name,
-          });
-        });
-    }
+  const _reportMessage = (_result: ReportItemModel[]) => {
+    // todo: confirm
+    return;
+    // if (msg) {
+    //   // todo:
+    //   im.reportMessage({
+    //     messageId: msg.msgId,
+    //     tag: '',
+    //     reason: '',
+    //   })
+    //     .then(() => {
+    //       // todo: test
+    //     })
+    //     .catch((e) => {
+    //       im.sendError({
+    //         error: new UIKitError({
+    //           code: ErrorCode.msg_report_error,
+    //           extra: e.toString(),
+    //         }),
+    //         from: useMessageListApi?.caller?.name,
+    //       });
+    //     });
+    // }
   };
 
   return {
