@@ -71,6 +71,9 @@ export function Container(props: ContainerProps) {
                       },
                       messageList: {
                         isVisibleGift: true,
+                        isVisibleAvatar: true,
+                        isVisibleTag: true,
+                        isVisibleTime: true,
                       },
                     } as RoomOption
                   ),

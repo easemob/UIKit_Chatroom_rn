@@ -14,5 +14,8 @@ export type RoomOption = {
   };
   messageList: {
     isVisibleGift: boolean;
+    isVisibleTime: boolean;
+    isVisibleTag: boolean;
+    isVisibleAvatar: boolean;
   };
 };

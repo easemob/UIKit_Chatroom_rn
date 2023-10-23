@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { Animated, Pressable, View } from 'react-native';
 
-import type { IconNameType } from '../../assets';
+import { useConfigContext } from '../../config';
 import { useDispatchContext } from '../../dispatch';
 import { ErrorCode, UIKitError } from '../../error';
 import { useColors } from '../../hook';
 import { usePaletteContext } from '../../theme';
-import { Icon } from '../../ui/Image';
+import { DefaultIconImage } from '../../ui/Image';
 import { Text } from '../../ui/Text';
 import { formatTs } from '../../utils';
 import { Avatar } from '../Avatar';
@@ -34,6 +34,10 @@ export function MessageListItem(props: MessageListItemProps) {
       dark: colors.primary[8],
     },
   });
+  const { roomOption } = useConfigContext();
+  const {
+    messageList: { isVisibleAvatar, isVisibleTag, isVisibleTime },
+  } = roomOption;
   const headerWidth = React.useRef(0);
   const width = React.useRef(0);
   const { type, basic, action } = props;
@@ -106,27 +110,44 @@ export function MessageListItem(props: MessageListItemProps) {
               }
             }}
           >
-            <View>
-              <Text
-                textType={'medium'}
-                paletteType={'body'}
+            {isVisibleTime === true ? (
+              <View style={{ marginRight: 4, alignSelf: 'center' }}>
+                <Text
+                  textType={'medium'}
+                  paletteType={'body'}
+                  style={{
+                    color: getColor('time'),
+                  }}
+                >
+                  {formatTs(basic.timestamp)}
+                </Text>
+              </View>
+            ) : null}
+
+            {isVisibleTag === true ? (
+              basic.tag ? (
+                <View style={{ marginRight: 4, alignSelf: 'center' }}>
+                  <DefaultIconImage
+                    size={18}
+                    borderRadius={0}
+                    url={basic.tag}
+                  />
+                </View>
+              ) : null
+            ) : null}
+
+            {isVisibleAvatar === true ? (
+              <View
                 style={{
-                  color: getColor('time'),
+                  marginRight: 4,
+                  alignSelf: 'center',
                 }}
               >
-                {formatTs(basic.timestamp)}
-              </Text>
-            </View>
-            <View>
-              <Icon
-                name={(basic.tag as IconNameType) ?? 'achievement'}
-                style={{ height: 18, width: 18 }}
-              />
-            </View>
-            <View>
-              <Avatar url={basic.avatar} size={18} borderRadius={18} />
-            </View>
-            <View style={{ marginRight: 4 }}>
+                <Avatar url={basic.avatar} size={18} borderRadius={18} />
+              </View>
+            ) : null}
+
+            <View style={{ marginRight: 4, alignSelf: 'center' }}>
               <Text
                 textType={'medium'}
                 paletteType={'label'}
