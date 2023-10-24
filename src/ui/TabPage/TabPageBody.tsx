@@ -45,9 +45,8 @@ export function TabPageBody(props: TabPageBodyProps) {
     ...others
   } = props;
   const ref = React.useRef<ScrollView>({} as any);
-  const { width: winWidth, height } = useWindowDimensions();
+  const { width: winWidth } = useWindowDimensions();
   const w = initWidth ?? winWidth;
-  const [pageY, setPageY] = React.useState(0);
   let viewRef = React.useRef<View | undefined>();
   if (propsRef.current) {
     propsRef.current.scrollTo = (index: number) => {
@@ -57,22 +56,15 @@ export function TabPageBody(props: TabPageBodyProps) {
   return (
     <View
       style={[
-        { height: initHeight ? initHeight : height - pageY },
+        {
+          height: initHeight ? initHeight : undefined,
+          flexGrow: 1,
+        },
         containerStyle,
       ]}
       ref={(ref) => {
         if (ref) {
           viewRef.current = ref;
-        }
-      }}
-      onLayout={() => {
-        if (viewRef.current) {
-          viewRef.current.measureInWindow((_, __, ___, ____) => {});
-          viewRef.current.measure((_, __, ___, ____, _____, pageY) => {
-            if (initHeight === undefined) {
-              setPageY(pageY);
-            }
-          });
         }
       }}
     >

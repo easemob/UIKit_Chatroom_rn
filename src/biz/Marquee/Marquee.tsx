@@ -129,7 +129,6 @@ export const Marquee = React.forwardRef<MarqueeRef, MarqueeProps>(function (
   };
 
   const pushTask = (task: MarqueeTask) => {
-    console.log('test:zuoyu:pushTask:', task);
     tasks.enqueue(task);
     execTask();
   };

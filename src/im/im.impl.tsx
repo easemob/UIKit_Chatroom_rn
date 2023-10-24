@@ -44,6 +44,7 @@ export abstract class IMServiceImpl implements IMService {
   // }
 
   constructor() {
+    console.log('test:zuoyu:reset:im:');
     this._userMap = new Map();
     this._muterMap = new Map();
     this._listeners = new Set();
@@ -111,66 +112,117 @@ export abstract class IMServiceImpl implements IMService {
     result: (params: { isOk: boolean; error?: UIKitError }) => void;
   }): Promise<void> {
     const { userId, userToken, userNickname, userAvatarURL, result } = params;
-    if (userToken.startsWith('00')) {
-      return this.client
-        .loginWithAgoraToken(userId, userToken)
-        .then(() => {
-          this._updateMember({
-            nickName: userNickname,
-            avatarURL: userAvatarURL,
-            userId: userId,
-          });
-          const self = this._userMap.get(userId);
-          if (self) {
-            this.updateSelfInfo(self);
-          }
+    try {
+      if (userToken.startsWith('00')) {
+        await this.client.loginWithAgoraToken(userId, userToken);
+      } else {
+        await this.client.login(userId, userToken, false);
+      }
 
-          result?.({ isOk: true });
-        })
-        .catch((e) => {
-          if (e.code === 200) {
-            this.client.getCurrentUsername();
-            result?.({ isOk: true });
-          } else {
-            result?.({
-              isOk: false,
-              error: new UIKitError({
-                code: ErrorCode.login_error,
-                extra: JSON.stringify(e),
-              }),
-            });
-          }
-        });
-    } else {
-      return this.client
-        .login(userId, userToken, false)
-        .then(() => {
-          this._updateMember({
-            nickName: userNickname,
-            avatarURL: userAvatarURL,
-            userId: userId,
-          });
-          const self = this._userMap.get(userId);
-          if (self) {
-            this.updateSelfInfo(self);
-          }
+      this._updateMember({
+        nickName: userNickname,
+        avatarURL: userAvatarURL,
+        userId: userId,
+      });
 
-          result?.({ isOk: true });
-        })
-        .catch((e) => {
-          if (e.code === 200) {
-            result?.({ isOk: true });
-          } else {
-            result?.({
-              isOk: false,
-              error: new UIKitError({
-                code: ErrorCode.login_error,
-                extra: JSON.stringify(e),
-              }),
-            });
-          }
+      this.client.getCurrentUsername();
+
+      const self = this._userMap.get(userId);
+      if (self) {
+        this.updateSelfInfo(self);
+      }
+
+      result?.({ isOk: true });
+    } catch (error: any) {
+      if (error?.code === 200) {
+        this._updateMember({
+          nickName: userNickname,
+          avatarURL: userAvatarURL,
+          userId: userId,
         });
+        this.client.getCurrentUsername();
+      }
+      result?.({
+        isOk: false,
+        error: new UIKitError({
+          code: ErrorCode.login_error,
+          extra: JSON.stringify(error),
+        }),
+      });
     }
+    // if (userToken.startsWith('00')) {
+    //   return this.client
+    //     .loginWithAgoraToken(userId, userToken)
+    //     .then(() => {
+    //       this._updateMember({
+    //         nickName: userNickname,
+    //         avatarURL: userAvatarURL,
+    //         userId: userId,
+    //       });
+    //       const self = this._userMap.get(userId);
+    //       if (self) {
+    //         this.updateSelfInfo(self);
+    //       }
+
+    //       result?.({ isOk: true });
+    //     })
+    //     .catch((e) => {
+    //       console.log('test:login:error:', e);
+    //       if (e.code === 200) {
+    //         this.client.getCurrentUsername();
+    //         result?.({ isOk: true });
+    //         this._updateMember({
+    //           nickName: userNickname,
+    //           avatarURL: userAvatarURL,
+    //           userId: userId,
+    //         });
+    //       } else {
+    //         result?.({
+    //           isOk: false,
+    //           error: new UIKitError({
+    //             code: ErrorCode.login_error,
+    //             extra: JSON.stringify(e),
+    //           }),
+    //         });
+    //       }
+    //     });
+    // } else {
+    //   return this.client
+    //     .login(userId, userToken, false)
+    //     .then(() => {
+    //       this._updateMember({
+    //         nickName: userNickname,
+    //         avatarURL: userAvatarURL,
+    //         userId: userId,
+    //       });
+    //       const self = this._userMap.get(userId);
+    //       if (self) {
+    //         this.updateSelfInfo(self);
+    //       }
+
+    //       result?.({ isOk: true });
+    //     })
+    //     .catch((e) => {
+    //       console.log('test:login:error:', e);
+    //       if (e.code === 200) {
+    //         this.client.getCurrentUsername();
+    //         result?.({ isOk: true });
+    //         this._updateMember({
+    //           nickName: userNickname,
+    //           avatarURL: userAvatarURL,
+    //           userId: userId,
+    //         });
+    //       } else {
+    //         result?.({
+    //           isOk: false,
+    //           error: new UIKitError({
+    //             code: ErrorCode.login_error,
+    //             extra: JSON.stringify(e),
+    //           }),
+    //         });
+    //       }
+    //     });
+    // }
   }
   logout(): Promise<void> {
     return this.client.logout();

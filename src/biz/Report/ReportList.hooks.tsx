@@ -1,73 +1,34 @@
 import * as React from 'react';
 import { PanResponder } from 'react-native';
 
-import { seqId } from '../../utils';
 import type { ReportListItemProps } from './ReportList.item';
 import type { ReportItemModel } from './types';
 
 export function useReportListApi(itemData: ReportItemModel[]) {
   const dataRef = React.useRef<ReportListItemProps[]>(
-    itemData
-      ? itemData.map((v) => {
-          return { data: v };
-        })
-      : [
-          {
-            data: {
-              id: seqId('_rp').toString(),
-              title: 'Unwelcome commercial content or spam',
-              checked: true,
-            },
-          },
-          {
-            data: {
-              id: seqId('_rp').toString(),
-              title: 'Pornographic or explicit content',
-              checked: false,
-            },
-          },
-          {
-            data: {
-              id: seqId('_rp').toString(),
-              title: 'Child abuse',
-              checked: false,
-            },
-          },
-          {
-            data: {
-              id: seqId('_rp').toString(),
-              title: 'Hate speech or graphic violence',
-              checked: false,
-            },
-          },
-          {
-            data: {
-              id: seqId('_rp').toString(),
-              title: 'Promote terrorism',
-              checked: false,
-            },
-          },
-          {
-            data: {
-              id: seqId('_rp').toString(),
-              title: 'Harassment or bullying',
-              checked: false,
-            },
-          },
-        ]
+    itemData.map((v) => {
+      return { data: v };
+    })
   );
   const [data, setData] = React.useState<ReportListItemProps[]>(
     dataRef.current
   );
 
-  const _onUpdate = (item: ReportListItemProps) => {
+  const _onUpdate = (clickedItem: ReportListItemProps) => {
+    let isNeedUpdate = false;
     for (const data of dataRef.current) {
-      if (data.data.id === item.data.id) {
-        data.data.checked = item.data.checked;
-        break;
+      if (data.data.id === clickedItem.data.id) {
+        if (clickedItem.data.checked === false) {
+          data.data.checked = true;
+          isNeedUpdate = true;
+        }
+      } else {
+        data.data.checked = false;
       }
     }
-    setData([...dataRef.current]);
+    if (isNeedUpdate === true) {
+      setData([...dataRef.current]);
+    }
   };
 
   return {

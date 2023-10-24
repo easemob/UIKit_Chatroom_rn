@@ -107,7 +107,7 @@ export function useInputBarApi(params: {
     if (im.roomState === 'joined') {
       im.sendText({
         roomId: im.roomId!,
-        content: content,
+        content: content, // !!! raw content, not ui content
         result: ({ isOk, message, error }) => {
           if (isOk === true) {
             onSended?.(message!);

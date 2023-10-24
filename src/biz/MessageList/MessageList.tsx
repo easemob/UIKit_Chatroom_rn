@@ -11,6 +11,7 @@ import type { ChatMessage } from 'react-native-chat-sdk';
 
 import { useDispatchListener } from '../../dispatch';
 import { useColors } from '../../hook';
+import { useI18nContext } from '../../i18n';
 import { usePaletteContext } from '../../theme';
 import { BorderButton } from '../../ui/Button';
 import { seqId } from '../../utils';
@@ -72,7 +73,7 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
               menuRef?.current?.startHide?.();
             } else if (type === 'Report') {
               menuRef?.current?.startHide?.(() => {
-                // todo : report
+                reportRef?.current?.startShow?.();
               });
             } else if (type === 'Translate') {
               translateMessage(item.msg);
@@ -108,6 +109,8 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
 
     const menuRef = React.useRef<MessageContextMenuRef>({} as any);
     const reportRef = React.useRef<ReportRef>({} as any);
+    const { tr } = useI18nContext();
+    const defaultData = useGetReportDefaultData(tr);
 
     React.useImperativeHandle(
       ref,
@@ -128,16 +131,17 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
       if (reportProps?.data) {
         return reportProps.data;
       }
-      return reportDefaultData;
-    }, [reportProps?.data]);
+      return defaultData;
+    }, [defaultData, reportProps?.data]);
 
     const getOnReport = React.useMemo(() => {
       if (reportProps?.onReport) {
         return { onReport: reportProps.onReport };
       }
       return {
-        onReport: (result: ReportItemModel[]) => {
+        onReport: (result?: ReportItemModel) => {
           reportMessage(result);
+          reportRef?.current?.startHide?.();
         },
       };
     }, [reportMessage, reportProps?.onReport]);
@@ -255,35 +259,40 @@ const UnreadButton = ({ onPress }: { onPress: () => void }) => {
   );
 };
 
-const reportDefaultData: ReportItemModel[] = [
-  {
-    id: seqId('_rp').toString(),
-    title: 'Unwelcome commercial content or spam',
-    checked: true,
-  },
-  {
-    id: seqId('_rp').toString(),
-    title: 'Pornographic or explicit content',
-    checked: false,
-  },
-  {
-    id: seqId('_rp').toString(),
-    title: 'Child abuse',
-    checked: false,
-  },
-  {
-    id: seqId('_rp').toString(),
-    title: 'Hate speech or graphic violence',
-    checked: false,
-  },
-  {
-    id: seqId('_rp').toString(),
-    title: 'Promote terrorism',
-    checked: false,
-  },
-  {
-    id: seqId('_rp').toString(),
-    title: 'Harassment or bullying',
-    checked: false,
-  },
-];
+function useGetReportDefaultData(tr: (key: string, ...args: any[]) => string) {
+  const ret = React.useMemo(() => {
+    return [
+      {
+        id: seqId('_rp').toString(),
+        title: tr('Unwelcome commercial content or spam'),
+        checked: false,
+      },
+      {
+        id: seqId('_rp').toString(),
+        title: tr('Pornographic or explicit content'),
+        checked: false,
+      },
+      {
+        id: seqId('_rp').toString(),
+        title: tr('Child abuse'),
+        checked: false,
+      },
+      {
+        id: seqId('_rp').toString(),
+        title: tr('Hate speech or graphic violence'),
+        checked: false,
+      },
+      {
+        id: seqId('_rp').toString(),
+        title: tr('Promote terrorism'),
+        checked: false,
+      },
+      {
+        id: seqId('_rp').toString(),
+        title: tr('Harassment or bullying'),
+        checked: false,
+      },
+    ] as ReportItemModel[];
+  }, [tr]);
+  return ret;
+}

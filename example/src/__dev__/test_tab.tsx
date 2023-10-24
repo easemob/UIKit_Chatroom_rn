@@ -26,7 +26,13 @@ export function BodyPages(): React.ReactNode[] {
       return [];
     };
     return (
-      <TabPageBodyItem key={i} style={{ backgroundColor: color()[0] }}>
+      <TabPageBodyItem
+        key={i}
+        style={{
+          backgroundColor: color()[0],
+          // height: 100,
+        }}
+      >
         <View style={{ height: 40, backgroundColor: color()[1], margin: 15 }} />
       </TabPageBodyItem>
     );

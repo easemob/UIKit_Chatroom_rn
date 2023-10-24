@@ -7,6 +7,7 @@ import { useI18nContext } from '../../i18n';
 import { usePaletteContext } from '../../theme';
 import { SimulativeModal, SimulativeModalRef } from '../../ui/Modal';
 import { TabPage } from '../../ui/TabPage';
+import { gBottomSheetHeaderHeight } from '../const';
 import type { PropsWithError, PropsWithTest } from '../types';
 import { useIsOwner } from './MemberList.hooks';
 import { MemberListParticipants } from './MemberList.parts';
@@ -168,7 +169,7 @@ export const MemberList = React.forwardRef<MemberListRef, MemberListProps>(
           <View
             style={{
               width: 36,
-              height: 5,
+              height: gBottomSheetHeaderHeight - 6 * 2,
               marginVertical: 6,
               backgroundColor: getColor('backgroundColor2'),
               borderRadius: 2.5,

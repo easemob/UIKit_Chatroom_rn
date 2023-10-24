@@ -11,11 +11,8 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { BorderButton, CmnButton } from '../../ui/Button';
 import type { SimulativeModalRef } from '../../ui/Modal';
-import {
-  gAspectRatio,
-  gBottomSheetHeaderHeight,
-  gTabHeaderHeight,
-} from './ReportList.const';
+import { gBottomSheetHeaderHeight } from '../const';
+import { gTabHeaderHeight } from './ReportList.const';
 import { useReportListApi, useScrollGesture } from './ReportList.hooks';
 import { ReportListItemMemo, ReportListItemProps } from './ReportList.item';
 import type { ReportItemModel } from './types';
@@ -25,7 +22,7 @@ export type ReportListRef = SimulativeModalRef & {};
 export type ReportListProps = {
   requestUseScrollGesture?: (finished: boolean) => void;
   onCancel: () => void;
-  onReport: (result: ReportItemModel[]) => void;
+  onReport: (result?: ReportItemModel) => void;
   data: ReportItemModel[];
 };
 
@@ -34,10 +31,10 @@ export function ReportList(props: ReportListProps) {
   const { data, onUpdate } = useReportListApi(propData);
   const { isScrollingRef, handles } = useScrollGesture(requestUseScrollGesture);
   const ref = React.useRef<FlatList<ReportListItemProps>>({} as any);
-  const { width: winWidth } = useWindowDimensions();
+  const { height: winHeight } = useWindowDimensions();
   const { bottom } = useSafeAreaInsets();
   let height =
-    winWidth / gAspectRatio -
+    (winHeight * 3) / 5 -
     gBottomSheetHeaderHeight -
     gTabHeaderHeight -
     bottom -
@@ -59,10 +56,7 @@ export function ReportList(props: ReportListProps) {
             <ReportListItemMemo
               data={item.data}
               onChecked={() => {
-                onUpdate({
-                  ...item,
-                  data: { ...item.data, checked: !item.data.checked },
-                });
+                onUpdate(item);
               }}
             />
           );
@@ -105,7 +99,9 @@ export function ReportList(props: ReportListProps) {
           text={'Report'}
           style={{ width: '42%', height: 40 }}
           onPress={() => {
-            onReport?.(data.map((v) => v.data));
+            onReport?.(
+              data.map((v) => v.data).filter((v) => v.checked === true)[0]
+            );
           }}
         />
       </View>

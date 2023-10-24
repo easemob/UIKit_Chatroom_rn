@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { gBottomSheetHeaderHeight } from '../const';
 // import {
 //   Modal,
 //   ModalRef,
@@ -17,11 +18,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 // } from '../../ui/Modal';
 import type { PropsWithError, PropsWithTest } from '../types';
 import { MemberContextMenuWrapper } from './MemberContextMenu';
-import {
-  gAspectRatio,
-  gBottomSheetHeaderHeight,
-  gTabHeaderHeight,
-} from './MemberList.const';
+import { gAspectRatio, gTabHeaderHeight } from './MemberList.const';
 import { useMemberListAPI, usePanHandlers } from './MemberList.hooks';
 import { MemberListItemMemo, MemberListItemProps } from './MemberList.item';
 // import { SearchMember } from './SearchMember';

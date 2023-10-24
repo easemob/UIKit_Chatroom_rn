@@ -6,6 +6,7 @@ import { useColors } from '../../hook';
 import { usePaletteContext } from '../../theme';
 import { SimulativeModal, SimulativeModalRef } from '../../ui/Modal';
 import { TabPage } from '../../ui/TabPage';
+import { gBottomSheetHeaderHeight } from '../const';
 import type { PropsWithError, PropsWithTest } from '../types';
 import { ReportList } from './ReportList';
 import type { ReportItemModel } from './types';
@@ -15,7 +16,7 @@ export type ReportProps = {
   data: ReportItemModel[];
   maskStyle?: StyleProp<ViewStyle> | undefined;
   containerStyle?: StyleProp<ViewStyle>;
-  onReport: (result: ReportItemModel[]) => void;
+  onReport: (result?: ReportItemModel) => void;
 } & PropsWithTest &
   PropsWithError;
 
@@ -88,7 +89,7 @@ export const Report = React.forwardRef<ReportRef, ReportProps>(function (
         <View
           style={{
             width: 36,
-            height: 5,
+            height: gBottomSheetHeaderHeight - 6 * 2,
             marginVertical: 6,
             backgroundColor: getColor('backgroundColor2'),
             borderRadius: 2.5,

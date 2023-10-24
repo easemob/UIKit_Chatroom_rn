@@ -92,7 +92,11 @@ export function useMessageListApi(params: {
   onUnreadCount?: (count: number) => void;
   onLayoutProps?: ((event: LayoutChangeEvent) => void) | undefined;
 }) {
-  const { onLongPress, onLayoutProps, onUnreadCount } = params;
+  const {
+    onLongPress: propsOnLongPress,
+    onLayoutProps,
+    onUnreadCount,
+  } = params;
   const listRef = React.useRef<FlatList>({} as any);
   const dataRef = React.useRef<MessageListItemProps[]>([
     // {
@@ -178,6 +182,13 @@ export function useMessageListApi(params: {
   const im = useIMContext();
   const { tr, currentLanguage } = useI18nContext();
   const { roomOption } = useConfigContext();
+
+  const langPressItemRef = React.useRef<MessageListItemModel | undefined>();
+
+  const onLongPress = (item: MessageListItemModel) => {
+    langPressItemRef.current = item;
+    propsOnLongPress?.(item);
+  };
 
   const msgListener = React.useRef<IMServiceListener>({
     onMessageReceived: (roomId, message) => {
@@ -419,29 +430,28 @@ export function useMessageListApi(params: {
         });
     }
   };
-  const _reportMessage = (_result: ReportItemModel[]) => {
-    // todo: confirm
-    return;
-    // if (msg) {
-    //   // todo:
-    //   im.reportMessage({
-    //     messageId: msg.msgId,
-    //     tag: '',
-    //     reason: '',
-    //   })
-    //     .then(() => {
-    //       // todo: test
-    //     })
-    //     .catch((e) => {
-    //       im.sendError({
-    //         error: new UIKitError({
-    //           code: ErrorCode.msg_report_error,
-    //           extra: e.toString(),
-    //         }),
-    //         from: useMessageListApi?.caller?.name,
-    //       });
-    //     });
-    // }
+  const _reportMessage = (_result?: ReportItemModel) => {
+    console.log('test:zuoyu:', _result, langPressItemRef.current?.msg?.msgId);
+    if (langPressItemRef.current?.msg) {
+      const msg = langPressItemRef.current.msg;
+      im.reportMessage({
+        messageId: msg.msgId,
+        tag: _result?.title ?? '',
+        reason: '',
+      })
+        .then(() => {
+          // todo: test
+        })
+        .catch((e) => {
+          im.sendError({
+            error: new UIKitError({
+              code: ErrorCode.msg_report_error,
+              extra: e.toString(),
+            }),
+            from: useMessageListApi?.caller?.name,
+          });
+        });
+    }
   };
 
   return {

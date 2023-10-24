@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Platform, useWindowDimensions, View } from 'react-native';
 
 import { ErrorCode, UIKitError } from '../../error';
+import { gHeaderHeight, gIndicatorHeight } from './TabPage.const';
 import { useHeaderStartScrolling } from './TabPage.hooks';
 import {
   TabPageBody,
@@ -80,7 +81,8 @@ const _TabPage = (props: TabPageProps) => {
   return (
     <View
       style={{
-        flex: 1,
+        // flex: 1,
+        flexGrow: 1,
         width: width,
       }}
     >
@@ -94,7 +96,9 @@ const _TabPage = (props: TabPageProps) => {
           headerStartScrolling(width, e.nativeEvent.contentOffset.x);
         }}
         scrollEventThrottle={scrollEventThrottle ?? 16}
-        height={height}
+        height={
+          height ? height - (gHeaderHeight + gIndicatorHeight) : undefined
+        }
         width={width}
         children={bodyChildren}
         {...BodyOtherProps}
