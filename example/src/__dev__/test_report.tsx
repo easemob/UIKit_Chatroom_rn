@@ -30,6 +30,16 @@ const data = [
   },
   {
     id: seqId('_rp').toString(),
+    title: 'Child abuse 2',
+    checked: false,
+  },
+  {
+    id: seqId('_rp').toString(),
+    title: 'Child abuse 3',
+    checked: false,
+  },
+  {
+    id: seqId('_rp').toString(),
     title: 'Hate speech or graphic violence',
     checked: false,
   },

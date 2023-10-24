@@ -4,14 +4,13 @@ import { StyleProp, useWindowDimensions, View, ViewStyle } from 'react-native';
 import { g_mask_color } from '../../const';
 import { useColors } from '../../hook';
 import { usePaletteContext } from '../../theme';
-import { SimulativeModal, SimulativeModalRef } from '../../ui/Modal';
+import { SlideModal, SlideModalRef } from '../../ui/Modal';
 import { TabPage } from '../../ui/TabPage';
-import { gBottomSheetHeaderHeight } from '../const';
 import type { PropsWithError, PropsWithTest } from '../types';
 import { ReportList } from './ReportList';
 import type { ReportItemModel } from './types';
 
-export type ReportRef = SimulativeModalRef & {};
+export type ReportRef = SlideModalRef & {};
 export type ReportProps = {
   data: ReportItemModel[];
   maskStyle?: StyleProp<ViewStyle> | undefined;
@@ -24,8 +23,8 @@ export const Report = React.forwardRef<ReportRef, ReportProps>(function (
   props: ReportProps,
   ref?: React.ForwardedRef<ReportRef>
 ) {
-  const { data, maskStyle, containerStyle, onReport } = props;
-  const modalRef = React.useRef<SimulativeModalRef>({} as any);
+  const { data, containerStyle, onReport } = props;
+  const modalRef = React.useRef<SlideModalRef>({} as any);
   const { height: winHeight } = useWindowDimensions();
   const height = (winHeight * 3) / 5;
   const isUsePanResponder = React.useRef(true);
@@ -57,21 +56,24 @@ export const Report = React.forwardRef<ReportRef, ReportProps>(function (
   );
 
   return (
-    <SimulativeModal
+    <SlideModal
       propsRef={modalRef}
       modalAnimationType="slide"
       backgroundColor={g_mask_color}
       backgroundTransparent={false}
-      onStartShouldSetPanResponder={() => {
-        return isUsePanResponder.current;
+      onRequestModalClose={(): void => {
+        modalRef?.current?.startHide?.();
       }}
+      // onStartShouldSetPanResponder={() => {
+      //   return isUsePanResponder.current;
+      // }}
       // onMoveShouldSetPanResponder={() => {
       //   return isUsePanResponder.current;
       // }}
       // onRequestModalClose={() => {
       //   ref.current.startHide();
       // }}
-      maskStyle={maskStyle}
+      // maskStyle={maskStyle}
     >
       <View
         style={[
@@ -80,13 +82,11 @@ export const Report = React.forwardRef<ReportRef, ReportProps>(function (
             backgroundColor: getColor('backgroundColor'),
             alignItems: 'center',
             width: '100%',
-            borderTopRightRadius: 16,
-            borderTopLeftRadius: 16,
           },
           containerStyle,
         ]}
       >
-        <View
+        {/* <View
           style={{
             width: 36,
             height: gBottomSheetHeaderHeight - 6 * 2,
@@ -94,7 +94,7 @@ export const Report = React.forwardRef<ReportRef, ReportProps>(function (
             backgroundColor: getColor('backgroundColor2'),
             borderRadius: 2.5,
           }}
-        />
+        /> */}
         <TabPage
           header={{
             HeaderProps: {
@@ -121,6 +121,6 @@ export const Report = React.forwardRef<ReportRef, ReportProps>(function (
           headerPosition="up"
         />
       </View>
-    </SimulativeModal>
+    </SlideModal>
   );
 });

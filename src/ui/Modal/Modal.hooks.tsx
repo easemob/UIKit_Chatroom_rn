@@ -14,14 +14,14 @@ export const useModalAnimation = (type: ModalAnimationType) => {
   const { height } = useWindowDimensions();
   const initialY = type === 'slide' ? height : 0;
   const backgroundOpacity = React.useRef(new Animated.Value(0)).current;
-  const translateY = React.useRef(new Animated.Value(initialY)).current;
+  const translateYRef = React.useRef(new Animated.Value(initialY));
   // translateY.setValue(initialY);
 
   const createAnimated = (toValue: 0 | 1) => {
     const config = { duration: 250, useNativeDriver: false };
     return Animated.parallel([
       Animated.timing(backgroundOpacity, { toValue, ...config }),
-      Animated.timing(translateY, {
+      Animated.timing(translateYRef.current, {
         toValue: toValue === 0 ? initialY : 0,
         ...config,
       }),
@@ -29,7 +29,7 @@ export const useModalAnimation = (type: ModalAnimationType) => {
   };
 
   return {
-    translateY,
+    translateY: translateYRef.current,
     backgroundOpacity,
     startShow: createAnimated(1),
     startHide: createAnimated(0),
@@ -67,7 +67,7 @@ export const useModalPanResponder = (params: {
         if (onMoveShouldSetPanResponder) {
           return onMoveShouldSetPanResponder(e, g);
         }
-        return g.dy > 8;
+        return g.dy >= 0;
       },
       onPanResponderGrant: (_, __) => {
         // @ts-ignore

@@ -24,21 +24,29 @@ export type ReportListProps = {
   onCancel: () => void;
   onReport: (result?: ReportItemModel) => void;
   data: ReportItemModel[];
+  height?: number;
 };
 
 export function ReportList(props: ReportListProps) {
-  const { requestUseScrollGesture, onCancel, data: propData, onReport } = props;
+  const {
+    requestUseScrollGesture,
+    onCancel,
+    data: propData,
+    onReport,
+    height: propsHeight,
+  } = props;
   const { data, onUpdate } = useReportListApi(propData);
   const { isScrollingRef, handles } = useScrollGesture(requestUseScrollGesture);
   const ref = React.useRef<FlatList<ReportListItemProps>>({} as any);
   const { height: winHeight } = useWindowDimensions();
   const { bottom } = useSafeAreaInsets();
   let height =
+    propsHeight ??
     (winHeight * 3) / 5 -
-    gBottomSheetHeaderHeight -
-    gTabHeaderHeight -
-    bottom -
-    (StatusBar.currentHeight ?? 0);
+      gBottomSheetHeaderHeight -
+      gTabHeaderHeight -
+      bottom -
+      (StatusBar.currentHeight ?? 0);
 
   return (
     <View
