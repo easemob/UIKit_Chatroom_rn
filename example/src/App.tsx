@@ -16,6 +16,7 @@ import {
 import { AppDev } from './__dev__/AppDev';
 import type { RootParamsList, RootParamsName } from './routes';
 import {
+  ChatroomHeaderRight,
   ChatroomListScreen,
   ChatroomScreen,
   ConfigScreen,
@@ -76,7 +77,7 @@ export function App() {
         isDevMode={env.isDevMode}
         palette={palette}
         theme={theme}
-        roomOption={{ marquee: { isVisible: false } }}
+        roomOption={{ marquee: { isVisible: true } }}
       >
         <NavigationContainer
           onStateChange={(state: NavigationState | undefined) => {
@@ -131,6 +132,7 @@ export function App() {
               name={'TestChatroom'}
               options={{
                 headerShown: true,
+                headerRight: ChatroomHeaderRight,
               }}
               component={ChatroomScreen}
             />

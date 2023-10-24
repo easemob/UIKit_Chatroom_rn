@@ -112,7 +112,7 @@ export function useInputBarApi(params: {
           if (isOk === true) {
             onSended?.(message!);
           } else {
-            im.sendError({ error: error!, from: useInputBarApi.caller.name });
+            im.sendError({ error: error!, from: useInputBarApi?.caller?.name });
           }
         },
       });

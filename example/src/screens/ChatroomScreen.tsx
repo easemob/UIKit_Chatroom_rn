@@ -1,6 +1,6 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
-import { Platform, TouchableOpacity, View } from 'react-native';
+import { Platform, Text, TouchableOpacity, View } from 'react-native';
 import {
   Chatroom,
   Icon,
@@ -56,21 +56,21 @@ export function ChatroomScreen(props: Props) {
   );
 
   // !!! ERROR  Warning: React has detected a change in the order of Hooks called by HeaderConfig. This will lead to bugs and errors if not fixed. For more information, read the Rules of Hooks: https://reactjs.org/link/rules-of-hooks
-  React.useEffect(() => {
-    navigation.setOptions({
-      headerRight: HeaderRight,
-      // headerShadowVisible: false,
-      // headerBackTitleVisible: false,
-    });
-  }, [navigation]);
+  // React.useEffect(() => {
+  //   navigation.setOptions({
+  //     headerRight: ChatroomHeaderRight,
+  //     // headerShadowVisible: false,
+  //     // headerBackTitleVisible: false,
+  //   });
+  // }, [navigation]);
 
   React.useEffect(() => {
     const cb = () => {
       menuRef?.current?.startShow?.();
     };
-    addListener(`_$${HeaderRight.name}`, cb);
+    addListener(`_$${ChatroomHeaderRight?.name}`, cb);
     return () => {
-      removeListener(`_$${HeaderRight.name}`, cb);
+      removeListener(`_$${ChatroomHeaderRight?.name}`, cb);
     };
   }, [addListener, removeListener]);
 
@@ -223,20 +223,49 @@ export function ChatroomScreen(props: Props) {
           console.log('ChatroomScreen:onError:2', e.toString());
         }}
       >
-        {/* <Pressable
+        <View
           style={{
             position: 'absolute',
-            width: 100,
-            height: 100,
-            backgroundColor: 'red',
-            bottom: 100,
-            // top: 100,
-            left: 100,
+            width: 150,
+            height: 300,
+            // backgroundColor: 'red',
+            // bottom: 100,
+            top: 100,
+            right: 20,
           }}
-          onPress={() => {
-            // todo:
-          }}
-        /> */}
+        >
+          <TouchableOpacity
+            style={{
+              height: 30,
+              width: 150,
+              backgroundColor: '#fff8dc',
+              borderRadius: 20,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+            onPress={() => {
+              addMarqueeTask();
+            }}
+          >
+            <Text>{'add import message'}</Text>
+          </TouchableOpacity>
+          <View style={{ height: 1 }} />
+          <TouchableOpacity
+            style={{
+              height: 30,
+              width: 150,
+              backgroundColor: '#fff8dc',
+              borderRadius: 20,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+            onPress={() => {
+              addGiftFloatingTask();
+            }}
+          >
+            <Text>{'add gift message'}</Text>
+          </TouchableOpacity>
+        </View>
       </Chatroom>
       <ChatroomTestMenu
         ref={menuRef}
@@ -251,16 +280,17 @@ export function ChatroomScreen(props: Props) {
   );
 }
 
-const HeaderRight = () => {
+export const ChatroomHeaderRight = () => {
   const { emit } = useDispatchContext();
   return (
     <View>
       <TouchableOpacity
         onPress={() => {
-          emit(`_$${HeaderRight.name}`, {});
+          emit(`_$${ChatroomHeaderRight.name}`, {});
         }}
+        // style={{ backgroundColor: 'red' }}
       >
-        <Icon name={'plus_in_circle'} style={{ width: 20, height: 20 }} />
+        <Icon name={'plus_in_circle'} style={{ width: 40, height: 40 }} />
       </TouchableOpacity>
     </View>
   );
