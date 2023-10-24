@@ -18,6 +18,6 @@ export function useDispatchListener(key: string, cb: Callback) {
       [addListener, cb, key, removeListener]
     ),
     useDispatchListener.name,
-    true
+    false
   );
 }

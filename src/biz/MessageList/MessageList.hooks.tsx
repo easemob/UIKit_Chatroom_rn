@@ -27,7 +27,7 @@ import {
   useIMListener,
 } from '../../im';
 import { seqId, timeoutTask } from '../../utils';
-import { emoji } from '../EmojiList';
+import { emoji as convert } from '../EmojiList';
 import type { ReportItemModel } from '../Report';
 import { gIdleTimeout, gMaxMessageCount } from './MessageList.const';
 import type { MessageListItemModel, MessageListItemProps } from './types';
@@ -225,7 +225,7 @@ export function useMessageListApi(params: {
   const _addTextData = (message: ChatMessage, content?: string) => {
     const getContent = () => {
       if (content) return content;
-      return emoji.toCodePointText(
+      return convert.toCodePointText(
         (message.body as ChatTextMessageBody).content
       );
     };

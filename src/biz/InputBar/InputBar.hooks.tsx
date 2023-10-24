@@ -4,7 +4,7 @@ import emoji from 'twemoji';
 
 import { ErrorCode, UIKitError } from '../../error';
 import { useIMContext } from '../../im';
-import { FACE_ASSETS_UTF16 } from '../EmojiList';
+import { emoji as convert, FACE_ASSETS_UTF16 } from '../EmojiList';
 
 export function useInputValue() {
   const [_value, _setValue] = React.useState('');
@@ -55,6 +55,7 @@ export function useInputValue() {
         }
       }
       valueRef.current = text;
+      console.log('test:zuoyu:text:', text, rawValue.current);
       _setValue(valueRef.current);
     }
   };
@@ -107,7 +108,8 @@ export function useInputBarApi(params: {
     if (im.roomState === 'joined') {
       im.sendText({
         roomId: im.roomId!,
-        content: content, // !!! raw content, not ui content
+        // content: content, // !!! raw content, not ui content
+        content: convert.fromCodePointText(content),
         result: ({ isOk, message, error }) => {
           if (isOk === true) {
             onSended?.(message!);

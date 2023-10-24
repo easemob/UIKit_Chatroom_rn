@@ -1,6 +1,7 @@
 import _emoji from 'twemoji';
 
 import { FACE_ASSETS } from '../../assets';
+import { FACE_ASSETS_UTF16 } from './EmojiList.const';
 
 /**
  * Convert text into emoji text.
@@ -27,6 +28,18 @@ function toCodePointText(text: string): string {
   return tmp;
 }
 
+function fromCodePointText(text: string): string {
+  let tmp = text;
+  for (const key of FACE_ASSETS_UTF16) {
+    tmp = tmp.replace(
+      new RegExp(key, 'g'),
+      'U+' + _emoji.convert.toCodePoint(key).toUpperCase()
+    );
+  }
+  return tmp;
+}
+
 export const emoji = {
   toCodePointText,
+  fromCodePointText,
 };

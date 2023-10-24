@@ -79,8 +79,7 @@ export const InputBar = React.forwardRef<InputBarRef, InputBarProps>(function (
 
   const [iconName, setIconName] = React.useState<IconNameType>('face');
 
-  const { value, valueRef, setValue, onFace, onDel, getRawValue, clear } =
-    useInputValue();
+  const { value, valueRef, setValue, onFace, onDel, clear } = useInputValue();
   const { sendText } = useInputBarApi({
     onSended: (msg) => {
       onSended?.(valueRef.current, msg);
@@ -119,7 +118,9 @@ export const InputBar = React.forwardRef<InputBarRef, InputBarProps>(function (
   };
 
   const _onSend = () => {
-    const content = getRawValue();
+    // const content = getRawValue();
+    const content = valueRef.current;
+    console.log('test:zuoyu:text:222:', content);
     if (content.length > 0) {
       sendText(content);
     }
