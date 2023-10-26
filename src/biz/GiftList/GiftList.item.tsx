@@ -25,7 +25,7 @@ export type GiftListItemProps = {
 };
 
 export function GiftListItem(props: GiftListItemProps) {
-  const { selected, width } = props;
+  const { width } = props;
   return (
     <View
       style={{
@@ -35,73 +35,13 @@ export function GiftListItem(props: GiftListItemProps) {
         alignItems: 'center',
       }}
     >
-      {selected === true ? (
-        <GiftListSelectedItem {...props} />
-      ) : (
-        <GiftListNoSelectedItem {...props} />
-      )}
+      <GiftListStateItem {...props} />
     </View>
   );
 }
 
-function GiftListNoSelectedItem(props: GiftListItemProps) {
-  const { gift, onSelected } = props;
-  const { colors } = usePaletteContext();
-  const { getColor } = useColors({
-    t1: {
-      light: colors.neutral[1],
-      dark: colors.neutral[98],
-    },
-    t2: {
-      light: colors.neutral[5],
-      dark: colors.neutral[6],
-    },
-  });
-  return (
-    <View
-      style={{
-        height: gItemHeight,
-        width: gItemWidth,
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}
-      onTouchEnd={() => {
-        onSelected?.(gift.giftId);
-      }}
-    >
-      <GiftIcon url={gift.giftIcon} size={gItemGiftSize} borderRadius={0} />
-      <View style={{ height: 4 }} />
-      <View>
-        <Text
-          textType={'small'}
-          paletteType={'title'}
-          numberOfLines={1}
-          style={{
-            color: getColor('t1'),
-          }}
-        >
-          {gift.giftName}
-        </Text>
-      </View>
-      <View style={{ flexDirection: 'row' }}>
-        <Icon name={'agora_dollar'} style={{ width: 14, height: 14 }} />
-        <Text
-          textType={'extraSmall'}
-          paletteType={'label'}
-          numberOfLines={1}
-          style={{
-            color: getColor('t2'),
-          }}
-        >
-          {gift.giftPrice}
-        </Text>
-      </View>
-    </View>
-  );
-}
-
-function GiftListSelectedItem(props: GiftListItemProps) {
-  const { gift, onSelected } = props;
+function GiftListStateItem(props: GiftListItemProps) {
+  const { gift, selected, onSelected, onSend } = props;
   const { colors, lineGradient } = usePaletteContext();
   const { start, end } = lineGradient.bottomToTop;
   const { getColor, getColors } = useColors({
@@ -135,10 +75,16 @@ function GiftListSelectedItem(props: GiftListItemProps) {
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 8,
-        borderWidth: 1,
-        borderColor: getColor('borderColor'),
-        backgroundColor: getColor('backgroundColor'),
+        borderWidth: selected === true ? 1 : undefined,
+        borderColor: selected === true ? getColor('borderColor') : undefined,
+        backgroundColor:
+          selected === true ? getColor('backgroundColor') : undefined,
         overflow: 'hidden',
+      }}
+      onTouchEnd={() => {
+        if (selected === false) {
+          onSelected?.(gift.giftId);
+        }
       }}
     >
       <View
@@ -149,6 +95,20 @@ function GiftListSelectedItem(props: GiftListItemProps) {
         }}
       >
         <GiftIcon url={gift.giftIcon} size={gItemGiftSize} borderRadius={0} />
+        {selected === false ? (
+          <View>
+            <Text
+              textType={'small'}
+              paletteType={'title'}
+              numberOfLines={1}
+              style={{
+                color: getColor('t1'),
+              }}
+            >
+              {gift.giftName}
+            </Text>
+          </View>
+        ) : null}
         <View style={{ flexDirection: 'row' }}>
           <Icon name={'agora_dollar'} style={{ width: 14, height: 14 }} />
           <Text
@@ -163,35 +123,37 @@ function GiftListSelectedItem(props: GiftListItemProps) {
           </Text>
         </View>
       </View>
-      <LinearGradient
-        colors={getColors('backgroundColor2') as (string | number)[]}
-        start={start}
-        end={end}
-        style={{
-          height: gItemButtonHeight,
-          // backgroundColor: getColor('backgroundColor2'),
-          justifyContent: 'center',
-          alignItems: 'center',
-          width: '100%',
-        }}
-      >
-        <TouchableOpacity
-          onPress={() => {
-            onSelected?.(gift.giftId);
+      {selected === true ? (
+        <LinearGradient
+          colors={getColors('backgroundColor2') as (string | number)[]}
+          start={start}
+          end={end}
+          style={{
+            height: gItemButtonHeight,
+            // backgroundColor: getColor('backgroundColor2'),
+            justifyContent: 'center',
+            alignItems: 'center',
+            width: '100%',
           }}
         >
-          <Text
-            textType={'medium'}
-            paletteType={'label'}
-            numberOfLines={1}
-            style={{
-              color: getColor('color2'),
+          <TouchableOpacity
+            onPress={() => {
+              onSend?.(gift.giftId);
             }}
           >
-            {tr('Send')}
-          </Text>
-        </TouchableOpacity>
-      </LinearGradient>
+            <Text
+              textType={'medium'}
+              paletteType={'label'}
+              numberOfLines={1}
+              style={{
+                color: getColor('color2'),
+              }}
+            >
+              {tr('Send')}
+            </Text>
+          </TouchableOpacity>
+        </LinearGradient>
+      ) : null}
     </View>
   );
 }

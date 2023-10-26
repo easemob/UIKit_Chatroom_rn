@@ -34,15 +34,14 @@ export function LoginListScreen(props: Props) {
           alignSelf: 'center',
         }}
         onPress={() => {
-          im.logout()
-            .then(() => {
-              setS('logouted');
-              setReason('');
-            })
-            .catch((e) => {
-              setS('failed');
-              setReason(e?.toString() ?? '');
-            });
+          im.logout({
+            result: ({ isOk, error }) => {
+              setS(isOk === true ? 'logouted' : 'failed');
+              if (error) {
+                console.warn('logout:', error);
+              }
+            },
+          });
         }}
       >
         <Text style={{ color: '#f0fff0', fontSize: 26 }}>
@@ -73,6 +72,9 @@ export function LoginListScreen(props: Props) {
                   userNickname: v.id,
                   userAvatarURL:
                     'https://cdn4.iconfinder.com/data/icons/small-n-flat/24/cat-512.png',
+                  gender: 1,
+                  identify:
+                    'https://cdn0.iconfinder.com/data/icons/small-n-flat/24/678064-star-512.png',
                   result: ({ isOk, error }) => {
                     setS(isOk === true ? 'success' : 'failed');
                     if (error) {

@@ -1,22 +1,24 @@
 import React from 'react';
 
-import { getIMService, IMServiceImpl } from './im.impl';
+import { getIMService as _getIMService } from './im.impl';
 import type { IMService, IMServiceInit } from './types';
 
 export const IMContext = React.createContext<IMService | undefined>(undefined);
 IMContext.displayName = 'UIKitIMContext';
 
-type IMContextProps = React.PropsWithChildren<{ value: IMServiceInit }>;
+type IMContextProps = React.PropsWithChildren<{
+  value: IMServiceInit & { im?: IMService };
+}>;
 
 export function IMContextProvider({ value, children }: IMContextProps) {
-  const {} = value;
-  const im = getIMService() as IMServiceImpl;
-  im.init({
-    appKey: value.appKey,
-    debugMode: value.debugMode,
+  const { appKey, debugMode, im } = value;
+  const _im = im ?? _getIMService();
+  _im.init({
+    appKey: appKey,
+    debugMode: debugMode,
     autoLogin: false,
   });
-  return <IMContext.Provider value={im}>{children}</IMContext.Provider>;
+  return <IMContext.Provider value={_im}>{children}</IMContext.Provider>;
 }
 
 /**
@@ -26,4 +28,8 @@ export function useIMContext(): IMService {
   const im = React.useContext(IMContext);
   if (!im) throw Error(`${IMContext.displayName} is not provided`);
   return im;
+}
+
+export function getIMService(): IMService {
+  return _getIMService();
 }

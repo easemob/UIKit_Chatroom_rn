@@ -6,6 +6,7 @@ import { useDispatchContext, useDispatchListener } from '../../dispatch';
 import { ErrorCode, UIKitError } from '../../error';
 import { useDelayExecTask } from '../../hook';
 import {
+  chatroom_uikit_userInfo,
   IMServiceListener,
   useIMContext,
   useIMListener,
@@ -209,11 +210,9 @@ export function useMemberListAPI(
     }
   };
 
-  const testCount = React.useRef(0);
   useMemberListener({
     onUpdateInfo: (roomId, userInfo) => {
       if (roomId === im.roomId) {
-        ++testCount.current;
         im.updateUserInfos([userInfo]);
         // _updateUI(_updateData(userInfo));
       }
@@ -491,10 +490,14 @@ export function useSearchMemberListAPI(props: { memberType: MemberListType }) {
 export function userInfoFromMessage(
   msg: ChatMessage
 ): UserServiceData | undefined {
-  const userInfo = msg.attributes as UserServiceData;
-  if (userInfo?.userId) {
-    return userInfo;
+  const jsonUserInfo = (msg.attributes as any)[chatroom_uikit_userInfo];
+  if (jsonUserInfo) {
+    const userInfo = jsonUserInfo as UserServiceData;
+    if (userInfo?.userId) {
+      return userInfo;
+    }
   }
+
   return undefined;
 }
 

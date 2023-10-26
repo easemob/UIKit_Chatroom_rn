@@ -4,13 +4,13 @@ import { StyleProp, useWindowDimensions, View, ViewStyle } from 'react-native';
 import { g_mask_color } from '../../const';
 import { useColors } from '../../hook';
 import { usePaletteContext } from '../../theme';
-import { SimulativeModal, SimulativeModalRef } from '../../ui/Modal';
+import { SlideModal, SlideModalRef } from '../../ui/Modal';
 import { TabPage } from '../../ui/TabPage';
 import { gAspectRatio } from './BottomSheetGift.const';
 import { GiftList } from './GiftList';
 import type { GiftListModel } from './types';
 
-export type BottomSheetGiftRef = SimulativeModalRef & {
+export type BottomSheetGiftRef = SlideModalRef & {
   startShowWithInit: (
     gifts: {
       title: string;
@@ -34,9 +34,9 @@ export const BottomSheetGift = React.forwardRef<
   props: BottomSheetGiftProps,
   ref?: React.ForwardedRef<BottomSheetGiftRef>
 ) {
-  const { gifts: initGifts, onSend, maskStyle } = props;
+  const { gifts: initGifts, onSend } = props;
   const [gifts, setGift] = React.useState(initGifts);
-  const modalRef = React.useRef<SimulativeModalRef>({} as any);
+  const modalRef = React.useRef<SlideModalRef>({} as any);
   const { width: winWidth } = useWindowDimensions();
   const height = winWidth / gAspectRatio;
   const isUsePanResponder = React.useRef(true);
@@ -91,21 +91,23 @@ export const BottomSheetGift = React.forwardRef<
   }, [gifts]);
 
   return (
-    <SimulativeModal
+    <SlideModal
       propsRef={modalRef}
       modalAnimationType="slide"
       backgroundColor={g_mask_color}
       backgroundTransparent={false}
-      onStartShouldSetPanResponder={() => {
-        return isUsePanResponder.current;
-      }}
+      onRequestModalClose={() => {
+        modalRef?.current?.startHide();
+      }} // onStartShouldSetPanResponder={() => {
+      //   return isUsePanResponder.current;
+      // }}
       // onMoveShouldSetPanResponder={() => {
       //   return isUsePanResponder.current;
       // }}
       // onRequestModalClose={() => {
       //   ref.current.startHide();
       // }}
-      maskStyle={maskStyle}
+      // maskStyle={maskStyle}
     >
       <View
         style={{
@@ -117,7 +119,7 @@ export const BottomSheetGift = React.forwardRef<
           borderTopLeftRadius: 16,
         }}
       >
-        <View
+        {/* <View
           style={{
             width: 36,
             height: 5,
@@ -125,7 +127,7 @@ export const BottomSheetGift = React.forwardRef<
             backgroundColor: getColor('backgroundColor2'),
             borderRadius: 2.5,
           }}
-        />
+        /> */}
         <TabPage
           header={{
             HeaderProps: {
@@ -153,6 +155,6 @@ export const BottomSheetGift = React.forwardRef<
           headerPosition="up"
         />
       </View>
-    </SimulativeModal>
+    </SlideModal>
   );
 });

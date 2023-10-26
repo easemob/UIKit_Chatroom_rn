@@ -79,6 +79,7 @@ export function GiftFloatingItemFC(props: GiftFloatingItemFCProps) {
             textType={'extraSmall'}
             paletteType={'label'}
             style={{ color: 'white' }}
+            numberOfLines={1}
           >
             {item.gift.content}
           </Text>

@@ -54,7 +54,7 @@ export function ReportScreen(props: Props) {
         data={data}
         maskStyle={{ transform: [{ translateY: -pageY }] }} // !!! Correct the offset.
         onReport={function (_result?: ReportItemModel): void {
-          console.log('test:');
+          console.log('onReport:');
         }}
       />
       <View

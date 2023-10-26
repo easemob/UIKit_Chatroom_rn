@@ -27,6 +27,8 @@ export function createStringSetEn(): StringSet {
 
     'self': 'self',
 
+    "Sent '@${0}'": (a: string) => `Sent '@${a}'`,
+
     'delete_button_click_popups_title': 'Delete Message',
     'delete_button_click_popups_content':
       'The message will be deleted and cannot been seen by others.',

@@ -31,6 +31,7 @@ export abstract class IMServiceImpl implements IMService {
   _currentRoomId?: string;
   _currentOwnerId?: string;
   _roomState: RoomState;
+  _user?: UserServiceData;
 
   // static _instance?: IMServiceImpl;
   // public static getInstance(): IMService {
@@ -44,17 +45,17 @@ export abstract class IMServiceImpl implements IMService {
   // }
 
   constructor() {
-    console.log('test:zuoyu:reset:im:');
     this._userMap = new Map();
     this._muterMap = new Map();
     this._listeners = new Set();
     this._roomState = 'leaved';
   }
 
-  init(params: {
+  async init(params: {
     appKey: string;
     debugMode?: boolean;
     autoLogin?: boolean;
+    result?: (params: { isOk: boolean; error?: UIKitError }) => void;
   }): Promise<void> {
     const { appKey, debugMode, autoLogin } = params;
     const options = new ChatOptions({
@@ -62,7 +63,18 @@ export abstract class IMServiceImpl implements IMService {
       debugModel: debugMode,
       autoLogin,
     });
-    return this.client.init(options);
+    try {
+      await this.client.init(options);
+      params.result?.({ isOk: true });
+    } catch (error) {
+      params.result?.({
+        isOk: false,
+        error: new UIKitError({
+          code: ErrorCode.init_error,
+          extra: JSON.stringify(error),
+        }),
+      });
+    }
   }
   unInit() {}
 
@@ -109,9 +121,19 @@ export abstract class IMServiceImpl implements IMService {
     userToken: string;
     userNickname?: string | undefined;
     userAvatarURL?: string | undefined;
+    gender?: number;
+    identify?: string;
     result: (params: { isOk: boolean; error?: UIKitError }) => void;
   }): Promise<void> {
-    const { userId, userToken, userNickname, userAvatarURL, result } = params;
+    const {
+      userId,
+      userToken,
+      userNickname,
+      userAvatarURL,
+      gender,
+      identify,
+      result,
+    } = params;
     try {
       if (userToken.startsWith('00')) {
         await this.client.loginWithAgoraToken(userId, userToken);
@@ -119,11 +141,13 @@ export abstract class IMServiceImpl implements IMService {
         await this.client.login(userId, userToken, false);
       }
 
-      this._updateMember({
+      this._user = {
         nickName: userNickname,
         avatarURL: userAvatarURL,
         userId: userId,
-      });
+        gender: gender,
+        identify: identify,
+      } as UserServiceData;
 
       this.client.getCurrentUsername();
 
@@ -150,82 +174,20 @@ export abstract class IMServiceImpl implements IMService {
         }),
       });
     }
-    // if (userToken.startsWith('00')) {
-    //   return this.client
-    //     .loginWithAgoraToken(userId, userToken)
-    //     .then(() => {
-    //       this._updateMember({
-    //         nickName: userNickname,
-    //         avatarURL: userAvatarURL,
-    //         userId: userId,
-    //       });
-    //       const self = this._userMap.get(userId);
-    //       if (self) {
-    //         this.updateSelfInfo(self);
-    //       }
-
-    //       result?.({ isOk: true });
-    //     })
-    //     .catch((e) => {
-    //       console.log('test:login:error:', e);
-    //       if (e.code === 200) {
-    //         this.client.getCurrentUsername();
-    //         result?.({ isOk: true });
-    //         this._updateMember({
-    //           nickName: userNickname,
-    //           avatarURL: userAvatarURL,
-    //           userId: userId,
-    //         });
-    //       } else {
-    //         result?.({
-    //           isOk: false,
-    //           error: new UIKitError({
-    //             code: ErrorCode.login_error,
-    //             extra: JSON.stringify(e),
-    //           }),
-    //         });
-    //       }
-    //     });
-    // } else {
-    //   return this.client
-    //     .login(userId, userToken, false)
-    //     .then(() => {
-    //       this._updateMember({
-    //         nickName: userNickname,
-    //         avatarURL: userAvatarURL,
-    //         userId: userId,
-    //       });
-    //       const self = this._userMap.get(userId);
-    //       if (self) {
-    //         this.updateSelfInfo(self);
-    //       }
-
-    //       result?.({ isOk: true });
-    //     })
-    //     .catch((e) => {
-    //       console.log('test:login:error:', e);
-    //       if (e.code === 200) {
-    //         this.client.getCurrentUsername();
-    //         result?.({ isOk: true });
-    //         this._updateMember({
-    //           nickName: userNickname,
-    //           avatarURL: userAvatarURL,
-    //           userId: userId,
-    //         });
-    //       } else {
-    //         result?.({
-    //           isOk: false,
-    //           error: new UIKitError({
-    //             code: ErrorCode.login_error,
-    //             extra: JSON.stringify(e),
-    //           }),
-    //         });
-    //       }
-    //     });
-    // }
   }
-  logout(): Promise<void> {
-    return this.client.logout();
+  async logout(params: {
+    result?: (params: { isOk: boolean; error?: UIKitError }) => void;
+  }): Promise<void> {
+    try {
+      await this.client.logout();
+      params.result?.({ isOk: true });
+      this._user = undefined;
+    } catch (error) {
+      params.result?.({
+        isOk: false,
+        error: new UIKitError({ code: ErrorCode.logout_error }),
+      });
+    }
   }
   async loginState(): Promise<'logged' | 'noLogged'> {
     const r = await this.client.isLoginBefore();
@@ -242,7 +204,8 @@ export abstract class IMServiceImpl implements IMService {
       this._muterMap.set(id, -1);
     }
   }
-  getUserInfo(id: string): UserServiceData | undefined {
+  getUserInfo(id?: string): UserServiceData | undefined {
+    if (id === undefined) return undefined;
     return this._userMap.get(id);
   }
   getUserInfos(ids: string[]): UserServiceData[] {
@@ -260,6 +223,9 @@ export abstract class IMServiceImpl implements IMService {
     }
   }
   async fetchUserInfos(ids: string[]): Promise<UserServiceData[]> {
+    if (ids === undefined || ids.length === 0) {
+      return [];
+    }
     const list = await this.client.userManager.fetchUserInfoById(ids);
     if (list) {
       const ret: UserServiceData[] = [];
@@ -392,7 +358,7 @@ export abstract class IMServiceImpl implements IMService {
     return this._sendCustomMessage({
       roomId: params.roomId,
       eventType: custom_msg_event_type_gift,
-      eventParams: { gift: JSON.stringify(params.gift) },
+      eventParams: { chatroom_uikit_gift: JSON.stringify(params.gift) },
       mentionIds: params.mentionIds,
       result: params.result,
     });
@@ -439,7 +405,10 @@ export abstract class IMServiceImpl implements IMService {
     }
     const user = this._userMap.get(curUserId);
     if (user === undefined) {
-      throw new UIKitError({ code: ErrorCode.existed });
+      throw new UIKitError({
+        code: ErrorCode.existed,
+        extra: `use is not existed. ${curUserId}`,
+      });
     }
     const msg = ChatMessage.createTextMessage(
       roomId,
@@ -447,7 +416,7 @@ export abstract class IMServiceImpl implements IMService {
       ChatMessageChatType.ChatRoom
     );
     msg.receiverList = mentionIds;
-    msg.attributes = user;
+    msg.attributes = { chatroom_uikit_userInfo: user };
     this.client.chatManager
       .sendMessage(msg, {
         onError: (_localMsgId, error) => {
@@ -504,10 +473,13 @@ export abstract class IMServiceImpl implements IMService {
     );
     const user = this._userMap.get(curUserId);
     if (user === undefined) {
-      throw new UIKitError({ code: ErrorCode.existed });
+      throw new UIKitError({
+        code: ErrorCode.existed,
+        extra: `use is not existed. ${curUserId}`,
+      });
     }
     msg.receiverList = mentionIds;
-    msg.attributes = user;
+    msg.attributes = { chatroom_uikit_userInfo: user };
     this.client.chatManager
       .sendMessage(msg, {
         onError: (_localMsgId, error) => {
@@ -817,6 +789,7 @@ export class IMServicePrivateImpl extends IMServiceImpl {
     this._setRoomState('joining');
     this._setRoomId(roomId);
     this._setOwner(ownerId);
+    this._updateMember(this._user!);
   }
   _leave(_roomId: string): void {
     this._setRoomState('leaving');
@@ -846,3 +819,12 @@ export function getIMService(): IMService {
   }
   return gIMService;
 }
+
+// export class IMServicePrivateImplTest extends IMServicePrivateImpl {
+//   constructor() {
+//     super();
+//   }
+//   test() {
+//     this._clearMuter();
+//   }
+// }

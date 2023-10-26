@@ -92,14 +92,25 @@ export interface IMService {
    */
   get client(): ChatClient;
 
+  init(params: {
+    appKey: string;
+    debugMode?: boolean;
+    autoLogin?: boolean;
+    result?: (params: { isOk: boolean; error?: UIKitError }) => void;
+  }): Promise<void>;
+
   login(params: {
     userId: string;
     userToken: string;
     userNickname?: string;
     userAvatarURL?: string;
+    gender?: number;
+    identify?: string;
     result: (params: { isOk: boolean; error?: UIKitError }) => void;
   }): Promise<void>;
-  logout(): Promise<void>;
+  logout(params: {
+    result?: (params: { isOk: boolean; error?: UIKitError }) => void;
+  }): Promise<void>;
   loginState(): Promise<'logged' | 'noLogged'>;
 
   get userId(): string | undefined;
@@ -107,7 +118,7 @@ export interface IMService {
   getMuter(id: string): number | undefined;
   updateMuter(ids: string[]): void;
 
-  getUserInfo(id: string): UserServiceData | undefined;
+  getUserInfo(id?: string): UserServiceData | undefined;
   getUserInfos(ids: string[]): UserServiceData[];
   updateUserInfos(users: UserServiceData[]): void;
   fetchUserInfos(ids: string[]): Promise<UserServiceData[]>;

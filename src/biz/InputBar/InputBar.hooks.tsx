@@ -55,7 +55,6 @@ export function useInputValue() {
         }
       }
       valueRef.current = text;
-      console.log('test:zuoyu:text:', text, rawValue.current);
       _setValue(valueRef.current);
     }
   };

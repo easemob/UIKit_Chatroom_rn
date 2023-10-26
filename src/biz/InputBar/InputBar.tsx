@@ -120,7 +120,6 @@ export const InputBar = React.forwardRef<InputBarRef, InputBarProps>(function (
   const _onSend = () => {
     // const content = getRawValue();
     const content = valueRef.current;
-    console.log('test:zuoyu:text:222:', content);
     if (content.length > 0) {
       sendText(content);
     }

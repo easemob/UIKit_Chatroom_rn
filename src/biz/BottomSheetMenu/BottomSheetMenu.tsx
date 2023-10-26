@@ -8,12 +8,12 @@ import {
 import { ErrorCode, UIKitError } from '../../error';
 import { useColors } from '../../hook';
 import { usePaletteContext } from '../../theme';
-import { Modal, ModalRef } from '../../ui/Modal';
+import { SlideModal, SlideModalRef } from '../../ui/Modal';
 import { Text } from '../../ui/Text';
 import { gMaxItemCount } from './BottomSheetMenu.const';
 import { useGetItems } from './BottomSheetMenu.hooks';
 
-export type BottomSheetMenuRef = ModalRef & {
+export type BottomSheetMenuRef = SlideModalRef & {
   startShowWithInit: (initItems: React.ReactElement[]) => void;
 };
 export type BottomSheetMenuProps = {
@@ -35,7 +35,7 @@ export const BottomSheetMenu = React.forwardRef<
   const { onRequestModalClose, initItems, title } = props;
   const { colors } = usePaletteContext();
   const { bottom } = useSafeAreaInsets();
-  const modalRef = React.useRef<ModalRef>({} as any);
+  const modalRef = React.useRef<SlideModalRef>({} as any);
   const { items, updateItems } = useGetItems(initItems);
   const { getColor } = useColors({
     bg1: {
@@ -90,7 +90,7 @@ export const BottomSheetMenu = React.forwardRef<
   }
 
   return (
-    <Modal
+    <SlideModal
       propsRef={modalRef}
       modalAnimationType={'slide'}
       onRequestModalClose={onRequestModalClose}
@@ -101,11 +101,11 @@ export const BottomSheetMenu = React.forwardRef<
           backgroundColor: getColor('bg1'),
           alignItems: 'center',
           width: '100%',
-          borderTopLeftRadius: 16,
-          borderTopRightRadius: 16,
+          // borderTopLeftRadius: 16,
+          // borderTopRightRadius: 16,
         }}
       >
-        <View
+        {/* <View
           style={{
             width: 36,
             height: 5,
@@ -113,7 +113,7 @@ export const BottomSheetMenu = React.forwardRef<
             backgroundColor: getColor('bg2'),
             borderRadius: 2.5,
           }}
-        />
+        /> */}
 
         {title ? (
           <View style={{ paddingVertical: 13, paddingHorizontal: 16 }}>
@@ -133,6 +133,6 @@ export const BottomSheetMenu = React.forwardRef<
 
         <View style={{ height: bottom }} />
       </SafeAreaView>
-    </Modal>
+    </SlideModal>
   );
 });

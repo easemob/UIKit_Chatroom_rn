@@ -20,6 +20,7 @@ import { ErrorCode, UIKitError } from '../../error';
 import { useDelayExecTask } from '../../hook';
 import { useI18nContext } from '../../i18n';
 import {
+  chatroom_uikit_gift,
   custom_msg_event_type_gift,
   GiftServiceData,
   IMServiceListener,
@@ -240,25 +241,39 @@ export function useMessageListApi(params: {
   };
   const _addGiftData = (message: ChatMessage) => {
     const body = message.body as ChatCustomMessageBody;
-    const gift = JSON.parse(body.params?.gift ?? '{}') as GiftServiceData;
-    const part = {
-      type: 'gift',
-      msg: message,
-      content: {
-        gift: gift.icon,
-        text: `Sent '@${gift.sender?.nickName ?? gift.sender?.userId}'`,
-      },
-    } as Pick<MessageListItemProps, 'type' | 'msg' | 'content'>;
-    return _addCommonData(part);
+    const jsonGift = (body.params as any)[chatroom_uikit_gift];
+    if (jsonGift) {
+      const gift = JSON.parse(jsonGift) as GiftServiceData;
+      const part = {
+        type: 'gift',
+        msg: message,
+        content: {
+          gift: gift.icon,
+          text: tr("Sent '@${0}'", gift.name),
+        },
+      } as Pick<MessageListItemProps, 'type' | 'msg' | 'content'>;
+      return _addCommonData(part);
+    }
+    return false;
   };
   const _addCommonData = (
     d: Pick<MessageListItemProps, 'type' | 'msg' | 'content'>
   ) => {
+    const getNickName = () => {
+      if (im.userId === d.msg?.from) {
+        return tr('self');
+      }
+      const user = im.getUserInfo(d.msg?.from);
+      if (user) {
+        return user.nickName ?? user.userId;
+      }
+      return d.msg?.from ?? d.content;
+    };
     dataRef.current.push({
       id: `${seqId('_msg')}`,
       basic: {
         timestamp: Date.now(),
-        nickName: tr('self'),
+        nickName: getNickName()!,
       },
       action: {
         onStartPress: () => {},
@@ -431,7 +446,6 @@ export function useMessageListApi(params: {
     }
   };
   const _reportMessage = (_result?: ReportItemModel) => {
-    console.log('test:zuoyu:', _result, langPressItemRef.current?.msg?.msgId);
     if (langPressItemRef.current?.msg) {
       const msg = langPressItemRef.current.msg;
       im.reportMessage({

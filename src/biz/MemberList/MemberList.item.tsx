@@ -53,18 +53,20 @@ export function MemberListItem(props: MemberListItemProps) {
     >
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
         {userInfo?.identify ? (
-          <Image
-            style={{
-              width: 22,
-              height: 22,
-              // tintColor: 'orange',
-              margin: 4,
-            }}
-            source={{ uri: userInfo.identify, cache: 'default' }}
-          />
+          <>
+            <Image
+              style={{
+                width: 22,
+                height: 22,
+                // tintColor: 'orange',
+                margin: 4,
+              }}
+              source={{ uri: userInfo.identify, cache: 'default' }}
+            />
+            <View style={{ width: 12 }} />
+          </>
         ) : null}
 
-        <View style={{ width: 12 }} />
         <Avatar url={userInfo.avatarURL} size={40} borderRadius={40} />
         <View style={{ width: 12 }} />
         <View style={{ marginVertical: 10 }}>
@@ -106,7 +108,7 @@ export function MemberListItem(props: MemberListItemProps) {
         style={{
           backgroundColor: getColor('color2'),
           height: g_flatlist_border_bottom_width,
-          marginLeft: 50,
+          marginLeft: userInfo?.identify ? 90 : 50,
         }}
       />
     </View>

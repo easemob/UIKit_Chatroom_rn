@@ -8,6 +8,7 @@ export enum ErrorCode {
   // protocol error 1000 start
   init_error = 1000,
   login_error,
+  logout_error,
 
   msg_send_error = 1100,
   msg_recall_error,

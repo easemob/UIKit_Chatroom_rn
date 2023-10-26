@@ -10,6 +10,7 @@ import {
 
 import { Config, ConfigContext } from '../../config';
 import type { UIKitError } from '../../error';
+import { I18nContext, I18nTr } from '../../i18n';
 import { IMContext, IMService, IMServiceListener } from '../../im';
 import {
   GiftFloating,
@@ -75,6 +76,7 @@ export abstract class ChatroomBase extends React.PureComponent<
   containerRef?: React.RefObject<View>;
   im?: IMService;
   config?: Config;
+  i18n?: I18nTr;
   listener?: IMServiceListener;
   constructor(props: ChatroomProps) {
     super(props);
@@ -178,8 +180,15 @@ export abstract class ChatroomBase extends React.PureComponent<
           return (
             <ConfigContext.Consumer>
               {(config) => {
-                this.config = config;
-                return this._render();
+                return (
+                  <I18nContext.Consumer>
+                    {(t) => {
+                      this.i18n = t;
+                      this.config = config;
+                      return this._render();
+                    }}
+                  </I18nContext.Consumer>
+                );
               }}
             </ConfigContext.Consumer>
           );

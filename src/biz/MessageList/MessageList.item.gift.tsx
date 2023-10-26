@@ -3,8 +3,8 @@ import { View } from 'react-native';
 
 import { useColors } from '../../hook';
 import { usePaletteContext } from '../../theme';
-import { Icon } from '../../ui/Image';
 import { Text } from '../../ui/Text';
+import { GiftIcon } from '../GiftIcon';
 import type { GiftContent, MessageListItemProps } from './types';
 
 export function MessageListGiftItem(props: MessageListItemProps) {
@@ -26,7 +26,7 @@ export function MessageListGiftItem(props: MessageListItemProps) {
       >
         {c.text}
       </Text>
-      <Icon name={'link'} style={{ height: 18, width: 18 }} />
+      <GiftIcon url={c.gift} size={18} borderRadius={0} />
     </View>
   );
 }
