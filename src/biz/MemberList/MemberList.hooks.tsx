@@ -1,12 +1,17 @@
 import * as React from 'react';
 import { PanResponder, ViewToken } from 'react-native';
-import type { ChatMessage } from 'react-native-chat-sdk';
+import {
+  ChatCustomMessageBody,
+  ChatMessage,
+  ChatMessageType,
+} from 'react-native-chat-sdk';
 
 import { useDispatchContext, useDispatchListener } from '../../dispatch';
 import { ErrorCode, UIKitError } from '../../error';
 import { useDelayExecTask } from '../../hook';
 import {
   chatroom_uikit_userInfo,
+  custom_msg_event_type_join,
   IMServiceListener,
   useIMContext,
   useIMListener,
@@ -214,7 +219,12 @@ export function useMemberListAPI(
     onUpdateInfo: (roomId, userInfo) => {
       if (roomId === im.roomId) {
         im.updateUserInfos([userInfo]);
-        // _updateUI(_updateData(userInfo));
+        // _updateUI(_updateData(userInfo)); // !!! Save rendering.
+      }
+    },
+    onUserJoinedNotify: (roomId, userInfo) => {
+      if (roomId === im.roomId) {
+        _updateUI(_addData(userInfo.userId));
       }
     },
     onUserJoined: (roomId, userId) => {
@@ -503,17 +513,30 @@ export function userInfoFromMessage(
 
 type useMemberListenerProps = {
   onUpdateInfo?: (roomId: string, userInfo: UserServiceData) => void;
+  onUserJoinedNotify?: (roomId: string, userInfo: UserServiceData) => void;
   onUserJoined?: (roomId: string, userId: string) => void;
   onUserLeave?: (roomId: string, userId: string) => void;
   onUserBeKicked?: (roomId: string, reason: number) => void;
 };
 export function useMemberListener(props: useMemberListenerProps) {
-  const { onUpdateInfo, onUserJoined, onUserLeave, onUserBeKicked } = props;
+  const {
+    onUpdateInfo,
+    onUserJoined,
+    onUserLeave,
+    onUserBeKicked,
+    onUserJoinedNotify,
+  } = props;
   const msgListener = React.useRef<IMServiceListener>({
     onMessageReceived: (roomId, message) => {
       const userInfo = userInfoFromMessage(message);
       if (userInfo) {
         onUpdateInfo?.(roomId, userInfo);
+        if (message.body.type === ChatMessageType.CUSTOM) {
+          const body = message.body as ChatCustomMessageBody;
+          if (body.event === custom_msg_event_type_join) {
+            onUserJoinedNotify?.(roomId, userInfo);
+          }
+        }
       }
     },
     onUserJoined: (roomId, user) => {
