@@ -287,9 +287,13 @@ export abstract class IMServiceImpl implements IMService {
       return v.userId.includes(key);
     });
   }
-  async fetchChatroomList(pageNum: number): Promise<ChatRoom[]> {
+  async fetchChatroomList(
+    pageNum: number,
+    pageSize?: number
+  ): Promise<ChatRoom[]> {
     const r = await this.client.roomManager.fetchPublicChatRoomsFromServer(
-      pageNum
+      pageNum,
+      pageSize
     );
     return r.list ?? [];
   }

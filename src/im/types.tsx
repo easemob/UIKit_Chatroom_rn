@@ -143,7 +143,7 @@ export interface IMService {
   get ownerId(): string | undefined;
   get roomState(): RoomState;
 
-  fetchChatroomList(pageNum: number): Promise<ChatRoom[]>;
+  fetchChatroomList(pageNum: number, pageSize?: number): Promise<ChatRoom[]>;
   joinRoom(roomId: string, room: { ownerId: string }): Promise<void>;
   leaveRoom(roomId: string): Promise<void>;
   /**

@@ -11,32 +11,53 @@ export function ChatroomListScreen(props: Props) {
   const { navigation } = props;
   const dataRef = React.useRef<{ id: string; room: ChatRoom }[]>([]);
   const [data, setData] = React.useState(dataRef.current);
+  const [refreshing, setRefreshing] = React.useState(false);
   const im = useIMContext();
+
+  const request = React.useCallback(
+    async (finished?: () => void) => {
+      const s = await im.loginState();
+      if (s === 'logged') {
+        dataRef.current = [];
+        im.fetchChatroomList(1)
+          .then((list) => {
+            for (const room of list) {
+              dataRef.current.push({
+                id: room.roomId,
+                room: room,
+              });
+            }
+            setData([...dataRef.current]);
+            finished?.();
+          })
+          .catch(finished);
+      } else {
+        finished?.();
+      }
+    },
+    [im]
+  );
+  const onRefresh = () => {
+    setRefreshing(true);
+    setTimeout(() => {
+      request(() => {
+        setRefreshing(false);
+      });
+    }, 1000);
+  };
+
   useLifecycle(
     React.useCallback(
       async (state) => {
         if (state === 'load') {
-          const s = await im.loginState();
-          if (s === 'logged') {
-            dataRef.current = [];
-            im.fetchChatroomList(1)
-              .then((list) => {
-                for (const room of list) {
-                  dataRef.current.push({
-                    id: room.roomId,
-                    room: room,
-                  });
-                }
-                setData([...dataRef.current]);
-              })
-              .catch();
-          }
+          request();
         } else {
         }
       },
-      [im]
+      [request]
     )
   );
+
   return (
     <View style={{ flex: 1 }}>
       <View>
@@ -77,6 +98,8 @@ export function ChatroomListScreen(props: Props) {
         keyExtractor={(item) => {
           return item.id;
         }}
+        onRefresh={onRefresh}
+        refreshing={refreshing}
       />
 
       <View style={{ flex: 1 }} />
