@@ -5,8 +5,8 @@ import { FlatList, ListRenderItemInfo, View } from 'react-native';
 import { Queue } from '../../utils';
 import {
   gGiftFloatingListHeight,
+  gGiftFloatingListWidth,
   gItemInterval,
-  gListWidth,
   gTimeoutTask,
 } from './GiftFloating.const';
 import { useAddData } from './GiftFloating.hooks';
@@ -113,7 +113,7 @@ export const GiftFloating = React.forwardRef<
         containerStyle,
         {
           height: gGiftFloatingListHeight,
-          width: gListWidth,
+          width: gGiftFloatingListWidth,
           // backgroundColor: '#ffd700',
         },
       ]}

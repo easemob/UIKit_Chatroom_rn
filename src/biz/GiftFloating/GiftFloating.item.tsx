@@ -6,7 +6,7 @@ import { usePaletteContext } from '../../theme';
 import { Text } from '../../ui/Text';
 import { Avatar } from '../Avatar';
 import { GiftIcon } from '../GiftIcon';
-import { gItemBorderRadius, gItemMaxWidth } from './GiftFloating.const';
+import { gItemBorderRadius } from './GiftFloating.const';
 import { GiftFloatingItem, useAnimation } from './GiftFloating.item.hooks';
 
 export type GiftFloatingItemFCProps = {
@@ -65,32 +65,43 @@ export function GiftFloatingItemFC(props: GiftFloatingItemFCProps) {
         </View>
 
         <View
-          style={{ paddingHorizontal: 4, width: gItemMaxWidth, flexGrow: 1 }}
+          style={{
+            flex: 1,
+            maxWidth: '80%',
+          }}
         >
-          <Text
-            textType={'small'}
-            paletteType={'label'}
-            numberOfLines={1}
-            style={{ color: 'white' }}
+          <View
+            style={{
+              paddingHorizontal: 4,
+              justifyContent: 'center',
+              alignItems: 'flex-start',
+              flexGrow: 1,
+            }}
           >
-            {item.gift.nickName}
-          </Text>
-          <Text
-            textType={'extraSmall'}
-            paletteType={'label'}
-            style={{ color: 'white' }}
-            numberOfLines={1}
-          >
-            {item.gift.content}
-          </Text>
+            <Text
+              textType={'small'}
+              paletteType={'label'}
+              numberOfLines={1}
+              style={{ color: 'white' }}
+            >
+              {item.gift.nickName}
+            </Text>
+            <Text
+              textType={'extraSmall'}
+              paletteType={'label'}
+              style={{ color: 'white' }}
+              numberOfLines={1}
+            >
+              {item.gift.content}
+            </Text>
+          </View>
         </View>
 
         <GiftIcon url={item.gift.giftIcon} borderRadius={0} size={40} />
 
-        <View style={{ padding: 2, paddingHorizontal: 6 }}>
+        <View style={{ marginLeft: 4, marginRight: 16 }}>
           <Text style={styles.dig}>x{item.gift.giftCount ?? 1}</Text>
         </View>
-        <View style={{ width: 10 }} />
       </Animated.View>
     </Animated.View>
   );
@@ -108,7 +119,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'center',
-    flex: 1,
   },
   dig: {
     color: 'white',

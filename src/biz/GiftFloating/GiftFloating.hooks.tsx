@@ -3,8 +3,8 @@ import { FlatList, Platform } from 'react-native';
 
 import { getCurTs, seqId } from '../../utils';
 import {
+  gGiftFloatingListWidth,
   gItemHeight,
-  gItemWidth,
   gScrollingTimeout,
 } from './GiftFloating.const';
 import type { GiftFloatingItem } from './GiftFloating.item.hooks';
@@ -18,7 +18,7 @@ export const useAddData = (params: {
   const { dataRef, setData, ref } = params;
   const preTaskTs = React.useRef(0);
   const delayedScrolling = React.useRef<NodeJS.Timeout>();
-  const width = gItemWidth;
+  const width = gGiftFloatingListWidth;
   const height = gItemHeight;
 
   const scrollToEnd = () => {

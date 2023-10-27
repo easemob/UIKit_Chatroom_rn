@@ -37,7 +37,7 @@ export function TestGiftFloating() {
                 nickName: 'NickName',
                 giftCount: 1,
                 giftIcon: 'http://notext.png',
-                content: 'send Agoraship',
+                content: 'send Agoraship too too too long',
               },
             });
           }}
