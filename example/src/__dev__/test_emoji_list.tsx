@@ -75,7 +75,11 @@ export function TestEmojiList22() {
         <Text>{'test emoji list'}</Text>
       </TouchableOpacity>
       <View style={{ height: 100 }} />
-      <EmojiListMemo onFace={onFace} />
+      <EmojiListMemo
+        onFace={onFace}
+        // containerStyle={{ width: 300 }}
+        // countPerRow={5}
+      />
     </View>
   );
 }

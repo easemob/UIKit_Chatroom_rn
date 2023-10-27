@@ -12,14 +12,20 @@ import emoji from 'twemoji';
 
 import { FACE_ASSETS } from '../../assets';
 import { useConfigContext } from '../../config';
-import { useColors, useCompare } from '../../hook';
+import {
+  useCheckType,
+  useColors,
+  useCompare,
+  useGetStyleSize,
+} from '../../hook';
 import { usePaletteContext } from '../../theme';
 import { Text } from '../../ui/Text';
-import { gAspectRatio } from './EmojiList.const';
+import { gAspectRatio, gCountPerRow } from './EmojiList.const';
 
 export type EmojiListProps = {
   onFace: (id: string) => void;
-  style?: StyleProp<ViewStyle>;
+  containerStyle?: StyleProp<ViewStyle>;
+  countPerRow?: number;
 };
 
 export function EmojiList(props: EmojiListProps) {
@@ -31,9 +37,19 @@ export function EmojiList(props: EmojiListProps) {
       dark: colors.neutral[1],
     },
   });
-  const { onFace, style } = props;
+  const { onFace, containerStyle, countPerRow = gCountPerRow } = props;
+  const { getViewStyleSize } = useGetStyleSize();
+  const { width: propsWidth } = getViewStyleSize(containerStyle);
+  const { checkType } = useCheckType();
+  if (propsWidth) {
+    checkType(propsWidth, 'number');
+  }
   const getUnitSize = () => {
-    return winWidth / 7 - 1;
+    console.log('test:zuoyu:width:', propsWidth, containerStyle);
+    if (propsWidth) {
+      return (propsWidth as number) / countPerRow - 1;
+    }
+    return winWidth / countPerRow - 1;
   };
   const { enableCompare } = useConfigContext();
   useCompare(getColor, { enabled: enableCompare });
@@ -44,7 +60,7 @@ export function EmojiList(props: EmojiListProps) {
           height: gAspectRatio * winWidth,
           backgroundColor: getColor('bg1'),
         },
-        style,
+        containerStyle,
       ]}
     >
       <ScrollView>
