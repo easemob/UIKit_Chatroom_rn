@@ -6,6 +6,7 @@ import {
   ChatMessageStatusCallback,
   ChatOptions,
   ChatRoom,
+  ChatTranslateLanguage,
 } from 'react-native-chat-sdk';
 
 import { ErrorCode, UIKitError } from '../error';
@@ -540,6 +541,9 @@ export abstract class IMServiceImpl implements IMService {
     languagesCode: string
   ): Promise<ChatMessage> {
     return this.client.chatManager.translateMessage(message, [languagesCode]);
+  }
+  fetchSupportedLanguages(): Promise<ChatTranslateLanguage[]> {
+    return this.client.chatManager.fetchSupportedLanguages();
   }
   sendError(params: { error: UIKitError; from?: string; extra?: any }): void {
     this._listeners.forEach((v) => {

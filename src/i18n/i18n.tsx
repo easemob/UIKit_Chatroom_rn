@@ -10,8 +10,11 @@ I18nContext.displayName = 'UIKitI18nContext';
 type I18nContextProps = React.PropsWithChildren<{ value: I18nInit }>;
 
 export function I18nContextProvider({ value, children }: I18nContextProps) {
-  const { stringSet, stringSetType } = value;
-  const t = new TranslateImpl({ func: createStringSet, type: stringSetType });
+  const { stringSet, stringSetType, factory } = value;
+  const t = new TranslateImpl({
+    func: factory ?? createStringSet,
+    type: stringSetType,
+  });
   if (stringSet) {
     t.addCustom({ stringSet, type: stringSetType });
   }

@@ -3,6 +3,7 @@ import type {
   ChatCursorResult,
   ChatMessage,
   ChatRoom,
+  ChatTranslateLanguage,
 } from 'react-native-chat-sdk';
 
 import type { UIKitError } from '../error';
@@ -210,6 +211,8 @@ export interface IMService {
     message: ChatMessage,
     languagesCode: string
   ): Promise<ChatMessage>;
+
+  fetchSupportedLanguages(): Promise<ChatTranslateLanguage[]>;
 
   sendError(params: { error: UIKitError; from?: string; extra?: any }): void;
 }

@@ -3,7 +3,8 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { ConfigContextProvider, RoomOption } from '../config';
 import { DispatchContextProvider } from '../dispatch';
-import { I18nContextProvider, StringSetType } from '../i18n';
+import { CreateStringSet, I18nContextProvider, StringSetType } from '../i18n';
+import { createStringSet } from '../i18n/StringSet';
 import { IMContextProvider } from '../im';
 import {
   Palette,
@@ -21,7 +22,8 @@ type PartialRoomOption = PartialDeep<RoomOption>;
 export type ContainerProps = React.PropsWithChildren<{
   appKey: string;
   isDevMode?: boolean;
-  Language?: StringSetType;
+  language?: StringSetType;
+  languageFactory?: CreateStringSet;
   palette?: Palette;
   theme?: Theme;
   roomOption?: PartialRoomOption;
@@ -31,7 +33,8 @@ export function Container(props: ContainerProps) {
   const {
     appKey,
     children,
-    Language,
+    language,
+    languageFactory = createStringSet,
     isDevMode = false,
     palette,
     theme,
@@ -41,7 +44,9 @@ export function Container(props: ContainerProps) {
   const light = useLightTheme(palette ?? _palette);
 
   const getLanguage = (): StringSetType => {
-    if (Language) return Language;
+    if (language) {
+      return language;
+    }
     const systemLanguage = getSystemLanguage();
     if (systemLanguage.includes('zh_CN')) {
       return 'zh-Hans';
@@ -53,7 +58,12 @@ export function Container(props: ContainerProps) {
     <DispatchContextProvider>
       <PaletteContextProvider value={palette ?? _palette}>
         <ThemeContextProvider value={theme ?? light}>
-          <I18nContextProvider value={{ stringSetType: getLanguage() }}>
+          <I18nContextProvider
+            value={{
+              stringSetType: getLanguage(),
+              factory: languageFactory,
+            }}
+          >
             <IMContextProvider value={{ appKey, debugMode: isDevMode }}>
               <ConfigContextProvider
                 value={{

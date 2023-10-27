@@ -1,7 +1,9 @@
-import type { createStringSet } from './StringSet';
-import type { StringSet, StringSetType, StringSetValueType } from './types';
-
-type CreateStringSet = typeof createStringSet;
+import type {
+  CreateStringSet,
+  StringSet,
+  StringSetType,
+  StringSetValueType,
+} from './types';
 
 export interface Translate {
   tr(key: string, ...args: any[]): string;
