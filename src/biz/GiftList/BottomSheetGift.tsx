@@ -7,7 +7,7 @@ import { usePaletteContext } from '../../theme';
 import { SlideModal, SlideModalRef } from '../../ui/Modal';
 import { TabPage } from '../../ui/TabPage';
 import { gAspectRatio } from './BottomSheetGift.const';
-import { GiftList } from './GiftList';
+import { GiftListMemo } from './GiftList';
 import type { GiftListModel } from './types';
 
 export type BottomSheetGiftRef = SlideModalRef & {
@@ -39,7 +39,7 @@ export const BottomSheetGift = React.forwardRef<
   const modalRef = React.useRef<SlideModalRef>({} as any);
   const { width: winWidth } = useWindowDimensions();
   const height = winWidth / gAspectRatio;
-  const isUsePanResponder = React.useRef(true);
+  // const isUsePanResponder = React.useRef(true);
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     backgroundColor: {
@@ -98,7 +98,8 @@ export const BottomSheetGift = React.forwardRef<
       backgroundTransparent={false}
       onRequestModalClose={() => {
         modalRef?.current?.startHide();
-      }} // onStartShouldSetPanResponder={() => {
+      }}
+      // onStartShouldSetPanResponder={() => {
       //   return isUsePanResponder.current;
       // }}
       // onMoveShouldSetPanResponder={() => {
@@ -140,12 +141,12 @@ export const BottomSheetGift = React.forwardRef<
             BodyProps: {
               children: gifts.map((v, i) => {
                 return (
-                  <GiftList
+                  <GiftListMemo
                     key={i}
                     gifts={v.gifts}
-                    requestUseScrollGesture={(finished) => {
-                      isUsePanResponder.current = finished;
-                    }}
+                    // requestUseScrollGesture={(finished) => {
+                    //   isUsePanResponder.current = finished;
+                    // }}
                     onSend={onSend}
                   />
                 );

@@ -8,29 +8,25 @@ import { usePaletteContext } from '../../theme';
 import { Icon } from '../../ui/Image';
 import { Text } from '../../ui/Text';
 import { GiftIcon } from '../GiftIcon';
-import {
-  gItemButtonHeight,
-  gItemGiftSize,
-  gItemHeight,
-  gItemWidth,
-} from './GiftList.const';
+import { gItemButtonHeight, gItemGiftSize } from './GiftList.const';
 import type { GiftListModel } from './types';
 
 export type GiftListItemProps = {
   gift: GiftListModel;
   selected: boolean;
   width?: number;
+  height?: number;
   onSelected?: (giftId: string) => void;
   onSend?: (giftId: string) => void;
 };
 
 export function GiftListItem(props: GiftListItemProps) {
-  const { width } = props;
+  const { width, height } = props;
   return (
     <View
       style={{
-        width: width ?? gItemWidth,
-        height: gItemHeight + 16,
+        width: width,
+        height: height,
         justifyContent: 'center',
         alignItems: 'center',
       }}
@@ -70,8 +66,8 @@ function GiftListStateItem(props: GiftListItemProps) {
   return (
     <View
       style={{
-        height: gItemHeight,
-        width: gItemWidth,
+        height: '80%',
+        width: '80%',
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 8,
@@ -157,3 +153,5 @@ function GiftListStateItem(props: GiftListItemProps) {
     </View>
   );
 }
+
+export const GiftListItemMemo = React.memo(GiftListItem);

@@ -9,8 +9,12 @@ import {
 
 import { useColors } from '../../hook';
 import { usePaletteContext } from '../../theme';
-import { gAspectRatio } from './GiftList.const';
-import { GiftListItem } from './GiftList.item';
+import {
+  gAspectRatio,
+  gItemAspectRatio,
+  gItemCountPerRow,
+} from './GiftList.const';
+import { GiftListItemMemo } from './GiftList.item';
 import type { GiftListModel } from './types';
 
 export type GiftListProps = {
@@ -29,9 +33,13 @@ export function GiftList(props: GiftListProps) {
       dark: colors.neutral[1],
     },
   });
-  const [unitWidth, setUnitWidth] = React.useState(80);
+  const unitWidth = winWidth / gItemCountPerRow;
   const [selected, setSelected] = React.useState<string | undefined>(undefined);
   const isScrollingRef = React.useRef(false);
+
+  const onSelected = React.useCallback((giftId) => {
+    setSelected(giftId);
+  }, []);
 
   const r = React.useRef(
     PanResponder.create({
@@ -64,10 +72,6 @@ export function GiftList(props: GiftListProps) {
         height: gAspectRatio * winWidth,
         backgroundColor: getColor('backgroundColor'),
       }}
-      onLayout={(e) => {
-        const s = e.nativeEvent.layout.width / 4;
-        setUnitWidth(Math.floor(s));
-      }}
       {...r.panHandlers}
     >
       <ScrollView
@@ -93,19 +97,15 @@ export function GiftList(props: GiftListProps) {
         >
           {gifts.map((gift, i) => {
             return (
-              <View key={i}>
-                <GiftListItem
-                  gift={gift}
-                  selected={selected === gift.giftId ? true : false}
-                  width={unitWidth}
-                  onSelected={(giftId) => {
-                    setSelected(giftId);
-                  }}
-                  onSend={(giftId) => {
-                    onSend?.(giftId);
-                  }}
-                />
-              </View>
+              <GiftListItemMemo
+                key={i}
+                gift={gift}
+                selected={selected === gift.giftId ? true : false}
+                width={unitWidth * 0.99}
+                height={unitWidth * gItemAspectRatio * 0.99}
+                onSelected={onSelected}
+                onSend={onSend}
+              />
             );
           })}
         </View>
@@ -113,3 +113,5 @@ export function GiftList(props: GiftListProps) {
     </View>
   );
 }
+
+export const GiftListMemo = React.memo(GiftList);

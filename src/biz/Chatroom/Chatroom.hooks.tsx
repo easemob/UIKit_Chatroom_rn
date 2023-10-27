@@ -29,7 +29,6 @@ export class Chatroom extends ChatroomBase {
   async init() {
     this.listener = {
       onUserJoined: (roomId, user) => {
-        console.log('test:zuoyu:onUserJoined:', roomId, user);
         if (user.userId === this.im?.userId) {
           this.im?.sendJoinCmd({
             roomId: roomId,
