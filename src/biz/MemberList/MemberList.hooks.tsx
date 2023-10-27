@@ -251,13 +251,10 @@ export function useMemberListAPI(
     },
     onUserLeave: (roomId, userId) => {
       if (roomId === im.roomId) {
-        _updateUI(_removeData(userId));
+        if (userId !== im.userId) {
+          _updateUI(_removeData(userId));
+        }
       }
-    },
-    onUserBeKicked: (roomId, reason) => {
-      console.log('dev:onUserBeKicked', reason);
-      // todo: Internal: Clean up resources. External notifications kicked. Typical: Re-entering the chat room, prompting that the room has been exited, etc.
-      im.resetRoom(roomId);
     },
   });
 
@@ -516,16 +513,9 @@ type useMemberListenerProps = {
   onUserJoinedNotify?: (roomId: string, userInfo: UserServiceData) => void;
   onUserJoined?: (roomId: string, userId: string) => void;
   onUserLeave?: (roomId: string, userId: string) => void;
-  onUserBeKicked?: (roomId: string, reason: number) => void;
 };
 export function useMemberListener(props: useMemberListenerProps) {
-  const {
-    onUpdateInfo,
-    onUserJoined,
-    onUserLeave,
-    onUserBeKicked,
-    onUserJoinedNotify,
-  } = props;
+  const { onUpdateInfo, onUserJoined, onUserLeave, onUserJoinedNotify } = props;
   const msgListener = React.useRef<IMServiceListener>({
     onMessageReceived: (roomId, message) => {
       const userInfo = userInfoFromMessage(message);
@@ -544,9 +534,6 @@ export function useMemberListener(props: useMemberListenerProps) {
     },
     onUserLeave: (roomId, userId) => {
       onUserLeave?.(roomId, userId);
-    },
-    onUserBeKicked: (roomId, reason) => {
-      onUserBeKicked?.(roomId, reason);
     },
   });
   useIMListener(msgListener.current);

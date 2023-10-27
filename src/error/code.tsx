@@ -9,6 +9,7 @@ export enum ErrorCode {
   init_error = 1000,
   login_error,
   logout_error,
+  refresh_token_error,
 
   msg_send_error = 1100,
   msg_recall_error,

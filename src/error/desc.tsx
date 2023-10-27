@@ -9,6 +9,7 @@ export enum ErrorDescription {
   init_error = 'An initialization error occurred.',
   login_error = 'A login error occurred.',
   logout_error = 'A log out error occurred.',
+  refresh_token_error = 'refresh token error occurred.',
 
   network_error = 'A network error occurred.',
 

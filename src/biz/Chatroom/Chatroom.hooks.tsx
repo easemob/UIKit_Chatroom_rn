@@ -8,6 +8,7 @@ import { ErrorCode, UIKitError } from '../../error';
 import {
   chatroom_uikit_gift,
   custom_msg_event_type_gift,
+  DisconnectReasonType,
   GiftServiceData,
 } from '../../im';
 import { seqId } from '../../utils';
@@ -45,6 +46,33 @@ export class Chatroom extends ChatroomBase {
               if (body.event === custom_msg_event_type_gift) {
                 this._onReceiveGift(message);
               }
+            }
+          }
+        }
+      },
+      onUserBeKicked: (roomId) => {
+        // Clean up resources. External notifications kicked. Typical: Re-entering the chat room, prompting that the room has been exited, etc.
+        this.im?.resetRoom(roomId);
+      },
+      onDisconnected: (reason) => {
+        if (
+          reason === DisconnectReasonType.token_did_expire ||
+          reason === DisconnectReasonType.app_active_number_reach_limit ||
+          reason === DisconnectReasonType.user_did_login_from_other_device ||
+          reason === DisconnectReasonType.user_did_remove_from_server ||
+          reason === DisconnectReasonType.user_did_forbid_by_server ||
+          reason === DisconnectReasonType.user_did_change_password ||
+          reason === DisconnectReasonType.user_did_login_too_many_device ||
+          reason === DisconnectReasonType.user_kicked_by_other_device ||
+          reason === DisconnectReasonType.user_authentication_failed
+        ) {
+          if (
+            this.im?.roomState === 'joined' ||
+            this.im?.roomState === 'joining' ||
+            this.im?.roomState === 'leaving'
+          ) {
+            if (this.im?.roomId) {
+              this.im.resetRoom(this.im.roomId);
             }
           }
         }

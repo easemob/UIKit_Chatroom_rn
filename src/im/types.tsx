@@ -112,6 +112,19 @@ export interface IMService {
     result?: (params: { isOk: boolean; error?: UIKitError }) => void;
   }): Promise<void>;
   loginState(): Promise<'logged' | 'noLogged'>;
+  /**
+   * Only agora token refresh is supported.
+   *
+   * When receiving notification {@link DisconnectReasonType.token_will_expire} that the token is about to expire, you can refresh the token.
+   *
+   * @params
+   * - token: Agora token.
+   * - result: The result after performing the operation. If failed, an error object is returned.
+   */
+  refreshToken(params: {
+    token: string;
+    result?: (params: { isOk: boolean; error?: UIKitError }) => void;
+  }): Promise<void>;
 
   get userId(): string | undefined;
 

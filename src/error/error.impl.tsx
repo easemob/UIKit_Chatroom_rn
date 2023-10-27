@@ -31,6 +31,9 @@ export function getDescription(code: ErrorCode): ErrorDescription {
     case ErrorCode.logout_error:
       ret = ErrorDescription.logout_error;
       break;
+    case ErrorCode.refresh_token_error:
+      ret = ErrorDescription.refresh_token_error;
+      break;
     case ErrorCode.network_error:
       ret = ErrorDescription.network_error;
       break;

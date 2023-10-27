@@ -193,6 +193,21 @@ export abstract class IMServiceImpl implements IMService {
     const r = await this.client.isLoginBefore();
     return r === true ? 'logged' : 'noLogged';
   }
+  async refreshToken(params: {
+    token: string;
+    result?: (params: { isOk: boolean; error?: UIKitError }) => void;
+  }): Promise<void> {
+    try {
+      await this.client.renewAgoraToken(params.token);
+      params?.result?.({ isOk: true });
+    } catch (error) {
+      params.result?.({
+        isOk: false,
+        error: new UIKitError({ code: ErrorCode.refresh_token_error }),
+      });
+    }
+  }
+
   get userId(): string | undefined {
     return this.client.currentUserName as string | undefined;
   }
