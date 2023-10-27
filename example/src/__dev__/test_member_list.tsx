@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { Platform, Pressable, TouchableOpacity, View } from 'react-native';
 import {
+  BottomSheetMemberList,
+  BottomSheetMemberListRef,
   Container,
   createDarkTheme,
   createLightTheme,
   createPresetPalette,
-  MemberList,
-  MemberListRef,
   Text,
 } from 'react-native-chat-room';
 
@@ -14,10 +14,10 @@ import {
  * for test member list.
  */
 export function MemberListItem(): React.JSX.Element {
-  const ref = React.useRef<MemberListRef>({} as any);
+  const ref = React.useRef<BottomSheetMemberListRef>({} as any);
   return (
     <View style={{ flex: 1 }}>
-      <MemberList ref={ref} />
+      <BottomSheetMemberList ref={ref} />
       <View
         style={{
           position: 'absolute', // !!! must
@@ -45,7 +45,7 @@ export function MemberListItem(): React.JSX.Element {
  * Verify absolute layout.
  */
 export function MemberListItem2(): React.JSX.Element {
-  const ref = React.useRef<MemberListRef>({} as any);
+  const ref = React.useRef<BottomSheetMemberListRef>({} as any);
   return (
     <View style={{ flex: 1, top: 100 }}>
       <TouchableOpacity
@@ -59,10 +59,10 @@ export function MemberListItem2(): React.JSX.Element {
 
       {Platform.OS === 'ios' ? (
         <View style={{ position: 'absolute' }}>
-          <MemberList ref={ref} />
+          <BottomSheetMemberList ref={ref} />
         </View>
       ) : (
-        <MemberList ref={ref} />
+        <BottomSheetMemberList ref={ref} />
       )}
     </View>
   );

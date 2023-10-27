@@ -3,7 +3,7 @@ import { FlatList, ListRenderItemInfo, Text, View } from 'react-native';
 
 type MemberListItemProps = { id: string };
 
-export function MemberListParticipants() {
+export function MemberList() {
   const dataRef = React.useRef<MemberListItemProps[]>([
     { id: '1' },
     { id: '2' },
@@ -77,7 +77,7 @@ export function MemberListItem(): React.JSX.Element {
         <View style={{ flex: 1, position: 'absolute' }}>
           <View style={{ flex: 1 }}>
             <View style={{ position: 'absolute' }}>
-              <MemberListParticipants />
+              <MemberList />
             </View>
           </View>
         </View>

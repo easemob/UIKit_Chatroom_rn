@@ -21,7 +21,11 @@ import { gGiftFloatingListHeight } from '../GiftFloating/GiftFloating.const'; //
 import { InputBar, InputBarProps, InputBarRef } from '../InputBar';
 import { gInputBarStyleHeight } from '../InputBar/InputBar.const';
 import { Marquee, MarqueeProps, MarqueeRef } from '../Marquee';
-import { MemberList, MemberListProps, MemberListRef } from '../MemberList';
+import {
+  BottomSheetMemberList,
+  BottomSheetMemberListProps,
+  BottomSheetMemberListRef,
+} from '../MemberList';
 import { MessageList, MessageListProps, MessageListRef } from '../MessageList';
 import { gMessageListHeight } from '../MessageList/MessageList.const'; // for test
 import type { PropsWithError, PropsWithTest } from '../types';
@@ -52,7 +56,7 @@ export type ChatroomProps = React.PropsWithChildren<
       props?: GiftFloatingProps;
     };
     memberList?: {
-      props?: MemberListProps;
+      props?: BottomSheetMemberListProps;
     };
     backgroundView?: React.ReactElement;
   } & ChatroomData &
@@ -72,7 +76,7 @@ export abstract class ChatroomBase extends React.PureComponent<
   messageRef?: React.RefObject<MessageListRef>;
   marqueeRef?: React.RefObject<MarqueeRef>;
   giftRef?: React.RefObject<GiftFloatingRef>;
-  memberRef?: React.RefObject<MemberListRef>;
+  memberRef?: React.RefObject<BottomSheetMemberListRef>;
   containerRef?: React.RefObject<View>;
   im?: IMService;
   config?: Config;
@@ -303,7 +307,7 @@ export abstract class ChatroomBase extends React.PureComponent<
           {...input?.props}
         />
 
-        <MemberList
+        <BottomSheetMemberList
           ref={this.memberRef}
           maskStyle={{ transform: [{ translateY: -this.state.pageY }] }}
           {...memberList?.props}

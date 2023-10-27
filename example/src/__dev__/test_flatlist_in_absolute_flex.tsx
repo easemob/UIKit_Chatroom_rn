@@ -14,7 +14,7 @@ import {
 
 type MemberListItemProps = { id: string };
 
-export function MemberListParticipants() {
+export function MemberList() {
   const dataRef = React.useRef<MemberListItemProps[]>([
     { id: '1' },
     { id: '2' },
@@ -111,7 +111,7 @@ export function MemberListItem(): React.JSX.Element {
     >
       <View style={{ position: 'absolute' }}>
         <View style={{ height: 320, width: 300, flexGrow: 1 }}>
-          <MemberListParticipants />
+          <MemberList />
         </View>
       </View>
     </View>

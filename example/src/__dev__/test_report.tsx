@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { Platform, Pressable, TouchableOpacity, View } from 'react-native';
 import {
+  BottomSheetMemberListRef,
   Container,
   createDarkTheme,
   createLightTheme,
   createPresetPalette,
-  MemberListRef,
   Report,
   seqId,
   SimulativeModalRef,
@@ -90,7 +90,7 @@ export function TestReport(): React.JSX.Element {
  * Verify absolute layout.
  */
 export function TestReport2(): React.JSX.Element {
-  const ref = React.useRef<MemberListRef>({} as any);
+  const ref = React.useRef<BottomSheetMemberListRef>({} as any);
   return (
     <View style={{ flex: 1, top: 100 }}>
       <TouchableOpacity
