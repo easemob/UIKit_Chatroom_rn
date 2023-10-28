@@ -10,7 +10,10 @@ import {
   gTimeoutTask,
 } from './GiftFloating.const';
 import { useAddData } from './GiftFloating.hooks';
-import { GiftFloatingItemFC } from './GiftFloating.item';
+import {
+  GiftFloatingItemFC,
+  GiftFloatingItemFCProps,
+} from './GiftFloating.item';
 import type { GiftFloatingItem } from './GiftFloating.item.hooks';
 import type { GiftFloatingTask } from './types';
 
@@ -20,6 +23,7 @@ export type GiftFloatingRef = {
 export type GiftFloatingProps = {
   visible?: boolean;
   containerStyle?: StyleProp<ViewStyle>;
+  GiftFloatingItemComponent?: React.ComponentType<GiftFloatingItemFCProps>;
 };
 
 export const GiftFloating = React.forwardRef<
@@ -29,7 +33,7 @@ export const GiftFloating = React.forwardRef<
   props: GiftFloatingProps,
   ref?: React.ForwardedRef<GiftFloatingRef>
 ) {
-  const { containerStyle, visible = true } = props;
+  const { containerStyle, visible = true, GiftFloatingItemComponent } = props;
 
   const dataRef = React.useRef<GiftFloatingItem[]>([]);
   const [data, setData] = React.useState<GiftFloatingItem[]>(dataRef.current);
@@ -48,6 +52,9 @@ export const GiftFloating = React.forwardRef<
     setData: setData,
     ref: listRef,
   });
+
+  const _GiftFloatingItemComponent =
+    GiftFloatingItemComponent ?? GiftFloatingItemFC;
 
   const execTask = () => {
     if (curTask.current === undefined) {
@@ -122,7 +129,7 @@ export const GiftFloating = React.forwardRef<
         ref={listRef}
         data={data}
         renderItem={(info: ListRenderItemInfo<GiftFloatingItem>) => {
-          return <GiftFloatingItemFC item={info.item} />;
+          return <_GiftFloatingItemComponent item={info.item} />;
         }}
         keyExtractor={(item: GiftFloatingItem) => {
           return item.id;

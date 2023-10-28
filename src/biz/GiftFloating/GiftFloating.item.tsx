@@ -128,3 +128,5 @@ const styles = StyleSheet.create({
     fontStyle: 'italic',
   },
 });
+
+export const GiftFloatingItemFCMemo = React.memo(GiftFloatingItemFC);
