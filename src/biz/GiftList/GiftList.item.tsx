@@ -61,6 +61,14 @@ function GiftListStateItem(props: GiftListItemProps) {
       light: colors.neutral[98],
       dark: colors.neutral[98],
     },
+    t1: {
+      light: colors.neutral[1],
+      dark: colors.neutral[98],
+    },
+    t2: {
+      light: colors.neutral[5],
+      dark: colors.neutral[6],
+    },
   });
   const { tr } = useI18nContext();
   return (
@@ -112,7 +120,7 @@ function GiftListStateItem(props: GiftListItemProps) {
             paletteType={'label'}
             numberOfLines={1}
             style={{
-              color: getColor('color'),
+              color: getColor('t2'),
             }}
           >
             {gift.giftPrice}

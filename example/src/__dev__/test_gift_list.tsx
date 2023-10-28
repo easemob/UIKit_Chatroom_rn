@@ -3,8 +3,8 @@
 import * as React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import {
-  BottomSheetGift,
-  BottomSheetGiftRef,
+  BottomSheetGift2,
+  BottomSheetGiftSimuRef,
   Container,
   createDarkTheme,
   createLightTheme,
@@ -13,6 +13,7 @@ import {
   GiftListModel,
   useCompare,
   useDarkTheme,
+  useLightTheme,
   usePresetPalette,
 } from 'react-native-chat-room';
 
@@ -44,18 +45,17 @@ export function TestGiftList() {
 }
 
 export function TestGiftList2() {
-  console.log('test:zuoyu:4444');
   // const pal = createPresetPalette();
   // const dark = createDarkTheme(pal);
   // const light = createLightTheme(pal);
   const pal = usePresetPalette();
   const dark = useDarkTheme(pal);
-  const light = useDarkTheme(pal);
+  const light = useLightTheme(pal);
   useCompare(pal, { enabled: true });
   useCompare(dark, { enabled: true });
   useCompare(light, { enabled: true });
 
-  const ref = React.useRef<BottomSheetGiftRef>({} as any);
+  const ref = React.useRef<BottomSheetGiftSimuRef>({} as any);
   const count = React.useRef(0);
 
   return (
@@ -85,7 +85,7 @@ export function TestGiftList2() {
           <Text>{'Start painting presents'}</Text>
         </TouchableOpacity>
         <View style={{ height: 100 }} />
-        <BottomSheetGift
+        <BottomSheetGift2
           ref={ref}
           gifts={[
             { title: 'gift1', gifts },

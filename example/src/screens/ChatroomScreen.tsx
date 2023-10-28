@@ -2,8 +2,8 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
 import { Platform, Text, TouchableOpacity, View } from 'react-native';
 import {
-  BottomSheetGift,
-  BottomSheetGiftRef,
+  BottomSheetGift2,
+  BottomSheetGiftSimuRef,
   Chatroom,
   GiftListModel,
   Icon,
@@ -29,7 +29,7 @@ export function ChatroomScreen(props: Props) {
   const testRef = React.useRef<View>({} as any);
   const menuRef = React.useRef<ChatroomTestMenuRef>({} as any);
   const chatroomRef = React.useRef<Chatroom>({} as any);
-  const giftRef = React.useRef<BottomSheetGiftRef>({} as any);
+  const giftRef = React.useRef<BottomSheetGiftSimuRef>({} as any);
   const im = useIMContext();
   const count = React.useRef(0);
   const { colors } = usePaletteContext();
@@ -278,8 +278,9 @@ export function ChatroomScreen(props: Props) {
           </TouchableOpacity>
         </View>
       </Chatroom>
-      <BottomSheetGift
+      <BottomSheetGift2
         ref={giftRef}
+        maskStyle={{ transform: [{ translateY: -pageY }] }}
         gifts={[
           { title: 'gift1', gifts },
           { title: 'gift2', gifts: gifts2 },
