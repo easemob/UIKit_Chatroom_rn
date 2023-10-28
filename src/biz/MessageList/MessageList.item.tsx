@@ -179,3 +179,5 @@ export function MessageListItem(props: MessageListItemProps) {
 }
 
 export const MessageListItemMemo = React.memo(MessageListItem);
+
+export type MessageListItemComponent = typeof MessageListItem;

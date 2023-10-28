@@ -30,6 +30,7 @@ export type MemberListProps = {
   memberType: MemberListType;
   onSearch?: (memberType: MemberListType) => void;
   onNoMoreMember?: () => void;
+  MemberItemComponent?: React.ComponentType<MemberListItemProps>;
 } & PropsWithTest &
   PropsWithError;
 
@@ -41,6 +42,7 @@ export function MemberList(props: MemberListProps) {
     memberType,
     onSearch,
     onNoMoreMember,
+    MemberItemComponent,
   } = props;
 
   const {
@@ -73,6 +75,8 @@ export function MemberList(props: MemberListProps) {
   });
   // const modalRef = React.useRef<ModalRef>({} as any);
 
+  const _MemberItemComponent = MemberItemComponent ?? MemberListItemMemo;
+
   return (
     <>
       <View
@@ -94,7 +98,7 @@ export function MemberList(props: MemberListProps) {
           onRefresh={onRefresh}
           renderItem={(info: ListRenderItemInfo<MemberListItemProps>) => {
             const { item } = info;
-            return <MemberListItemMemo {...item} />;
+            return <_MemberItemComponent {...item} />;
           }}
           keyExtractor={(item: MemberListItemProps) => {
             return item.id;

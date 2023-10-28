@@ -11,6 +11,7 @@ import { gBottomSheetHeaderHeight } from '../const';
 import type { PropsWithError, PropsWithTest } from '../types';
 import { MemberList } from './MemberList';
 import { useIsOwner } from './MemberList.hooks';
+import type { MemberListItemProps } from './MemberList.item';
 import type { MemberListType } from './types';
 
 export type BottomSheetMemberListRef = SimulativeModalRef & {
@@ -22,6 +23,7 @@ export type BottomSheetMemberListProps = {
   onSearch?: (memberType: MemberListType) => void;
   onNoMoreMember?: () => void;
   containerStyle?: StyleProp<ViewStyle>;
+  MemberItemComponent?: React.ComponentType<MemberListItemProps>;
 } & PropsWithTest &
   PropsWithError;
 
@@ -39,6 +41,7 @@ export const BottomSheetMemberList = React.forwardRef<
     onSearch,
     onNoMoreMember,
     containerStyle,
+    MemberItemComponent,
   } = props;
   const modalRef = React.useRef<SimulativeModalRef>({} as any);
   const { height: winHeight } = useWindowDimensions();
@@ -130,6 +133,7 @@ export const BottomSheetMemberList = React.forwardRef<
           onSearch?.('member');
         }}
         onNoMoreMember={onNoMoreMember}
+        MemberItemComponent={MemberItemComponent}
       />,
     ];
   };

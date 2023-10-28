@@ -281,3 +281,5 @@ const MarqueeIcon = ({
     </View>
   );
 };
+
+export type MarqueeComponent = typeof Marquee;

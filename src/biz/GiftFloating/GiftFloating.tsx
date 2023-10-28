@@ -138,3 +138,5 @@ export const GiftFloating = React.forwardRef<
 const ItemSeparatorComponent = () => {
   return <View style={{ height: gItemInterval }} />;
 };
+
+export type GiftFloatingComponent = typeof GiftFloating;

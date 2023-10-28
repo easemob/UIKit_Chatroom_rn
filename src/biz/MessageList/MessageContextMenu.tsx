@@ -37,7 +37,7 @@ export const MessageContextMenu = React.forwardRef<
 ) {
   const { onRequestModalClose, ...others } = props;
   const menuRef = React.useRef<BottomSheetMenuRef>({} as any);
-  const { getItems } = useGetItems();
+  const { getItems } = useGetMessageListItems();
 
   React.useImperativeHandle(
     ref,
@@ -70,7 +70,7 @@ export const MessageContextMenu = React.forwardRef<
   );
 });
 
-export function useGetItems() {
+export function useGetMessageListItems() {
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     divider: {

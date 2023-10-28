@@ -34,7 +34,7 @@ export const MemberContextMenu = React.forwardRef<
 ) {
   const { onRequestModalClose, ...others } = props;
   const menuRef = React.useRef<BottomSheetMenuRef>({} as any);
-  const { getItems } = useGetItems();
+  const { getItems } = useGetMemberListItems();
 
   React.useImperativeHandle(
     ref,
@@ -64,7 +64,7 @@ export const MemberContextMenu = React.forwardRef<
   );
 });
 
-export function useGetItems() {
+export function useGetMemberListItems() {
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     divider: {
@@ -145,7 +145,7 @@ export const MemberContextMenuWrapper = (
 ) => {
   const { muteMember, removeMember, memberType } = props;
   const menuRef = React.useRef<MemberContextMenuRef>({} as any);
-  const { getItems } = useGetItems();
+  const { getItems } = useGetMemberListItems();
   const listener = React.useRef(
     (
       _memberType: MemberListType, // current mute list

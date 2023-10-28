@@ -14,13 +14,19 @@ import { I18nContext, I18nTr } from '../../i18n';
 import { IMContext, IMService, IMServiceListener } from '../../im';
 import {
   GiftFloating,
+  GiftFloatingComponent,
   GiftFloatingProps,
   GiftFloatingRef,
 } from '../GiftFloating';
 import { gGiftFloatingListHeight } from '../GiftFloating/GiftFloating.const'; // for test
 import { InputBar, InputBarProps, InputBarRef } from '../InputBar';
 import { gInputBarStyleHeight } from '../InputBar/InputBar.const';
-import { Marquee, MarqueeProps, MarqueeRef } from '../Marquee';
+import {
+  Marquee,
+  MarqueeComponent,
+  MarqueeProps,
+  MarqueeRef,
+} from '../Marquee';
 import {
   BottomSheetMemberList,
   BottomSheetMemberListProps,
@@ -37,6 +43,8 @@ type ChatroomData = {
 export type ChatroomProps = React.PropsWithChildren<
   {
     containerStyle?: StyleProp<ViewStyle>;
+    GiftFloating?: GiftFloatingComponent;
+    Marquee?: MarqueeComponent;
     input?: {
       props?: Omit<
         InputBarProps,
@@ -68,6 +76,9 @@ type ChatroomState = {
   pageY: number;
 };
 
+let GGiftFloating: GiftFloatingComponent;
+let GMarquee: MarqueeComponent;
+
 export abstract class ChatroomBase extends React.PureComponent<
   ChatroomProps,
   ChatroomState
@@ -91,6 +102,9 @@ export abstract class ChatroomBase extends React.PureComponent<
     this.giftRef = React.createRef();
     this.memberRef = React.createRef();
     this.containerRef = React.createRef();
+
+    GGiftFloating = props.GiftFloating ?? GiftFloating;
+    GMarquee = props.Marquee ?? Marquee;
 
     this.state = {
       isInputBarShow: false,
@@ -270,7 +284,7 @@ export abstract class ChatroomBase extends React.PureComponent<
           />
 
           {this.config?.roomOption.gift.isVisible === true ? (
-            <GiftFloating
+            <GGiftFloating
               ref={this.giftRef}
               containerStyle={{
                 left: 16,
@@ -283,7 +297,7 @@ export abstract class ChatroomBase extends React.PureComponent<
           ) : null}
 
           {this.config?.roomOption.marquee.isVisible === true ? (
-            <Marquee
+            <GMarquee
               ref={this.marqueeRef}
               containerStyle={{
                 position: 'absolute',

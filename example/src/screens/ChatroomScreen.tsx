@@ -146,14 +146,16 @@ export function ChatroomScreen(props: Props) {
       {/* <BackgroundImageMemo /> */}
       <Chatroom
         ref={chatroomRef}
+        // Marquee={Marquee}
         // containerStyle={{ transform: [{ translateY: -pageY }] }}
         // messageList={{
         //   props: {
         //     visible: true,
-        //     containerStyle: {
-        //       position: 'absolute',
-        //       top: 100,
-        //     },
+        //     // containerStyle: {
+        //     //   position: 'absolute',
+        //     //   top: 100,
+        //     // },
+        //     // MessageListItemComponent: MessageListItemMemo,
         //   },
         // }}
         // gift={{
@@ -226,6 +228,7 @@ export function ChatroomScreen(props: Props) {
             onSearch: (memberType) => {
               navigation.push('TestSearchMember', { params: { memberType } });
             },
+            // MemberItemComponent: MemberListItemMemo,
           },
         }}
         roomId={room.roomId}

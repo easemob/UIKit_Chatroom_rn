@@ -17,7 +17,7 @@ import { BorderButton } from '../../ui/Button';
 import { seqId } from '../../utils';
 import { Report, ReportItemModel, ReportProps, ReportRef } from '../Report';
 import type { PropsWithError, PropsWithTest } from '../types';
-import { useGetItems } from './MessageContextMenu';
+import { useGetMessageListItems } from './MessageContextMenu';
 import {
   MessageContextMenu,
   MessageContextMenuRef,
@@ -47,6 +47,7 @@ export type MessageListProps = {
   containerStyle?: StyleProp<ViewStyle>;
   backgroundStyle?: StyleProp<ViewStyle>;
   onLayout?: ((event: LayoutChangeEvent) => void) | undefined;
+  MessageListItemComponent?: React.ComponentType<MessageListItemProps>;
 
   reportProps?: ReportProps;
 } & PropsWithTest &
@@ -61,8 +62,9 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
       visible = true,
       onLayout: onLayoutProps,
       reportProps,
+      MessageListItemComponent,
     } = props;
-    const { getItems } = useGetItems();
+    const { getItems } = useGetMessageListItems();
     const _onLongPress = (item: MessageListItemModel) => {
       menuRef?.current?.startShowWithInit?.(
         getItems({
@@ -146,6 +148,9 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
       };
     }, [reportMessage, reportProps?.onReport]);
 
+    const _MessageListItemComponent =
+      MessageListItemComponent ?? MessageListItemMemo;
+
     if (visible === false) {
       return null;
     }
@@ -169,7 +174,7 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
             ref={listRef}
             data={data}
             renderItem={(info: ListRenderItemInfo<MessageListItemProps>) => {
-              return <MessageListItemMemo {...info.item} />;
+              return <_MessageListItemComponent {...info.item} />;
             }}
             // renderItem={RenderItemMemo}
             keyExtractor={(item: MessageListItemProps) => {

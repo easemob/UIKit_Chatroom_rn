@@ -31,6 +31,7 @@ export * from './biz/GiftIcon';
 export * from './biz/GiftList';
 export * from './biz/Marquee';
 export * from './biz/MemberList';
+export * from './biz/MessageList';
 export * from './biz/Report';
 export * from './biz/types';
 export * from './config';
