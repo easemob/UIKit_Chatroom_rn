@@ -151,10 +151,13 @@ export function ChatroomScreen(props: Props) {
         // messageList={{
         //   props: {
         //     visible: true,
-        //     // containerStyle: {
-        //     //   position: 'absolute',
-        //     //   top: 100,
-        //     // },
+        //     containerStyle: {
+        //       position: 'absolute',
+        //       top: 100,
+        //       // height: 400,
+        //       // width: 150,
+        //       // backgroundColor: 'red',
+        //     },
         //     // MessageListItemComponent: MessageListItemMemo,
         //   },
         // }}
