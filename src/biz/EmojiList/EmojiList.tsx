@@ -45,7 +45,6 @@ export function EmojiList(props: EmojiListProps) {
     checkType(propsWidth, 'number');
   }
   const getUnitSize = () => {
-    console.log('test:zuoyu:width:', propsWidth, containerStyle);
     if (propsWidth) {
       return (propsWidth as number) / countPerRow - 1;
     }

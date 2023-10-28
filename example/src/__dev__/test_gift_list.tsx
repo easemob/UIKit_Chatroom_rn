@@ -11,6 +11,9 @@ import {
   createPresetPalette,
   GiftList,
   GiftListModel,
+  useCompare,
+  useDarkTheme,
+  usePresetPalette,
 } from 'react-native-chat-room';
 
 export function TestGiftList() {
@@ -41,9 +44,17 @@ export function TestGiftList() {
 }
 
 export function TestGiftList2() {
-  const pal = createPresetPalette();
-  const dark = createDarkTheme(pal);
-  const light = createLightTheme(pal);
+  console.log('test:zuoyu:4444');
+  // const pal = createPresetPalette();
+  // const dark = createDarkTheme(pal);
+  // const light = createLightTheme(pal);
+  const pal = usePresetPalette();
+  const dark = useDarkTheme(pal);
+  const light = useDarkTheme(pal);
+  useCompare(pal, { enabled: true });
+  useCompare(dark, { enabled: true });
+  useCompare(light, { enabled: true });
+
   const ref = React.useRef<BottomSheetGiftRef>({} as any);
   const count = React.useRef(0);
 
@@ -59,15 +70,15 @@ export function TestGiftList2() {
         <TouchableOpacity
           style={{ width: 200, height: 40, backgroundColor: 'red' }}
           onPress={() => {
-            // ref.current?.startShow();
-            ref.current?.startShowWithInit(
-              count.current % 2 === 0
-                ? [{ title: 'gift1', gifts }]
-                : [
-                    { title: 'gift1', gifts },
-                    { title: 'gift2', gifts: gifts2 },
-                  ]
-            );
+            ref.current?.startShow();
+            // ref.current?.startShowWithInit(
+            //   count.current % 2 === 0
+            //     ? [{ title: 'gift1', gifts }]
+            //     : [
+            //         { title: 'gift1', gifts },
+            //         { title: 'gift2', gifts: gifts2 },
+            //       ]
+            // );
             ++count.current;
           }}
         >

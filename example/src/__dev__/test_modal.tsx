@@ -10,9 +10,52 @@ import {
   ThemeContextProvider,
 } from 'react-native-chat-room';
 
+type MyModalRef = ModalRef;
+type MyModalProps = {
+  propsRef?: React.RefObject<MyModalRef>;
+};
+export const MyModal = (props: MyModalProps) => {
+  const { propsRef } = props;
+  const modalRef = React.useRef<ModalRef>({} as any);
+  console.log('test:MyModal:', propsRef?.current);
+  if (propsRef?.current) {
+    propsRef.current.startShow = () => {
+      modalRef?.current?.startShow?.();
+    };
+    propsRef.current.startHide = () => {
+      modalRef?.current?.startHide?.();
+    };
+  }
+  return (
+    <Modal
+      propsRef={modalRef}
+      modalAnimationType="slide"
+      backgroundColor={'rgba(1,1,1, 0.2)'}
+      backgroundTransparent={false}
+      onRequestModalClose={() => {
+        modalRef.current.startHide();
+      }}
+    >
+      <Pressable
+      // style={{ height: 400, backgroundColor: 'yellow' }}
+      // onPress={() => {
+      //   modalRef.current.startHide();
+      // }}
+      >
+        <View style={{ height: 400, backgroundColor: 'yellow' }}>
+          <View style={{ height: 40, margin: 10, backgroundColor: 'blue' }} />
+          <View style={{ height: 40, margin: 10, backgroundColor: 'blue' }} />
+          <View style={{ height: 40, margin: 10, backgroundColor: 'blue' }} />
+          <View style={{ height: 40, margin: 10, backgroundColor: 'blue' }} />
+        </View>
+      </Pressable>
+    </Modal>
+  );
+};
+
 export function ModalComponent(): React.JSX.Element {
   const { width } = useWindowDimensions();
-  const modalRef = React.useRef<ModalRef>({} as any);
+  const modalRef = React.useRef<MyModalRef>({} as any);
   return (
     <View style={{ flex: 1, paddingTop: 100 }}>
       <Pressable
@@ -22,29 +65,7 @@ export function ModalComponent(): React.JSX.Element {
       >
         <View style={{ width: width, height: 50, backgroundColor: 'orange' }} />
       </Pressable>
-      <Modal
-        propsRef={modalRef}
-        modalAnimationType="slide"
-        backgroundColor={'rgba(1,1,1, 0.2)'}
-        backgroundTransparent={false}
-        onRequestModalClose={() => {
-          modalRef.current.startHide();
-        }}
-      >
-        <Pressable
-        // style={{ height: 400, backgroundColor: 'yellow' }}
-        // onPress={() => {
-        //   modalRef.current.startHide();
-        // }}
-        >
-          <View style={{ height: 400, backgroundColor: 'yellow' }}>
-            <View style={{ height: 40, margin: 10, backgroundColor: 'blue' }} />
-            <View style={{ height: 40, margin: 10, backgroundColor: 'blue' }} />
-            <View style={{ height: 40, margin: 10, backgroundColor: 'blue' }} />
-            <View style={{ height: 40, margin: 10, backgroundColor: 'blue' }} />
-          </View>
-        </Pressable>
-      </Modal>
+      <MyModal propsRef={modalRef} />
     </View>
   );
 }

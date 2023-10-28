@@ -9,6 +9,8 @@ import {
   createPresetPalette,
   EmojiList,
   EmojiListMemo,
+  SlideModal,
+  SlideModalRef,
   useCompare,
   useDarkTheme,
   useForceUpdate,
@@ -205,6 +207,46 @@ export function TestViewMemo2() {
   );
 }
 
+export function TestEmojiList3() {
+  const modalRef = React.useRef<SlideModalRef>({} as any);
+  console.log('test:TestEmojiList3:');
+
+  // const pal = createPresetPalette();
+  // const dark = createDarkTheme(pal);
+  // const light = createLightTheme(pal);
+  const pal = usePresetPalette();
+  const dark = useDarkTheme(pal);
+  const light = useDarkTheme(pal);
+  useCompare(pal);
+  useCompare(dark);
+  useCompare(light);
+
+  return (
+    <Container appKey={'sdf'} palette={pal} theme={light ? light : dark}>
+      <View
+        style={{ top: 100, backgroundColor: 'red', height: 50 }}
+        onTouchEnd={() => {
+          modalRef?.current?.startShow?.();
+        }}
+      >
+        <Text>{'click me for test'}</Text>
+      </View>
+      <SlideModal
+        propsRef={modalRef}
+        onRequestModalClose={(): void => {
+          modalRef?.current?.startHide?.();
+        }}
+      >
+        <EmojiListMemo
+          onFace={function (id: string): void {
+            console.log('test:', id);
+          }}
+        />
+      </SlideModal>
+    </Container>
+  );
+}
+
 export default function test_emoji_list() {
-  return <TestEmojiList2 />;
+  return <TestEmojiList3 />;
 }
