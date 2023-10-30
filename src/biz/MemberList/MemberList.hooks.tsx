@@ -269,10 +269,26 @@ export function useMemberListAPI(
         memberCursor.current = '';
         im.fetchMembers(im.roomId!, gMemberPerPageSize, memberCursor.current)
           .then((r) => {
+            // add owner
+            const owner = im?.getUserInfo(im?.ownerId);
+            if (owner === undefined) {
+              im.sendError({
+                error: new UIKitError({
+                  code: ErrorCode.room_join_error,
+                  extra: 'get owner is failed.',
+                }),
+                from: useMemberListAPI?.caller?.name,
+              });
+            }
+            if (owner) {
+              _addDataList([owner.userId]);
+            }
+
             memberCursor.current = r.cursor;
             if (r.list) {
-              _updateUI(_addDataList(r.list));
+              _addDataList(r.list);
             }
+            _updateUI(true);
             onFinished?.();
           })
           .catch((e) => {
