@@ -12,6 +12,7 @@ import {
 import { ErrorCode, UIKitError } from '../error';
 import { asyncTask } from '../utils';
 import {
+  chatroom_uikit_userInfo,
   custom_msg_event_type_gift,
   custom_msg_event_type_join,
 } from './im.const';
@@ -142,6 +143,7 @@ export abstract class IMServiceImpl implements IMService {
         await this.client.login(userId, userToken, false);
       }
 
+      // !!! hot-reload no pass
       this._user = {
         nickName: userNickname,
         avatarURL: userAvatarURL,
@@ -436,7 +438,9 @@ export abstract class IMServiceImpl implements IMService {
       ChatMessageChatType.ChatRoom
     );
     msg.receiverList = mentionIds;
-    msg.attributes = { chatroom_uikit_userInfo: user };
+    msg.attributes = {
+      chatroom_uikit_userInfo: { ...user, gender: user.gender?.toString() },
+    };
     this.client.chatManager
       .sendMessage(msg, {
         onError: (_localMsgId, error) => {
@@ -499,7 +503,9 @@ export abstract class IMServiceImpl implements IMService {
       });
     }
     msg.receiverList = mentionIds;
-    msg.attributes = { chatroom_uikit_userInfo: user };
+    msg.attributes = {
+      chatroom_uikit_userInfo: { ...user, gender: user.gender?.toString() },
+    };
     this.client.chatManager
       .sendMessage(msg, {
         onError: (_localMsgId, error) => {
@@ -549,6 +555,24 @@ export abstract class IMServiceImpl implements IMService {
     this._listeners.forEach((v) => {
       asyncTask(() => v.onError?.(params));
     });
+  }
+  userInfoFromMessage(msg?: ChatMessage): UserServiceData | undefined {
+    if (msg === undefined || msg === null) {
+      return undefined;
+    }
+    const jsonUserInfo = (msg.attributes as any)[chatroom_uikit_userInfo];
+    if (jsonUserInfo) {
+      const userInfo = jsonUserInfo as UserServiceData;
+      if (userInfo?.userId) {
+        const gender =
+          typeof jsonUserInfo?.gender === 'string'
+            ? Number.parseInt(jsonUserInfo?.gender ?? '0', 10)
+            : (jsonUserInfo?.gender as number);
+        return { ...userInfo, gender: gender };
+      }
+    }
+
+    return undefined;
   }
   // destructor() {}
 }

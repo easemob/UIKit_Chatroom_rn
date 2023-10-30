@@ -22,6 +22,7 @@ import { useI18nContext } from '../../i18n';
 import {
   chatroom_uikit_gift,
   custom_msg_event_type_gift,
+  custom_msg_event_type_join,
   GiftServiceData,
   IMServiceListener,
   useIMContext,
@@ -227,6 +228,20 @@ export function useMessageListApi(params: {
     onUnreadCount?.(unreadCount.current);
   };
 
+  const _addJoinData = (message: ChatMessage) => {
+    const getNickName = () => {
+      const user = im.userInfoFromMessage(message);
+      return user?.nickName ?? user?.userId ?? 'unknown';
+    };
+    const part = {
+      type: 'text',
+      msg: message,
+      content: {
+        text: tr('${0} Joined', getNickName()),
+      },
+    } as Pick<MessageListItemProps, 'type' | 'msg' | 'content'>;
+    return _addCommonData(part);
+  };
   const _addTextData = (message: ChatMessage, content?: string) => {
     const getContent = () => {
       if (content) return content;
@@ -252,8 +267,8 @@ export function useMessageListApi(params: {
         type: 'gift',
         msg: message,
         content: {
-          gift: gift.icon,
-          text: tr("Sent '@${0}'", gift.name),
+          gift: gift.giftIcon,
+          text: tr("Sent '@${0}'", gift.giftName),
         },
       } as Pick<MessageListItemProps, 'type' | 'msg' | 'content'>;
       return _addCommonData(part);
@@ -264,7 +279,10 @@ export function useMessageListApi(params: {
     d: Pick<MessageListItemProps, 'type' | 'msg' | 'content'>
   ) => {
     const getBasic = (): MessageListItemBasic => {
-      const user = im.getUserInfo(d.msg?.from);
+      let user = im.getUserInfo(d.msg?.from);
+      if (user === undefined) {
+        user = im.userInfoFromMessage(d.msg);
+      }
       const nickName =
         im.userId === d.msg?.from
           ? tr('self')
@@ -308,6 +326,7 @@ export function useMessageListApi(params: {
     _startClearTask();
     _scrollToEnd();
   };
+
   const _onCustomMessage = (message: ChatMessage) => {
     const body = message.body as ChatCustomMessageBody;
     if (body.event === custom_msg_event_type_gift) {
@@ -323,11 +342,22 @@ export function useMessageListApi(params: {
         _startClearTask();
         _scrollToEnd();
       }
+    } else if (body.event === custom_msg_event_type_join) {
+      _updateUI(_addJoinData(message));
     }
   };
 
   const _addTextMessage = (content: string, message?: ChatMessage) => {
     _updateUI(_addTextData(message!, content));
+    _setNeedScroll(true);
+    _setUnreadCount(0);
+    emit(`_$${useMessageListApi.name}_updateUnreadCount`, unreadCount.current);
+    _startClearTask();
+    _scrollToEnd();
+  };
+
+  const _addJoinedMessage = (message: ChatMessage) => {
+    _updateUI(_addJoinData(message));
     _setNeedScroll(true);
     _setUnreadCount(0);
     emit(`_$${useMessageListApi.name}_updateUnreadCount`, unreadCount.current);
@@ -476,6 +506,7 @@ export function useMessageListApi(params: {
     data: data,
     listRef: listRef,
     addTextMessage: _addTextMessage,
+    addJoinedMessage: _addJoinedMessage,
     scrollToEnd: _scrollToEnd,
     onEndReached: _onEndReached,
     onScroll: _onScroll,

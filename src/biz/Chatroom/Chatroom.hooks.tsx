@@ -40,8 +40,13 @@ export class Chatroom extends ChatroomBase {
         if (user.userId === this.im?.userId) {
           this.im?.sendJoinCmd({
             roomId: roomId,
-            result: ({ error }) => {
-              if (error) this.props.onError?.(error);
+            result: ({ error, message }) => {
+              if (error) {
+                this.props.onError?.(error);
+              }
+              if (message) {
+                this.messageRef?.current?.addJoinedMessage(message);
+              }
             },
           });
         }
@@ -102,6 +107,7 @@ export class Chatroom extends ChatroomBase {
     }
   }
   async unInit() {
+    console.log('test:unInit:');
     if (this.listener) {
       this.im?.removeListener(this.listener);
     }
@@ -173,13 +179,16 @@ export class Chatroom extends ChatroomBase {
 
     if (jsonGift) {
       const gift = JSON.parse(jsonGift) as GiftServiceData;
+      const user = this.im?.userInfoFromMessage(message);
+      const nickName = user?.nickName ?? user?.userId ?? 'unknown';
       this.giftRef?.current?.pushTask?.({
         model: {
           id: seqId('_gf').toString(),
-          nickName: gift.sender?.nickName ?? gift.sender?.userId ?? 'unknown',
-          giftCount: gift.count,
-          giftIcon: gift.icon,
-          content: this.i18n?.tr("Sent '@${0}'", gift.name) ?? '',
+          avatar: user?.avatarURL,
+          nickName: nickName,
+          giftCount: gift.giftCount,
+          giftIcon: gift.giftIcon,
+          content: this.i18n?.tr("Sent '@${0}'", gift.giftName) ?? '',
         },
       });
     }

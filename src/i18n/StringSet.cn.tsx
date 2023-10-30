@@ -28,6 +28,7 @@ export function createStringSetCn(): StringSet {
     'self': '自己',
 
     "Sent '@${0}'": (a: string) => `发送 '@${a}'`,
+    '${0} Joined': (a: string) => `${a} 加入`,
 
     'delete_button_click_popups_title': '删除消息',
     'delete_button_click_popups_content': '该消息将被删除且其他人无法看到',

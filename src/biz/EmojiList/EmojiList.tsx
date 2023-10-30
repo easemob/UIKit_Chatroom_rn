@@ -26,6 +26,7 @@ export type EmojiListProps = {
   onFace: (id: string) => void;
   containerStyle?: StyleProp<ViewStyle>;
   countPerRow?: number;
+  emojiList?: string[];
 };
 
 export function EmojiList(props: EmojiListProps) {
@@ -37,7 +38,12 @@ export function EmojiList(props: EmojiListProps) {
       dark: colors.neutral[1],
     },
   });
-  const { onFace, containerStyle, countPerRow = gCountPerRow } = props;
+  const {
+    onFace,
+    containerStyle,
+    countPerRow = gCountPerRow,
+    emojiList,
+  } = props;
   const { getViewStyleSize } = useGetStyleSize();
   const { width: propsWidth } = getViewStyleSize(containerStyle);
   const { checkType } = useCheckType();
@@ -52,6 +58,9 @@ export function EmojiList(props: EmojiListProps) {
   };
   const { enableCompare } = useConfigContext();
   useCompare(getColor, { enabled: enableCompare });
+
+  const _emojiList = emojiList ?? FACE_ASSETS;
+
   return (
     <View
       style={[
@@ -65,7 +74,7 @@ export function EmojiList(props: EmojiListProps) {
       <ScrollView>
         <View style={styles.group}>
           <View style={styles.list}>
-            {FACE_ASSETS.map((v, i) => {
+            {_emojiList.map((v, i) => {
               const r = emoji.convert.fromCodePoint(v.substring(2));
               return (
                 <View

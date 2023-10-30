@@ -1,17 +1,13 @@
 import * as React from 'react';
 import { PanResponder, ViewToken } from 'react-native';
-import {
-  ChatCustomMessageBody,
-  ChatMessage,
-  ChatMessageType,
-} from 'react-native-chat-sdk';
+import { ChatCustomMessageBody, ChatMessageType } from 'react-native-chat-sdk';
 
 import { useDispatchContext, useDispatchListener } from '../../dispatch';
 import { ErrorCode, UIKitError } from '../../error';
 import { useDelayExecTask } from '../../hook';
 import {
-  chatroom_uikit_userInfo,
   custom_msg_event_type_join,
+  IMService,
   IMServiceListener,
   useIMContext,
   useIMListener,
@@ -216,6 +212,7 @@ export function useMemberListAPI(
   };
 
   useMemberListener({
+    im: im,
     onUpdateInfo: (roomId, userInfo) => {
       if (roomId === im.roomId) {
         im.updateUserInfos([userInfo]);
@@ -270,18 +267,8 @@ export function useMemberListAPI(
         im.fetchMembers(im.roomId!, gMemberPerPageSize, memberCursor.current)
           .then((r) => {
             // add owner
-            const owner = im?.getUserInfo(im?.ownerId);
-            if (owner === undefined) {
-              im.sendError({
-                error: new UIKitError({
-                  code: ErrorCode.room_join_error,
-                  extra: 'get owner is failed.',
-                }),
-                from: useMemberListAPI?.caller?.name,
-              });
-            }
-            if (owner) {
-              _addDataList([owner.userId]);
+            if (im?.ownerId) {
+              _addDataList([im.ownerId]);
             }
 
             memberCursor.current = r.cursor;
@@ -510,31 +497,19 @@ export function useSearchMemberListAPI(props: { memberType: MemberListType }) {
   };
 }
 
-export function userInfoFromMessage(
-  msg: ChatMessage
-): UserServiceData | undefined {
-  const jsonUserInfo = (msg.attributes as any)[chatroom_uikit_userInfo];
-  if (jsonUserInfo) {
-    const userInfo = jsonUserInfo as UserServiceData;
-    if (userInfo?.userId) {
-      return userInfo;
-    }
-  }
-
-  return undefined;
-}
-
 type useMemberListenerProps = {
+  im: IMService;
   onUpdateInfo?: (roomId: string, userInfo: UserServiceData) => void;
   onUserJoinedNotify?: (roomId: string, userInfo: UserServiceData) => void;
   onUserJoined?: (roomId: string, userId: string) => void;
   onUserLeave?: (roomId: string, userId: string) => void;
 };
 export function useMemberListener(props: useMemberListenerProps) {
-  const { onUpdateInfo, onUserJoined, onUserLeave, onUserJoinedNotify } = props;
+  const { im, onUpdateInfo, onUserJoined, onUserLeave, onUserJoinedNotify } =
+    props;
   const msgListener = React.useRef<IMServiceListener>({
     onMessageReceived: (roomId, message) => {
-      const userInfo = userInfoFromMessage(message);
+      const userInfo = im.userInfoFromMessage(message);
       if (userInfo) {
         onUpdateInfo?.(roomId, userInfo);
         if (message.body.type === ChatMessageType.CUSTOM) {

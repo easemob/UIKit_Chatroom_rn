@@ -17,7 +17,7 @@ import { FACE_ASSETS_UTF16 } from './EmojiList.const';
  */
 function toCodePointText(text: string): string {
   let tmp = text;
-  for (const key of FACE_ASSETS) {
+  for (const key of gEmojiList) {
     // tmp.replaceAll(key, _emoji.convert.fromCodePoint(key.substring(2)));
     const keyTmp = key.replace('+', '\\+');
     tmp = tmp.replace(
@@ -30,7 +30,7 @@ function toCodePointText(text: string): string {
 
 function fromCodePointText(text: string): string {
   let tmp = text;
-  for (const key of FACE_ASSETS_UTF16) {
+  for (const key of gEmojiListUTF16) {
     tmp = tmp.replace(
       new RegExp(key, 'g'),
       'U+' + _emoji.convert.toCodePoint(key).toUpperCase()
@@ -39,7 +39,18 @@ function fromCodePointText(text: string): string {
   return tmp;
 }
 
+let gEmojiList = FACE_ASSETS;
+let gEmojiListUTF16 = FACE_ASSETS_UTF16;
+
+function setEmojiList(list: string[]) {
+  gEmojiList = list;
+  gEmojiListUTF16 = gEmojiList.map((v) => {
+    return _emoji.convert.fromCodePoint(v.substring(2));
+  });
+}
+
 export const emoji = {
   toCodePointText,
   fromCodePointText,
+  setEmojiList,
 };

@@ -41,15 +41,14 @@ export type UserServiceData = {
 };
 
 export type GiftServiceData = {
-  id: string;
-  name: string;
-  price: string;
-  count: number;
-  icon: string;
-  effect: string;
-  selected: boolean;
-  sendedThenClose: boolean;
-  sender?: UserServiceData;
+  giftId: string;
+  giftName: string;
+  giftPrice: string;
+  giftCount: number;
+  giftIcon: string;
+  giftEffect: string;
+  selected?: boolean;
+  sendedThenClose?: boolean;
 };
 
 export interface ChatroomServiceListener {
@@ -213,6 +212,8 @@ export interface IMService {
   ): Promise<ChatMessage>;
 
   fetchSupportedLanguages(): Promise<ChatTranslateLanguage[]>;
+
+  userInfoFromMessage(msg?: ChatMessage): UserServiceData | undefined;
 
   sendError(params: { error: UIKitError; from?: string; extra?: any }): void;
 }
