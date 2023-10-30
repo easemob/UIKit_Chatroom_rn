@@ -15,7 +15,12 @@ import { useI18nContext } from '../../i18n';
 import { usePaletteContext } from '../../theme';
 import { BorderButton } from '../../ui/Button';
 import { seqId } from '../../utils';
-import { Report, ReportItemModel, ReportProps, ReportRef } from '../Report';
+import {
+  BottomSheetReport,
+  ReportItemModel,
+  ReportProps,
+  ReportRef,
+} from '../Report';
 import type { PropsWithError, PropsWithTest } from '../types';
 import { useGetMessageListItems } from './MessageContextMenu';
 import {
@@ -195,7 +200,7 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
           }}
           list={[]}
         />
-        <Report
+        <BottomSheetReport
           ref={reportRef}
           {...reportProps}
           onReport={getOnReport.onReport}

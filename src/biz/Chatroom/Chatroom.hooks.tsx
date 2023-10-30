@@ -24,7 +24,15 @@ export class Chatroom extends ChatroomBase {
   componentWillUnmount?(): void {
     this.unInit();
   }
-  componentDidCatch?(_error: Error, _errorInfo: React.ErrorInfo): void {}
+  componentDidCatch?(e: Error, info: React.ErrorInfo): void {
+    this.im?.sendError({
+      error: new UIKitError({
+        code: ErrorCode.common,
+        desc: JSON.stringify(e),
+        extra: info.componentStack,
+      }),
+    });
+  }
 
   async init() {
     this.listener = {

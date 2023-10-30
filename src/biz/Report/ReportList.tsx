@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { useI18nContext } from '../../i18n';
 import { BorderButton, CmnButton } from '../../ui/Button';
 import type { SimulativeModalRef } from '../../ui/Modal';
 import { gBottomSheetHeaderHeight } from '../const';
@@ -40,6 +41,7 @@ export function ReportList(props: ReportListProps) {
   const ref = React.useRef<FlatList<ReportListItemProps>>({} as any);
   const { height: winHeight } = useWindowDimensions();
   const { bottom } = useSafeAreaInsets();
+  const { tr } = useI18nContext();
   let height =
     propsHeight ??
     (winHeight * 3) / 5 -
@@ -96,7 +98,7 @@ export function ReportList(props: ReportListProps) {
           sizesType={'large'}
           radiusType={'large'}
           contentType={'only-text'}
-          text={'Cancel'}
+          text={tr('Cancel')}
           style={{ width: '42%', height: 40 }}
           onPress={onCancel}
         />
@@ -104,7 +106,7 @@ export function ReportList(props: ReportListProps) {
           sizesType={'large'}
           radiusType={'large'}
           contentType={'only-text'}
-          text={'Report'}
+          text={tr('Report')}
           style={{ width: '42%', height: 40 }}
           onPress={() => {
             onReport?.(

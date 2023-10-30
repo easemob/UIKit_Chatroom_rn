@@ -2,11 +2,11 @@ import * as React from 'react';
 import { Platform, Pressable, TouchableOpacity, View } from 'react-native';
 import {
   BottomSheetMemberListRef,
+  BottomSheetReport,
   Container,
   createDarkTheme,
   createLightTheme,
   createPresetPalette,
-  Report,
   seqId,
   SimulativeModalRef,
   Text,
@@ -62,7 +62,7 @@ export function TestReport(): React.JSX.Element {
   const ref = React.useRef<SimulativeModalRef>({} as any);
   return (
     <View style={{ flex: 1 }}>
-      <Report ref={ref} data={data} onReport={() => {}} />
+      <BottomSheetReport ref={ref} data={data} onReport={() => {}} />
       <View
         style={{
           position: 'absolute', // !!! must
@@ -104,10 +104,10 @@ export function TestReport2(): React.JSX.Element {
 
       {Platform.OS === 'ios' ? (
         <View style={{ position: 'absolute' }}>
-          <Report ref={ref} data={data} onReport={() => {}} />
+          <BottomSheetReport ref={ref} data={data} onReport={() => {}} />
         </View>
       ) : (
-        <Report ref={ref} data={data} onReport={() => {}} />
+        <BottomSheetReport ref={ref} data={data} onReport={() => {}} />
       )}
     </View>
   );
