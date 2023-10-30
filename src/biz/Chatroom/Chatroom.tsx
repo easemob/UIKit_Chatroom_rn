@@ -169,23 +169,6 @@ export abstract class ChatroomBase extends React.PureComponent<
     return this._getMessageListTop() - gGiftFloatingListHeight;
   }
 
-  _getBackgroundHeight() {
-    if (Platform.OS === 'ios') {
-      return (
-        Dimensions.get('window').height -
-        0 - // bottom height
-        94
-      ); // navigator header height
-    } else {
-      return (
-        Dimensions.get('window').height -
-        0 - // bottom height
-        56 - // navigator header height
-        (StatusBar.currentHeight ?? 0) // android platform
-      );
-    }
-  }
-
   componentDidMount?(): void {}
   componentWillUnmount?(): void {}
   componentDidCatch?(_error: Error, _errorInfo: React.ErrorInfo): void {}
@@ -261,16 +244,7 @@ export abstract class ChatroomBase extends React.PureComponent<
             }
           }}
         >
-          <View
-            style={[
-              {
-                width: '100%',
-                height: this._getBackgroundHeight(),
-              },
-            ]}
-          >
-            {backgroundView}
-          </View>
+          {backgroundView}
 
           <MessageList
             ref={this.messageRef}
@@ -278,6 +252,7 @@ export abstract class ChatroomBase extends React.PureComponent<
               {
                 position: 'absolute',
                 top: this._getMessageListTop() - 8,
+                // bottom: 54, // !!! Not supported on Android platform.
               },
             ]}
             {...messageList?.props}

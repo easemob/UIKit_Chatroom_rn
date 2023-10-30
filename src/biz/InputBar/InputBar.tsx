@@ -222,13 +222,16 @@ export const InputBar = React.forwardRef<InputBarRef, InputBarProps>(function (
                   }}
                   onBlur={() => {
                     setIconName('keyboard2');
-                    LayoutAnimation.configureNext({
-                      duration: 250, // from keyboard event
-                      update: {
-                        duration: 250,
-                        type: Platform.OS === 'ios' ? 'keyboard' : 'linear',
-                      },
-                    });
+                    if (isStyle === false) {
+                      LayoutAnimation.configureNext({
+                        duration: 250, // from keyboard event
+                        update: {
+                          duration: 250,
+                          type: Platform.OS === 'ios' ? 'keyboard' : 'linear',
+                        },
+                      });
+                    }
+
                     if (isClosedEmoji.current === true) {
                       setEmojiHeight(0);
                     } else {
@@ -291,7 +294,10 @@ export const InputBar = React.forwardRef<InputBarRef, InputBarProps>(function (
           // display: isStyle === false ? 'flex' : 'none',
         }}
       >
-        <EmojiListMemo style={{ flex: 1, marginBottom: 8 }} onFace={onFace} />
+        <EmojiListMemo
+          containerStyle={{ flex: 1, marginBottom: 8 }}
+          onFace={onFace}
+        />
         <DelButtonMemo
           getColor={getColor}
           emojiHeight={emojiHeight}
