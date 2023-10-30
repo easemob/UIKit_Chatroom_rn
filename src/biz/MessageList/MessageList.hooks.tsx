@@ -31,7 +31,11 @@ import { seqId, timeoutTask } from '../../utils';
 import { emoji as convert } from '../EmojiList';
 import type { ReportItemModel } from '../Report';
 import { gIdleTimeout, gMaxMessageCount } from './MessageList.const';
-import type { MessageListItemModel, MessageListItemProps } from './types';
+import type {
+  MessageListItemBasic,
+  MessageListItemModel,
+  MessageListItemProps,
+} from './types';
 
 export const useKeyboardOnAndroid = (isInputBarShow: boolean) => {
   const { addListener, removeListener, emit } = useDispatchContext();
@@ -259,22 +263,22 @@ export function useMessageListApi(params: {
   const _addCommonData = (
     d: Pick<MessageListItemProps, 'type' | 'msg' | 'content'>
   ) => {
-    const getNickName = () => {
-      if (im.userId === d.msg?.from) {
-        return tr('self');
-      }
+    const getBasic = (): MessageListItemBasic => {
       const user = im.getUserInfo(d.msg?.from);
-      if (user) {
-        return user.nickName ?? user.userId;
-      }
-      return d.msg?.from ?? d.content;
+      const nickName =
+        im.userId === d.msg?.from
+          ? tr('self')
+          : user?.nickName ?? user?.userId ?? 'unknown';
+      return {
+        timestamp: Date.now(),
+        nickName: nickName,
+        avatar: user?.avatarURL,
+        tag: user?.identify,
+      };
     };
     dataRef.current.push({
       id: `${seqId('_msg')}`,
-      basic: {
-        timestamp: Date.now(),
-        nickName: getNickName()!,
-      },
+      basic: getBasic(),
       action: {
         onStartPress: () => {},
         onLongPress: (data: MessageListItemModel) => {
