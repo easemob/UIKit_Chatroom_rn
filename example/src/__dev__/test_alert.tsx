@@ -45,14 +45,15 @@ export function TestAlertComponent(): React.JSX.Element {
               ref2.current?.close?.();
             },
           },
-          {
-            text: 'test',
-            onPress: () => {
-              // !!! The Android platform supports nested modal components, but iOS does not.
-              ref.current.alert();
-            },
-          },
+          // {
+          //   text: 'test',
+          //   onPress: () => {
+          //     // !!! The Android platform supports nested modal components, but iOS does not.
+          //     ref.current.alert();
+          //   },
+          // },
         ]}
+        // supportInput={true}
       />
       <Alert ref={ref} title="test title" message="test message" />
     </View>
