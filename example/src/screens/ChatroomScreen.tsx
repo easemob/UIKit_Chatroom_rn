@@ -1,6 +1,12 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
-import { Platform, Text, TouchableOpacity, View } from 'react-native';
+import {
+  Platform,
+  Text,
+  ToastAndroid,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {
   BottomSheetGift2,
   BottomSheetGiftSimuRef,
@@ -56,6 +62,22 @@ export function ChatroomScreen(props: Props) {
       return {
         onError: (params) => {
           console.log('ChatroomScreen:onError:', JSON.stringify(params));
+          if (Platform.OS === 'android') {
+            ToastAndroid.show(JSON.stringify(params), 3000);
+          } else {
+            let content;
+            try {
+              content = JSON.stringify(params);
+            } catch (error) {
+              content = params.toString();
+            }
+            chatroomRef?.current?.getMarqueeRef()?.pushTask?.({
+              model: {
+                id: seqId('_mq').toString(),
+                content: content,
+              },
+            });
+          }
         },
       };
     }, [])
