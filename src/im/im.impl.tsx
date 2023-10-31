@@ -15,6 +15,7 @@ import {
   chatroom_uikit_userInfo,
   custom_msg_event_type_gift,
   custom_msg_event_type_join,
+  gMaxMuterSize,
 } from './im.const';
 import {
   DisconnectReasonType,
@@ -331,7 +332,11 @@ export abstract class IMServiceImpl implements IMService {
     );
   }
   fetchMutedMembers(roomId: string, pageSize: number): Promise<string[]> {
-    return this.client.roomManager.fetchChatRoomMuteList(roomId, pageSize);
+    return this.client.roomManager.fetchChatRoomMuteList(
+      roomId,
+      pageSize,
+      gMaxMuterSize
+    );
   }
   fetchAnnouncement(roomId: string): Promise<string | undefined> {
     return this.client.roomManager.fetchChatRoomAnnouncement(roomId);

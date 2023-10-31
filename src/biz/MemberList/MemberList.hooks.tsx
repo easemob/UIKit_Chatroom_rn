@@ -15,11 +15,7 @@ import {
 } from '../../im';
 import { wait } from '../../utils';
 import type { PropsWithError, PropsWithTest } from '../types';
-import {
-  gMaxMuterSize,
-  gMemberPerPageSize,
-  gSearchTimeout,
-} from './MemberList.const';
+import { gMemberPerPageSize, gSearchTimeout } from './MemberList.const';
 import type { MemberListItemProps } from './MemberList.item';
 import type { MemberListType } from './types';
 
@@ -221,35 +217,41 @@ export function useMemberListAPI(
     },
     onUserJoinedNotify: (roomId, userInfo) => {
       if (roomId === im.roomId) {
-        _updateUI(_addData(userInfo.userId));
+        if (memberType === 'member') {
+          _updateUI(_addData(userInfo.userId));
+        }
       }
     },
     onUserJoined: (roomId, userId) => {
       if (roomId === im.roomId) {
-        if (im.userId !== userId) {
-          _updateUI(_addData(userId));
-        } else {
-          _refreshMembers(() => {
-            const list10 = dataRef.current.slice(0, 19).map((v) => {
-              return v.userInfo.userId;
+        if (memberType === 'member') {
+          if (im.userId !== userId) {
+            _updateUI(_addData(userId));
+          } else {
+            _refreshMembers(() => {
+              const list10 = dataRef.current.slice(0, 19).map((v) => {
+                return v.userInfo.userId;
+              });
+              _fetchMemberInfo(list10);
             });
-            _fetchMemberInfo(list10);
-          });
-          if (isOwner() === true) {
-            _fetchMuter(() => {
-              if (muterRef.current.length > 0) {
-                const list10 = muterRef.current.slice(0, 19);
-                _fetchMemberInfo(list10);
-              }
-            });
+            if (isOwner() === true) {
+              _fetchMuter(() => {
+                if (muterRef.current.length > 0) {
+                  const list10 = muterRef.current.slice(0, 19);
+                  _fetchMemberInfo(list10);
+                }
+              });
+            }
           }
         }
       }
     },
     onUserLeave: (roomId, userId) => {
       if (roomId === im.roomId) {
-        if (userId !== im.userId) {
-          _updateUI(_removeData(userId));
+        if (memberType === 'member') {
+          if (userId !== im.userId) {
+            _updateUI(_removeData(userId));
+          }
         }
       }
     },
@@ -295,7 +297,7 @@ export function useMemberListAPI(
       if (im.roomState === 'joined') {
         dataRef.current = [];
         memberCursor.current = '';
-        im.fetchMutedMembers(im.roomId!, gMaxMuterSize)
+        im.fetchMutedMembers(im.roomId!, 1)
           .then((r) => {
             im.updateMuter(r ?? []);
             muterRef.current = r ?? [];
@@ -370,7 +372,7 @@ export function useMemberListAPI(
       return;
     }
     if (im.roomState === 'joined') {
-      im.fetchMutedMembers(im.roomId!, gMaxMuterSize)
+      im.fetchMutedMembers(im.roomId!, 1)
         .then((r) => {
           im.updateMuter(r ?? []);
           muterRef.current = r ?? [];
@@ -411,15 +413,21 @@ export function useMemberListAPI(
         im.roomId!,
         memberId,
         isMuted === true ? 'mute' : 'unmute'
-      ).catch((e) => {
-        im.sendError({
-          error: new UIKitError({
-            code: ErrorCode.room_mute_member_error,
-            extra: e.toString(),
-          }),
-          from: useMemberListAPI?.caller?.name,
+      )
+        .then(() => {
+          if (memberType === 'muted') {
+            _updateUI(_removeData(memberId));
+          }
+        })
+        .catch((e) => {
+          im.sendError({
+            error: new UIKitError({
+              code: ErrorCode.room_mute_member_error,
+              extra: e.toString(),
+            }),
+            from: useMemberListAPI?.caller?.name,
+          });
         });
-      });
     }
   };
   const _removeMember = (memberId: string) => {
