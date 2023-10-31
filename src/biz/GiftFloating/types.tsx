@@ -8,9 +8,9 @@ export type GiftFloatingModel = {
   content: string;
   giftIcon: string;
   /**
-   * Default number 1.
+   * Default string 1.
    */
-  giftCount?: number;
+  giftCount?: string;
 };
 export type GiftFloatingTask = {
   model: GiftFloatingModel;

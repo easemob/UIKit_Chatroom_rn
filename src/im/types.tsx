@@ -44,7 +44,7 @@ export type GiftServiceData = {
   giftId: string;
   giftName: string;
   giftPrice: string;
-  giftCount: number;
+  giftCount: string;
   giftIcon: string;
   giftEffect: string;
   selected?: boolean;

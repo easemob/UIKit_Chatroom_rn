@@ -35,7 +35,7 @@ export function TestGiftFloating() {
               model: {
                 id: seqId('_gf').toString(),
                 nickName: 'NickName',
-                giftCount: 1,
+                giftCount: '1',
                 giftIcon: 'http://notext.png',
                 content: 'send Agoraship too too too long',
               },

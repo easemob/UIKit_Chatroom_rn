@@ -100,7 +100,7 @@ export function GiftFloatingItemFC(props: GiftFloatingItemFCProps) {
         <GiftIcon url={item.gift.giftIcon} borderRadius={0} size={40} />
 
         <View style={{ marginLeft: 4, marginRight: 16 }}>
-          <Text style={styles.dig}>x{item.gift.giftCount ?? 1}</Text>
+          <Text style={styles.dig}>x{item.gift.giftCount ?? '1'}</Text>
         </View>
       </Animated.View>
     </Animated.View>
