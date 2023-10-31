@@ -4,7 +4,9 @@ import { View } from 'react-native';
 import { useDispatchListener } from '../../dispatch';
 import { useColors } from '../../hook';
 import { useI18nContext } from '../../i18n';
+import { useIMContext } from '../../im';
 import { usePaletteContext } from '../../theme';
+import { Alert, AlertRef } from '../../ui/Alert';
 import {
   BottomSheetMenu,
   BottomSheetMenuItem,
@@ -145,7 +147,11 @@ export const MemberContextMenuWrapper = (
 ) => {
   const { muteMember, removeMember, memberType } = props;
   const menuRef = React.useRef<MemberContextMenuRef>({} as any);
+  const alertRef = React.useRef<AlertRef>({} as any);
+  const [userName, setUserName] = React.useState('');
   const { getItems } = useGetMemberListItems();
+  const im = useIMContext();
+  const userIdRef = React.useRef('');
   const listener = React.useRef(
     (
       _memberType: MemberListType, // current mute list
@@ -160,13 +166,21 @@ export const MemberContextMenuWrapper = (
               getItems({
                 list: ['Mute', 'Remove'],
                 onClicked: (type) => {
-                  if (type === 'Mute') {
-                    muteMember(userId, true);
-                  } else if (type === 'Unmute') {
-                    muteMember(userId, false);
-                  } else if (type === 'Remove') {
-                    removeMember(userId);
+                  if (userId !== im.userId) {
+                    if (type === 'Mute') {
+                      muteMember(userId, true);
+                    } else if (type === 'Unmute') {
+                      muteMember(userId, false);
+                    } else if (type === 'Remove') {
+                      userIdRef.current = userId;
+                      setUserName(userId);
+                      menuRef?.current?.startHide?.(() => {
+                        alertRef?.current?.alert?.();
+                      });
+                      return;
+                    }
                   }
+
                   menuRef?.current?.startHide?.();
                 },
                 onRequestModalClose: () => {
@@ -205,12 +219,33 @@ export const MemberContextMenuWrapper = (
     listener.current
   );
   return (
-    <MemberContextMenu
-      ref={menuRef}
-      list={[]}
-      onRequestModalClose={() => {
-        menuRef?.current?.startHide?.();
-      }}
-    />
+    <>
+      <MemberContextMenu
+        ref={menuRef}
+        list={[]}
+        onRequestModalClose={() => {
+          menuRef?.current?.startHide?.();
+        }}
+      />
+      <Alert
+        ref={alertRef}
+        title={`Want to remove '${userName}'`}
+        buttons={[
+          {
+            text: 'Cancel',
+            onPress: () => {
+              alertRef.current?.close?.();
+            },
+          },
+          {
+            text: 'Confirm',
+            onPress: () => {
+              removeMember(userIdRef.current);
+              alertRef.current?.close?.();
+            },
+          },
+        ]}
+      />
+    </>
   );
 };

@@ -432,15 +432,19 @@ export function useMemberListAPI(
   };
   const _removeMember = (memberId: string) => {
     if (im.roomState === 'joined') {
-      im.kickMember(im.roomId!, memberId).catch((e) => {
-        im.sendError({
-          error: new UIKitError({
-            code: ErrorCode.room_kick_member_error,
-            extra: e.toString(),
-          }),
-          from: useMemberListAPI?.caller?.name,
+      im.kickMember(im.roomId!, memberId)
+        .then(() => {
+          _updateUI(_removeData(memberId));
+        })
+        .catch((e) => {
+          im.sendError({
+            error: new UIKitError({
+              code: ErrorCode.room_kick_member_error,
+              extra: e.toString(),
+            }),
+            from: useMemberListAPI?.caller?.name,
+          });
         });
-      });
     }
   };
 
