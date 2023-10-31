@@ -307,8 +307,25 @@ export function ChatroomScreen(props: Props) {
                     sendedThenClose: true,
                     selected: true,
                   },
-                  result: ({ isOk, error }) => {
+                  result: ({ isOk, error, message }) => {
                     console.log('sendGift:', isOk, error);
+                    if (isOk === true && message) {
+                      chatroomRef?.current
+                        ?.getMessageListRef()
+                        ?.addSendedMessage(message);
+                      chatroomRef?.current?.getGiftFloatingRef()?.pushTask({
+                        model: {
+                          id: seqId('_gf').toString(),
+                          nickName:
+                            im.getUserInfo(im.userId)?.nickName ??
+                            im.userId ??
+                            'unknown',
+                          giftCount: '1',
+                          giftIcon: gift.giftIcon,
+                          content: `sent ${gift.giftName}`,
+                        },
+                      });
+                    }
                   },
                 });
                 giftRef?.current?.startHide?.();

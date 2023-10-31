@@ -104,65 +104,7 @@ export function useMessageListApi(params: {
     onUnreadCount,
   } = params;
   const listRef = React.useRef<FlatList>({} as any);
-  const dataRef = React.useRef<MessageListItemProps[]>([
-    // {
-    //   id: '1',
-    //   type: 'text',
-    //   basic: {
-    //     timestamp: Date.now(),
-    //     nickName: 'self',
-    //   },
-    //   content: {
-    //     text: 'John, go on.',
-    //   } as TextContent,
-    // },
-    // {
-    //   id: '2',
-    //   type: 'gift',
-    //   basic: {
-    //     timestamp: Date.now(),
-    //     nickName: 'self',
-    //   },
-    //   content: {
-    //     gift: 'sdf',
-    //     text: 'send a gift',
-    //   } as GiftContent,
-    // },
-    // {
-    //   id: '3',
-    //   type: 'voice',
-    //   basic: {
-    //     timestamp: Date.now(),
-    //     nickName: 'self',
-    //   },
-    //   content: {
-    //     icon: '2_bars_in_circle',
-    //     length: 8,
-    //   } as VoiceContent,
-    // },
-    // {
-    //   id: '4',
-    //   type: 'text',
-    //   basic: {
-    //     timestamp: Date.now(),
-    //     nickName: 'self',
-    //   },
-    //   content: {
-    //     text: 'Sei la cosa più bella che mi sia mai capitato non so stare senza te.',
-    //   } as TextContent,
-    // },
-    // {
-    //   id: '5',
-    //   type: 'text',
-    //   basic: {
-    //     timestamp: Date.now(),
-    //     nickName: 'self',
-    //   },
-    //   content: {
-    //     text: '2 Sei la cosa più bella che mi sia mai capitato non so stare senza te.',
-    //   } as TextContent,
-    // },
-  ]);
+  const dataRef = React.useRef<MessageListItemProps[]>([]);
   const [data, setData] = React.useState<MessageListItemProps[]>(
     dataRef.current
   );
@@ -365,6 +307,36 @@ export function useMessageListApi(params: {
     _scrollToEnd();
   };
 
+  const _addSendedMessage = (message: ChatMessage) => {
+    if (message.body.type === ChatMessageType.CUSTOM) {
+      const body = message.body as ChatCustomMessageBody;
+      if (body.event === custom_msg_event_type_join) {
+        _updateUI(_addJoinData(message));
+      } else if (body.event === custom_msg_event_type_gift) {
+        _updateUI(_addGiftData(message));
+      } else {
+        im.sendError({
+          error: new UIKitError({ code: ErrorCode.enum }),
+          from: 'MessageList',
+        });
+        return;
+      }
+    } else if (message.body.type === ChatMessageType.TXT) {
+      _updateUI(_addTextData(message));
+    } else {
+      im.sendError({
+        error: new UIKitError({ code: ErrorCode.enum }),
+        from: 'MessageList',
+      });
+      return;
+    }
+    _setNeedScroll(true);
+    _setUnreadCount(0);
+    emit(`_$${useMessageListApi.name}_updateUnreadCount`, unreadCount.current);
+    _startClearTask();
+    _scrollToEnd();
+  };
+
   const _scrollToEnd = () => {
     if (_needScroll() === true) {
       timeoutTask(() => listRef.current?.scrollToEnd?.());
@@ -507,6 +479,7 @@ export function useMessageListApi(params: {
     listRef: listRef,
     addTextMessage: _addTextMessage,
     addJoinedMessage: _addJoinedMessage,
+    addSendedMessage: _addSendedMessage,
     scrollToEnd: _scrollToEnd,
     onEndReached: _onEndReached,
     onScroll: _onScroll,

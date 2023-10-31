@@ -132,6 +132,10 @@ export abstract class ChatroomBase extends React.PureComponent<
     return this.memberRef?.current;
   }
 
+  getMessageListRef() {
+    return this.messageRef?.current;
+  }
+
   abstract joinRoom(params: {
     roomId: string;
     ownerId: string;
@@ -289,8 +293,8 @@ export abstract class ChatroomBase extends React.PureComponent<
 
         <InputBar
           ref={this.inputBarRef}
-          onSended={(content, message) => {
-            this.messageRef?.current?.addNewMessage?.(content, message);
+          onSended={(_content, message) => {
+            this.messageRef?.current?.addSendedMessage?.(message);
           }}
           closeAfterSend={true}
           {...input?.props}

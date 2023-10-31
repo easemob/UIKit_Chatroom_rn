@@ -38,11 +38,7 @@ import { MessageListItemMemo } from './MessageList.item';
 import type { MessageListItemModel, MessageListItemProps } from './types';
 
 export type MessageListRef = {
-  /**
-   * The message comes from the input box. Automatically scroll to the bottom.
-   */
-  addNewMessage: (content: string, message?: ChatMessage) => void;
-  addJoinedMessage: (message: ChatMessage) => void;
+  addSendedMessage: (message: ChatMessage) => void;
   scrollToEnd: () => void;
 };
 
@@ -96,8 +92,7 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
     };
     const {
       data,
-      addTextMessage,
-      addJoinedMessage,
+      addSendedMessage,
       listRef,
       scrollToEnd,
       onEndReached,
@@ -125,18 +120,15 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
       ref,
       () => {
         return {
-          addNewMessage: (content: string, message?: ChatMessage) => {
-            addTextMessage(content, message);
-          },
-          addJoinedMessage: (message) => {
-            addJoinedMessage(message);
+          addSendedMessage: (message) => {
+            addSendedMessage(message);
           },
           scrollToEnd: () => {
             scrollToEnd();
           },
         };
       },
-      [addJoinedMessage, addTextMessage, scrollToEnd]
+      [addSendedMessage, scrollToEnd]
     );
 
     const getReportData = React.useMemo(() => {

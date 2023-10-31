@@ -45,7 +45,7 @@ export class Chatroom extends ChatroomBase {
                 this.props.onError?.(error);
               }
               if (message) {
-                this.messageRef?.current?.addJoinedMessage(message);
+                this.messageRef?.current?.addSendedMessage(message);
               }
             },
           });
