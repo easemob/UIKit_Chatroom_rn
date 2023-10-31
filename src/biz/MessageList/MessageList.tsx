@@ -16,17 +16,16 @@ import { usePaletteContext } from '../../theme';
 import { BorderButton } from '../../ui/Button';
 import { seqId } from '../../utils';
 import {
+  BottomSheetNameMenu,
+  BottomSheetNameMenuRef,
+} from '../BottomSheetMenu';
+import {
   BottomSheetReport,
   ReportItemModel,
   ReportProps,
   ReportRef,
 } from '../Report';
 import type { PropsWithError, PropsWithTest } from '../types';
-import { useGetMessageListItems } from './MessageContextMenu';
-import {
-  MessageContextMenu,
-  MessageContextMenuRef,
-} from './MessageContextMenu';
 import {
   gMessageListHeight,
   gMessageListMarginBottom,
@@ -66,29 +65,34 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
       reportProps,
       MessageListItemComponent,
     } = props;
-    const { getItems } = useGetMessageListItems();
     const _onLongPress = (item: MessageListItemModel) => {
-      menuRef?.current?.startShowWithInit?.(
-        getItems({
-          list: ['Translate', 'Delete', 'Report'],
-          onClicked: (type) => {
-            if (type === 'Delete') {
-              deleteMessage(item.msg);
-              menuRef?.current?.startHide?.();
-            } else if (type === 'Report') {
-              menuRef?.current?.startHide?.(() => {
-                reportRef?.current?.startShow?.();
-              });
-            } else if (type === 'Translate') {
-              translateMessage(item.msg);
-              menuRef?.current?.startHide?.();
-            }
-          },
-          onRequestModalClose: () => {
+      menuRef?.current?.startShowWithInit?.([
+        {
+          name: 'Translate',
+          isHigh: false,
+          onClicked: () => {
+            translateMessage(item.msg);
             menuRef?.current?.startHide?.();
           },
-        })
-      );
+        },
+        {
+          name: 'Delete',
+          isHigh: false,
+          onClicked: () => {
+            deleteMessage(item.msg);
+            menuRef?.current?.startHide?.();
+          },
+        },
+        {
+          name: 'Report',
+          isHigh: true,
+          onClicked: () => {
+            menuRef?.current?.startHide?.(() => {
+              reportRef?.current?.startShow?.();
+            });
+          },
+        },
+      ]);
     };
     const {
       data,
@@ -111,7 +115,7 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
       onLayoutProps,
     });
 
-    const menuRef = React.useRef<MessageContextMenuRef>({} as any);
+    const menuRef = React.useRef<BottomSheetNameMenuRef>({} as any);
     const reportRef = React.useRef<ReportRef>({} as any);
     const { tr } = useI18nContext();
     const defaultData = useGetReportDefaultData(tr);
@@ -190,12 +194,12 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
           />
           <UnreadButton onPress={scrollToLastMessage} />
         </View>
-        <MessageContextMenu
+        <BottomSheetNameMenu
           ref={menuRef}
           onRequestModalClose={() => {
             menuRef?.current?.startHide?.();
           }}
-          list={[]}
+          initItems={[]}
         />
         <BottomSheetReport
           ref={reportRef}

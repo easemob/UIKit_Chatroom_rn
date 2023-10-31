@@ -10,18 +10,11 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { gBottomSheetHeaderHeight } from '../const';
-// import {
-//   Modal,
-//   ModalRef,
-//   // SimulativeModal,
-//   // SimulativeModalRef,
-// } from '../../ui/Modal';
 import type { PropsWithError, PropsWithTest } from '../types';
 import { MemberContextMenuWrapper } from './MemberContextMenu';
 import { gAspectRatio, gTabHeaderHeight } from './MemberList.const';
 import { useMemberListAPI, usePanHandlers } from './MemberList.hooks';
 import { MemberListItemMemo, MemberListItemProps } from './MemberList.item';
-// import { SearchMember } from './SearchMember';
 import { SearchStyle } from './SearchStyle';
 import type { MemberListType } from './types';
 
@@ -73,7 +66,6 @@ export function MemberList(props: MemberListProps) {
   const { panHandlers, isScrollingRef } = usePanHandlers({
     requestUseScrollGesture,
   });
-  // const modalRef = React.useRef<ModalRef>({} as any);
 
   const _MemberItemComponent = MemberItemComponent ?? MemberListItemMemo;
 
@@ -125,31 +117,6 @@ export function MemberList(props: MemberListProps) {
         removeMember={removeMember}
         muteMember={muteMember}
       />
-      {/* <Modal
-        propsRef={modalRef}
-        onRequestModalClose={() => {
-          modalRef.current?.startHide();
-        }}
-        modalAnimationType={'slide'}
-        // maskStyle={{ transform: [{ translateY: 100 }] }}
-      >
-        <View
-          style={{
-            // height: winHeight,
-            // width: winWidth,
-            height: '100%',
-            width: '100%',
-          }}
-        >
-          <SearchMember
-            memberType={memberType}
-            onRequestClose={() => {
-              modalRef.current?.startHide();
-            }}
-            data={memberType === 'member' ? data : muter}
-          />
-        </View>
-      </Modal> */}
     </>
   );
 }
