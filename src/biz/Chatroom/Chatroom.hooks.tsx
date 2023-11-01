@@ -97,6 +97,9 @@ export class Chatroom extends ChatroomBase {
     if (r === 'logged') {
       this.im
         ?.joinRoom(this.props.roomId, { ownerId: this.props.ownerId })
+        .then(() => {
+          this.im?.sendFinished({ event: 'join' });
+        })
         .catch((e) => {
           this.im?.sendError({
             error: new UIKitError({
@@ -118,11 +121,19 @@ export class Chatroom extends ChatroomBase {
     }
     const r = await this.im?.loginState();
     if (r === 'logged') {
-      this.im?.leaveRoom(this.props.roomId).catch((e) => {
-        this.im?.sendError({
-          error: new UIKitError({ code: ErrorCode.room_leave_error, extra: e }),
+      this.im
+        ?.leaveRoom(this.props.roomId)
+        .then(() => {
+          this.im?.sendFinished({ event: 'leave' });
+        })
+        .catch((e) => {
+          this.im?.sendError({
+            error: new UIKitError({
+              code: ErrorCode.room_leave_error,
+              extra: e,
+            }),
+          });
         });
-      });
     } else {
       this.im?.sendError({
         error: new UIKitError({ code: ErrorCode.login_error }),

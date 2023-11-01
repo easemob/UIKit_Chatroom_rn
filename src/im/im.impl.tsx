@@ -20,6 +20,7 @@ import {
 import {
   DisconnectReasonType,
   GiftServiceData,
+  IMEventType,
   IMService,
   IMServiceListener,
   RoomMemberOperate,
@@ -559,6 +560,11 @@ export abstract class IMServiceImpl implements IMService {
   sendError(params: { error: UIKitError; from?: string; extra?: any }): void {
     this._listeners.forEach((v) => {
       asyncTask(() => v.onError?.(params));
+    });
+  }
+  sendFinished(params: { event: IMEventType; extra?: any }): void {
+    this._listeners.forEach((v) => {
+      asyncTask(() => v.onFinished?.(params));
     });
   }
   userInfoFromMessage(msg?: ChatMessage): UserServiceData | undefined {

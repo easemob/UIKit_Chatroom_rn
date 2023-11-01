@@ -112,6 +112,7 @@ export function useInputBarApi(params: {
         result: ({ isOk, message, error }) => {
           if (isOk === true) {
             onSended?.(message!);
+            im.sendFinished({ event: 'send_text' });
           } else {
             im.sendError({ error: error!, from: useInputBarApi?.caller?.name });
           }

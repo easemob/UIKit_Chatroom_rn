@@ -285,6 +285,7 @@ export function useMemberListAPI(
             _updateUI(true);
             onFinished?.();
             _onPageState('normal');
+            im.sendFinished({ event: 'fetch_member_list' });
           })
           .catch((e) => {
             onFinished?.();
@@ -312,6 +313,7 @@ export function useMemberListAPI(
               _updateUI(_addDataList(r));
             }
             onFinished?.();
+            im.sendFinished({ event: 'fetch_muter_list' });
           })
           .catch((e) => {
             onFinished?.();
@@ -342,6 +344,7 @@ export function useMemberListAPI(
           if (isNeedUpdate === false) {
             onNoMoreMember?.();
           }
+          im.sendFinished({ event: 'fetch_member_list' });
         })
         .catch((e) => {
           im.sendError({
@@ -384,6 +387,7 @@ export function useMemberListAPI(
           im.updateMuter(r ?? []);
           muterRef.current = r ?? [];
           onFinished?.();
+          im.sendFinished({ event: 'fetch_muter_list' });
         })
         .catch((e) => {
           onFinished?.();
@@ -429,6 +433,7 @@ export function useMemberListAPI(
           if (memberType === 'muted') {
             _updateUI(_removeData(memberId));
           }
+          im.sendFinished({ event: isMuted === true ? 'mute' : 'unmute' });
         })
         .catch((e) => {
           im.sendError({
@@ -446,6 +451,7 @@ export function useMemberListAPI(
       im.kickMember(im.roomId!, memberId)
         .then(() => {
           _updateUI(_removeData(memberId));
+          im.sendFinished({ event: 'kick' });
         })
         .catch((e) => {
           im.sendError({

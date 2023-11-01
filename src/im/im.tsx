@@ -17,6 +17,13 @@ export function IMContextProvider({ value, children }: IMContextProps) {
     appKey: appKey,
     debugMode: debugMode,
     autoLogin: false,
+    result: ({ isOk, error }) => {
+      if (isOk === false) {
+        if (error) _im.sendError({ error: error });
+      } else {
+        _im.sendFinished({ event: 'init' });
+      }
+    },
   });
   return <IMContext.Provider value={_im}>{children}</IMContext.Provider>;
 }

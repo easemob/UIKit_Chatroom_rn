@@ -32,6 +32,21 @@ export enum DisconnectReasonType {
   others = 'others',
 }
 
+export type IMEventType =
+  | 'init'
+  | 'join'
+  | 'leave'
+  | 'kick'
+  | 'mute'
+  | 'unmute'
+  | 'translate_message'
+  | 'recall_message'
+  | 'report_message'
+  | 'fetch_member_list'
+  | 'fetch_muter_list'
+  | 'send_gift'
+  | 'send_text';
+
 export type UserServiceData = {
   userId: string;
   nickName?: string;
@@ -76,11 +91,15 @@ export interface MessageServiceListener {
 export interface ErrorServiceListener {
   onError?(params: { error: UIKitError; from?: string; extra?: any }): void;
 }
+export interface ResultServiceListener {
+  onFinished?(params: { event: IMEventType; extra?: any }): void;
+}
 
 export type IMServiceListener = ClientServiceListener &
   ChatroomServiceListener &
   MessageServiceListener &
-  ErrorServiceListener;
+  ErrorServiceListener &
+  ResultServiceListener;
 
 export interface IMService {
   addListener(listener: IMServiceListener): void;
@@ -216,6 +235,7 @@ export interface IMService {
   userInfoFromMessage(msg?: ChatMessage): UserServiceData | undefined;
 
   sendError(params: { error: UIKitError; from?: string; extra?: any }): void;
+  sendFinished(params: { event: IMEventType; extra?: any }): void;
 }
 
 export type IMServiceInit = {

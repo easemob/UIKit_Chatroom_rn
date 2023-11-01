@@ -414,6 +414,7 @@ export function useMessageListApi(params: {
               }
             }
           }
+          im.sendFinished({ event: 'translate_message' });
         })
         .catch((e) => {
           im.sendError({
@@ -439,6 +440,7 @@ export function useMessageListApi(params: {
               break;
             }
           }
+          im.sendFinished({ event: 'recall_message' });
         })
         .catch((e) => {
           im.sendError({
@@ -460,7 +462,7 @@ export function useMessageListApi(params: {
         reason: '',
       })
         .then(() => {
-          // todo: test
+          im.sendFinished({ event: 'report_message' });
         })
         .catch((e) => {
           im.sendError({
