@@ -63,7 +63,7 @@ export function ReportScreen(props: Props) {
           marginTop: 100,
           height: 60,
           width: 300,
-          backgroundColor: 'red',
+          // backgroundColor: 'red',
           // padding: 10,
         }}
       >

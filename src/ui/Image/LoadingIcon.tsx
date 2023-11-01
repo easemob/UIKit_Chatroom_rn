@@ -7,14 +7,14 @@ import { ClassImage } from './Image.class';
 
 export type LoadingIconResolutionType = '' | '2x' | '3x';
 export type LoadingIconProps = Omit<ImageProps, 'source' | 'failedSource'> & {
-  name: IconNameType;
+  name?: IconNameType;
   resolution?: LoadingIconResolutionType;
 };
 
 const AnimatedImage = Animated.createAnimatedComponent(ClassImage);
 
 export function LoadingIcon(props: LoadingIconProps) {
-  const { name, resolution, style, ...others } = props;
+  const { name = 'loading', resolution, style, ...others } = props;
   const s = ICON_ASSETS[name](resolution ?? '3x');
   const deg = React.useRef(new Animated.Value(0)).current;
   React.useEffect(() => {

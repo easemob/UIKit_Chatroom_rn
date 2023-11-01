@@ -91,6 +91,10 @@ export function useMemberListAPI(
 
   const [refreshing, setRefreshing] = React.useState(false);
 
+  const [pageState, setPageState] = React.useState<
+    'loading' | 'normal' | 'error'
+  >('loading');
+
   const { emit } = useDispatchContext();
   useDispatchListener(
     `_$${useMemberListAPI.name}_${memberType}_fetchMemberInfo`,
@@ -264,6 +268,7 @@ export function useMemberListAPI(
   const _refreshMembers = (onFinished?: () => void) => {
     if (memberType === 'member') {
       if (im.roomState === 'joined') {
+        // _onPageState('loading');
         dataRef.current = [];
         memberCursor.current = '';
         im.fetchMembers(im.roomId!, gMemberPerPageSize, memberCursor.current)
@@ -279,6 +284,7 @@ export function useMemberListAPI(
             }
             _updateUI(true);
             onFinished?.();
+            _onPageState('normal');
           })
           .catch((e) => {
             onFinished?.();
@@ -289,6 +295,7 @@ export function useMemberListAPI(
               }),
               from: useMemberListAPI?.caller?.name,
             });
+            _onPageState('error');
           });
       } else {
         onFinished?.();
@@ -403,6 +410,10 @@ export function useMemberListAPI(
     });
   };
 
+  const _onPageState = (state: typeof pageState) => {
+    setPageState(state);
+  };
+
   const _onEndReached = () => {
     _loadMoreMembers();
   };
@@ -450,6 +461,7 @@ export function useMemberListAPI(
 
   return {
     data: data,
+    pageState: pageState,
     muter: muterRef.current,
     refreshing: refreshing,
     onRefresh: _onRefresh,
@@ -458,6 +470,7 @@ export function useMemberListAPI(
     onViewableItemsChanged: delayExecTask,
     muteMember: _muteMember,
     removeMember: _removeMember,
+    requestRefresh: _refreshMembers,
   };
 }
 
