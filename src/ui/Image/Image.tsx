@@ -28,10 +28,9 @@ export function Image(props: ImageProps) {
       onError={(event) => {
         if (onError) {
           onError(event);
-        } else {
-          if (failedSource) {
-            setSource(failedSource);
-          }
+        }
+        if (failedSource) {
+          setSource(failedSource);
         }
       }}
       {...others}
