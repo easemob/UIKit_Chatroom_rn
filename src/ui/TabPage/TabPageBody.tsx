@@ -7,6 +7,9 @@ import {
   View,
 } from 'react-native';
 
+import { useDelayExecTask } from '../../hook';
+import { calculateIndex } from './TabPage.hooks';
+
 export type TabPageBodyItemProps = ScrollViewProps;
 export function TabPageBodyItem(props: TabPageBodyItemProps) {
   const { style, children, ...others } = props;
@@ -34,6 +37,7 @@ export type TabPageBodyProps = Omit<
   width?: number;
   containerStyle?: StyleProp<ViewStyle>;
   initIndex?: number;
+  onCurrentIndex?: (currentIndex: number) => void;
 };
 export function TabPageBody(props: TabPageBodyProps) {
   const {
@@ -45,6 +49,9 @@ export function TabPageBody(props: TabPageBodyProps) {
     containerStyle,
     initIndex = 0,
     onLayout: propsOnLayout,
+    onCurrentIndex,
+    onScroll: propsScroll,
+    onMomentumScrollEnd: propsOnMomentumScrollEnd,
     ...others
   } = props;
   const ref = React.useRef<ScrollView>({} as any);
@@ -54,8 +61,15 @@ export function TabPageBody(props: TabPageBodyProps) {
   if (propsRef.current) {
     propsRef.current.scrollTo = (index: number, animated?: boolean) => {
       ref.current?.scrollTo({ x: index * w, animated: animated });
+      onCurrentIndex?.(index);
     };
   }
+  const { delayExecTask: _onCurrentIndex } = useDelayExecTask(
+    100,
+    (index: number) => {
+      onCurrentIndex?.(index);
+    }
+  );
   return (
     <View
       style={[
@@ -85,6 +99,14 @@ export function TabPageBody(props: TabPageBodyProps) {
           if (initIndex > 0) {
             ref.current?.scrollTo({ x: initIndex * w, animated: false });
           }
+        }}
+        onScroll={(e) => {
+          propsScroll?.(e);
+        }}
+        onMomentumScrollEnd={(e) => {
+          propsOnMomentumScrollEnd?.(e);
+          const x = e.nativeEvent.contentOffset.x;
+          _onCurrentIndex(calculateIndex({ width: w, contentOffsetX: x }));
         }}
         {...others}
       >

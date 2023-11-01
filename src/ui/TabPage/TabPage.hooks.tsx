@@ -2,7 +2,10 @@ import * as React from 'react';
 
 import type { TabPageHeaderRef } from './TabPageHeader';
 
-const calculateIndex = (params: { width: number; contentOffsetX: number }) => {
+export const calculateIndex = (params: {
+  width: number;
+  contentOffsetX: number;
+}) => {
   const { width, contentOffsetX } = params;
   if (Number.isInteger(width) && Number.isInteger(contentOffsetX)) {
     return Math.floor(contentOffsetX / width);
