@@ -13,9 +13,9 @@ export const asyncTask = (f: Callback, ...args: any[]) => {
   }
 };
 
-export const timeoutTask = (f: Callback, ...args: any[]) => {
+export const timeoutTask = (timeout: number, f: Callback, ...args: any[]) => {
   try {
-    setTimeout(() => f(args), 0);
+    setTimeout(() => f(args), timeout);
   } catch (error) {
     console.warn('queueTask:', error);
   }

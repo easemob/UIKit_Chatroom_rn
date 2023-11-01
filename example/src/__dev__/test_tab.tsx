@@ -40,6 +40,41 @@ export function BodyPages(): React.ReactNode[] {
   return r;
 }
 
+export function BodyPagesT({
+  index,
+  currentIndex,
+}: {
+  index: number;
+  currentIndex: number;
+}) {
+  console.log('test:BodyPagesT:', index, currentIndex);
+  const color = (i: number) => {
+    if (i === 0) {
+      return ['blue', 'red'];
+    } else if (i === 1) {
+      return ['orange', 'yellow'];
+    } else if (i === 2) {
+      return ['yellow', 'gray'];
+    } else if (i === 3) {
+      return ['red', 'yellow'];
+    }
+    return [];
+  };
+  return (
+    <TabPageBodyItem
+      key={index}
+      style={{
+        backgroundColor: color(index)[0],
+        // height: 100,
+      }}
+    >
+      <View
+        style={{ height: 40, backgroundColor: color(index)[1], margin: 15 }}
+      />
+    </TabPageBodyItem>
+  );
+}
+
 export function TestTab() {
   const palette = createPresetPalette();
   const light = createLightTheme(palette);
@@ -56,10 +91,21 @@ export function TestTab() {
                 titles: ['1', '2', '3', '4'],
               },
             }}
+            // body={{
+            //   type: 'TabPageBody',
+            //   // Body: TabPage.DefaultBody,
+            //   BodyProps: {
+            //     children: BodyPages(),
+            //   },
+            // }}
             body={{
-              // Body: TabPage.DefaultBody,
+              type: 'TabPageBodyT',
               BodyProps: {
-                children: BodyPages(),
+                RenderChildren: BodyPagesT,
+                RenderChildrenProps: {
+                  index: 0,
+                  currentIndex: 0,
+                },
               },
             }}
             height={300}

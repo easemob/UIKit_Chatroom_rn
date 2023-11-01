@@ -125,7 +125,7 @@ export const InputBar = React.forwardRef<InputBarRef, InputBarProps>(function (
     }
 
     if (closeAfterSend === true) {
-      timeoutTask(_close);
+      timeoutTask(0, _close);
     }
   };
 
@@ -159,7 +159,7 @@ export const InputBar = React.forwardRef<InputBarRef, InputBarProps>(function (
             setIsStyle(false);
             setIconName('face');
             onInputBarWillShow?.();
-            timeoutTask(() => {
+            timeoutTask(0, () => {
               if (inputRef.current?.focus) {
                 inputRef.current?.focus();
               }

@@ -339,7 +339,7 @@ export function useMessageListApi(params: {
 
   const _scrollToEnd = () => {
     if (_needScroll() === true) {
-      timeoutTask(() => listRef.current?.scrollToEnd?.());
+      timeoutTask(0, () => listRef.current?.scrollToEnd?.());
     }
   };
 

@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { Animated } from 'react-native';
 
+import { gAnimatedDuration } from './TabPage.const';
+
 export const calculateLeft = (params: {
   width: number;
   count: number;
@@ -30,7 +32,7 @@ export const useTabPageHeaderAnimation = (params: {
     //@ts-ignore
     const cur = left.__getValue();
     const c = count ?? 1;
-    const config = { duration: 250, useNativeDriver: false };
+    const config = { duration: gAnimatedDuration, useNativeDriver: false };
     return Animated.timing(left, {
       toValue: type === 'r' ? cur + unitWidth * c : cur - unitWidth * c,
       ...config,
@@ -70,7 +72,7 @@ export const useTabPageHeaderAnimation2 = (params: {
     indicatorWidth: number;
   }) => {
     const { left: leftValue } = calculateLeft(params);
-    const config = { duration: 250, useNativeDriver: false };
+    const config = { duration: gAnimatedDuration, useNativeDriver: false };
     return Animated.timing(left, {
       toValue: leftValue,
       ...config,

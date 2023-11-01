@@ -138,6 +138,7 @@ export const BottomSheetGift = React.forwardRef<
             },
           }}
           body={{
+            type: 'TabPageBody',
             BodyProps: {
               children: gifts.map((v, i) => {
                 return (

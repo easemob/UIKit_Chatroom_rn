@@ -191,6 +191,7 @@ export const BottomSheetMemberList = React.forwardRef<
             },
           }}
           body={{
+            type: 'TabPageBody',
             BodyProps: {
               children: getTabItemBodies({
                 isOwner: isOwner(),

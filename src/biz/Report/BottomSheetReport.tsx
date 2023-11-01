@@ -100,6 +100,7 @@ export const BottomSheetReport = React.forwardRef<ReportRef, ReportProps>(
               },
             }}
             body={{
+              type: 'TabPageBody',
               BodyProps: {
                 children: [
                   <ReportList
