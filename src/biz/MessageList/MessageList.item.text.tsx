@@ -34,7 +34,7 @@ export function MessageListTextItem(props: MessageListItemProps) {
           return;
         }
         if (width - headerWidth > contentWidth.current) {
-          // todo: one line
+          // one line
         } else {
           translateX.setValue(-headerWidth);
           const spacesString = Array(

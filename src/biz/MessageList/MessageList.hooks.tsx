@@ -395,7 +395,6 @@ export function useMessageListApi(params: {
     if (msg) {
       im.translateMessage(msg, currentLanguage())
         .then((r) => {
-          // todo: update ui
           for (const item of dataRef.current) {
             if (item.msg) {
               if (item.msg.msgId === r.msgId) {
@@ -431,7 +430,6 @@ export function useMessageListApi(params: {
     if (msg) {
       im.recallMessage(msg.msgId)
         .then(() => {
-          // todo: update ui
           for (let index = 0; index < dataRef.current.length; index++) {
             const item = dataRef.current[index];
             if (item?.msg?.msgId === msg.msgId) {

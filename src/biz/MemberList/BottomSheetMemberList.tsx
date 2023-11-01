@@ -73,7 +73,6 @@ export const BottomSheetMemberList = React.forwardRef<
         },
         startShowWithInit: () => {
           modalRef.current.startShow();
-          // todo: clear pre member list, and init current member list
         },
       };
     },
