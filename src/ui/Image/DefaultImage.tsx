@@ -53,7 +53,7 @@ export function DefaultImage2(props: DefaultImageProps2) {
       <Image
         style={style}
         onLoad={onLoad}
-        source={{ ...source, cache: source.cache ?? 'only-if-cached' }}
+        source={{ ...source, cache: source.cache ?? 'default' }}
         defaultSource={defaultSource}
         {...others}
       />
