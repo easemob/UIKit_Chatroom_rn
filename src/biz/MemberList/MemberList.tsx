@@ -56,6 +56,8 @@ export function MemberList(props: MemberListProps) {
     muteMember,
     removeMember,
     requestRefresh,
+    onScrollBeginDrag,
+    onScrollEndDrag,
   } = useMemberListAPI({
     testMode,
     onError,
@@ -131,6 +133,8 @@ export function MemberList(props: MemberListProps) {
           ListLoadingComponent={
             pageState === 'loading' ? LoadingPlaceholder : null
           }
+          onScrollBeginDrag={onScrollBeginDrag}
+          onScrollEndDrag={onScrollEndDrag}
         />
       </View>
       <MemberContextMenuWrapper

@@ -1,7 +1,6 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
 import {
-  Alert,
   Platform,
   Text,
   ToastAndroid,
@@ -83,7 +82,18 @@ export function ChatroomScreen(props: Props) {
         onFinished: (params) => {
           console.log('ChatroomScreen:onFinished:', params);
           if (Platform.OS === 'ios') {
-            Alert.alert(params.event, params.extra?.toString() ?? undefined);
+            let content;
+            try {
+              content = params.event + ':' + params.extra?.toString();
+            } catch (error) {
+              content = params.toString();
+            }
+            chatroomRef?.current?.getMarqueeRef()?.pushTask?.({
+              model: {
+                id: seqId('_mq').toString(),
+                content: content,
+              },
+            });
           } else {
             ToastAndroid.show(
               params.event + ':' + params.extra?.toString(),

@@ -1,5 +1,10 @@
 import * as React from 'react';
-import { PanResponder, ViewToken } from 'react-native';
+import {
+  NativeScrollEvent,
+  NativeSyntheticEvent,
+  PanResponder,
+  ViewToken,
+} from 'react-native';
 import { ChatCustomMessageBody, ChatMessageType } from 'react-native-chat-sdk';
 
 import { useDispatchContext, useDispatchListener } from '../../dispatch';
@@ -90,6 +95,8 @@ export function useMemberListAPI(
   const muterRef = React.useRef<string[]>([]);
 
   const [refreshing, setRefreshing] = React.useState(false);
+  const isRefreshGestureRef = React.useRef(false);
+  const contentOffsetYRef = React.useRef(0);
 
   const [pageState, setPageState] = React.useState<
     'loading' | 'normal' | 'error'
@@ -238,14 +245,23 @@ export function useMemberListAPI(
               });
               _fetchMemberInfo(list10);
             });
-            if (isOwner() === true) {
-              _fetchMuter(() => {
-                if (muterRef.current.length > 0) {
-                  const list10 = muterRef.current.slice(0, 19);
-                  _fetchMemberInfo(list10);
-                }
+            // if (isOwner() === true) {
+            //   _fetchMuter(() => {
+            //     if (muterRef.current.length > 0) {
+            //       const list10 = muterRef.current.slice(0, 19);
+            //       _fetchMemberInfo(list10);
+            //     }
+            //   });
+            // }
+          }
+        } else if (memberType === 'muted') {
+          if (im.userId === userId) {
+            _refreshMembers(() => {
+              const list10 = dataRef.current.slice(0, 19).map((v) => {
+                return v.userInfo.userId;
               });
-            }
+              _fetchMemberInfo(list10);
+            });
           }
         }
       }
@@ -313,6 +329,7 @@ export function useMemberListAPI(
               _updateUI(_addDataList(r));
             }
             onFinished?.();
+            _onPageState('normal');
             im.sendFinished({ event: 'fetch_muter_list' });
           })
           .catch((e) => {
@@ -324,6 +341,7 @@ export function useMemberListAPI(
               }),
               from: useMemberListAPI?.caller?.name,
             });
+            _onPageState('error');
           });
       } else {
         onFinished?.();
@@ -377,35 +395,34 @@ export function useMemberListAPI(
     }
   };
 
-  const _fetchMuter = (onFinished?: () => void) => {
-    if (memberType === 'muted') {
-      return;
-    }
-    if (im.roomState === 'joined') {
-      im.fetchMutedMembers(im.roomId!, 1)
-        .then((r) => {
-          im.updateMuter(r ?? []);
-          muterRef.current = r ?? [];
-          onFinished?.();
-          im.sendFinished({ event: 'fetch_muter_list' });
-        })
-        .catch((e) => {
-          onFinished?.();
-          im.sendError({
-            error: new UIKitError({
-              code: ErrorCode.room_fetch_mute_member_list_error,
-              extra: e.toString(),
-            }),
-            from: useMemberListAPI?.caller?.name,
-          });
-        });
-    } else {
-      onFinished?.();
-    }
-  };
+  // const _fetchMuter = (onFinished?: () => void) => {
+  //   if (memberType === 'muted') {
+  //     return;
+  //   }
+  //   if (im.roomState === 'joined') {
+  //     im.fetchMutedMembers(im.roomId!, 1)
+  //       .then((r) => {
+  //         im.updateMuter(r ?? []);
+  //         muterRef.current = r ?? [];
+  //         onFinished?.();
+  //         im.sendFinished({ event: 'fetch_muter_list' });
+  //       })
+  //       .catch((e) => {
+  //         onFinished?.();
+  //         im.sendError({
+  //           error: new UIKitError({
+  //             code: ErrorCode.room_fetch_mute_member_list_error,
+  //             extra: e.toString(),
+  //           }),
+  //           from: useMemberListAPI?.caller?.name,
+  //         });
+  //       });
+  //   } else {
+  //     onFinished?.();
+  //   }
+  // };
 
   const _onRefresh = () => {
-    im.getIncludes('8');
     setRefreshing(true);
     _refreshMembers(() => {
       wait(1000).then(() => {
@@ -419,7 +436,9 @@ export function useMemberListAPI(
   };
 
   const _onEndReached = () => {
-    _loadMoreMembers();
+    if (isRefreshGestureRef.current === false) {
+      _loadMoreMembers();
+    }
   };
 
   const _muteMember = (memberId: string, isMuted: boolean) => {
@@ -465,6 +484,19 @@ export function useMemberListAPI(
     }
   };
 
+  const _onScrollBeginDrag = (
+    event: NativeSyntheticEvent<NativeScrollEvent>
+  ) => {
+    contentOffsetYRef.current = event.nativeEvent.contentOffset.y;
+  };
+  const _onScrollEndDrag = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+    if (contentOffsetYRef.current > event.nativeEvent.contentOffset.y) {
+      isRefreshGestureRef.current = true;
+    } else {
+      isRefreshGestureRef.current = false;
+    }
+  };
+
   return {
     data: data,
     pageState: pageState,
@@ -477,6 +509,8 @@ export function useMemberListAPI(
     muteMember: _muteMember,
     removeMember: _removeMember,
     requestRefresh: _refreshMembers,
+    onScrollBeginDrag: _onScrollBeginDrag,
+    onScrollEndDrag: _onScrollEndDrag,
   };
 }
 
