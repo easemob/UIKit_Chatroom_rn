@@ -32,7 +32,7 @@ export function DefaultImage(props: DefaultImageProps) {
           onLoad?.(e);
           setVisible(false);
         }}
-        source={{ ...source, cache: source.cache ?? 'only-if-cached' }}
+        source={{ ...source, cache: source.cache ?? 'default' }}
         {...others}
       />
     </View>
