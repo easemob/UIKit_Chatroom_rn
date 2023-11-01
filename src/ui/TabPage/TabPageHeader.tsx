@@ -36,6 +36,7 @@ export type TabPageHeaderProps = {
     style?: StyleProp<TextStyle>;
     containerStyle?: StyleProp<ViewStyle>;
   };
+  initIndex?: number;
 };
 
 export function TabPageHeader(props: TabPageHeaderProps) {
@@ -47,6 +48,7 @@ export function TabPageHeader(props: TabPageHeaderProps) {
     indicatorStyle,
     containerStyle,
     content,
+    initIndex,
   } = props;
   const { width: winWidth } = useWindowDimensions();
   const { colors } = usePaletteContext();
@@ -65,11 +67,12 @@ export function TabPageHeader(props: TabPageHeaderProps) {
       dark: colors.neutral[4],
     },
   });
-  const [currentIndex, setCurrentIndex] = React.useState(0);
+  const [currentIndex, setCurrentIndex] = React.useState(initIndex ?? 0);
   const count = titles.length;
   const indicatorWidth = (indicatorStyle as any)?.width ?? 28;
   const width = initWidth ?? winWidth;
   const { left, toNext, unitWidth } = useTabPageHeaderAnimation2({
+    index: initIndex,
     width: width,
     count: count,
     indicatorWidth: indicatorWidth,

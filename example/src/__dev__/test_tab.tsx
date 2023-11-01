@@ -65,6 +65,7 @@ export function TestTab() {
             height={300}
             // width={300}
             headerPosition="up"
+            initIndex={2}
           />
         </View>
       </PaletteContextProvider>

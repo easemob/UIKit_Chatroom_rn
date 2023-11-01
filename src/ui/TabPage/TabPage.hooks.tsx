@@ -15,9 +15,10 @@ const calculateIndex = (params: { width: number; contentOffsetX: number }) => {
 
 export const useHeaderStartScrolling = (
   count: number,
-  headerRef?: React.RefObject<TabPageHeaderRef>
+  headerRef?: React.RefObject<TabPageHeaderRef>,
+  initIndex?: number
 ) => {
-  const currentIndex = React.useRef(0);
+  const currentIndex = React.useRef(initIndex ?? 0);
   return {
     headerStartScrolling: (width: number, x: number) => {
       const index = calculateIndex({

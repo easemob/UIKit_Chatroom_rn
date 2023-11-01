@@ -27,6 +27,7 @@ export type TabPageProps = {
   height?: number;
   width?: number;
   headerPosition?: 'up' | 'down';
+  initIndex?: number;
 };
 
 const _TabPage = (props: TabPageProps) => {
@@ -36,6 +37,7 @@ const _TabPage = (props: TabPageProps) => {
     height,
     width: initWidth,
     headerPosition = 'up',
+    initIndex = 0,
   } = props;
   const { Header, HeaderProps } = header;
   const { titles: headerTitles } = HeaderProps;
@@ -53,7 +55,11 @@ const _TabPage = (props: TabPageProps) => {
   const _TabPageHeader = Header ?? TabPageHeader;
   const _TabPageBody = Body ?? TabPageBody;
   const width = initWidth ?? winWidth;
-  const { headerStartScrolling } = useHeaderStartScrolling(count, headerRef);
+  const { headerStartScrolling } = useHeaderStartScrolling(
+    count,
+    headerRef,
+    initIndex
+  );
 
   if (
     headerTitles.length <= 0 ||
@@ -73,6 +79,7 @@ const _TabPage = (props: TabPageProps) => {
           }
         }}
         width={width}
+        initIndex={initIndex}
         {...HeaderProps}
       />
     );
@@ -101,6 +108,7 @@ const _TabPage = (props: TabPageProps) => {
         }
         width={width}
         children={bodyChildren}
+        initIndex={initIndex}
         {...BodyOtherProps}
       />
 

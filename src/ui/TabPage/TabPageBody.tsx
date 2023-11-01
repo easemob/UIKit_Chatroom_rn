@@ -33,6 +33,7 @@ export type TabPageBodyProps = Omit<
   height?: number;
   width?: number;
   containerStyle?: StyleProp<ViewStyle>;
+  initIndex?: number;
 };
 export function TabPageBody(props: TabPageBodyProps) {
   const {
@@ -42,6 +43,8 @@ export function TabPageBody(props: TabPageBodyProps) {
     height: initHeight,
     width: initWidth,
     containerStyle,
+    initIndex = 0,
+    onLayout: propsOnLayout,
     ...others
   } = props;
   const ref = React.useRef<ScrollView>({} as any);
@@ -49,8 +52,8 @@ export function TabPageBody(props: TabPageBodyProps) {
   const w = initWidth ?? winWidth;
   let viewRef = React.useRef<View | undefined>();
   if (propsRef.current) {
-    propsRef.current.scrollTo = (index: number) => {
-      ref.current?.scrollTo({ x: index * w });
+    propsRef.current.scrollTo = (index: number, animated?: boolean) => {
+      ref.current?.scrollTo({ x: index * w, animated: animated });
     };
   }
   return (
@@ -75,6 +78,14 @@ export function TabPageBody(props: TabPageBodyProps) {
         pagingEnabled={true}
         showsHorizontalScrollIndicator={false}
         bounces={false}
+        onLayout={(e) => {
+          if (propsOnLayout) {
+            propsOnLayout(e);
+          }
+          if (initIndex > 0) {
+            ref.current?.scrollTo({ x: initIndex * w, animated: false });
+          }
+        }}
         {...others}
       >
         {children.map((Body, i) => {
