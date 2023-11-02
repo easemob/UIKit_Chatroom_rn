@@ -1,5 +1,8 @@
 import * as React from 'react';
 
+/**
+ * Try to get the name of the component. If it is of other types, it will be parsed accordingly.
+ */
 export function useGetObjectName() {
   const getObjectName = React.useCallback((object: any) => {
     const objectType = typeof object;

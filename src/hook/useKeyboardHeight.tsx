@@ -1,6 +1,9 @@
 import * as React from 'react';
 import { Keyboard } from 'react-native';
 
+/**
+ * Get the keyboard height. Need to be obtained dynamically.
+ */
 export function useKeyboardHeight() {
   const [keyboardHeight, setKeyboardHeight] = React.useState(0);
 

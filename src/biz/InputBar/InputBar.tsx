@@ -21,18 +21,64 @@ import { DelButtonMemo } from './DelButton';
 import { useInputBarApi, useInputValue } from './InputBar.hooks';
 import { InputBarStyle, InputBarStyleProps } from './InputBarStyle';
 
+/**
+ * Referencing Values of the `InputBar` component.
+ */
 export type InputBarRef = {
+  /**
+   * Close the input box component and switch to the input style component.
+   */
   close: () => void;
 };
+/**
+ * Properties of the `InputBar` component.
+ */
 export type InputBarProps = Omit<InputBarStyleProps, 'onClickInput'> & {
+  /**
+   * Callback function when the input box component is will displayed.
+   */
   onInputBarWillShow?: () => void;
+  /**
+   * Callback function when the input box component is will hidden.
+   */
   onInputBarWillHide?: () => void;
+  /**
+   * Callback function when the input box component is displayed.
+   */
   onSend?: (content: string) => void;
+  /**
+   * Callback function when the input box component is hidden.
+   */
   onSended?: (content: string, message: ChatMessage) => void;
   keyboardVerticalOffset?: number;
   closeAfterSend?: boolean;
 };
 
+/**
+ * The InputBar component provides input box functionality.
+ *
+ * It is composed of `TextInput` and `InputBarStyle`, and switches the input state through events.
+ *
+ * @param props {@link InputBarProps}
+ * @param ref {@link InputBarRef}
+ * @returns React.JSX.Element
+ *
+ * @example
+ * ```tsx
+ * inputBarRef?: React.RefObject<InputBarRef>;
+ * // ...
+ * <InputBar
+ *    ref={this.inputBarRef}
+ *    onSended={(_content, message) => {
+ *      this.messageRef?.current?.addSendedMessage?.(message);
+ *    }}
+ *    closeAfterSend={true}
+ *    {...input?.props}
+ *  />
+ *  // ...
+ *  this.inputBarRef.current.close();
+ * ```
+ */
 export const InputBar = React.forwardRef<InputBarRef, InputBarProps>(function (
   props: React.PropsWithChildren<InputBarProps>,
   ref?: React.ForwardedRef<InputBarRef>

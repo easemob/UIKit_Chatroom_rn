@@ -4,13 +4,13 @@ import { StyleProp, useWindowDimensions, View, ViewStyle } from 'react-native';
 import { g_mask_color } from '../../const';
 import { useColors } from '../../hook';
 import { usePaletteContext } from '../../theme';
-import { SimulativeModalRef, SlideModal } from '../../ui/Modal';
+import { SlideModal, SlideModalRef } from '../../ui/Modal';
 import { TabPage } from '../../ui/TabPage';
 import { gAspectRatio } from './BottomSheetGift.const';
 import { GiftListMemo } from './GiftList';
 import type { GiftListModel } from './types';
 
-export type BottomSheetGiftRef = SimulativeModalRef & {
+export type BottomSheetGiftRef = SlideModalRef & {
   startShowWithInit: (
     gifts: {
       title: string;
@@ -36,7 +36,7 @@ export const BottomSheetGift = React.forwardRef<
 ) {
   const { gifts: initGifts, onSend } = props;
   const [gifts, setGift] = React.useState(initGifts);
-  const modalRef = React.useRef<SimulativeModalRef>({} as any);
+  const modalRef = React.useRef<SlideModalRef>({} as any);
   const { width: winWidth } = useWindowDimensions();
   const height = winWidth / gAspectRatio;
   // const isUsePanResponder = React.useRef(true);

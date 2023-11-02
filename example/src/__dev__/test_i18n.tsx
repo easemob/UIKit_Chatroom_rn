@@ -5,8 +5,8 @@ import {
   createDarkTheme,
   createLightTheme,
   createPresetPalette,
+  LanguageCode,
   StringSet,
-  StringSetType,
   useI18nContext,
 } from 'react-native-chat-room';
 
@@ -34,7 +34,7 @@ function I18nComponent3(): React.JSX.Element {
   );
 }
 
-function createLanguage(type: StringSetType): StringSet {
+function createLanguage(type: LanguageCode): StringSet {
   console.log('test:zuoyu:createLanguage:', type);
   if (type === 'fr') {
     return {

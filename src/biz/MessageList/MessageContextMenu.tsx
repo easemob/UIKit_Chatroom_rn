@@ -12,12 +12,22 @@ import {
 } from '../BottomSheetMenu';
 import type { PropsWithError, PropsWithTest } from '../types';
 
+/**
+ * Type of menu item.
+ */
 export type MessageContextMenuItemType =
   | 'Private Chat'
   | 'Translate'
   | 'Delete'
   | 'Report';
+
+/**
+ * Referencing value of the `MessageContextMenu` component.
+ */
 export type MessageContextMenuRef = BottomSheetMenuRef;
+/**
+ * Properties of the `MessageContextMenu` component.
+ */
 export type MessageContextMenuProps = Omit<
   BottomSheetMenuProps,
   'title' | 'initItems'
@@ -28,6 +38,9 @@ export type MessageContextMenuProps = Omit<
     onClicked?: (type: MessageContextMenuItemType) => void;
   };
 
+/**
+ * Component for displaying the context menu of the message.
+ */
 export const MessageContextMenu = React.forwardRef<
   MessageContextMenuRef,
   MessageContextMenuProps

@@ -21,19 +21,76 @@ import { gMarqueeHeight } from './Marquee.const';
 import { createCompose } from './Marquee.hooks';
 import type { MarqueeTask } from './types';
 
+/**
+ * Referencing value of the `Marquee` component.
+ */
 export type MarqueeRef = {
+  /**
+   * Push a task to the queue.
+   */
   pushTask: (task: MarqueeTask) => void;
 };
 
+/**
+ * Properties of the `Marquee` component.
+ */
 export type MarqueeProps = {
+  /**
+   * Whether to display the component.
+   *
+   * Changing the display or hiding in this way usually does not trigger the loading and unloading of components.
+   */
   visible?: boolean;
+  /**
+   * The speed of the animation.
+   * default: 8.0.
+   * Range [0, 100]
+   */
   playSpeed?: number;
+  /**
+   * The style of the container.
+   */
   containerStyle?: StyleProp<ViewStyle>;
+  /**
+   * The style of the text.
+   */
   textStyle?: StyleProp<TextStyle>;
+  /**
+   * The icon component.
+   */
   icon?: React.ReactElement;
+  /**
+   * Callback function when the animation is finished.
+   */
   onFinished?: () => void;
 };
 
+/**
+ * The Marquee component provides a floating text animation.
+ *
+ * Messages can be displayed in sequence through a queue.
+ *
+ * @param props {@link MarqueeProps}
+ * @param ref {@link MarqueeRef}
+ * @returns React.JSX.Element
+ *
+ * @test {@link https://github.com/AsteriskZuo/react-native-chat-room/blob/a9379f61a7b19be6b87b277f5669a6e7bcf3d45c/example/src/__dev__/test_marquee.tsx}
+ *
+ * @example
+ *
+ * ```tsx
+ * const ref = React.useRef<MarqueeRef>({} as any);
+ * // ...
+ * <Marquee ref={ref} />
+ * // ...
+ * ref.current?.pushTask?.({
+ *   model: {
+ *     id: count.toString(),
+ *     content: count.toString() + content,
+ *   },
+ * });
+ * ```
+ */
 export const Marquee = React.forwardRef<MarqueeRef, MarqueeProps>(function (
   props: MarqueeProps,
   ref?: React.ForwardedRef<MarqueeRef>
@@ -147,10 +204,6 @@ export const Marquee = React.forwardRef<MarqueeRef, MarqueeProps>(function (
     []
   );
 
-  if (visible === false) {
-    return null;
-  }
-
   return (
     <View
       style={[
@@ -163,7 +216,7 @@ export const Marquee = React.forwardRef<MarqueeRef, MarqueeProps>(function (
           // paddingLeft: containerHeight,
           borderRadius: 10,
           paddingHorizontal: 10,
-          display: isShow ? 'flex' : 'none',
+          display: visible === true && isShow === true ? 'flex' : 'none',
           backgroundColor: getColor('backgroundColor'),
           // backgroundColor: '#ffd700',
         },

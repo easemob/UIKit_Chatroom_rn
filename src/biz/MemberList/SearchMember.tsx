@@ -16,12 +16,26 @@ import { MemberListItemMemo, MemberListItemProps } from './MemberList.item';
 import { Search } from './Search';
 import type { MemberListType } from './types';
 
+/**
+ * Properties of the `MemberList` component.
+ */
 export type SearchMemberProps = {
+  /**
+   * List type. {@link MemberListType}
+   */
   memberType: MemberListType;
+  /**
+   * Callback function when cancel button is clicked.
+   */
   onRequestClose: () => void;
 } & PropsWithTest &
   PropsWithError;
 
+/**
+ * Search member components.
+ * @param props {@link SearchMemberProps}
+ * @returns React.JSX.Element
+ */
 export function SearchMember(props: SearchMemberProps) {
   const { onRequestClose, memberType } = props;
   const [value, setValue] = React.useState('');

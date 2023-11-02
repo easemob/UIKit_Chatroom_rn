@@ -36,41 +36,83 @@ import { MessageList, MessageListProps, MessageListRef } from '../MessageList';
 import { gMessageListHeight } from '../MessageList/MessageList.const'; // for test
 import type { PropsWithError, PropsWithTest } from '../types';
 
-type ChatroomData = {
+/**
+ * Data model for the Chatroom component.
+ */
+type ChatroomModel = {
   roomId: string;
   ownerId: string;
 };
+/**
+ * Properties of the `Chatroom` component.
+ */
 export type ChatroomProps = React.PropsWithChildren<
   {
+    /**
+     * Style of the container. This property can mainly change the display or hiding, position, size, background color, style, etc.
+     */
     containerStyle?: StyleProp<ViewStyle>;
+    /**
+     * Renderer for the GiftFloating component. If not set, the built-in one is used.
+     *
+     * You can set whether to load through `RoomOption.gift`.
+     */
     GiftFloating?: GiftFloatingComponent;
+    /**
+     * Renderer for the Marquee component. If not set, the built-in one is used.
+     *
+     * You can set whether to load through `RoomOption.marquee`.
+     */
     Marquee?: MarqueeComponent;
+    /**
+     * Properties of the InputBar component. If not set, the default value is used.
+     */
     input?: {
       props?: Omit<
         InputBarProps,
         'onInputBarWillShow' | 'onInputBarWillHide' | 'onSend'
       >;
     };
+    /**
+     * Properties of the MessageList component. If not set, the default value is used.
+     */
     messageList?: {
       props?: Omit<
         MessageListProps,
         'onRequestCloseInputBar' | 'isInputBarShow' | 'onLongPressItem'
       >;
     };
+    /**
+     * Properties of the Marquee component. If not set, the default value is used.
+     */
     marquee?: {
       props?: MarqueeProps;
     };
+    /**
+     * Properties of the GiftFloating component. If not set, the default value is used.
+     */
     gift?: {
       props?: GiftFloatingProps;
     };
+    /**
+     * Properties of the MemberList component. If not set, the default value is used.
+     */
     memberList?: {
       props?: BottomSheetMemberListProps;
     };
+    /**
+     * Renderer for the background view.
+     *
+     * Typical usage scenarios: placing background images and placing live videos.
+     */
     backgroundView?: React.ReactElement;
-  } & ChatroomData &
+  } & ChatroomModel &
     PropsWithTest &
     PropsWithError
 >;
+/**
+ * State variable of the `Chatroom` component.
+ */
 type ChatroomState = {
   isInputBarShow: boolean;
   pageY: number;
@@ -79,19 +121,56 @@ type ChatroomState = {
 let GGiftFloating: GiftFloatingComponent;
 let GMarquee: MarqueeComponent;
 
+/**
+ * Component for chat room.
+ *
+ * The ChatroomBase component defines properties and UI styles. The business logic part is separated into `Chatroom`.
+ *
+ * The Chatroom component is a first-level component, and there are sub-components below. Errors in the request network or caused by business problems will be notified through `IMServiceListener.onError`. If the request network ends, it will be notified through `IMServiceListener.onFinished`.
+ */
 export abstract class ChatroomBase extends React.PureComponent<
   ChatroomProps,
   ChatroomState
 > {
+  /**
+   * Reference to the InputBar component.
+   */
   inputBarRef?: React.RefObject<InputBarRef>;
+  /**
+   * Reference to the MessageList component.
+   */
   messageRef?: React.RefObject<MessageListRef>;
+  /**
+   * Reference to the Marquee component.
+   */
   marqueeRef?: React.RefObject<MarqueeRef>;
+  /**
+   * Reference to the GiftFloating component.
+   */
   giftRef?: React.RefObject<GiftFloatingRef>;
+  /**
+   * Reference to the MemberList component.
+   */
   memberRef?: React.RefObject<BottomSheetMemberListRef>;
+  /**
+   * Reference to the container.
+   */
   containerRef?: React.RefObject<View>;
+  /**
+   * IM service.
+   */
   im?: IMService;
+  /**
+   * Global Configuration.
+   */
   config?: Config;
+  /**
+   * Internationalization service.
+   */
   i18n?: I18nTr;
+  /**
+   * IM service listener.
+   */
   listener?: IMServiceListener;
   constructor(props: ChatroomProps) {
     super(props);
@@ -113,29 +192,47 @@ export abstract class ChatroomBase extends React.PureComponent<
   }
 
   /**
-   * fot test
-   * @returns
+   * Get the reference of the InputBar component.
+   * @returns MarqueeRef | null.
    */
   getMarqueeRef() {
     return this.marqueeRef?.current;
   }
 
   /**
-   * fot test
-   * @returns
+   * Get the reference of the InputBar component.
+   * @returns GiftFloatingRef | null.
    */
   getGiftFloatingRef() {
     return this.giftRef?.current;
   }
 
+  /**
+   * Get the reference of the InputBar component.
+   * @returns BottomSheetMemberListRef | null.
+   */
   getMemberListRef() {
     return this.memberRef?.current;
   }
 
+  /**
+   * Get the reference of the InputBar component.
+   * @returns MessageListRef | null.
+   */
   getMessageListRef() {
     return this.messageRef?.current;
   }
 
+  /**
+   * Join chatroom.
+   *
+   * Different from `IMService`, it will update the internal state of UI components. It is not recommended to use `IMService.joinRoom` directly
+   *
+   * @params
+   * - roomId: Room ID.
+   * - ownerId: Room owner ID.
+   * - result: Callback for joining chatroom.
+   */
   abstract joinRoom(params: {
     roomId: string;
     ownerId: string;

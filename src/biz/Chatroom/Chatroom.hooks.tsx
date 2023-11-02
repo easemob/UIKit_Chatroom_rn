@@ -14,6 +14,11 @@ import {
 import { seqId } from '../../utils';
 import { ChatroomBase, ChatroomProps } from './Chatroom';
 
+/**
+ * Component for chat room.
+ *
+ * The Chatroom component is mainly responsible for implementing relevant business logic.
+ */
 export class Chatroom extends ChatroomBase {
   constructor(props: ChatroomProps) {
     super(props);
@@ -63,6 +68,9 @@ export class Chatroom extends ChatroomBase {
           }
         }
       },
+      onGlobalNotifyReceived: (_roomId, _notifyMessage) => {
+        // todo:
+      },
       onUserBeKicked: (roomId) => {
         // Clean up resources. External notifications kicked. Typical: Re-entering the chat room, prompting that the room has been exited, etc.
         this.im?.resetRoom(roomId);
@@ -102,10 +110,7 @@ export class Chatroom extends ChatroomBase {
         })
         .catch((e) => {
           this.im?.sendError({
-            error: new UIKitError({
-              code: ErrorCode.room_join_error,
-              extra: e,
-            }),
+            error: e,
           });
         });
     } else {
@@ -128,10 +133,7 @@ export class Chatroom extends ChatroomBase {
         })
         .catch((e) => {
           this.im?.sendError({
-            error: new UIKitError({
-              code: ErrorCode.room_leave_error,
-              extra: e,
-            }),
+            error: e,
           });
         });
     } else {
@@ -164,10 +166,7 @@ export class Chatroom extends ChatroomBase {
       .catch((e) => {
         params.result({
           isOk: false,
-          error: new UIKitError({
-            code: ErrorCode.room_join_error,
-            extra: e.toString(),
-          }),
+          error: e,
         });
       });
   }
@@ -183,10 +182,7 @@ export class Chatroom extends ChatroomBase {
       .catch((e) => {
         params.result({
           isOk: false,
-          error: new UIKitError({
-            code: ErrorCode.room_leave_error,
-            extra: e.toString(),
-          }),
+          error: e,
         });
       });
   }

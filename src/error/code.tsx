@@ -25,6 +25,7 @@ export enum ErrorCode {
   room_fetch_mute_member_list_error,
   room_fetch_member_info_error,
   room_fetch_room_list_error,
+  room_upload_user_info_error,
 
   // network error 2000 start
   network_error = 2000,

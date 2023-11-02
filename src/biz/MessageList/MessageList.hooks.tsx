@@ -97,11 +97,13 @@ export function useMessageListApi(params: {
   onLongPress?: (data: MessageListItemModel) => void;
   onUnreadCount?: (count: number) => void;
   onLayoutProps?: ((event: LayoutChangeEvent) => void) | undefined;
+  maxMessageCount?: number;
 }) {
   const {
     onLongPress: propsOnLongPress,
     onLayoutProps,
     onUnreadCount,
+    maxMessageCount = gMaxMessageCount,
   } = params;
   const listRef = React.useRef<FlatList>({} as any);
   const dataRef = React.useRef<MessageListItemProps[]>([]);
@@ -117,8 +119,8 @@ export function useMessageListApi(params: {
   const { delayExecTask: _startClearTask } = useDelayExecTask(
     gIdleTimeout,
     () => {
-      if (dataRef.current.length > gMaxMessageCount) {
-        dataRef.current.splice(0, dataRef.current.length - gMaxMessageCount);
+      if (dataRef.current.length > maxMessageCount) {
+        dataRef.current.splice(0, dataRef.current.length - maxMessageCount);
         _updateUI(true);
       }
     }
@@ -147,6 +149,13 @@ export function useMessageListApi(params: {
           } else if (message.body.type === ChatMessageType.CUSTOM) {
             _onCustomMessage(message);
           }
+        }
+      }
+    },
+    onMessageRecalled: (roomId, message) => {
+      if (im.roomState === 'joined') {
+        if (im.roomId === roomId) {
+          _updateUI(_delData(message.msgId));
         }
       }
     },
@@ -250,6 +259,18 @@ export function useMessageListApi(params: {
     } as MessageListItemProps);
     return true;
   };
+
+  const _delData = (msgId: string) => {
+    for (let index = 0; index < dataRef.current.length; index++) {
+      const item = dataRef.current[index];
+      if (item?.msg?.msgId === msgId) {
+        dataRef.current.splice(index, 1);
+        return true;
+      }
+    }
+    return false;
+  };
+
   const _updateUI = (isNeedUpdate: boolean) => {
     if (isNeedUpdate === true) {
       setData([...dataRef.current]);
@@ -417,10 +438,7 @@ export function useMessageListApi(params: {
         })
         .catch((e) => {
           im.sendError({
-            error: new UIKitError({
-              code: ErrorCode.msg_translate_error,
-              extra: e.toString(),
-            }),
+            error: e,
             from: useMessageListApi?.caller?.name,
           });
         });
@@ -442,10 +460,7 @@ export function useMessageListApi(params: {
         })
         .catch((e) => {
           im.sendError({
-            error: new UIKitError({
-              code: ErrorCode.msg_recall_error,
-              extra: e.toString(),
-            }),
+            error: e,
             from: useMessageListApi?.caller?.name,
           });
         });
@@ -464,10 +479,7 @@ export function useMessageListApi(params: {
         })
         .catch((e) => {
           im.sendError({
-            error: new UIKitError({
-              code: ErrorCode.msg_report_error,
-              extra: e.toString(),
-            }),
+            error: e,
             from: useMessageListApi?.caller?.name,
           });
         });

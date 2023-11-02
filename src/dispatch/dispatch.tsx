@@ -4,13 +4,24 @@ import { ErrorCode, UIKitError } from '../error';
 import { asyncTask } from '../utils';
 import type { DispatchApi, DispatchInit, Listener } from './types';
 
+/**
+ * Context of the dispatch.
+ */
 export const DispatchContext = React.createContext<DispatchApi | undefined>(
   undefined
 );
 DispatchContext.displayName = 'UIKitDispatchContext';
 
+/**
+ * Properties of the dispatch context.
+ */
 type DispatchContextProps = React.PropsWithChildren<{ value?: DispatchInit }>;
 
+/**
+ * The dispatch context's provider.
+ * @param param0 {@link DispatchContextProps}
+ * @returns The Dispatch Provider
+ */
 export function DispatchContextProvider({ children }: DispatchContextProps) {
   const map = new Map<string, Set<Listener>>();
   const v = {
@@ -59,6 +70,10 @@ export function DispatchContextProvider({ children }: DispatchContextProps) {
   );
 }
 
+/**
+ * The dispatch context's hook.
+ * @returns dispatch {@link DispatchApi}
+ */
 export function useDispatchContext(): DispatchApi {
   const dis = React.useContext(DispatchContext);
   if (!dis) throw Error(`${DispatchContext.displayName} is not provided`);

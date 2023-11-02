@@ -1,5 +1,8 @@
 import * as React from 'react';
 
+/**
+ * Function component life cycle calling tool.
+ */
 export function useLifecycle(
   onLifecycle?: (state: 'load' | 'unload') => void,
   callerName?: string,

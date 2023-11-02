@@ -3,6 +3,9 @@ import * as React from 'react';
 import { createPalette, useCreatePalette } from './palette';
 import type { Palette } from './types';
 
+/**
+ * Preset parameters of the palette.
+ */
 const presetParams = {
   colors: {
     primary: 203,
@@ -14,7 +17,7 @@ const presetParams = {
 };
 
 /**
- * Create a theme object.
+ * Create a palette object.
  *
  * primary.6: 'hsla(203, 100%, 60%, 1)'
  * primary.2: 'hsla(203, 100%, 20%, 1)'
@@ -43,12 +46,16 @@ const presetParams = {
  * neutral.7: 'hsla(203, 8%, 70%, 1)'
  * neutral.8: 'hsla(203, 8%, 80%, 1)'
  *
- * @returns The dark theme.
+ * @returns The palette object.
  */
 export function createPresetPalette(): Palette {
   return createPalette(presetParams);
 }
 
+/**
+ * Create a `Palette` object through the cache's `createPalette` method.
+ * @returns The preset Palette.
+ */
 export function usePresetPalette(): Palette {
   const params = React.useMemo(() => presetParams, []);
   const { createPalette } = useCreatePalette(params);

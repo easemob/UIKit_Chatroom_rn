@@ -1,7 +1,7 @@
 import type {
   CreateStringSet,
+  LanguageCode,
   StringSet,
-  StringSetType,
   StringSetValueType,
 } from './types';
 
@@ -11,7 +11,7 @@ export interface Translate {
 
 export class TranslateImpl implements Translate {
   map: Map<string, StringSetValueType>;
-  language: StringSetType;
+  language: LanguageCode;
   tr(key: string, ...args: any[]): string {
     const r = this.map.get(key);
     if (r) {
@@ -23,10 +23,10 @@ export class TranslateImpl implements Translate {
     }
     return key;
   }
-  currentLanguage(): StringSetType {
+  currentLanguage(): LanguageCode {
     return this.language;
   }
-  constructor(params: { func: CreateStringSet; type: StringSetType }) {
+  constructor(params: { func: CreateStringSet; type: LanguageCode }) {
     this.map = new Map();
     this.language = params.type;
     const stringSet = params.func(params.type);
@@ -35,7 +35,7 @@ export class TranslateImpl implements Translate {
       this.map.set(key, stringSet[key]!);
     }
   }
-  addCustom(params: { stringSet: StringSet; type: StringSetType }) {
+  addCustom(params: { stringSet: StringSet; type: LanguageCode }) {
     const { stringSet } = params;
     const keys = Object.keys(stringSet);
     for (const key of keys) {

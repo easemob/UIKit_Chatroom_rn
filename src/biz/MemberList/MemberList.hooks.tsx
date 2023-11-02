@@ -8,7 +8,6 @@ import {
 import { ChatCustomMessageBody, ChatMessageType } from 'react-native-chat-sdk';
 
 import { useDispatchContext, useDispatchListener } from '../../dispatch';
-import { ErrorCode, UIKitError } from '../../error';
 import { useDelayExecTask } from '../../hook';
 import {
   custom_msg_event_type_join,
@@ -25,6 +24,10 @@ import type { MemberListItemProps } from './MemberList.item';
 import type { MemberListType } from './types';
 
 export function usePanHandlers(params: {
+  /**
+   * Callback function when the gesture is used.
+   * When used together with `Modal` or `SimuModal`, the pull-down gesture conflicts with the scrolling gift list gesture and cannot be resolved using bubbling events. Resolved by manually controlling usage rights.
+   */
   requestUseScrollGesture: ((finished: boolean) => void) | undefined;
 }) {
   const { requestUseScrollGesture } = params;
@@ -212,6 +215,20 @@ export function useMemberListAPI(
     return false;
   };
 
+  const _removeDataList = (userIds?: string[]) => {
+    if (userIds === undefined) {
+      return false;
+    }
+    let ret = false;
+    for (const userId of userIds) {
+      const r = _removeData(userId);
+      if (r === true) {
+        ret = true;
+      }
+    }
+    return ret;
+  };
+
   const _updateUI = (isNeedUpdate: boolean) => {
     if (isNeedUpdate === true) {
       setData([...dataRef.current]);
@@ -275,6 +292,20 @@ export function useMemberListAPI(
         }
       }
     },
+    onUserMuted: (roomId, userIds, _operatorId) => {
+      if (roomId === im.roomId) {
+        if (memberType === 'muted') {
+          _updateUI(_addDataList(userIds));
+        }
+      }
+    },
+    onUserUnmuted: (roomId, userIds, _operatorId) => {
+      if (roomId === im.roomId) {
+        if (memberType === 'muted') {
+          _updateUI(_removeDataList(userIds));
+        }
+      }
+    },
   });
 
   const _isMuter = (memberId: string) => {
@@ -306,10 +337,7 @@ export function useMemberListAPI(
           .catch((e) => {
             onFinished?.();
             im.sendError({
-              error: new UIKitError({
-                code: ErrorCode.room_fetch_member_list_error,
-                extra: e.toString(),
-              }),
+              error: e,
               from: useMemberListAPI?.caller?.name,
             });
             _onPageState('error');
@@ -335,10 +363,7 @@ export function useMemberListAPI(
           .catch((e) => {
             onFinished?.();
             im.sendError({
-              error: new UIKitError({
-                code: ErrorCode.room_fetch_mute_member_list_error,
-                extra: e.toString(),
-              }),
+              error: e,
               from: useMemberListAPI?.caller?.name,
             });
             _onPageState('error');
@@ -366,10 +391,7 @@ export function useMemberListAPI(
         })
         .catch((e) => {
           im.sendError({
-            error: new UIKitError({
-              code: ErrorCode.room_fetch_member_list_error,
-              extra: e.toString(),
-            }),
+            error: e,
             from: useMemberListAPI?.caller?.name,
           });
         });
@@ -385,10 +407,7 @@ export function useMemberListAPI(
         })
         .catch((e) => {
           im.sendError({
-            error: new UIKitError({
-              code: ErrorCode.room_fetch_member_info_error,
-              extra: e.toString(),
-            }),
+            error: e,
             from: useMemberListAPI?.caller?.name,
           });
         });
@@ -456,10 +475,7 @@ export function useMemberListAPI(
         })
         .catch((e) => {
           im.sendError({
-            error: new UIKitError({
-              code: ErrorCode.room_mute_member_error,
-              extra: e.toString(),
-            }),
+            error: e,
             from: useMemberListAPI?.caller?.name,
           });
         });
@@ -474,10 +490,7 @@ export function useMemberListAPI(
         })
         .catch((e) => {
           im.sendError({
-            error: new UIKitError({
-              code: ErrorCode.room_kick_member_error,
-              extra: e.toString(),
-            }),
+            error: e,
             from: useMemberListAPI?.caller?.name,
           });
         });
@@ -529,7 +542,7 @@ export function useSearchMemberListAPI(props: { memberType: MemberListType }) {
   };
 
   const _execSearch = (key: string) => {
-    const r = im.getIncludes(key);
+    const r = im.getIncludes(key, 'nickName');
     const rr = r.map((v) => {
       return {
         id: v.userId,
@@ -568,10 +581,23 @@ type useMemberListenerProps = {
   onUserJoinedNotify?: (roomId: string, userInfo: UserServiceData) => void;
   onUserJoined?: (roomId: string, userId: string) => void;
   onUserLeave?: (roomId: string, userId: string) => void;
+  onUserMuted?: (roomId: string, userIds: string[], operatorId: string) => void;
+  onUserUnmuted?: (
+    roomId: string,
+    userIds: string[],
+    operatorId: string
+  ) => void;
 };
 export function useMemberListener(props: useMemberListenerProps) {
-  const { im, onUpdateInfo, onUserJoined, onUserLeave, onUserJoinedNotify } =
-    props;
+  const {
+    im,
+    onUpdateInfo,
+    onUserJoined,
+    onUserLeave,
+    onUserJoinedNotify,
+    onUserMuted,
+    onUserUnmuted,
+  } = props;
   const msgListener = React.useRef<IMServiceListener>({
     onMessageReceived: (roomId, message) => {
       const userInfo = im.userInfoFromMessage(message);
@@ -590,6 +616,12 @@ export function useMemberListener(props: useMemberListenerProps) {
     },
     onUserLeave: (roomId, userId) => {
       onUserLeave?.(roomId, userId);
+    },
+    onUserMuted(roomId, userIds, operatorId) {
+      onUserMuted?.(roomId, userIds, operatorId);
+    },
+    onUserUnmuted(roomId, userIds, operatorId) {
+      onUserUnmuted?.(roomId, userIds, operatorId);
     },
   });
   useIMListener(msgListener.current);

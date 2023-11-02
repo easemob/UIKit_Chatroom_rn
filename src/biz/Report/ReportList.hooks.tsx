@@ -38,6 +38,10 @@ export function useReportListApi(itemData: ReportItemModel[]) {
 }
 
 export function useScrollGesture(
+  /**
+   * Callback function when the gesture is used.
+   * When used together with `Modal` or `SimuModal`, the pull-down gesture conflicts with the scrolling gift list gesture and cannot be resolved using bubbling events. Resolved by manually controlling usage rights.
+   */
   requestUseScrollGesture?: (finished: boolean) => void
 ) {
   const isScrollingRef = React.useRef(false);

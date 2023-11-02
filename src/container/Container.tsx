@@ -3,7 +3,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { ConfigContextProvider, RoomOption } from '../config';
 import { DispatchContextProvider } from '../dispatch';
-import { CreateStringSet, I18nContextProvider, StringSetType } from '../i18n';
+import { CreateStringSet, I18nContextProvider, LanguageCode } from '../i18n';
 import { createStringSet } from '../i18n/StringSet';
 import { IMContextProvider } from '../im';
 import {
@@ -22,7 +22,7 @@ type PartialRoomOption = PartialDeep<RoomOption>;
 export type ContainerProps = React.PropsWithChildren<{
   appKey: string;
   isDevMode?: boolean;
-  language?: StringSetType;
+  language?: LanguageCode;
   languageFactory?: CreateStringSet;
   palette?: Palette;
   theme?: Theme;
@@ -43,7 +43,7 @@ export function Container(props: ContainerProps) {
   const _palette = usePresetPalette();
   const light = useLightTheme(palette ?? _palette);
 
-  const getLanguage = (): StringSetType => {
+  const getLanguage = (): LanguageCode => {
     if (language) {
       return language;
     }
@@ -60,7 +60,7 @@ export function Container(props: ContainerProps) {
         <ThemeContextProvider value={theme ?? light}>
           <I18nContextProvider
             value={{
-              stringSetType: getLanguage(),
+              languageCode: getLanguage(),
               factory: languageFactory,
             }}
           >

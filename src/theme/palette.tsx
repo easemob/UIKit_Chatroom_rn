@@ -27,13 +27,22 @@ import type {
   Palette,
 } from './types';
 
+/**
+ * Context of the Palette.
+ */
 export const PaletteContext = React.createContext<Palette | undefined>(
   undefined
 );
 PaletteContext.displayName = 'UIKitPaletteContextContext';
 
+/**
+ * Properties of the Palette context.
+ */
 type PaletteContextProps = React.PropsWithChildren<{ value: Palette }>;
 
+/**
+ * The Palette context's provider.
+ */
 export function PaletteContextProvider({
   value,
   children,
@@ -43,12 +52,24 @@ export function PaletteContextProvider({
   );
 }
 
+/**
+ * Get the Palette context's value.
+ * @returns The Palette context's value.
+ */
 export function usePaletteContext(): Palette {
   const palette = React.useContext(PaletteContext);
   if (!palette) throw Error(`${PaletteContext.displayName} is not provided`);
   return palette;
 }
 
+/**
+ * Create a Palette.
+ *
+ * Create a default Palette. {@link createPresetPalette}
+ *
+ * @param params - The parameters to create a Palette. {@link createPaletteParams}
+ * @returns The Palette.
+ */
 export function createPalette(params: createPaletteParams): Palette {
   const { colors } = params;
   return {
@@ -84,6 +105,16 @@ export function createPalette(params: createPaletteParams): Palette {
   } as Palette;
 }
 
+/**
+ * Create a Palette' hook.
+ *
+ * Create a default Palette. see {@link usePresetPalette}
+ *
+ * Cache the `createPalette` function.
+ *
+ * @param params - The parameters to create a Palette. {@link createPaletteParams}
+ * @returns The `createPalette` function.
+ */
 export function useCreatePalette(params: createPaletteParams) {
   const palette = React.useMemo(() => createPalette(params), [params]);
   return {

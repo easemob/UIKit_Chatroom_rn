@@ -10,15 +10,29 @@ import type { PropsWithError, PropsWithTest } from '../types';
 import { ReportList } from './ReportList';
 import type { ReportItemModel } from './types';
 
+/**
+ * Referencing value of the `ReportList` component.
+ */
 export type ReportRef = SlideModalRef & {};
+/**
+ * Properties of the `ReportList` component.
+ */
 export type ReportProps = {
   data: ReportItemModel[];
   maskStyle?: StyleProp<ViewStyle> | undefined;
+  /**
+   * Style of the container. This property can mainly change the display or hiding, position, size, background color, style, etc.
+   */
   containerStyle?: StyleProp<ViewStyle>;
   onReport: (result?: ReportItemModel) => void;
 } & PropsWithTest &
   PropsWithError;
 
+/**
+ * Component for reporting messages.
+ *
+ * It is composed of `SlideModal` and `ReportList`.
+ */
 export const BottomSheetReport = React.forwardRef<ReportRef, ReportProps>(
   function (props: ReportProps, ref?: React.ForwardedRef<ReportRef>) {
     const { data, containerStyle, onReport } = props;

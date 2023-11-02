@@ -14,17 +14,41 @@ import {
   gItemAspectRatio,
   gItemCountPerRow,
 } from './GiftList.const';
-import { GiftListItemMemo } from './GiftList.item';
+import { GiftListItem, GiftListItemMemo } from './GiftList.item';
 import type { GiftListModel } from './types';
 
 export type GiftListProps = {
+  /**
+   * Gift list data comes from the app developer. The data should conform to the constrained format. {@link GiftListModel}
+   *
+   */
   gifts: GiftListModel[];
+  /**
+   * Callback function when a gift is selected.
+   */
   onSend?: (giftId: string) => void;
+  /**
+   * Callback function when the gesture is used.
+   * When used together with `Modal` or `SimuModal`, the pull-down gesture conflicts with the scrolling gift list gesture and cannot be resolved using bubbling events. Resolved by manually controlling usage rights.
+   */
   requestUseScrollGesture?: (finished: boolean) => void;
+  /**
+   * The component to be used for rendering the gift list item.
+   */
+  GiftListItemComponent?: typeof GiftListItem;
 };
 
+/**
+ * Gift list.
+ *
+ * @test {@link https://github.com/AsteriskZuo/react-native-chat-room/blob/f7c2208fde9e294fa8e7247624da2bb1d0458e9d/example/src/__dev__/test_gift_list.tsx}
+ *
+ * @param props {@link GiftListProps}
+ * @returns React.JSX.Element
+ */
 export function GiftList(props: GiftListProps) {
-  const { gifts, onSend, requestUseScrollGesture } = props;
+  const { gifts, onSend, requestUseScrollGesture, GiftListItemComponent } =
+    props;
   const { width: winWidth } = useWindowDimensions();
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
@@ -36,6 +60,8 @@ export function GiftList(props: GiftListProps) {
   const unitWidth = winWidth / gItemCountPerRow;
   const [selected, setSelected] = React.useState<string | undefined>(undefined);
   const isScrollingRef = React.useRef(false);
+
+  const _GiftListItem = GiftListItemComponent ?? GiftListItemMemo;
 
   const onSelected = React.useCallback((giftId) => {
     setSelected(giftId);
@@ -97,7 +123,7 @@ export function GiftList(props: GiftListProps) {
         >
           {gifts.map((gift, i) => {
             return (
-              <GiftListItemMemo
+              <_GiftListItem
                 key={i}
                 gift={gift}
                 selected={selected === gift.giftId ? true : false}

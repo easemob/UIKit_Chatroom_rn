@@ -84,6 +84,9 @@ export function getDescription(code: ErrorCode): ErrorDescription {
     case ErrorCode.room_fetch_room_list_error:
       ret = ErrorDescription.room_fetch_room_list_error;
       break;
+    case ErrorCode.room_upload_user_info_error:
+      ret = ErrorDescription.room_upload_user_info_error;
+      break;
     default:
       break;
   }

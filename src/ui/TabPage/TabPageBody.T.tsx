@@ -39,6 +39,9 @@ export type TabPageBodyTProps<BodyProps extends {} = {}> = Omit<
   RenderChildrenProps: BodyChildrenProps<BodyProps>;
   height?: number;
   width?: number;
+  /**
+   * Style of the container. This property can mainly change the display or hiding, position, size, background color, style, etc.
+   */
   containerStyle?: StyleProp<ViewStyle>;
   initIndex?: number;
   onCurrentIndex?: (currentIndex: number) => void;

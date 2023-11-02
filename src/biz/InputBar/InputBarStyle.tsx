@@ -12,14 +12,37 @@ import {
   gInputBarStyleItemHeight,
 } from './InputBar.const';
 
+/**
+ * Properties of the `InputBarStyle` component.
+ */
 export type InputBarStyleProps = {
+  /**
+   * Callback function when the input box is clicked.
+   */
   onClickInput: () => void;
+  /**
+   * Custom component in front of input component
+   */
   first?: React.ReactNode;
+  /**
+   * Custom component list after input component
+   */
   after?: React.ReactNode[];
+  /**
+   * Callback function when the layout changes.
+   */
   onLayout?: ((event: LayoutChangeEvent) => void) | undefined;
+  /**
+   * Whether to display the input box style
+   */
   isShow?: boolean;
 };
 
+/**
+ * Input style components. Custom buttons can be added to implement custom events. For example: add a gift button and display the gift list when the gift button is clicked.
+ * @param props {@link InputBarStyleProps}
+ * @returns React.JSX.Element
+ */
 export function InputBarStyle(props: InputBarStyleProps) {
   const { onClickInput, first, after, onLayout, isShow } = props;
   const { colors } = usePaletteContext();

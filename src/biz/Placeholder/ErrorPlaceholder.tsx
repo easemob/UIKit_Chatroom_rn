@@ -8,6 +8,11 @@ import { CmnButton } from '../../ui/Button';
 import { Image } from '../../ui/Image';
 import { Text } from '../../ui/Text';
 
+/**
+ * Placeholder component after error. You can click the retry button
+ * @param param0 The callback function when the button is clicked.
+ * @returns React.JSX.Element
+ */
 export function ErrorPlaceholder({ onClicked }: { onClicked: () => void }) {
   const { tr } = useI18nContext();
   const { colors } = usePaletteContext();

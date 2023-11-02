@@ -5,6 +5,10 @@ import { useColors } from '../../hook';
 import { usePaletteContext } from '../../theme';
 import { LoadingIcon } from '../../ui/Image';
 
+/**
+ * The data is not ready for loading placeholder component.
+ * @returns React.JSX.Element
+ */
 export function LoadingPlaceholder() {
   const { colors } = usePaletteContext();
   const { getColor } = useColors({

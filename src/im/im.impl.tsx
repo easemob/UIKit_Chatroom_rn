@@ -6,10 +6,10 @@ import {
   ChatMessageStatusCallback,
   ChatOptions,
   ChatRoom,
-  ChatTranslateLanguage,
 } from 'react-native-chat-sdk';
 
 import { ErrorCode, UIKitError } from '../error';
+import type { Keyof } from '../types';
 import { asyncTask } from '../utils';
 import {
   chatroom_uikit_userInfo,
@@ -96,6 +96,7 @@ export abstract class IMServiceImpl implements IMService {
   abstract _removeMember(userId: string): void;
   abstract _clearMember(): void;
   abstract _clearMuter(): void;
+  abstract _fromChatError(error: any): string | undefined;
 
   abstract _setRoomId(roomId: string | undefined): void;
   get roomId() {
@@ -246,49 +247,72 @@ export abstract class IMServiceImpl implements IMService {
     if (ids === undefined || ids.length === 0) {
       return [];
     }
-    const list = await this.client.userManager.fetchUserInfoById(ids);
-    if (list) {
-      const ret: UserServiceData[] = [];
-      for (const item of list) {
-        let identify;
-        try {
-          if (item[1].ext && item[1].ext?.length > 0) {
-            identify = JSON.parse(item[1].ext)?.identify;
+    try {
+      const list = await this.client.userManager.fetchUserInfoById(ids);
+      if (list) {
+        const ret: UserServiceData[] = [];
+        for (const item of list) {
+          let identify;
+          try {
+            if (item[1].ext && item[1].ext?.length > 0) {
+              identify = JSON.parse(item[1].ext)?.identify;
+            }
+          } catch (error) {
+            console.warn('fetchUserInfos:', error);
           }
-        } catch (error) {
-          console.warn('fetchUserInfos:', error);
+          ret.push({
+            userId: item[1].userId,
+            nickName: item[1].nickName ?? undefined,
+            avatarURL: item[1].avatarUrl ?? undefined,
+            gender: item[1].gender ?? 0,
+            identify: identify,
+          });
         }
-        ret.push({
-          userId: item[1].userId,
-          nickName: item[1].nickName ?? undefined,
-          avatarURL: item[1].avatarUrl ?? undefined,
-          gender: item[1].gender ?? 0,
-          identify: identify,
-        });
+        return ret;
       }
-      return ret;
+      return [];
+    } catch (error) {
+      throw new UIKitError({
+        code: ErrorCode.room_fetch_member_info_error,
+        extra: `{chat: ${this._fromChatError(error)}, ids: ${ids}}`,
+      });
     }
-    return [];
   }
   updateSelfInfo(self: UserServiceData): Promise<void> {
-    const p = {
-      userId: self.userId,
-      nickName: self.nickName,
-      avatarUrl: self.avatarURL,
-      gender: self.gender,
-      ext: JSON.stringify({ identify: self.identify }),
-    };
-    return this.client.userManager.updateOwnUserInfo(p);
+    try {
+      const p = {
+        userId: self.userId,
+        nickName: self.nickName,
+        avatarUrl: self.avatarURL,
+        gender: self.gender,
+        ext: JSON.stringify({ identify: self.identify }),
+      };
+      return this.client.userManager.updateOwnUserInfo(p);
+    } catch (error) {
+      throw new UIKitError({
+        code: ErrorCode.room_upload_user_info_error,
+        extra: `{chat: ${this._fromChatError(error)}, self: ${self}}`,
+      });
+    }
   }
   getNoExisted(ids: string[]): string[] {
     return ids.filter((v) => {
       return !this._userMap.has(v);
     });
   }
-  getIncludes(key: string): UserServiceData[] {
+  getIncludes(key: string, type?: Keyof<UserServiceData>): UserServiceData[] {
     return Array.from(this._userMap, (v) => {
       return v[1];
     }).filter((v) => {
+      if (type === 'avatarURL') {
+        return v.avatarURL?.includes(key);
+      } else if (type === 'nickName') {
+        return v.nickName?.includes(key);
+      } else if (type === 'identify') {
+        return v.identify?.includes(key);
+      } else if (type === 'gender') {
+        return v.gender?.toString().includes(key);
+      }
       return v.userId.includes(key);
     });
   }
@@ -296,20 +320,45 @@ export abstract class IMServiceImpl implements IMService {
     pageNum: number,
     pageSize?: number
   ): Promise<ChatRoom[]> {
-    const r = await this.client.roomManager.fetchPublicChatRoomsFromServer(
-      pageNum,
-      pageSize
-    );
-    return r.list ?? [];
+    try {
+      const r = await this.client.roomManager.fetchPublicChatRoomsFromServer(
+        pageNum,
+        pageSize
+      );
+      return r.list ?? [];
+    } catch (error) {
+      throw new UIKitError({
+        code: ErrorCode.room_fetch_room_list_error,
+        extra: `{chat: ${this._fromChatError(
+          error
+        )}, pageNum: ${pageNum}}, pageSize: ${pageSize}}`,
+      });
+    }
   }
   async joinRoom(roomId: string, room: { ownerId: string }): Promise<void> {
     this._join(roomId, room.ownerId);
-    await this.client.roomManager.joinChatRoom(roomId);
+    try {
+      await this.client.roomManager.joinChatRoom(roomId);
+    } catch (error) {
+      throw new UIKitError({
+        code: ErrorCode.room_join_error,
+        extra: `{chat: ${this._fromChatError(
+          error
+        )}, roomId: ${roomId}, ownerId: ${room.ownerId}}`,
+      });
+    }
     this._onJoined(roomId);
   }
   async leaveRoom(roomId: string): Promise<void> {
     this._leave(roomId);
-    await this.client.roomManager.leaveChatRoom(roomId);
+    try {
+      await this.client.roomManager.leaveChatRoom(roomId);
+    } catch (error) {
+      throw new UIKitError({
+        code: ErrorCode.room_leave_error,
+        extra: `{chat: ${this._fromChatError(error)}, roomId: ${roomId}}`,
+      });
+    }
     this._onLeaved(roomId);
   }
   resetRoom(roomId: string): void {
@@ -318,45 +367,85 @@ export abstract class IMServiceImpl implements IMService {
       this._reset();
     }
   }
-  kickMember(roomId: string, userId: string): Promise<void> {
-    return this.client.roomManager.removeChatRoomMembers(roomId, [userId]);
+  async kickMember(roomId: string, userId: string): Promise<void> {
+    try {
+      await this.client.roomManager.removeChatRoomMembers(roomId, [userId]);
+    } catch (error) {
+      throw new UIKitError({
+        code: ErrorCode.room_kick_member_error,
+        extra: `{chat: ${this._fromChatError(
+          error
+        )}, roomId: ${roomId}, userId: ${userId}}`,
+      });
+    }
   }
   async fetchMembers(
     roomId: string,
     pageSize: number,
     cursor?: string
   ): Promise<ChatCursorResult<string>> {
-    return this.client.roomManager.fetchChatRoomMembers(
-      roomId,
-      cursor,
-      pageSize
-    );
+    try {
+      return await this.client.roomManager.fetchChatRoomMembers(
+        roomId,
+        cursor,
+        pageSize
+      );
+    } catch (error) {
+      throw new UIKitError({
+        code: ErrorCode.room_fetch_member_list_error,
+        extra: `{chat: ${this._fromChatError(
+          error
+        )}, roomId: ${roomId}, pageSize: ${pageSize}, cursor: ${cursor}}`,
+      });
+    }
   }
-  fetchMutedMembers(roomId: string, pageSize: number): Promise<string[]> {
-    return this.client.roomManager.fetchChatRoomMuteList(
-      roomId,
-      pageSize,
-      gMaxMuterSize
-    );
+  async fetchMutedMembers(roomId: string, pageSize: number): Promise<string[]> {
+    try {
+      return await this.client.roomManager.fetchChatRoomMuteList(
+        roomId,
+        pageSize,
+        gMaxMuterSize
+      );
+    } catch (error) {
+      throw new UIKitError({
+        code: ErrorCode.room_fetch_mute_member_list_error,
+        extra: `{chat: ${this._fromChatError(
+          error
+        )}, roomId: ${roomId}, pageSize: ${pageSize}}`,
+      });
+    }
   }
-  fetchAnnouncement(roomId: string): Promise<string | undefined> {
-    return this.client.roomManager.fetchChatRoomAnnouncement(roomId);
-  }
-  updateAnnouncement(roomId: string, announcement: string): Promise<void> {
-    return this.client.roomManager.updateChatRoomAnnouncement(
-      roomId,
-      announcement
-    );
-  }
-  updateMemberState(
+  async updateMemberState(
     roomId: string,
     userId: string,
     op: RoomMemberOperate
   ): Promise<void> {
     if (op === 'mute') {
-      return this.client.roomManager.muteChatRoomMembers(roomId, [userId]);
+      try {
+        return await this.client.roomManager.muteChatRoomMembers(roomId, [
+          userId,
+        ]);
+      } catch (error) {
+        throw new UIKitError({
+          code: ErrorCode.room_mute_member_error,
+          extra: `{chat: ${this._fromChatError(
+            error
+          )}, roomId: ${roomId}, userId: ${userId}}`,
+        });
+      }
     } else if (op === 'unmute') {
-      return this.client.roomManager.unMuteChatRoomMembers(roomId, [userId]);
+      try {
+        return await this.client.roomManager.unMuteChatRoomMembers(roomId, [
+          userId,
+        ]);
+      } catch (error) {
+        throw new UIKitError({
+          code: ErrorCode.room_unmute_member_error,
+          extra: `{chat: ${this._fromChatError(
+            error
+          )}, roomId: ${roomId}, userId: ${userId}}`,
+        });
+      }
     } else {
       throw new UIKitError({ code: ErrorCode.not_impl });
     }
@@ -537,25 +626,53 @@ export abstract class IMServiceImpl implements IMService {
         });
       });
   }
-  recallMessage(messageId: string): Promise<void> {
-    return this.client.chatManager.recallMessage(messageId);
+  async recallMessage(messageId: string): Promise<void> {
+    try {
+      return await this.client.chatManager.recallMessage(messageId);
+    } catch (error) {
+      throw new UIKitError({
+        code: ErrorCode.msg_recall_error,
+        extra: `{chat: ${this._fromChatError(error)}, messageId: ${messageId}}`,
+      });
+    }
   }
-  reportMessage(params: {
+  async reportMessage(params: {
     messageId: string;
     tag: string;
     reason: string;
   }): Promise<void> {
     const { messageId, tag, reason } = params;
-    return this.client.chatManager.reportMessage(messageId, tag, reason);
+    try {
+      return await this.client.chatManager.reportMessage(
+        messageId,
+        tag,
+        reason
+      );
+    } catch (error) {
+      throw new UIKitError({
+        code: ErrorCode.msg_report_error,
+        extra: `{chat: ${this._fromChatError(
+          error
+        )}, messageId: ${messageId}, tag: ${tag}, reason: ${reason}}`,
+      });
+    }
   }
-  translateMessage(
+  async translateMessage(
     message: ChatMessage,
     languagesCode: string
   ): Promise<ChatMessage> {
-    return this.client.chatManager.translateMessage(message, [languagesCode]);
-  }
-  fetchSupportedLanguages(): Promise<ChatTranslateLanguage[]> {
-    return this.client.chatManager.fetchSupportedLanguages();
+    try {
+      return await this.client.chatManager.translateMessage(message, [
+        languagesCode,
+      ]);
+    } catch (error) {
+      throw new UIKitError({
+        code: ErrorCode.msg_translate_error,
+        extra: `{chat: ${this._fromChatError(error)}, messageId: ${
+          message.msgId
+        }`,
+      });
+    }
   }
   sendError(params: { error: UIKitError; from?: string; extra?: any }): void {
     this._listeners.forEach((v) => {
@@ -741,30 +858,12 @@ export class IMServicePrivateImpl extends IMServiceImpl {
           v.onUserUnmuted?.(params.roomId, params.mutes, '');
         });
       },
-      onAdminAdded: (params: { roomId: string; admin: string }) => {
-        this._listeners.forEach((v) => {
-          v.onUserAdmin?.(params.roomId, params.admin, '');
-        });
-      },
-      onAdminRemoved: (params: { roomId: string; admin: string }) => {
-        this._listeners.forEach((v) => {
-          v.onUserUnAmin?.(params.roomId, params.admin, '');
-        });
-      },
       onOwnerChanged: (params: {
         roomId: string;
         newOwner: string;
         oldOwner: string;
       }) => {
         const {} = params;
-      },
-      onAnnouncementChanged: (params: {
-        roomId: string;
-        announcement: string;
-      }) => {
-        this._listeners.forEach((v) => {
-          v.onAnnouncementUpdate?.(params.roomId, params.announcement);
-        });
       },
       onAllowListAdded: (params: {
         roomId: string;
@@ -821,6 +920,20 @@ export class IMServicePrivateImpl extends IMServiceImpl {
   }
   _clearMuter(): void {
     this._muterMap.clear();
+  }
+
+  _fromChatError(error: any): string | undefined {
+    let e: string | undefined;
+    try {
+      e = JSON.stringify(error);
+    } catch (ee) {
+      if (typeof error === 'string') {
+        e = error;
+      } else {
+        e = ee?.toString?.();
+      }
+    }
+    return e;
   }
 
   _setRoomId(roomId: string | undefined): void {

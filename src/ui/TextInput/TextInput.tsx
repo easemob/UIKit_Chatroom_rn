@@ -11,6 +11,9 @@ import {
 
 export type TextInputProps = RNTextInputProps & {
   unitHeight?: number;
+  /**
+   * Style of the container. This property can mainly change the display or hiding, position, size, background color, style, etc.
+   */
   containerStyle?: StyleProp<ViewStyle>;
 };
 

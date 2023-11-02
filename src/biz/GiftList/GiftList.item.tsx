@@ -11,12 +11,33 @@ import { GiftIcon } from '../GiftIcon';
 import { gItemButtonHeight, gItemGiftSize } from './GiftList.const';
 import type { GiftListModel } from './types';
 
+/**
+ * Properties of the `GiftListItem` component.
+ */
 export type GiftListItemProps = {
+  /**
+   * The gift model.
+   */
   gift: GiftListModel;
+  /**
+   * Whether the gift is selected.
+   */
   selected: boolean;
+  /**
+   * The width of the gift item.
+   */
   width?: number;
+  /**
+   * The height of the gift item.
+   */
   height?: number;
+  /**
+   * Callback function when the gift is selected.
+   */
   onSelected?: (giftId: string) => void;
+  /**
+   * Callback function when the gift is sent.
+   */
   onSend?: (giftId: string) => void;
 };
 

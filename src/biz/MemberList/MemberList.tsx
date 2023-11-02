@@ -16,7 +16,7 @@ import {
   LoadingPlaceholder,
 } from '../Placeholder';
 import type { PropsWithError, PropsWithTest } from '../types';
-import { MemberContextMenuWrapper } from './MemberContextMenu';
+import { MemberContextMenu } from './MemberContextMenu';
 import { gAspectRatio, gTabHeaderHeight } from './MemberList.const';
 import { useMemberListAPI, usePanHandlers } from './MemberList.hooks';
 import { MemberListItemMemo, MemberListItemProps } from './MemberList.item';
@@ -25,15 +25,40 @@ import type { MemberListType } from './types';
 
 const FlatList = FlatListFactory<MemberListItemProps>();
 
+/**
+ * Properties of the `MemberList` component.
+ */
 export type MemberListProps = {
+  /**
+   * Callback function when the gesture is used.
+   * When used together with `Modal` or `SimuModal`, the pull-down gesture conflicts with the scrolling gift list gesture and cannot be resolved using bubbling events. Resolved by manually controlling usage rights.
+   */
   requestUseScrollGesture?: (finished: boolean) => void;
+  /**
+   * List type. {@link MemberListType}
+   */
   memberType: MemberListType;
+  /**
+   * Callback function when search button is clicked.
+   */
   onSearch?: (memberType: MemberListType) => void;
+  /**
+   * Callback function when there is no more member.
+   */
   onNoMoreMember?: () => void;
+  /**
+   * Custom component for each item in the list. Built-in components are used by default.
+   */
   MemberItemComponent?: React.ComponentType<MemberListItemProps>;
 } & PropsWithTest &
   PropsWithError;
 
+/**
+ * Member List Component.
+ *
+ * @param props {@link MemberListProps}
+ * @returns React.JSX.Element
+ */
 export function MemberList(props: MemberListProps) {
   const {
     requestUseScrollGesture,
@@ -137,7 +162,7 @@ export function MemberList(props: MemberListProps) {
           onScrollEndDrag={onScrollEndDrag}
         />
       </View>
-      <MemberContextMenuWrapper
+      <MemberContextMenu
         {...props}
         removeMember={removeMember}
         muteMember={muteMember}

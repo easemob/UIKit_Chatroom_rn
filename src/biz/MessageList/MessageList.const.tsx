@@ -10,4 +10,4 @@ export const gMessageListWidth =
 export const gMessageListHeight = gMessageListWidth / gAspectRatio;
 export const gMessageListMarginBottom = 4;
 export const gIdleTimeout = 3000;
-export const gMaxMessageCount = 50;
+export const gMaxMessageCount = 1000;

@@ -23,12 +23,32 @@ import { Text } from '../../ui/Text';
 import { gAspectRatio, gCountPerRow } from './EmojiList.const';
 
 export type EmojiListProps = {
+  /**
+   * Callback function when an emoji is selected.
+   */
   onFace: (id: string) => void;
+  /**
+   * The style of the container.
+   */
   containerStyle?: StyleProp<ViewStyle>;
+  /**
+   * The number of emojis per row.
+   */
   countPerRow?: number;
+  /**
+   * The list of emoji expressions.
+   *
+   * The format needs to be followed. For example: `U+1F641` {@link FACE_ASSETS}. It will replace the built-in emoji  list.
+   */
   emojiList?: string[];
 };
 
+/**
+ * List of emoji expressions.
+ *
+ * @param props {@link EmojiListProps}
+ * @returns React.JSX.Element
+ */
 export function EmojiList(props: EmojiListProps) {
   const { colors } = usePaletteContext();
   const { width: winWidth } = useWindowDimensions();

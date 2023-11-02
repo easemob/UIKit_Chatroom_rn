@@ -14,19 +14,48 @@ import { useIsOwner } from './MemberList.hooks';
 import type { MemberListItemProps } from './MemberList.item';
 import type { MemberListType } from './types';
 
+/**
+ * Referencing value of the `MemberList` component.
+ */
 export type BottomSheetMemberListRef = SimulativeModalRef & {
+  /**
+   * Show the component.
+   */
   startShowWithInit: () => void;
 };
 
+/**
+ * Properties of the `MemberList` component.
+ */
 export type BottomSheetMemberListProps = {
+  /**
+   * The external style of the component's content can be set from opaque to transparent, as well as color and other properties.
+   */
   maskStyle?: StyleProp<ViewStyle> | undefined;
+  /**
+   * Callback function when the search button is clicked.
+   */
   onSearch?: (memberType: MemberListType) => void;
+  /**
+   * Callback function when there is no more member.
+   */
   onNoMoreMember?: () => void;
+  /**
+   * Style of the container. This property can mainly change the display or hiding, position, size, background color, style, etc.
+   */
   containerStyle?: StyleProp<ViewStyle>;
+  /**
+   * Custom component for each item in the list. Built-in components are used by default.
+   */
   MemberItemComponent?: React.ComponentType<MemberListItemProps>;
 } & PropsWithTest &
   PropsWithError;
 
+/**
+ * Component for displaying the list of members.
+ *
+ * It is composed of `MemberList` and `SimulativeModal`.
+ */
 export const BottomSheetMemberList = React.forwardRef<
   BottomSheetMemberListRef,
   BottomSheetMemberListProps

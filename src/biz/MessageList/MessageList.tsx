@@ -36,24 +36,71 @@ import { useMessageListApi } from './MessageList.hooks';
 import { MessageListItemMemo } from './MessageList.item';
 import type { MessageListItemModel, MessageListItemProps } from './types';
 
+/**
+ * Referencing value of the `MessageList` component.
+ */
 export type MessageListRef = {
+  /**
+   * Add a sended successful message to the list.
+   */
   addSendedMessage: (message: ChatMessage) => void;
+  /**
+   * Scroll to the end of the list.
+   */
   scrollToEnd: () => void;
 };
 
+/**
+ * Properties of the `MessageList` component.
+ */
 export type MessageListProps = {
+  /**
+   * Whether the component is visible.
+   */
   visible?: boolean;
+  /**
+   * Callback function when the gesture is used.
+   */
   onLongPressItem?: (item: MessageListItemModel) => void;
+  /**
+   * Callback function when the unread count changes.
+   */
   onUnreadCount?: (count: number) => void;
+  /**
+   * Style of the container. This property can mainly change the display or hiding, position, size, background color, style, etc.
+   */
   containerStyle?: StyleProp<ViewStyle>;
+  /**
+   * Style of the background.
+   */
   backgroundStyle?: StyleProp<ViewStyle>;
+  /**
+   * Callback function when the layout is changed.
+   */
   onLayout?: ((event: LayoutChangeEvent) => void) | undefined;
+  /**
+   * Custom component for each item in the list. Built-in components are used by default.
+   */
   MessageListItemComponent?: React.ComponentType<MessageListItemProps>;
 
+  /**
+   * Properties of the `Report` component.
+   */
   reportProps?: ReportProps;
+  /**
+   * Maximum number of messages displayed.
+   *
+   * Older messages exceeding this value will be recycled.
+   * The default value is 1000.
+   * Range: (0,10000]
+   */
+  maxMessageCount?: number;
 } & PropsWithTest &
   PropsWithError;
 
+/**
+ * Component for displaying the list of messages.
+ */
 export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
   function (props: MessageListProps, ref?: React.ForwardedRef<MessageListRef>) {
     const {
@@ -64,6 +111,7 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
       onLayout: onLayoutProps,
       reportProps,
       MessageListItemComponent,
+      maxMessageCount,
     } = props;
     const _onLongPress = (item: MessageListItemModel) => {
       menuRef?.current?.startShowWithInit?.([
@@ -113,6 +161,7 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
       onLongPress: onLongPressItem ?? _onLongPress,
       onUnreadCount,
       onLayoutProps,
+      maxMessageCount,
     });
 
     const menuRef = React.useRef<BottomSheetNameMenuRef>({} as any);

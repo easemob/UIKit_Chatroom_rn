@@ -5,6 +5,12 @@ import { DefaultIconImage, DefaultIconImageProps } from '../../ui/Image';
 
 export type AvatarProps = Omit<DefaultIconImageProps, 'localIcon'>;
 
+/**
+ * Avatar component. If the url is incorrect, does not exist, or a network error occurs
+ *
+ * @param props {@link DefaultIconImageProps}
+ * @returns React.JSX.Element
+ */
 export function Avatar(props: AvatarProps) {
   return (
     <DefaultIconImage

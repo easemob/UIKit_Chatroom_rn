@@ -11,23 +11,48 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useI18nContext } from '../../i18n';
 import { BorderButton, CmnButton } from '../../ui/Button';
-import type { SimulativeModalRef } from '../../ui/Modal';
 import { gBottomSheetHeaderHeight } from '../const';
 import { gTabHeaderHeight } from './ReportList.const';
 import { useReportListApi, useScrollGesture } from './ReportList.hooks';
 import { ReportListItemMemo, ReportListItemProps } from './ReportList.item';
 import type { ReportItemModel } from './types';
 
-export type ReportListRef = SimulativeModalRef & {};
-
+/**
+ * Properties of the `ReportList` component.
+ */
 export type ReportListProps = {
+  /**
+   * Callback function when the gesture is used.
+   * When used together with `Modal` or `SimuModal`, the pull-down gesture conflicts with the scrolling gift list gesture and cannot be resolved using bubbling events. Resolved by manually controlling usage rights.
+   */
   requestUseScrollGesture?: (finished: boolean) => void;
+  /**
+   * Callback function when cancel button is clicked.
+   */
   onCancel: () => void;
+  /**
+   * Callback function when report button is clicked.
+   */
   onReport: (result?: ReportItemModel) => void;
+  /**
+   * data source. {@link ReportItemModel}
+   */
   data: ReportItemModel[];
+  /**
+   * The height of the component.
+   */
   height?: number;
 };
 
+/**
+ * Component for reporting messages.
+ *
+ * This component is mainly used for reporting illegal messages.
+ *
+ * @param props {@link ReportListProps}
+ * @returns React.JSX.Element
+ *
+ */
 export function ReportList(props: ReportListProps) {
   const {
     requestUseScrollGesture,

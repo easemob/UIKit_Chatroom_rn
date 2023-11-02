@@ -5,6 +5,10 @@ import { useColors } from '../../hook';
 import { usePaletteContext } from '../../theme';
 import { Image } from '../../ui/Image';
 
+/**
+ * Blank placeholder component.
+ * @returns React.JSX.Element
+ */
 export function EmptyPlaceholder() {
   const { colors } = usePaletteContext();
   const { getColor } = useColors({

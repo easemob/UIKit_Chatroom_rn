@@ -10,6 +10,27 @@ export type StyleColorParams = KV<
   KV<ThemeType, ColorValue | ColorValue[] | undefined>
 >;
 
+/**
+ * Simplify the use of theme colors.
+ *
+ * @example
+ *
+ * ```tsx
+ * const { colors } = usePaletteContext();
+ * const { getColor } = useColors({
+ *   bg: {
+ *     light: colors.neutral[98],
+ *     dark: colors.neutral[1],
+ *   },
+ * });
+ * // ...
+ * <View
+ *   style={{
+ *     backgroundColor: getColor('bg'),
+ *   }}
+ * />
+ * ```
+ */
 export function useColors(pairs?: StyleColorParams) {
   const { style } = useThemeContext();
   const list = React.useRef(
