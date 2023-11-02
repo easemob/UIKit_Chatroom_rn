@@ -33,7 +33,10 @@ export type InputBarRef = {
 /**
  * Properties of the `InputBar` component.
  */
-export type InputBarProps = Omit<InputBarStyleProps, 'onClickInput'> & {
+export type InputBarProps = Omit<
+  InputBarStyleProps,
+  'onClickInput' | 'isShow'
+> & {
   /**
    * Callback function when the input box component is will displayed.
    */

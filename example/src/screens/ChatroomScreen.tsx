@@ -188,6 +188,7 @@ export function ChatroomScreen(props: Props) {
       }}
     >
       {/* <BackgroundImageMemo /> */}
+      {/* <Chatroom ref={chatroomRef} roomId={room.roomId} ownerId={room.owner} /> */}
       <Chatroom
         ref={chatroomRef}
         // Marquee={Marquee}

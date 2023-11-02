@@ -71,10 +71,6 @@ export type MessageListProps = {
    */
   containerStyle?: StyleProp<ViewStyle>;
   /**
-   * Style of the background.
-   */
-  backgroundStyle?: StyleProp<ViewStyle>;
-  /**
    * Callback function when the layout is changed.
    */
   onLayout?: ((event: LayoutChangeEvent) => void) | undefined;
