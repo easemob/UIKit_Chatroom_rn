@@ -15,7 +15,7 @@ export type ChatroomTestMenuProps = Omit<
   'title' | 'initItems'
 > & {
   addMarqueeTask: () => void;
-  addGiftFloatingTask: () => void;
+  addGiftEffectTask: () => void;
   showMemberList: () => void;
 };
 
@@ -28,7 +28,7 @@ export const ChatroomTestMenu = React.forwardRef<
 ) {
   const {
     onRequestModalClose,
-    addGiftFloatingTask,
+    addGiftEffectTask,
     showMemberList,
     addMarqueeTask,
     ...others
@@ -74,7 +74,7 @@ export const ChatroomTestMenu = React.forwardRef<
         id={'2'}
         initState={'enabled'}
         text={'add gift list task'}
-        onPress={addGiftFloatingTask}
+        onPress={addGiftEffectTask}
       />,
       <BottomSheetMenuItem
         key={2}
@@ -102,7 +102,7 @@ export const ChatroomTestMenu = React.forwardRef<
       />,
     ],
     [
-      addGiftFloatingTask,
+      addGiftEffectTask,
       addMarqueeTask,
       getColor,
       onRequestModalClose,

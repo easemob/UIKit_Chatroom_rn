@@ -6,14 +6,14 @@ import { usePaletteContext } from '../../theme';
 import { Text } from '../../ui/Text';
 import { Avatar } from '../Avatar';
 import { GiftIcon } from '../GiftIcon';
-import { gItemBorderRadius } from './GiftFloating.const';
-import { GiftFloatingItem, useAnimation } from './GiftFloating.item.hooks';
+import { gItemBorderRadius } from './GiftEffect.const';
+import { GiftEffectItem, useAnimation } from './GiftEffect.item.hooks';
 
-export type GiftFloatingItemFCProps = {
-  item: GiftFloatingItem;
+export type GiftEffectItemFCProps = {
+  item: GiftEffectItem;
 };
 
-export function GiftFloatingItemFC(props: GiftFloatingItemFCProps) {
+export function GiftEffectItemFC(props: GiftEffectItemFCProps) {
   const { item } = props;
 
   const { colors } = usePaletteContext();
@@ -129,4 +129,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export const GiftFloatingItemFCMemo = React.memo(GiftFloatingItemFC);
+export const GiftEffectItemFCMemo = React.memo(GiftEffectItemFC);

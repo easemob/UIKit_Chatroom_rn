@@ -2,12 +2,12 @@ import { Easing, Platform } from 'react-native';
 
 export const gScaleFactor = 36 / 44;
 
-export const gGiftFloatingListHeight = 84;
-export const gGiftFloatingListWidth = 227;
+export const gGiftEffectListHeight = 84;
+export const gGiftEffectListWidth = 227;
 export const gItemHeight = 44;
 export const gItemBorderRadius = 22;
 export const gItemSmallHeight = gItemHeight * gScaleFactor;
-export const gItemSmallWidth = gGiftFloatingListWidth * gScaleFactor;
+export const gItemSmallWidth = gGiftEffectListWidth * gScaleFactor;
 export const gItemInterval = 4 * gScaleFactor;
 
 export const gAnimateDuration = 300;

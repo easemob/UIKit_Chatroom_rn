@@ -8,10 +8,10 @@ import {
   gItemSmallHeight,
   gItemSmallWidth,
   gScaleFactor,
-} from './GiftFloating.const';
-import type { GiftFloatingModel } from './types';
+} from './GiftEffect.const';
+import type { GiftEffectModel } from './types';
 
-export type GiftFloatingItem = {
+export type GiftEffectItem = {
   id: string;
   height: number;
   width: number;
@@ -24,11 +24,11 @@ export type GiftFloatingItem = {
     | '2-3' //
     | '3-2' //
     | '3-3'; //
-  gift: GiftFloatingModel;
+  gift: GiftEffectModel;
 };
 
 export type useAnimationProps = {
-  item: GiftFloatingItem;
+  item: GiftEffectItem;
   iHeight: Animated.Value;
   iWidth: Animated.Value;
   ix: Animated.Value;

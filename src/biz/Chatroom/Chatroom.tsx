@@ -13,12 +13,12 @@ import type { UIKitError } from '../../error';
 import { I18nContext, I18nTr } from '../../i18n';
 import { IMContext, IMService, IMServiceListener } from '../../im';
 import {
-  GiftFloating,
-  GiftFloatingComponent,
-  GiftFloatingProps,
-  GiftFloatingRef,
-} from '../GiftFloating';
-import { gGiftFloatingListHeight } from '../GiftFloating/GiftFloating.const'; // for test
+  GiftEffect,
+  GiftEffectComponent,
+  GiftEffectProps,
+  GiftEffectRef,
+} from '../GiftEffect';
+import { gGiftEffectListHeight } from '../GiftEffect/GiftEffect.const'; // for test
 import { InputBar, InputBarProps, InputBarRef } from '../InputBar';
 import { gInputBarStyleHeight } from '../InputBar/InputBar.const';
 import {
@@ -53,11 +53,11 @@ export type ChatroomProps = React.PropsWithChildren<
      */
     containerStyle?: StyleProp<ViewStyle>;
     /**
-     * Renderer for the GiftFloating component. If not set, the built-in one is used.
+     * Renderer for the GiftEffect component. If not set, the built-in one is used.
      *
      * You can set whether to load through `RoomOption.gift`.
      */
-    GiftFloating?: GiftFloatingComponent;
+    GiftEffect?: GiftEffectComponent;
     /**
      * Renderer for the Marquee component. If not set, the built-in one is used.
      *
@@ -89,10 +89,10 @@ export type ChatroomProps = React.PropsWithChildren<
       props?: MarqueeProps;
     };
     /**
-     * Properties of the GiftFloating component. If not set, the default value is used.
+     * Properties of the GiftEffect component. If not set, the default value is used.
      */
     gift?: {
-      props?: GiftFloatingProps;
+      props?: GiftEffectProps;
     };
     /**
      * Properties of the MemberList component. If not set, the default value is used.
@@ -118,7 +118,7 @@ type ChatroomState = {
   pageY: number;
 };
 
-let GGiftFloating: GiftFloatingComponent;
+let GGiftEffect: GiftEffectComponent;
 let GMarquee: MarqueeComponent;
 
 /**
@@ -145,9 +145,9 @@ export abstract class ChatroomBase extends React.PureComponent<
    */
   marqueeRef?: React.RefObject<MarqueeRef>;
   /**
-   * Reference to the GiftFloating component.
+   * Reference to the GiftEffect component.
    */
-  giftRef?: React.RefObject<GiftFloatingRef>;
+  giftRef?: React.RefObject<GiftEffectRef>;
   /**
    * Reference to the MemberList component.
    */
@@ -182,7 +182,7 @@ export abstract class ChatroomBase extends React.PureComponent<
     this.memberRef = React.createRef();
     this.containerRef = React.createRef();
 
-    GGiftFloating = props.GiftFloating ?? GiftFloating;
+    GGiftEffect = props.GiftEffect ?? GiftEffect;
     GMarquee = props.Marquee ?? Marquee;
 
     this.state = {
@@ -201,9 +201,9 @@ export abstract class ChatroomBase extends React.PureComponent<
 
   /**
    * Get the reference of the InputBar component.
-   * @returns GiftFloatingRef | null.
+   * @returns GiftEffectRef | null.
    */
-  getGiftFloatingRef() {
+  getGiftEffectRef() {
     return this.giftRef?.current;
   }
 
@@ -267,7 +267,7 @@ export abstract class ChatroomBase extends React.PureComponent<
   }
 
   _getGiftTop() {
-    return this._getMessageListTop() - gGiftFloatingListHeight;
+    return this._getMessageListTop() - gGiftEffectListHeight;
   }
 
   componentDidMount?(): void {}
@@ -360,7 +360,7 @@ export abstract class ChatroomBase extends React.PureComponent<
           />
 
           {this.config?.roomOption.gift.isVisible === true ? (
-            <GGiftFloating
+            <GGiftEffect
               ref={this.giftRef}
               containerStyle={{
                 left: 16,

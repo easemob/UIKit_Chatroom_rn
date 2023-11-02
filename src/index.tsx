@@ -26,7 +26,7 @@ export * from './biz/Avatar';
 export * from './biz/BottomSheetMenu';
 export * from './biz/Chatroom';
 export * from './biz/EmojiList';
-export * from './biz/GiftFloating';
+export * from './biz/GiftEffect';
 export * from './biz/GiftIcon';
 export * from './biz/GiftList';
 export * from './biz/Marquee';

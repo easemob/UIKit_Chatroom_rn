@@ -7,13 +7,13 @@ import {
   createDarkTheme,
   createLightTheme,
   createPresetPalette,
-  GiftFloating,
-  GiftFloatingRef,
+  GiftEffect,
+  GiftEffectRef,
   seqId,
 } from 'react-native-chat-room';
 
-export function TestGiftFloating() {
-  const ref = React.useRef<GiftFloatingRef>({} as any);
+export function TestGiftEffect() {
+  const ref = React.useRef<GiftEffectRef>({} as any);
   const pal = createPresetPalette();
   const dark = createDarkTheme(pal);
   const light = createLightTheme(pal);
@@ -45,7 +45,7 @@ export function TestGiftFloating() {
           <Text>{'Start painting presents'}</Text>
         </TouchableOpacity>
         <View style={{ height: 100 }} />
-        <GiftFloating
+        <GiftEffect
           ref={ref}
           containerStyle={
             {
@@ -60,5 +60,5 @@ export function TestGiftFloating() {
 }
 
 export default function test_gift_floating() {
-  return <TestGiftFloating />;
+  return <TestGiftEffect />;
 }

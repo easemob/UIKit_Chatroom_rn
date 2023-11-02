@@ -3,22 +3,22 @@ import { FlatList, Platform } from 'react-native';
 
 import { getCurTs, seqId } from '../../utils';
 import {
-  gGiftFloatingListWidth,
+  gGiftEffectListWidth,
   gItemHeight,
   gScrollingTimeout,
-} from './GiftFloating.const';
-import type { GiftFloatingItem } from './GiftFloating.item.hooks';
-import type { GiftFloatingTask } from './types';
+} from './GiftEffect.const';
+import type { GiftEffectItem } from './GiftEffect.item.hooks';
+import type { GiftEffectTask } from './types';
 
 export const useAddData = (params: {
-  dataRef: React.MutableRefObject<GiftFloatingItem[]>;
-  setData: React.Dispatch<React.SetStateAction<GiftFloatingItem[]>>;
-  ref?: React.RefObject<FlatList<GiftFloatingItem>>;
+  dataRef: React.MutableRefObject<GiftEffectItem[]>;
+  setData: React.Dispatch<React.SetStateAction<GiftEffectItem[]>>;
+  ref?: React.RefObject<FlatList<GiftEffectItem>>;
 }) => {
   const { dataRef, setData, ref } = params;
   const preTaskTs = React.useRef(0);
   const delayedScrolling = React.useRef<NodeJS.Timeout>();
-  const width = gGiftFloatingListWidth;
+  const width = gGiftEffectListWidth;
   const height = gItemHeight;
 
   const scrollToEnd = () => {
@@ -45,7 +45,7 @@ export const useAddData = (params: {
 
   return {
     scrollToEnd: scrollToEnd,
-    addData: (task: GiftFloatingTask) => {
+    addData: (task: GiftEffectTask) => {
       let isUseAnimation = true;
       if (preTaskTs.current === 0) {
         preTaskTs.current = getCurTs();

@@ -124,8 +124,8 @@ export function ChatroomScreen(props: Props) {
     };
   }, [addListener, removeListener]);
 
-  const addGiftFloatingTask = () => {
-    chatroomRef?.current?.getGiftFloatingRef()?.pushTask({
+  const addGiftEffectTask = () => {
+    chatroomRef?.current?.getGiftEffectRef()?.pushTask({
       model: {
         id: seqId('_gf').toString(),
         nickName: 'NickName',
@@ -321,7 +321,7 @@ export function ChatroomScreen(props: Props) {
               alignItems: 'center',
             }}
             onPress={() => {
-              addGiftFloatingTask();
+              addGiftEffectTask();
             }}
           >
             <Text>{'add gift message'}</Text>
@@ -357,7 +357,7 @@ export function ChatroomScreen(props: Props) {
                       chatroomRef?.current
                         ?.getMessageListRef()
                         ?.addSendedMessage(message);
-                      chatroomRef?.current?.getGiftFloatingRef()?.pushTask({
+                      chatroomRef?.current?.getGiftEffectRef()?.pushTask({
                         model: {
                           id: seqId('_gf').toString(),
                           nickName:
@@ -384,7 +384,7 @@ export function ChatroomScreen(props: Props) {
         onRequestModalClose={() => {
           menuRef?.current?.startHide?.();
         }}
-        addGiftFloatingTask={addGiftFloatingTask}
+        addGiftEffectTask={addGiftEffectTask}
         addMarqueeTask={addMarqueeTask}
         showMemberList={showMemberList}
       />
