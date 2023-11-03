@@ -3,12 +3,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { ConfigContextProvider, RoomOption } from '../config';
 import { DispatchContextProvider } from '../dispatch';
-import {
-  CreateStringSet,
-  I18nContextProvider,
-  LanguageCode,
-  languageCodes,
-} from '../i18n';
+import { CreateStringSet, I18nContextProvider, LanguageCode } from '../i18n';
 import { createStringSet } from '../i18n/StringSet';
 import { IMContextProvider } from '../im';
 import {
@@ -20,7 +15,8 @@ import {
   usePresetPalette,
 } from '../theme';
 import type { PartialDeep } from '../types';
-import { getSystemLanguage, mergeObjects } from '../utils';
+import { mergeObjects } from '../utils';
+import { getI18nLanguage, getTranslateLanguage } from './Container.hook';
 
 type PartialRoomOption = PartialDeep<RoomOption>;
 
@@ -50,39 +46,13 @@ export function Container(props: ContainerProps) {
 
   const _languageFactory = languageFactory ?? createStringSet;
 
-  const getLanguage = (): LanguageCode => {
-    let ret = language;
-    if (language) {
-      const isExisted = languageCodes.includes(language);
-      if (isExisted === true) {
-        ret = language;
-      } else if (isExisted === false && languageFactory) {
-        ret = language;
-      } else {
-        ret = require('../config.local').language as LanguageCode;
-      }
-    } else {
-      const systemLanguage = getSystemLanguage();
-      if (systemLanguage?.includes('zh_CN')) {
-        ret = 'zh-Hans';
-      } else if (systemLanguage?.includes('en')) {
-        ret = 'en';
-      } else {
-        ret = require('../config.local').language as LanguageCode;
-      }
-    }
-
-    console.log('dev:language:', ret);
-    return ret;
-  };
-
   return (
     <DispatchContextProvider>
       <PaletteContextProvider value={palette ?? _palette}>
         <ThemeContextProvider value={theme ?? light}>
           <I18nContextProvider
             value={{
-              languageCode: getLanguage(),
+              languageCode: getI18nLanguage(language, languageFactory),
               factory: _languageFactory,
             }}
           >
@@ -109,6 +79,7 @@ export function Container(props: ContainerProps) {
                       },
                     } as RoomOption
                   ),
+                  languageCode: getTranslateLanguage(language),
                 }}
               >
                 <SafeAreaProvider>{children}</SafeAreaProvider>

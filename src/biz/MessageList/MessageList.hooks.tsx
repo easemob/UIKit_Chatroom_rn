@@ -130,8 +130,8 @@ export function useMessageListApi(params: {
   const userScrollGestureRef = React.useRef(false);
 
   const im = useIMContext();
-  const { tr, currentLanguage } = useI18nContext();
-  const { roomOption } = useConfigContext();
+  const { tr } = useI18nContext();
+  const { roomOption, languageCode } = useConfigContext();
 
   const langPressItemRef = React.useRef<MessageListItemModel | undefined>();
 
@@ -414,7 +414,7 @@ export function useMessageListApi(params: {
 
   const _translateMessage = (msg?: ChatMessage) => {
     if (msg) {
-      im.translateMessage(msg, currentLanguage())
+      im.translateMessage(msg, languageCode)
         .then((r) => {
           for (const item of dataRef.current) {
             if (item.msg) {
@@ -423,7 +423,7 @@ export function useMessageListApi(params: {
                   item.type === 'text' &&
                   r.body.type === ChatMessageType.TXT
                 ) {
-                  const key = currentLanguage();
+                  const key = languageCode;
                   const body = r.body as ChatTextMessageBody;
                   const t = body.translations?.[key] as string;
                   // (item.content as TextContent).text = t; // !!! Unable to trigger update.

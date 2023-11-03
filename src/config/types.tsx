@@ -1,3 +1,5 @@
+import type { LanguageCode } from '../i18n';
+
 /**
  * Config types
  */
@@ -18,6 +20,10 @@ export type Config = {
    * Room option.
    */
   roomOption: RoomOption;
+  /**
+   * This language code is used to translate message.
+   */
+  languageCode: LanguageCode;
 };
 /**
  * Room option types
