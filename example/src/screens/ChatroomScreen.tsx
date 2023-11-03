@@ -368,6 +368,7 @@ export function ChatroomScreen(props: Props) {
                           giftCount: '1',
                           giftIcon: gift.giftIcon,
                           content: `sent ${gift.giftName}`,
+                          avatar: im.userInfoFromMessage(message)?.avatarURL,
                         },
                       });
                     }

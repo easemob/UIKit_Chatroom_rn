@@ -23,6 +23,7 @@ export function MessageListGiftItem(props: MessageListItemProps) {
         textType={'medium'}
         paletteType={'body'}
         style={{ color: getColor('text') }}
+        numberOfLines={1}
       >
         {c.text}
       </Text>
