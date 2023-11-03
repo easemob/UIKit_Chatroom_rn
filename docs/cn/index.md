@@ -70,7 +70,7 @@
 还有一类特殊的组件，他们无法和其它同类组件共存，他们是 `Modal`组件。
 还有一些组件对约束是有要求的。例如：`ScrollView` 需要指定高度，或者父类有确定的高度。
 
-// todo: 添加组件图
+![chatroom_overview_tag](../chatroom_overview_tag.jpg)
 
 | UI 基础通用组件 | Function/Class   | 是否基础 | 是否页面 | 是否弹出 | 位置 | 大小 | 样式 | 控制 | 自定义 | 说明                                                |
 | --------------- | ---------------- | -------- | -------- | -------- | ---- | ---- | ---- | ---- | ------ | --------------------------------------------------- |
@@ -163,7 +163,7 @@
 
 `Chatroom UIKit SDK` 的入口就是 `Container` 组件，它主要负责集成其他组件和参数配置。
 
-```typescript
+```tsx
 export type ContainerProps = React.PropsWithChildren<{
   appKey: string;
   isDevMode?: boolean;
@@ -186,7 +186,7 @@ export type ContainerProps = React.PropsWithChildren<{
 
 通常 `Container` 会处于应用的底层，一般为根组件，或者是根组件同一级别。例如：
 
-```typescript
+```tsx
 export function App() {
   return <Container appKey={'your app key'}>{children}</Container>;
 }
@@ -194,7 +194,7 @@ export function App() {
 
 ## 业务组件介绍
 
-// todo: 配图，动图？
+业务组件主要是包含了 IM 相关功能的组件。主要包括消息列表组件、输入组件、成员列表组件和搜索成员列表。
 
 ### MessageList
 
@@ -206,7 +206,7 @@ export function App() {
 
 简单使用示例：
 
-```typescript
+```tsx
 // ...
 // 创建组件引用对象
 const ref = React.useRef<MessageListRef>({} as any);
@@ -237,13 +237,16 @@ ref?.current?.addSendedMessage?.(message);
 | addSendedMessage | 将输入框里面的内容发送到消息列表 |
 | scrollToEnd      | 滚动消息列表到底部               |
 
+![message_context_menu](../message_context_menu.png)
+![message_report](../message_report.png)
+
 ### GiftBarrage
 
 礼物特效组件用来展示发送的礼物效果，礼物消息可以显示在消息列表，也可以显示在该组件。
 
 简单使用示例：
 
-```typescript
+```tsx
 // ...
 // 创建组件引用对象
 const ref = React.useRef<GiftEffectRef>({} as any);
@@ -282,7 +285,7 @@ ref.current?.pushTask({
 
 简单示例如下：
 
-```typescript
+```tsx
 // ...
 // 创建组件引用对象
 const ref = React.useRef<MarqueeRef>({} as any);
@@ -325,7 +328,7 @@ ref.current?.pushTask?.({
 
 简单示例如下：
 
-```typescript
+```tsx
 // ...
 // 创建引用对象
 const ref = React.useRef<InputBarRef>({} as any);
@@ -361,6 +364,9 @@ ref?.current?.close?.();
 | ----- | ------------------------------------ |
 | close | 主动关闭输入状态，切换为输入样式状态 |
 
+![input_bar](../input_bar.png)
+![emoji_list.png](../emoji_list.png)
+
 ### InputBarStyle
 
 输入样式组件。和输入框组件组成了复合组件，可以动态进行切换。
@@ -375,7 +381,7 @@ ref?.current?.close?.();
 
 简单示例如下：
 
-```typescript
+```tsx
 // ...
 // 创建引用对象
 const ref = React.useRef<BottomSheetMemberListRef>({} as any);
@@ -404,6 +410,9 @@ ref?.current?.startShow?.();
 | startShow | 显示成员列表组件                         |
 | startHide | 隐藏成员列表组件，隐藏动画完成后返回通知 |
 
+![member_list](../member_list.png)
+![member_context_menu](../member_context_menu.png)
+
 ### BottomSheetGift
 
 礼物列表组件提供自定义礼物列表，点击礼物项的发送按钮发送到聊天室。
@@ -412,7 +421,7 @@ ref?.current?.startShow?.();
 
 简单示例如下：
 
-```typescript
+```tsx
 // ...
 // 创建引用对象
 const ref = React.useRef<BottomSheetGiftSimuRef>({} as any);
@@ -459,13 +468,15 @@ ref?.current?.startShow?.();
 | startShowWithInit | 显示成员列表组件，同时可以初始化列表     |
 | startHide         | 隐藏成员列表组件，隐藏动画完成后返回通知 |
 
+![gift_list](../gift_list.png)
+
 ### Chatroom
 
 聊天室组件是包括成员列表组件、输入组件、消息列表组件、礼物特效组件、重要消息通知组件、菜单组件等的集合。它是一个页面级组件，基本占据了这个屏幕。如果想要添加组件，建议成为它的子组件或者背景组件。
 
 简单示例如下：
 
-```typescript
+```tsx
 // ...
 // 创建引用对象
 const ref = React.useRef<Chatroom>({} as any);
@@ -476,7 +487,7 @@ const ref = React.useRef<Chatroom>({} as any);
 
 由于 `UIKit` 没有路由 （`React-Native` 没有内置），所以，这里如果需要进行成员搜索，需要像下面这样设置。
 
-```typescript
+```tsx
 <Chatroom
   ref={chatroomRef}
   memberList={{
@@ -517,13 +528,15 @@ const ref = React.useRef<Chatroom>({} as any);
 | joinRoom          | 加入聊天室                     |
 | leaveRoom         | 退出聊天室                     |
 
+![chatroom](../chatroom.png)
+
 ## 主题介绍
 
 每个 UI 组件都会用到主题，主题服务提供了`light`和`dark`主题。支持一键切换。
 
 简单示例如下：
 
-```typescript
+```tsx
 // ...
 // 定义主题设置状态
 const palette = usePresetPalette();
@@ -547,13 +560,13 @@ UIKit 支持多国语言切换，目前内置中文和英文。支持扩展其�
 
 简单示例如下：
 
-```typescript
+```tsx
 <Container appKey={env.appKey} language={'en'} />
 ```
 
 使用扩展语言集合示例如下：
 
-```typescript
+```tsx
 // ...
 // 创建指定语言集合
 function createLanguage(type: LanguageCode): StringSet {
@@ -578,4 +591,4 @@ function createLanguage(type: LanguageCode): StringSet {
 
 ## 更多
 
-// todo: 后续补充
+// todo: 持续更新
