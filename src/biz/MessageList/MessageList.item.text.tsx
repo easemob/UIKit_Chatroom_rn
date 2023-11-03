@@ -61,7 +61,7 @@ export function MessageListTextItem(props: MessageListItemProps) {
         }}
       />
       <PresetCalcTextWidth
-        content={c.text}
+        content={c.text.trim()}
         textProps={{ style: fonts.body.medium }}
         onWidth={(width: number) => {
           contentWidth.current = width;
@@ -80,7 +80,7 @@ export function MessageListTextItem(props: MessageListItemProps) {
           },
         ]}
       >
-        {space + c.text}
+        {space + c.text.trim()}
       </Animated.Text>
     </>
   );
