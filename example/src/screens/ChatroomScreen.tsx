@@ -415,7 +415,7 @@ export const gifts: GiftListModel[] = [
     giftId: '2665752a-e273-427c-ac5a-4b2a9c82b255',
     giftIcon:
       'https://fullapp.oss-cn-beijing.aliyuncs.com/uikit/pictures/gift/AUIKitGift1.png',
-    giftName: 'Sweet Heart',
+    giftName: 'Sweet Heart Sweet Heart',
     giftPrice: 1,
   },
   {

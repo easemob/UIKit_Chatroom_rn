@@ -11,3 +11,5 @@ export const gMessageListHeight = gMessageListWidth / gAspectRatio;
 export const gMessageListMarginBottom = 4;
 export const gIdleTimeout = 3000;
 export const gMaxMessageCount = 1000;
+export const gGiftIconWidth = 18;
+export const gEllipsizeWidth = 12;

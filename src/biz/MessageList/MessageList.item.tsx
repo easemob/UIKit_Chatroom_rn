@@ -68,6 +68,13 @@ export function MessageListItem(props: MessageListItemProps) {
             width.current,
             headerWidth.current
           );
+        } else if (type === 'gift') {
+          emitSync(
+            `_$${MessageListGiftItem.name}`,
+            props.id,
+            width.current,
+            headerWidth.current
+          );
         }
       }}
     >
@@ -105,6 +112,13 @@ export function MessageListItem(props: MessageListItemProps) {
               if (type === 'text') {
                 emitSync(
                   `_$${MessageListTextItem.name}`,
+                  props.id,
+                  width.current,
+                  headerWidth.current
+                );
+              } else if (type === 'gift') {
+                emitSync(
+                  `_$${MessageListGiftItem.name}`,
                   props.id,
                   width.current,
                   headerWidth.current
