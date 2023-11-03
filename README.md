@@ -20,15 +20,9 @@ agora chat room and example
 npm install react-native-chat-room
 ```
 
-## Usage
+## Detailed introduction
 
-```js
-import { multiply } from 'react-native-chat-room';
-
-// ...
-
-const result = await multiply(3, 7);
-```
+[detailed introduction](./docs/cn/index.md)
 
 ## Contributing
 
