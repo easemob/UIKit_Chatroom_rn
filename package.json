@@ -38,8 +38,9 @@
     "bootstrap": "yarn example && yarn install && yarn example pods",
     "clean": "del-cli android/build example/android/build example/android/app/build example/ios/build",
     "version": "node scripts/generate-version.js",
-    "env": "node scripts/generate-env.js",
-    "prepare": "yarn run version && yarn run prepack",
+    "env": "node scripts/generate-example-env.js",
+    "config": "node scripts/generate-config.js",
+    "prepare": "yarn run version && yarn run config && yarn run prepack",
     "change-icons-name": "node scripts/change-icons-name.js",
     "gen-face-name": "node scripts/generate-faces-name.js",
     "bundle-icons": "node scripts/bundle-icons.js"

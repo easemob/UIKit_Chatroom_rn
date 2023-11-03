@@ -78,6 +78,7 @@ export function App() {
         palette={palette}
         theme={theme}
         roomOption={{ marquee: { isVisible: true } }}
+        language={'fr'}
       >
         <NavigationContainer
           onStateChange={(state: NavigationState | undefined) => {

@@ -3,7 +3,12 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { ConfigContextProvider, RoomOption } from '../config';
 import { DispatchContextProvider } from '../dispatch';
-import { CreateStringSet, I18nContextProvider, LanguageCode } from '../i18n';
+import {
+  CreateStringSet,
+  I18nContextProvider,
+  LanguageCode,
+  languageCodes,
+} from '../i18n';
 import { createStringSet } from '../i18n/StringSet';
 import { IMContextProvider } from '../im';
 import {
@@ -34,7 +39,7 @@ export function Container(props: ContainerProps) {
     appKey,
     children,
     language,
-    languageFactory = createStringSet,
+    languageFactory,
     isDevMode = false,
     palette,
     theme,
@@ -43,15 +48,32 @@ export function Container(props: ContainerProps) {
   const _palette = usePresetPalette();
   const light = useLightTheme(palette ?? _palette);
 
+  const _languageFactory = languageFactory ?? createStringSet;
+
   const getLanguage = (): LanguageCode => {
+    let ret = language;
     if (language) {
-      return language;
+      const isExisted = languageCodes.includes(language);
+      if (isExisted === true) {
+        ret = language;
+      } else if (isExisted === false && languageFactory) {
+        ret = language;
+      } else {
+        ret = require('../config.local').language as LanguageCode;
+      }
+    } else {
+      const systemLanguage = getSystemLanguage();
+      if (systemLanguage?.includes('zh_CN')) {
+        ret = 'zh-Hans';
+      } else if (systemLanguage?.includes('en')) {
+        ret = 'en';
+      } else {
+        ret = require('../config.local').language as LanguageCode;
+      }
     }
-    const systemLanguage = getSystemLanguage();
-    if (systemLanguage?.includes('zh_CN')) {
-      return 'zh-Hans';
-    }
-    return 'en';
+
+    console.log('dev:language:', ret);
+    return ret;
   };
 
   return (
@@ -61,7 +83,7 @@ export function Container(props: ContainerProps) {
           <I18nContextProvider
             value={{
               languageCode: getLanguage(),
-              factory: languageFactory,
+              factory: _languageFactory,
             }}
           >
             <IMContextProvider value={{ appKey, debugMode: isDevMode }}>
