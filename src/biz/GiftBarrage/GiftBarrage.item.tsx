@@ -6,8 +6,8 @@ import { usePaletteContext } from '../../theme';
 import { Text } from '../../ui/Text';
 import { Avatar } from '../Avatar';
 import { GiftIcon } from '../GiftIcon';
-import { gItemBorderRadius } from './GiftEffect.const';
-import { GiftEffectItem, useAnimation } from './GiftEffect.item.hooks';
+import { gItemBorderRadius } from './GiftBarrage.const';
+import { GiftEffectItem, useAnimation } from './GiftBarrage.item.hooks';
 
 export type GiftEffectItemFCProps = {
   item: GiftEffectItem;

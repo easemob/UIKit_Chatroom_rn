@@ -8,14 +8,14 @@ import {
   gGiftEffectListWidth,
   gItemInterval,
   gTimeoutTask,
-} from './GiftEffect.const';
-import { useAddData } from './GiftEffect.hooks';
-import { GiftEffectItemFC, GiftEffectItemFCProps } from './GiftEffect.item';
-import type { GiftEffectItem } from './GiftEffect.item.hooks';
+} from './GiftBarrage.const';
+import { useAddData } from './GiftBarrage.hooks';
+import { GiftEffectItemFC, GiftEffectItemFCProps } from './GiftBarrage.item';
+import type { GiftEffectItem } from './GiftBarrage.item.hooks';
 import type { GiftEffectTask } from './types';
 
 /**
- * The reference of the `GiftEffect` component.
+ * The reference of the `GiftBarrage` component.
  */
 export type GiftEffectRef = {
   /**
@@ -24,7 +24,7 @@ export type GiftEffectRef = {
   pushTask: (task: GiftEffectTask) => void;
 };
 /**
- * Properties of the `GiftEffect` component.
+ * Properties of the `GiftBarrage` component.
  */
 export type GiftEffectProps = {
   /**
@@ -44,7 +44,7 @@ export type GiftEffectProps = {
 };
 
 /**
- * The GiftEffect component provides a floating gift animation.
+ * The GiftBarrage component provides a floating gift animation.
  *
  * @test {@link https://github.com/AsteriskZuo/react-native-chat-room/blob/3d538038480dda62e8046ceb1afe65c644a6e55f/example/src/__dev__/test_gift_floating.tsx}
  *
@@ -56,7 +56,7 @@ export type GiftEffectProps = {
  * ```tsx
  * const ref = React.useRef<GiftEffectRef>({} as any);
  * // ...
- * <GiftEffect
+ * <GiftBarrage
  *   ref={ref}
  *   containerStyle={
  *     {
@@ -77,7 +77,7 @@ export type GiftEffectProps = {
  *     });
  * ```
  */
-export const GiftEffect = React.forwardRef<GiftEffectRef, GiftEffectProps>(
+export const GiftBarrage = React.forwardRef<GiftEffectRef, GiftEffectProps>(
   function (props: GiftEffectProps, ref?: React.ForwardedRef<GiftEffectRef>) {
     const { containerStyle, visible = true, GiftEffectItemComponent } = props;
 
@@ -190,4 +190,4 @@ const ItemSeparatorComponent = () => {
   return <View style={{ height: gItemInterval }} />;
 };
 
-export type GiftEffectComponent = typeof GiftEffect;
+export type GiftEffectComponent = typeof GiftBarrage;

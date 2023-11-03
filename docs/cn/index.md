@@ -59,7 +59,7 @@
 
 ## 快速开始
 
-[portal](./quick-start.md)
+[quick start portal](./quick-start.md)
 
 ## 组件概览
 
@@ -93,7 +93,7 @@
 | GiftList        | Function       | ✅       | ❌       | ⭕️      | ✅   | ✅   | ❌   | ❌   | ❌     | 礼物选择列表                   |
 | Marquee         | Function       | ✅       | ❌       | ❌       | ✅   | ✅   | ⭕️  | ✅   | ✅     | 消息广播组件                   |
 | Report          | Function       | ✅       | ❌       | ⭕️      | ❌   | ❌   | ❌   | ✅   | ❌     | 消息上报组件                   |
-| GiftEffect      | Function       | ✅       | ❌       | ❌       | ✅   | ❌   | ❌   | ✅   | ❌     | 礼物特效组件                   |
+| GiftBarrage     | Function       | ✅       | ❌       | ❌       | ✅   | ❌   | ❌   | ✅   | ❌     | 礼物特效组件                   |
 
 | UI 业务组件   | Function/Class | 是否基础 | 是否页面 | 是否弹出 | 位置 | 大小 | 样式 | 控制 | 自定义 | 说明                       |
 | ------------- | -------------- | -------- | -------- | -------- | ---- | ---- | ---- | ---- | ------ | -------------------------- |
@@ -237,7 +237,7 @@ ref?.current?.addSendedMessage?.(message);
 | addSendedMessage | 将输入框里面的内容发送到消息列表 |
 | scrollToEnd      | 滚动消息列表到底部               |
 
-### GiftEffect
+### GiftBarrage
 
 礼物特效组件用来展示发送的礼物效果，礼物消息可以显示在消息列表，也可以显示在该组件。
 
@@ -248,7 +248,7 @@ ref?.current?.addSendedMessage?.(message);
 // 创建组件引用对象
 const ref = React.useRef<GiftEffectRef>({} as any);
 // 添加组件到渲染树
-<GiftEffect ref={ref} />;
+<GiftBarrage ref={ref} />;
 // ...
 // 添加礼物消息到组件消息队列中，排队显示。
 ref.current?.pushTask({
@@ -262,7 +262,7 @@ ref.current?.pushTask({
 });
 ```
 
-`GiftEffect`提供的属性概览
+`GiftBarrage`提供的属性概览
 
 | 属性                    | 是否可选 | 介绍                                           |
 | ----------------------- | -------- | ---------------------------------------------- |
@@ -270,7 +270,7 @@ ref.current?.pushTask({
 | containerStyle          | 可选     | 设置组件容器样式。支持背景、位置、边框等的设置 |
 | GiftEffectItemComponent | 可选     | 礼物特效列表项的渲染器                         |
 
-`GiftEffect`提供的方法概览
+`GiftBarrage`提供的方法概览
 
 | 方法     | 介绍                                 |
 | -------- | ------------------------------------ |
@@ -497,7 +497,7 @@ const ref = React.useRef<Chatroom>({} as any);
 | 属性           | 是否可选 | 介绍                                                 |
 | -------------- | -------- | ---------------------------------------------------- |
 | containerStyle | 可选     | 设置组件容器样式。支持背景、位置、大小、边框等的设置 |
-| GiftEffect     | 可选     | 礼物特效组件的渲染器                                 |
+| GiftBarrage    | 可选     | 礼物特效组件的渲染器                                 |
 | Marquee        | 可选     | 重要消息组件的渲染器                                 |
 | input          | 可选     | 输入组件的属性                                       |
 | messageList    | 可选     | 消息列表的属性                                       |

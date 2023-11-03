@@ -13,12 +13,12 @@ import type { UIKitError } from '../../error';
 import { I18nContext, I18nTr } from '../../i18n';
 import { IMContext, IMService, IMServiceListener } from '../../im';
 import {
-  GiftEffect,
+  GiftBarrage,
   GiftEffectComponent,
   GiftEffectProps,
   GiftEffectRef,
-} from '../GiftEffect';
-import { gGiftEffectListHeight } from '../GiftEffect/GiftEffect.const'; // for test
+} from '../GiftBarrage';
+import { gGiftEffectListHeight } from '../GiftBarrage/GiftBarrage.const'; // for test
 import { InputBar, InputBarProps, InputBarRef } from '../InputBar';
 import { gInputBarStyleHeight } from '../InputBar/InputBar.const';
 import {
@@ -53,11 +53,11 @@ export type ChatroomProps = React.PropsWithChildren<
      */
     containerStyle?: StyleProp<ViewStyle>;
     /**
-     * Renderer for the GiftEffect component. If not set, the built-in one is used.
+     * Renderer for the GiftBarrage component. If not set, the built-in one is used.
      *
      * You can set whether to load through `RoomOption.gift`.
      */
-    GiftEffect?: GiftEffectComponent;
+    GiftBarrage?: GiftEffectComponent;
     /**
      * Renderer for the Marquee component. If not set, the built-in one is used.
      *
@@ -89,7 +89,7 @@ export type ChatroomProps = React.PropsWithChildren<
       props?: MarqueeProps;
     };
     /**
-     * Properties of the GiftEffect component. If not set, the default value is used.
+     * Properties of the GiftBarrage component. If not set, the default value is used.
      */
     gift?: {
       props?: GiftEffectProps;
@@ -145,7 +145,7 @@ export abstract class ChatroomBase extends React.PureComponent<
    */
   marqueeRef?: React.RefObject<MarqueeRef>;
   /**
-   * Reference to the GiftEffect component.
+   * Reference to the GiftBarrage component.
    */
   giftRef?: React.RefObject<GiftEffectRef>;
   /**
@@ -182,7 +182,7 @@ export abstract class ChatroomBase extends React.PureComponent<
     this.memberRef = React.createRef();
     this.containerRef = React.createRef();
 
-    GGiftEffect = props.GiftEffect ?? GiftEffect;
+    GGiftEffect = props.GiftBarrage ?? GiftBarrage;
     GMarquee = props.Marquee ?? Marquee;
 
     this.state = {

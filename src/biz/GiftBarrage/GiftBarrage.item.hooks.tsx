@@ -8,7 +8,7 @@ import {
   gItemSmallHeight,
   gItemSmallWidth,
   gScaleFactor,
-} from './GiftEffect.const';
+} from './GiftBarrage.const';
 import type { GiftEffectModel } from './types';
 
 export type GiftEffectItem = {

@@ -6,8 +6,8 @@ import {
   gGiftEffectListWidth,
   gItemHeight,
   gScrollingTimeout,
-} from './GiftEffect.const';
-import type { GiftEffectItem } from './GiftEffect.item.hooks';
+} from './GiftBarrage.const';
+import type { GiftEffectItem } from './GiftBarrage.item.hooks';
 import type { GiftEffectTask } from './types';
 
 export const useAddData = (params: {
