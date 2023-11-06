@@ -4,6 +4,7 @@ import {
   NavigationState,
 } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import * as SplashScreen from 'expo-splash-screen';
 import * as React from 'react';
 import { DeviceEventEmitter, View } from 'react-native';
 import {
@@ -31,12 +32,16 @@ const env = require('./env');
 
 const Root = createNativeStackNavigator<RootParamsList>();
 
+SplashScreen.preventAutoHideAsync();
+
 export function App() {
   const [initialRouteName] = React.useState('TopMenu' as RootParamsName);
   const palette = usePresetPalette();
   const dark = useDarkTheme(palette);
   const light = useLightTheme(palette);
   const [theme, setTheme] = React.useState(light);
+  const isNavigationReadyRef = React.useRef(false);
+  const isContainerReadyRef = React.useRef(false);
 
   const formatNavigationState = (
     state: NavigationState | undefined,
@@ -70,6 +75,19 @@ export function App() {
     };
   }, [dark, light]);
 
+  const onReady = async (_ready: boolean) => {
+    // This tells the splash screen to hide immediately! If we call this after
+    // `setAppIsReady`, then we may see a blank screen while the app is
+    // loading its initial state and rendering its first pixels. So instead,
+    // we hide the splash screen once we know the root view has already
+    // performed layout.
+    setTimeout(async () => {
+      console.log('test:zuoyu:234:');
+      await SplashScreen.hideAsync();
+    }, 2000);
+    // await SplashScreen.hideAsync();
+  };
+
   return (
     <React.StrictMode>
       <Container
@@ -79,6 +97,16 @@ export function App() {
         theme={theme}
         roomOption={{ marquee: { isVisible: true } }}
         language={'fr'}
+        onInitialized={() => {
+          console.log('dev:onInitialized:');
+          isContainerReadyRef.current = true;
+          if (
+            isNavigationReadyRef.current === true &&
+            isContainerReadyRef.current === true
+          ) {
+            onReady(true);
+          }
+        }}
       >
         <NavigationContainer
           onStateChange={(state: NavigationState | undefined) => {
@@ -95,6 +123,13 @@ export function App() {
           }}
           onReady={() => {
             console.log('dev:onReady:');
+            isNavigationReadyRef.current = true;
+            if (
+              isNavigationReadyRef.current === true &&
+              isContainerReadyRef.current === true
+            ) {
+              onReady(true);
+            }
           }}
           fallback={
             <View style={{ height: 100, width: 100, backgroundColor: 'red' }} />

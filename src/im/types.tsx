@@ -587,4 +587,8 @@ export type IMServiceInit = {
    * Whether to enable debug mode.
    */
   debugMode?: boolean;
+  /**
+   * IM initialization is completed.
+   */
+  onInitialized?: () => void;
 };

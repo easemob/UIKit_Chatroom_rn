@@ -20,16 +20,52 @@ import { getI18nLanguage, getTranslateLanguage } from './Container.hook';
 
 type PartialRoomOption = PartialDeep<RoomOption>;
 
+/**
+ * Properties of the Container.
+ */
 export type ContainerProps = React.PropsWithChildren<{
+  /**
+   * The application key.
+   */
   appKey: string;
+  /**
+   * Whether to enable the development mode.
+   */
   isDevMode?: boolean;
+  /**
+   * The language code.
+   */
   language?: LanguageCode;
+  /**
+   * The language factory.
+   */
   languageFactory?: CreateStringSet;
+  /**
+   * The palette.
+   */
   palette?: Palette;
+  /**
+   * The theme.
+   */
   theme?: Theme;
+  /**
+   * The room option.
+   */
   roomOption?: PartialRoomOption;
+  /**
+   * IM initialization is completed.
+   */
+  onInitialized?: () => void;
 }>;
 
+/**
+ * Entry to the UIKit component library. It will complete initialization, configure custom parameters and other preparations.
+ * 
+ * **Note** IM will be initialized here. If other UIKit is integrated at the same time, the parameters initialized first shall prevail.
+For example: if `chat uikit sdk` and `chat room uikit sdk` are integrated at the same time, then the parameter initialized first will prevail.
+ * @param props {@link ContainerProps}
+ * @returns JSX.Element
+ */
 export function Container(props: ContainerProps) {
   const {
     appKey,
@@ -40,6 +76,7 @@ export function Container(props: ContainerProps) {
     palette,
     theme,
     roomOption,
+    onInitialized,
   } = props;
   const _palette = usePresetPalette();
   const light = useLightTheme(palette ?? _palette);
@@ -56,7 +93,13 @@ export function Container(props: ContainerProps) {
               factory: _languageFactory,
             }}
           >
-            <IMContextProvider value={{ appKey, debugMode: isDevMode }}>
+            <IMContextProvider
+              value={{
+                appKey,
+                debugMode: isDevMode,
+                onInitialized: onInitialized,
+              }}
+            >
               <ConfigContextProvider
                 value={{
                   isDevMode,
