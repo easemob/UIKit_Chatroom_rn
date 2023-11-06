@@ -81,11 +81,10 @@ export function App() {
     // loading its initial state and rendering its first pixels. So instead,
     // we hide the splash screen once we know the root view has already
     // performed layout.
-    setTimeout(async () => {
-      console.log('test:zuoyu:234:');
-      await SplashScreen.hideAsync();
-    }, 2000);
-    // await SplashScreen.hideAsync();
+    // setTimeout(async () => {
+    //   await SplashScreen.hideAsync();
+    // }, 2000);
+    await SplashScreen.hideAsync();
   };
 
   return (
