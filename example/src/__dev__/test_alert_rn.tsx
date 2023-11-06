@@ -7,7 +7,7 @@ import {
   createPresetPalette,
 } from 'react-native-chat-room';
 
-export function TestAlertComponent(): React.JSX.Element {
+export function TestAlertComponent(): JSX.Element {
   return (
     <View style={{ flex: 1, backgroundColor: 'green' }}>
       <View

@@ -13,7 +13,7 @@ import type { MemberListType } from './types';
 /**
  * Member list menu. Currently, it includes functions such as banning, unbanning, translation, and message reporting.
  * @param props {@link MemberListContextMenuProps}
- * @returns React.JSX.Element
+ * @returns JSX.Element
  */
 export const MemberContextMenu = (
   props: PropsWithTest &

@@ -13,7 +13,7 @@ import {
 /**
  * for test member list.
  */
-export function MemberListItem(): React.JSX.Element {
+export function MemberListItem(): JSX.Element {
   const ref = React.useRef<BottomSheetMemberListRef>({} as any);
   return (
     <View style={{ flex: 1 }}>
@@ -44,7 +44,7 @@ export function MemberListItem(): React.JSX.Element {
 /**
  * Verify absolute layout.
  */
-export function MemberListItem2(): React.JSX.Element {
+export function MemberListItem2(): JSX.Element {
   const ref = React.useRef<BottomSheetMemberListRef>({} as any);
   return (
     <View style={{ flex: 1, top: 100 }}>

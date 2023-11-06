@@ -237,7 +237,7 @@ const styles = StyleSheet.create({
   background: { flex: 1 },
 });
 
-export function TestModalPrototype(): React.JSX.Element {
+export function TestModalPrototype(): JSX.Element {
   console.log('test:TestModal');
   const [visible, setVisible] = React.useState(false);
   return (

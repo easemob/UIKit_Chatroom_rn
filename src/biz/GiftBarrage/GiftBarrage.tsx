@@ -50,7 +50,7 @@ export type GiftEffectProps = {
  *
  * @param props {@link GiftEffectProps}
  * @param ref {@link GiftEffectRef}
- * @returns React.JSX.Element
+ * @returns JSX.Element
  * @example
  *
  * ```tsx

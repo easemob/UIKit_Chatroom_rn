@@ -44,7 +44,7 @@ export type GiftListProps = {
  * @test {@link https://github.com/AsteriskZuo/react-native-chat-room/blob/f7c2208fde9e294fa8e7247624da2bb1d0458e9d/example/src/__dev__/test_gift_list.tsx}
  *
  * @param props {@link GiftListProps}
- * @returns React.JSX.Element
+ * @returns JSX.Element
  */
 export function GiftList(props: GiftListProps) {
   const { gifts, onSend, requestUseScrollGesture, GiftListItemComponent } =
@@ -63,7 +63,7 @@ export function GiftList(props: GiftListProps) {
 
   const _GiftListItem = GiftListItemComponent ?? GiftListItemMemo;
 
-  const onSelected = React.useCallback((giftId) => {
+  const onSelected = React.useCallback((giftId: string) => {
     setSelected(giftId);
   }, []);
 

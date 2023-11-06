@@ -13,7 +13,7 @@ import {
   useThemeContext,
 } from 'react-native-chat-room';
 
-export function TestSearchComponent(): React.JSX.Element {
+export function TestSearchComponent(): JSX.Element {
   const { style } = useThemeContext();
   const { colors } = usePaletteContext();
   return (

@@ -100,7 +100,7 @@ export function MemberList() {
   );
 }
 
-export function MemberListItem(): React.JSX.Element {
+export function MemberListItem(): JSX.Element {
   return (
     <View
       style={{

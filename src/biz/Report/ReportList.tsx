@@ -50,7 +50,7 @@ export type ReportListProps = {
  * This component is mainly used for reporting illegal messages.
  *
  * @param props {@link ReportListProps}
- * @returns React.JSX.Element
+ * @returns JSX.Element
  *
  */
 export function ReportList(props: ReportListProps) {

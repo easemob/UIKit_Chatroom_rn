@@ -71,7 +71,7 @@ export const Alert = React.forwardRef<AlertRef, AlertProps>(
             />
           );
         });
-        const ret = [] as React.JSX.Element[];
+        const ret = [] as JSX.Element[];
         if (count < 3) {
           for (let index = 0; index < list.length; index++) {
             const element = list[index];

@@ -8,7 +8,7 @@ export function useDispatchListener(key: string, cb: Callback) {
   const { addListener, removeListener } = useDispatchContext();
   useLifecycle(
     React.useCallback(
-      (state) => {
+      (state: 'load' | 'unload') => {
         if (state === 'load') {
           addListener(key, cb);
         } else if (state === 'unload') {

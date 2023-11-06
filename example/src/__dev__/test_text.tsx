@@ -9,7 +9,7 @@ import {
   ThemeContextProvider,
 } from 'react-native-chat-room';
 
-function TextComponent(): React.JSX.Element {
+function TextComponent(): JSX.Element {
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <Text textType={'large'} paletteType={'headline'}>

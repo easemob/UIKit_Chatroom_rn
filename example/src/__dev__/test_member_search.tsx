@@ -8,7 +8,7 @@ import {
   SearchMember,
 } from 'react-native-chat-room';
 
-export function SearchMemberComponent(): React.JSX.Element {
+export function SearchMemberComponent(): JSX.Element {
   return (
     <View style={{ flex: 1 }}>
       <SearchMember

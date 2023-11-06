@@ -11,7 +11,7 @@ class ClassFunction {
   }
 }
 
-function DispatchComponent(): React.JSX.Element {
+function DispatchComponent(): JSX.Element {
   console.log('test:DispatchComponent');
   const { addListener, removeListener } = useDispatchContext();
 
@@ -44,7 +44,7 @@ function DispatchComponent(): React.JSX.Element {
   );
 }
 
-function DispatchComponent2(): React.JSX.Element {
+function DispatchComponent2(): JSX.Element {
   console.log('test:DispatchComponent2');
   const { emitSync } = useDispatchContext();
   return (

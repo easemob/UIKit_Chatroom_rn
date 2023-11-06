@@ -58,7 +58,7 @@ const data = [
 /**
  * for test report list.
  */
-export function TestReport(): React.JSX.Element {
+export function TestReport() {
   const ref = React.useRef<SimulativeModalRef>({} as any);
   return (
     <View style={{ flex: 1 }}>
@@ -89,7 +89,7 @@ export function TestReport(): React.JSX.Element {
 /**
  * Verify absolute layout.
  */
-export function TestReport2(): React.JSX.Element {
+export function TestReport2(): JSX.Element {
   const ref = React.useRef<BottomSheetMemberListRef>({} as any);
   return (
     <View style={{ flex: 1, top: 100 }}>

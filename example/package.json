@@ -19,7 +19,7 @@
   "dependencies": {
     "@react-navigation/native": "^6.1.8",
     "@react-navigation/native-stack": "^6.9.14",
-    "@types/react": "~18.0.27",
+    "@types/react": "~18.0.21",
     "date-fns": "^2.30.0",
     "expo": "~48.0.18",
     "expo-dev-client": "~2.2.1",

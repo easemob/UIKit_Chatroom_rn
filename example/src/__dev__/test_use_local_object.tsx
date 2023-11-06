@@ -47,7 +47,7 @@ export const Component1 = React.forwardRef<Component1Ref, {}>(
   }
 );
 
-export function Component2(): React.JSX.Element {
+export function Component2(): JSX.Element {
   const { selfIncreasing } = useMyData();
   useLifecycle(() => {}, 'Component2', true);
   return (
@@ -60,7 +60,7 @@ export function Component2(): React.JSX.Element {
   );
 }
 
-export function Component3(): React.JSX.Element {
+export function Component3(): JSX.Element {
   const [isShow, setIsShow] = React.useState(false);
   const ref1 = React.useRef<Component1Ref>({} as any);
   const ref2 = React.useRef<Component1Ref>({} as any);

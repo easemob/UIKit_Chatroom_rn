@@ -190,7 +190,7 @@ const useModalPanResponder = (params: {
   else return { panHandlers: {} };
 };
 
-export function TestModalPrototype(): React.JSX.Element {
+export function TestModalPrototype(): JSX.Element {
   console.log('test:TestModalPrototype');
   const ref = React.useRef<SimulativeModalRef>({} as any);
   const { width } = useWindowDimensions();

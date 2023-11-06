@@ -47,7 +47,7 @@ export type EmojiListProps = {
  * List of emoji expressions.
  *
  * @param props {@link EmojiListProps}
- * @returns React.JSX.Element
+ * @returns JSX.Element
  */
 export function EmojiList(props: EmojiListProps) {
   const { colors } = usePaletteContext();

@@ -10,7 +10,7 @@ import {
   useI18nContext,
 } from 'react-native-chat-room';
 
-export function I18nComponent(): React.JSX.Element {
+export function I18nComponent(): JSX.Element {
   const { tr } = useI18nContext();
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -20,12 +20,12 @@ export function I18nComponent(): React.JSX.Element {
   );
 }
 
-function I18nComponent2(): React.JSX.Element {
+function I18nComponent2(): JSX.Element {
   const { tr } = useI18nContext();
   return <Text>{tr('Ts is ${0}', '1')}</Text>;
 }
 
-function I18nComponent3(): React.JSX.Element {
+function I18nComponent3(): JSX.Element {
   const { tr } = useI18nContext();
   return (
     <View style={{ top: 100 }}>
