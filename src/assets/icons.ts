@@ -1324,6 +1324,15 @@ export const ICON_ASSETS = {
       return require('./icons/rectangle_separate_2x.png');
     }
   },
+  'round_arrow_thick': (size: string) => {
+    if (size === '3x') {
+      return require('./icons/round_arrow_thick_3x.png');
+    } else if (size === '2x') {
+      return require('./icons/round_arrow_thick_3x.png');
+    } else {
+      return require('./icons/round_arrow_thick_2x.png');
+    }
+  },
   'screen_n_polygon': (size: string) => {
     if (size === '3x') {
       return require('./icons/screen_n_polygon_3x.png');
@@ -1448,6 +1457,24 @@ export const ICON_ASSETS = {
       return require('./icons/sun_3x.png');
     } else {
       return require('./icons/sun_2x.png');
+    }
+  },
+  'switch1': (size: string) => {
+    if (size === '3x') {
+      return require('./icons/switch1_3x.png');
+    } else if (size === '2x') {
+      return require('./icons/switch1_3x.png');
+    } else {
+      return require('./icons/switch1_2x.png');
+    }
+  },
+  'switch2': (size: string) => {
+    if (size === '3x') {
+      return require('./icons/switch2_3x.png');
+    } else if (size === '2x') {
+      return require('./icons/switch2_3x.png');
+    } else {
+      return require('./icons/switch2_2x.png');
     }
   },
   'cecond': (size: string) => {
@@ -1592,6 +1619,15 @@ export const ICON_ASSETS = {
       return require('./icons/video_camera_slash_3x.png');
     } else {
       return require('./icons/video_camera_slash_2x.png');
+    }
+  },
+  'video_camera_splus': (size: string) => {
+    if (size === '3x') {
+      return require('./icons/video_camera_splus_3x.png');
+    } else if (size === '2x') {
+      return require('./icons/video_camera_splus_3x.png');
+    } else {
+      return require('./icons/video_camera_splus_2x.png');
     }
   },
   'video_camera_xmark': (size: string) => {

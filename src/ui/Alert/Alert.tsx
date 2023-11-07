@@ -153,18 +153,22 @@ export const Alert = React.forwardRef<AlertRef, AlertProps>(
               {title}
             </Text>
           </View>
-          <View style={{ height: 12 }} />
-          <View style={{ alignItems: 'center' }}>
-            <Text
-              textType={'medium'}
-              paletteType={'label'}
-              style={{
-                color: getColor('text'),
-              }}
-            >
-              {message}
-            </Text>
-          </View>
+          {message ? (
+            <>
+              <View style={{ height: 12 }} />
+              <View style={{ alignItems: 'center' }}>
+                <Text
+                  textType={'medium'}
+                  paletteType={'label'}
+                  style={{
+                    color: getColor('text'),
+                  }}
+                >
+                  {message}
+                </Text>
+              </View>
+            </>
+          ) : null}
           <View style={{ height: 24 }} />
           {supportInput === true ? (
             <>

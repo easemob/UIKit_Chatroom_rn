@@ -9,24 +9,31 @@ export type LoadingIconResolutionType = '' | '2x' | '3x';
 export type LoadingIconProps = Omit<ImageProps, 'source' | 'failedSource'> & {
   name?: IconNameType;
   resolution?: LoadingIconResolutionType;
+  isStop?: boolean;
 };
 
 const AnimatedImage = Animated.createAnimatedComponent(ClassImage);
 
 export function LoadingIcon(props: LoadingIconProps) {
-  const { name = 'loading', resolution, style, ...others } = props;
+  const { name = 'loading', resolution, style, isStop, ...others } = props;
   const s = ICON_ASSETS[name](resolution ?? '3x');
   const deg = React.useRef(new Animated.Value(0)).current;
   React.useEffect(() => {
-    Animated.loop(
+    const animate = Animated.loop(
       Animated.timing(deg, {
         toValue: 1,
         duration: 1000,
-        useNativeDriver: true,
+        useNativeDriver: false,
         easing: Easing.inOut(Easing.linear),
       })
-    ).start();
-  }, [deg]);
+    );
+    if (isStop === true) {
+      animate.stop();
+    } else {
+      // animate.reset();
+      animate.start();
+    }
+  }, [deg, isStop]);
   return (
     <AnimatedImage
       source={s}
