@@ -17,7 +17,7 @@ export function TestComponent() {
   );
 }
 
-export function TestUseCompare(): React.JSX.Element {
+export function TestUseCompare() {
   const isShowRef = React.useRef({
     isShow: false,
   });
@@ -46,7 +46,7 @@ export function TestUseCompare(): React.JSX.Element {
   );
 }
 
-export function TestUseCompare2(): React.JSX.Element {
+export function TestUseCompare2(): JSX.Element {
   const [, setCount] = React.useState(0);
   const cb = React.useCallback(() => {
     setCount((pre) => pre + 1);
@@ -72,7 +72,7 @@ export function TestUseCompare2(): React.JSX.Element {
   );
 }
 
-export function TestUseCompare3(): React.JSX.Element {
+export function TestUseCompare3(): JSX.Element {
   const [, setCount] = React.useState(0);
   const cb = () => {
     console.log('test:onPress');

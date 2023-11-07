@@ -6,7 +6,7 @@ import {
   useSafeAreaInsets,
 } from 'react-native-safe-area-context';
 
-export function SafeAreaComponent(): React.JSX.Element {
+export function SafeAreaComponent(): JSX.Element {
   const insets = useSafeAreaInsets();
   console.log('test:SafeAreaComponent', insets);
   return (
@@ -16,7 +16,7 @@ export function SafeAreaComponent(): React.JSX.Element {
   );
 }
 
-export function SafeAreaComponent3(): React.JSX.Element {
+export function SafeAreaComponent3(): JSX.Element {
   const insets = useSafeAreaInsets();
   console.log('test:SafeAreaComponent', insets);
   return (
@@ -26,7 +26,7 @@ export function SafeAreaComponent3(): React.JSX.Element {
   );
 }
 
-export function SafeAreaComponent2(): React.JSX.Element {
+export function SafeAreaComponent2(): JSX.Element {
   const insets = useSafeAreaInsets();
   console.log('test:SafeAreaComponent', insets);
   return <View style={{ flex: 1, backgroundColor: 'blue' }} />;

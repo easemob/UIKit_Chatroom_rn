@@ -9,7 +9,7 @@ import {
   ThemeContextProvider,
 } from 'react-native-chat-room';
 
-export function TestShadow(): React.JSX.Element {
+export function TestShadow(): JSX.Element {
   const getShadow = (): StyleProp<ViewStyle> => {
     return {
       shadowColor: 'red',

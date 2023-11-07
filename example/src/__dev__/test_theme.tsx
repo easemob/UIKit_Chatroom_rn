@@ -10,7 +10,7 @@ import {
   useThemeContext,
 } from 'react-native-chat-room';
 
-function UseThemeComponent(): React.JSX.Element {
+function UseThemeComponent(): JSX.Element {
   const theme = useThemeContext();
   const palette = usePaletteContext();
   const printTheme = () => {

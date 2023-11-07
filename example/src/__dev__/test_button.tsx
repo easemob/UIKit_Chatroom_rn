@@ -11,7 +11,7 @@ import {
   ThemeContextProvider,
 } from 'react-native-chat-room';
 
-export function ButtonComponent(): React.JSX.Element {
+export function ButtonComponent(): JSX.Element {
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <Button
@@ -29,7 +29,7 @@ export function ButtonComponent(): React.JSX.Element {
   );
 }
 
-export function IconButtonComponent(): React.JSX.Element {
+export function IconButtonComponent(): JSX.Element {
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <Text1IconButton
@@ -44,7 +44,7 @@ export function IconButtonComponent(): React.JSX.Element {
   );
 }
 
-export function IconButtonComponent2(): React.JSX.Element {
+export function IconButtonComponent2(): JSX.Element {
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <BorderIconButton

@@ -12,7 +12,7 @@ export function useIMListener(listener: IMServiceListener) {
   const im = useIMContext();
   useLifecycle(
     React.useCallback(
-      (state) => {
+      (state: 'load' | 'unload') => {
         if (state === 'load') {
           im.addListener(listener);
         } else if (state === 'unload') {

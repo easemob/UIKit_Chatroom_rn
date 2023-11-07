@@ -41,7 +41,7 @@ export type InputBarStyleProps = {
 /**
  * Input style components. Custom buttons can be added to implement custom events. For example: add a gift button and display the gift list when the gift button is clicked.
  * @param props {@link InputBarStyleProps}
- * @returns React.JSX.Element
+ * @returns JSX.Element
  */
 export function InputBarStyle(props: InputBarStyleProps) {
   const { onClickInput, first, after, onLayout, isShow } = props;

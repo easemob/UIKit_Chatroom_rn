@@ -7,7 +7,7 @@ import { LoadingIcon } from '../../ui/Image';
 
 /**
  * The data is not ready for loading placeholder component.
- * @returns React.JSX.Element
+ * @returns JSX.Element
  */
 export function LoadingPlaceholder() {
   const { colors } = usePaletteContext();

@@ -9,7 +9,7 @@ import {
   createPresetPalette,
 } from 'react-native-chat-room';
 
-export function TestAlertComponent(): React.JSX.Element {
+export function TestAlertComponent(): JSX.Element {
   const ref = React.useRef<AlertRef>({} as any);
   const ref2 = React.useRef<AlertRef>({} as any);
   return (

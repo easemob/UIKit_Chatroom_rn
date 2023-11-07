@@ -165,7 +165,7 @@ function useGetListItems() {
             );
           }
         })
-        .filter((v) => v !== null) as React.JSX.Element[];
+        .filter((v) => v !== null) as JSX.Element[];
 
       const data = [
         ...d,

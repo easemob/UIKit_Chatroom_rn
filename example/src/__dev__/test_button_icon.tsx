@@ -10,7 +10,7 @@ import {
   ThemeContextProvider,
 } from 'react-native-chat-room';
 
-export function IconButtonComponent(): React.JSX.Element {
+export function IconButtonComponent(): JSX.Element {
   const [iconName, setIconName] = React.useState<IconNameType>('link');
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>

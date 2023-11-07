@@ -34,7 +34,7 @@ export type SearchMemberProps = {
 /**
  * Search member components.
  * @param props {@link SearchMemberProps}
- * @returns React.JSX.Element
+ * @returns JSX.Element
  */
 export function SearchMember(props: SearchMemberProps) {
   const { onRequestClose, memberType } = props;

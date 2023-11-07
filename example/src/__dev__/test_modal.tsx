@@ -53,7 +53,7 @@ export const MyModal = (props: MyModalProps) => {
   );
 };
 
-export function ModalComponent(): React.JSX.Element {
+export function ModalComponent(): JSX.Element {
   const { width } = useWindowDimensions();
   const modalRef = React.useRef<MyModalRef>({} as any);
   return (
@@ -70,7 +70,7 @@ export function ModalComponent(): React.JSX.Element {
   );
 }
 
-export function AlertComponent(): React.JSX.Element {
+export function AlertComponent(): JSX.Element {
   const { width } = useWindowDimensions();
   const modalRef = React.useRef<ModalRef>({} as any);
   return (

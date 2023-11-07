@@ -9,7 +9,7 @@ import {
   ThemeContextProvider,
 } from 'react-native-chat-room';
 
-export function TextComponent(): React.JSX.Element {
+export function TextComponent(): JSX.Element {
   return (
     <View
       style={{
@@ -35,7 +35,7 @@ export function TextComponent(): React.JSX.Element {
   );
 }
 
-export function TextComponent2(): React.JSX.Element {
+export function TextComponent2(): JSX.Element {
   return (
     <View
       style={{

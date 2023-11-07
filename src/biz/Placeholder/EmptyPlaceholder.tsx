@@ -7,7 +7,7 @@ import { Image } from '../../ui/Image';
 
 /**
  * Blank placeholder component.
- * @returns React.JSX.Element
+ * @returns JSX.Element
  */
 export function EmptyPlaceholder() {
   const { colors } = usePaletteContext();

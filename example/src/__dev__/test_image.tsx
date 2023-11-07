@@ -16,7 +16,7 @@ export default function test_image() {
  * Simulation failed to load images.
  * @returns
  */
-export function ImageComponent(): React.JSX.Element {
+export function ImageComponent(): JSX.Element {
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <View style={{ width: 100, height: 100, backgroundColor: 'red' }}>
@@ -44,7 +44,7 @@ export function ImageComponent(): React.JSX.Element {
  * Simulation failed to load local images.
  * @returns
  */
-export function ImageComponent2(): React.JSX.Element {
+export function ImageComponent2(): JSX.Element {
   const s = ICON_ASSETS.airplane('');
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -71,7 +71,7 @@ export function ImageComponent2(): React.JSX.Element {
  * Load default image.
  * @returns
  */
-export function ImageComponent3(): React.JSX.Element {
+export function ImageComponent3(): JSX.Element {
   const d = ICON_ASSETS.airplane('');
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -100,7 +100,7 @@ export function ImageComponent3(): React.JSX.Element {
  * Load default image.
  * @returns
  */
-export function ImageComponent4(): React.JSX.Element {
+export function ImageComponent4(): JSX.Element {
   const d = ICON_ASSETS.airplane('');
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -126,7 +126,7 @@ export function ImageComponent4(): React.JSX.Element {
   );
 }
 
-export function IconComponent(): React.JSX.Element {
+export function IconComponent(): JSX.Element {
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <View style={{ width: 100, height: 100, backgroundColor: 'red' }}>

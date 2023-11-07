@@ -42,7 +42,7 @@ export function DisplayComponent2({ style }: { style?: StyleProp<ViewStyle> }) {
   );
 }
 
-export function TestDisplay(): React.JSX.Element {
+export function TestDisplay(): JSX.Element {
   const [display, setDisplay] = React.useState(true);
   return (
     <View>

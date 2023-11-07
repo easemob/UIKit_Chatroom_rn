@@ -534,7 +534,7 @@ export abstract class IMServiceImpl implements IMService {
     );
     msg.receiverList = mentionIds;
     msg.attributes = {
-      chatroom_uikit_userInfo: { ...user, gender: user.gender?.toString() },
+      chatroom_uikit_userInfo: user,
     };
     this.client.chatManager
       .sendMessage(msg, {
@@ -599,7 +599,7 @@ export abstract class IMServiceImpl implements IMService {
     }
     msg.receiverList = mentionIds;
     msg.attributes = {
-      chatroom_uikit_userInfo: { ...user, gender: user.gender?.toString() },
+      chatroom_uikit_userInfo: user,
     };
     this.client.chatManager
       .sendMessage(msg, {
@@ -691,13 +691,7 @@ export abstract class IMServiceImpl implements IMService {
     const jsonUserInfo = (msg.attributes as any)[chatroom_uikit_userInfo];
     if (jsonUserInfo) {
       const userInfo = jsonUserInfo as UserServiceData;
-      if (userInfo?.userId) {
-        const gender =
-          typeof jsonUserInfo?.gender === 'string'
-            ? Number.parseInt(jsonUserInfo?.gender ?? '0', 10)
-            : (jsonUserInfo?.gender as number);
-        return { ...userInfo, gender: gender };
-      }
+      return userInfo;
     }
 
     return undefined;

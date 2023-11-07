@@ -12,7 +12,7 @@ import {
   ThemeContextProvider,
 } from 'react-native-chat-room';
 
-export function MemberListItem(): React.JSX.Element {
+export function MemberListItem(): JSX.Element {
   return (
     <View
       style={{ backgroundColor: 'white', paddingHorizontal: 10, width: '100%' }}

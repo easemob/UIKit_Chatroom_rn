@@ -18,9 +18,12 @@ type IMContextProps = React.PropsWithChildren<{
 
 /**
  * The IM context's provider.
+ * 
+ * **Note** IM will be initialized here. If other UIKit is integrated at the same time, the parameters initialized first shall prevail.
+For example: if `chat uikit sdk` and `chat room uikit sdk` are integrated at the same time, then the parameter initialized first will prevail.
  */
 export function IMContextProvider({ value, children }: IMContextProps) {
-  const { appKey, debugMode, im } = value;
+  const { appKey, debugMode, im, onInitialized } = value;
   const _im = im ?? _getIMService();
   _im.init({
     appKey: appKey,
@@ -30,6 +33,7 @@ export function IMContextProvider({ value, children }: IMContextProps) {
       if (isOk === false) {
         if (error) _im.sendError({ error: error });
       } else {
+        onInitialized?.();
         _im.sendFinished({ event: 'init' });
       }
     },

@@ -58,7 +58,7 @@ export function useInputValue() {
       _setValue(valueRef.current);
     }
   };
-  const _onFace = React.useCallback((face) => {
+  const _onFace = React.useCallback((face: string) => {
     setValue(valueRef.current, 'add_face', face);
   }, []);
 

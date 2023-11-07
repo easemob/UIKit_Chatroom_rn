@@ -10,7 +10,7 @@ import {
   usePaletteContext,
 } from 'react-native-chat-room';
 
-export function UseColorComponent(): React.JSX.Element {
+export function UseColorComponent(): JSX.Element {
   const { colors } = usePaletteContext();
   const { initColor, getColor } = useColors({
     '1': {
@@ -38,7 +38,7 @@ export function UseColorComponent(): React.JSX.Element {
   );
 }
 
-export function UseColorComponent2(): React.JSX.Element {
+export function UseColorComponent2(): JSX.Element {
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     '2': {

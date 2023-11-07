@@ -57,7 +57,7 @@ export type MemberListProps = {
  * Member List Component.
  *
  * @param props {@link MemberListProps}
- * @returns React.JSX.Element
+ * @returns JSX.Element
  */
 export function MemberList(props: MemberListProps) {
   const {

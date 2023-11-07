@@ -72,7 +72,7 @@ export type MarqueeProps = {
  *
  * @param props {@link MarqueeProps}
  * @param ref {@link MarqueeRef}
- * @returns React.JSX.Element
+ * @returns JSX.Element
  *
  * @test {@link https://github.com/AsteriskZuo/react-native-chat-room/blob/a9379f61a7b19be6b87b277f5669a6e7bcf3d45c/example/src/__dev__/test_marquee.tsx}
  *

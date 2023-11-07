@@ -64,7 +64,7 @@ export type InputBarProps = Omit<
  *
  * @param props {@link InputBarProps}
  * @param ref {@link InputBarRef}
- * @returns React.JSX.Element
+ * @returns JSX.Element
  *
  * @example
  * ```tsx
