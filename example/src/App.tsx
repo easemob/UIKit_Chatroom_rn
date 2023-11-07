@@ -206,6 +206,9 @@ try {
   if (isDev === true) {
     AppWrapper = AppDev;
   }
+  setTimeout(async () => {
+    await SplashScreen.hideAsync();
+  }, 0);
 } catch (error) {
   console.warn(error);
 }
