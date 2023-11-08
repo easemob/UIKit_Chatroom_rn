@@ -129,7 +129,7 @@ export function ChatroomScreen(props: Props) {
       model: {
         id: seqId('_gf').toString(),
         nickName: 'NickName',
-        giftCount: '1',
+        giftCount: 1,
         giftIcon: 'http://notext.png',
         content: 'send Agoraship',
       },
@@ -346,7 +346,7 @@ export function ChatroomScreen(props: Props) {
                     giftId: gift.giftId,
                     giftName: gift.giftName,
                     giftPrice: gift.giftPrice.toString(),
-                    giftCount: '1',
+                    giftCount: 1,
                     giftIcon: gift.giftIcon,
                     giftEffect: gift.giftEffect ?? '',
                     sendedThenClose: true,
@@ -365,7 +365,7 @@ export function ChatroomScreen(props: Props) {
                             im.getUserInfo(im.userId)?.nickName ??
                             im.userId ??
                             'unknown',
-                          giftCount: '1',
+                          giftCount: 1,
                           giftIcon: gift.giftIcon,
                           content: `sent ${gift.giftName}`,
                           avatar: im.userInfoFromMessage(message)?.avatarURL,

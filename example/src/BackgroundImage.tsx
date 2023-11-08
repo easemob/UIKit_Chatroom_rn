@@ -7,7 +7,7 @@ import {
 } from 'react-native';
 import { useThemeContext } from 'react-native-chat-room';
 
-import * as assert from './assert';
+import * as assert from './assets';
 export const BackgroundImage = () => {
   const { style } = useThemeContext();
   const { height: winHeight, width: winWidth } = useWindowDimensions();
