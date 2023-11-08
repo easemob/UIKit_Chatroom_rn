@@ -315,40 +315,40 @@ const UnreadButton = ({ onPress }: { onPress: () => void }) => {
   );
 };
 
-function useGetReportDefaultData(tr: (key: string, ...args: any[]) => string) {
+function useGetReportDefaultData(_tr: (key: string, ...args: any[]) => string) {
   const ret = React.useMemo(() => {
     return [
       {
         id: seqId('_rp').toString(),
-        title: tr('Unwelcome commercial content or spam'),
+        title: 'Unwelcome commercial content or spam',
         checked: false,
       },
       {
         id: seqId('_rp').toString(),
-        title: tr('Pornographic or explicit content'),
+        title: 'Pornographic or explicit content',
         checked: false,
       },
       {
         id: seqId('_rp').toString(),
-        title: tr('Child abuse'),
+        title: 'Child abuse',
         checked: false,
       },
       {
         id: seqId('_rp').toString(),
-        title: tr('Hate speech or graphic violence'),
+        title: 'Hate speech or graphic violence',
         checked: false,
       },
       {
         id: seqId('_rp').toString(),
-        title: tr('Promote terrorism'),
+        title: 'Promote terrorism',
         checked: false,
       },
       {
         id: seqId('_rp').toString(),
-        title: tr('Harassment or bullying'),
+        title: 'Harassment or bullying',
         checked: false,
       },
     ] as ReportItemModel[];
-  }, [tr]);
+  }, []);
   return ret;
 }

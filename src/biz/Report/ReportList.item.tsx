@@ -2,6 +2,7 @@ import * as React from 'react';
 import { View } from 'react-native';
 
 import { useColors } from '../../hook';
+import { useI18nContext } from '../../i18n';
 import { usePaletteContext } from '../../theme';
 import { IconButton } from '../../ui/Button';
 import { Text } from '../../ui/Text';
@@ -15,6 +16,7 @@ export type ReportListItemProps = {
 
 export function ReportListItem(props: ReportListItemProps) {
   const { colors } = usePaletteContext();
+  const { tr } = useI18nContext();
   const { getColor } = useColors({
     backgroundColor: {
       light: colors.neutral[98],
@@ -55,7 +57,7 @@ export function ReportListItem(props: ReportListItemProps) {
               color: getColor('color'),
             }}
           >
-            {title}
+            {tr(title)}
           </Text>
         </View>
         <View style={{ flex: 1 }} />

@@ -28,7 +28,7 @@ export function createStringSetEn(): StringSet {
     'self': 'self',
 
     "Sent '@${0}'": (a: string) => `Sent '@${a}'`,
-    '${0} Joined': (a: string) => `${a} Joined`,
+    '${0} Joined': (_: string) => `Joined`,
 
     'delete_button_click_popups_title': 'Delete Message',
     'delete_button_click_popups_content':

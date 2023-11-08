@@ -104,7 +104,7 @@ export type GiftServiceData = {
   /**
    * Gift count.
    */
-  giftCount: string;
+  giftCount: number;
   /**
    * Gift icon URL.
    */

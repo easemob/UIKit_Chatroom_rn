@@ -472,7 +472,7 @@ export function useMessageListApi(params: {
       im.reportMessage({
         messageId: msg.msgId,
         tag: _result?.title ?? '',
-        reason: '',
+        reason: tr(_result?.title ?? ''),
       })
         .then(() => {
           im.sendFinished({ event: 'report_message' });

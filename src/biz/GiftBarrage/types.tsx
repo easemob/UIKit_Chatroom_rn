@@ -8,9 +8,9 @@ export type GiftEffectModel = {
   content: string;
   giftIcon: string;
   /**
-   * Default string 1.
+   * Default number 1.
    */
-  giftCount?: string;
+  giftCount?: number;
 };
 export type GiftEffectTask = {
   model: GiftEffectModel;
