@@ -102,6 +102,7 @@ export const Marquee = React.forwardRef<MarqueeRef, MarqueeProps>(function (
     textStyle,
     onFinished,
   } = props;
+  const bg = (containerStyle as any).backgroundColor as ColorValue | undefined;
   const { getViewStyleSize } = useGetStyleSize();
   const { colors, lineGradient } = usePaletteContext();
   const { getColor, getColors } = useColors({
@@ -110,12 +111,12 @@ export const Marquee = React.forwardRef<MarqueeRef, MarqueeProps>(function (
       dark: colors.barrage[100],
     },
     backgroundColor: {
-      light: colors.error[7],
-      dark: colors.error[7],
+      light: bg ?? colors.error[7],
+      dark: bg ?? colors.error[7],
     },
     backgroundColor3: {
-      light: ['hsla(350, 100%, 70%, 0)', colors.error[7]],
-      dark: ['hsla(350, 100%, 70%, 0)', colors.error[7]],
+      light: [bg ?? 'hsla(350, 100%, 70%, 0)', bg ?? colors.error[7]],
+      dark: [bg ?? 'hsla(350, 100%, 70%, 0)', bg ?? colors.error[7]],
     },
     tintColor: {
       light: colors.neutral[98],
@@ -276,9 +277,8 @@ export const Marquee = React.forwardRef<MarqueeRef, MarqueeProps>(function (
         end={start}
         style={{
           position: 'absolute',
-          // backgroundColor: getColor('backgroundColor'),
           height: containerHeight,
-          width: containerHeight / 2,
+          width: containerHeight / 4,
           left: containerHeight,
         }}
       />
@@ -288,7 +288,6 @@ export const Marquee = React.forwardRef<MarqueeRef, MarqueeProps>(function (
         end={end}
         style={{
           position: 'absolute',
-          // backgroundColor: getColor('backgroundColor'),
           height: containerHeight,
           width: containerHeight / 2,
           right: 0,

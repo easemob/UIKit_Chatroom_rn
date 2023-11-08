@@ -2,6 +2,7 @@ import * as React from 'react';
 import {
   Animated,
   ColorValue,
+  ImageStyle,
   StyleProp,
   StyleSheet,
   View,
@@ -77,7 +78,20 @@ export interface MySwitchProps {
    */
   style?: StyleProp<ViewStyle> | undefined;
 
+  /**
+   * Set styles for the icon
+   */
+  iconStyle?: StyleProp<ImageStyle> | undefined;
+
+  /**
+   * Set background view
+   */
   backgroundView?: React.ReactNode | undefined;
+
+  /**
+   * Set animation duration
+   */
+  animationDuration?: number | undefined;
 }
 
 export function Switch(props: MySwitchProps) {
@@ -112,6 +126,8 @@ export function Switch(props: MySwitchProps) {
     trackColor: propsTrackColor,
     trackIcon: propsTrackIcon,
     backgroundView,
+    iconStyle,
+    animationDuration = 100,
   } = props;
   const height = propsHeight ?? 40;
   const width = propsWidth ?? height * (70 / 40);
@@ -127,6 +143,7 @@ export function Switch(props: MySwitchProps) {
     height,
     falseColor,
     trueColor,
+    animationDuration,
   });
 
   const _onValueChange = (v: boolean) => {
@@ -203,11 +220,14 @@ export function Switch(props: MySwitchProps) {
             name={
               propsValue === true ? propsTrackIcon.true : propsTrackIcon.false
             }
-            style={{
-              width: height * 0.9,
-              height: height * 0.9,
-              tintColor: thumbColor,
-            }}
+            style={[
+              {
+                width: height * 0.9,
+                height: height * 0.9,
+                tintColor: thumbColor,
+              },
+              iconStyle,
+            ]}
           />
         ) : null}
       </Animated.View>

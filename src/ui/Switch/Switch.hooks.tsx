@@ -7,8 +7,10 @@ export function useSwitchAnimation(params: {
   height: number;
   falseColor: string;
   trueColor: string;
+  animationDuration: number;
 }) {
-  const { height, width, value, falseColor, trueColor } = params;
+  const { height, width, value, falseColor, trueColor, animationDuration } =
+    params;
   const marginLeft = React.useRef(height * 0.05 < 1 ? 1 : height * 0.05);
   const translateX = React.useRef(
     new Animated.Value(
@@ -25,24 +27,24 @@ export function useSwitchAnimation(params: {
   const toRight = Animated.parallel([
     Animated.timing(translateX, {
       toValue: width - height + marginLeft.current,
-      duration: 250,
+      duration: animationDuration,
       useNativeDriver: true,
     }),
     Animated.timing(trackColorNumber, {
       toValue: 1,
-      duration: 250,
+      duration: animationDuration,
       useNativeDriver: false,
     }),
   ]).start;
   const toLeft = Animated.parallel([
     Animated.timing(translateX, {
       toValue: marginLeft.current,
-      duration: 250,
+      duration: animationDuration,
       useNativeDriver: true,
     }),
     Animated.timing(trackColorNumber, {
       toValue: 0,
-      duration: 250,
+      duration: animationDuration,
       useNativeDriver: false,
     }),
   ]).start;
