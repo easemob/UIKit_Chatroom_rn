@@ -154,6 +154,22 @@ export function ChatroomScreen(props: Props) {
     });
   };
 
+  const testMemberMenu = () => {
+    const member = chatroomRef?.current
+      ?.getMemberListRef()
+      ?.getMemberListRef('member');
+    member?.initMenu?.([
+      {
+        name: 'my',
+        isHigh: true,
+        onClicked: (name, others) => {
+          console.log('onClicked:', name, others);
+          member?.closeMenu?.();
+        },
+      },
+    ]);
+  };
+
   return (
     <View
       ref={testRef}
@@ -204,6 +220,16 @@ export function ChatroomScreen(props: Props) {
         //       // backgroundColor: 'red',
         //     },
         //     // MessageListItemComponent: MessageListItemMemo,
+        //     messageMenuItems: [
+        //       {
+        //         name: 'my',
+        //         isHigh: false,
+        //         onClicked: (name, others) => {
+        //           console.log('onClicked:', name, others);
+        //           chatroomRef.current?.getMessageListRef()?.closeMenu?.();
+        //         },
+        //       },
+        //     ],
         //   },
         // }}
         // gift={{
@@ -326,6 +352,21 @@ export function ChatroomScreen(props: Props) {
             }}
           >
             <Text>{'add gift message'}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              height: 30,
+              width: 150,
+              backgroundColor: '#fff8dc',
+              borderRadius: 20,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+            onPress={() => {
+              testMemberMenu();
+            }}
+          >
+            <Text>{'test member menu'}</Text>
           </TouchableOpacity>
         </View>
       </Chatroom>

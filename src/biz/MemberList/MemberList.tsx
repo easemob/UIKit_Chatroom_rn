@@ -9,6 +9,10 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { FlatListFactory, FlatListRef } from '../../ui/FlatList';
+import type {
+  BottomSheetNameMenuRef,
+  InitMenuItemsType,
+} from '../BottomSheetMenu';
 import { gBottomSheetHeaderHeight } from '../const';
 import {
   EmptyPlaceholder,
@@ -26,9 +30,37 @@ import type { MemberListType } from './types';
 const FlatList = FlatListFactory<MemberListItemProps>();
 
 /**
+ * Referencing value of the `MemberList` component.
+ */
+export type MemberListRef = {
+  /**
+   * Add custom menu item list.
+   * @param memberMenuItems member menu item list.
+   */
+  initMenu: (memberMenuItems?: InitMenuItemsType[]) => void;
+  /**
+   * Remove member.
+   * @param memberId the member id.
+   */
+  removeMember: (memberId: string) => void;
+  /**
+   * Mute member.
+   * @param memberId the member id.
+   * @param isMuted whether to mute.
+   */
+  muteMember: (memberId: string, isMuted: boolean) => void;
+
+  /**
+   * Close the menu.
+   */
+  closeMenu: () => void;
+};
+
+/**
  * Properties of the `MemberList` component.
  */
 export type MemberListProps = {
+  propsRef?: React.RefObject<MemberListRef>;
   /**
    * Callback function when the gesture is used.
    * When used together with `Modal` or `SimuModal`, the pull-down gesture conflicts with the scrolling gift list gesture and cannot be resolved using bubbling events. Resolved by manually controlling usage rights.
@@ -68,6 +100,7 @@ export function MemberList(props: MemberListProps) {
     onSearch,
     onNoMoreMember,
     MemberItemComponent,
+    propsRef,
   } = props;
 
   const {
@@ -90,6 +123,8 @@ export function MemberList(props: MemberListProps) {
     onNoMoreMember,
   });
   const ref = React.useRef<FlatListRef<MemberListItemProps>>({} as any);
+  const memberMenuItemsRef = React.useRef<InitMenuItemsType[]>([]);
+  let menuRef = React.useRef<BottomSheetNameMenuRef>({} as any);
   const { width: winWidth } = useWindowDimensions();
   const { bottom } = useSafeAreaInsets();
   let height =
@@ -104,6 +139,25 @@ export function MemberList(props: MemberListProps) {
   });
 
   const _MemberItemComponent = MemberItemComponent ?? MemberListItemMemo;
+
+  if (propsRef?.current) {
+    propsRef.current.initMenu = (memberMenuItems?: InitMenuItemsType[]) => {
+      memberMenuItemsRef.current = memberMenuItems ?? [];
+    };
+    propsRef.current.removeMember = (memberId: string) => {
+      removeMember(memberId);
+    };
+    propsRef.current.muteMember = (memberId: string, isMuted: boolean) => {
+      muteMember(memberId, isMuted);
+    };
+    propsRef.current.closeMenu = () => {
+      menuRef.current?.startHide?.();
+    };
+  }
+
+  const onGetMenuItems = () => {
+    return memberMenuItemsRef.current;
+  };
 
   return (
     <>
@@ -166,6 +220,10 @@ export function MemberList(props: MemberListProps) {
         {...props}
         removeMember={removeMember}
         muteMember={muteMember}
+        onGetMenuItems={onGetMenuItems}
+        onGetMenuRef={(m) => {
+          menuRef = m;
+        }}
       />
     </>
   );

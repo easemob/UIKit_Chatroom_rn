@@ -570,7 +570,6 @@ UIKit 支持多国语言切换，目前内置中文和英文。支持扩展其�
 // ...
 // 创建指定语言集合
 function createLanguage(type: LanguageCode): StringSet {
-  console.log('test:zuoyu:createLanguage:', type);
   if (type === 'fr') {
     return {
       'French text.': 'Texte français.',

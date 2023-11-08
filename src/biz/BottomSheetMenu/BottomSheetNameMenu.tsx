@@ -7,7 +7,7 @@ import { usePaletteContext } from '../../theme';
 import { BottomSheetMenu, BottomSheetMenuRef } from './BottomSheetMenu';
 import { BottomSheetMenuItem } from './BottomSheetMenu.item';
 
-type InitItemsType = {
+export type InitMenuItemsType = {
   /**
    * The text to be displayed.
    */
@@ -18,14 +18,17 @@ type InitItemsType = {
   isHigh: boolean;
   /**
    * The callback function when the text is clicked.
+   *
+   * @param name The text to be displayed.
+   * @param others Other parameters. You can pass in the parameters you need. For example, you can pass in the user ID.
    */
-  onClicked?: (name: string) => void;
+  onClicked?: (name: string, others?: any) => void;
 };
 export type BottomSheetNameMenuRef = Omit<
   BottomSheetMenuRef,
   'startShowWithInit'
 > & {
-  startShowWithInit: (initItems: InitItemsType[]) => void;
+  startShowWithInit: (initItems: InitMenuItemsType[], others?: any) => void;
 };
 export type BottomSheetNameMenuProps = {
   /**
@@ -39,7 +42,7 @@ export type BottomSheetNameMenuProps = {
   /**
    * The maximum number should not exceed 6.
    */
-  initItems: InitItemsType[];
+  initItems: InitMenuItemsType[];
 };
 
 /**
@@ -95,7 +98,9 @@ export const BottomSheetNameMenu = React.forwardRef<
   ref?: React.ForwardedRef<BottomSheetNameMenuRef>
 ) {
   const { onRequestModalClose, title } = props;
-  const { getItems } = useGetListItems();
+  const { getItems } = useGetListItems(() => {
+    return menuRef?.current?.getData?.();
+  });
   const menuRef = React.useRef<BottomSheetMenuRef>({} as any);
   React.useImperativeHandle(
     ref,
@@ -107,9 +112,12 @@ export const BottomSheetNameMenu = React.forwardRef<
         startHide: (onFinished?: () => void) => {
           menuRef?.current?.startHide?.(onFinished);
         },
-        startShowWithInit: (initItems: InitItemsType[]) => {
+        startShowWithInit: (initItems: InitMenuItemsType[], others?: any) => {
           const items = getItems({ initItems, onRequestModalClose });
-          menuRef?.current?.startShowWithInit?.(items);
+          menuRef?.current?.startShowWithInit?.(items, others);
+        },
+        getData: () => {
+          return menuRef?.current?.getData?.();
         },
       };
     },
@@ -125,7 +133,7 @@ export const BottomSheetNameMenu = React.forwardRef<
   );
 });
 
-function useGetListItems() {
+function useGetListItems(onGetData?: () => any) {
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     divider: {
@@ -147,7 +155,7 @@ function useGetListItems() {
                 initState={'enabled'}
                 text={tr(v.name)}
                 onPress={() => {
-                  v.onClicked?.(v.name);
+                  v.onClicked?.(v.name, onGetData?.());
                 }}
               />
             );
@@ -159,7 +167,7 @@ function useGetListItems() {
                 initState={'warned'}
                 text={tr(v.name)}
                 onPress={() => {
-                  v.onClicked?.(v.name);
+                  v.onClicked?.(v.name, onGetData?.());
                 }}
               />
             );
@@ -187,7 +195,7 @@ function useGetListItems() {
       ];
       return data;
     },
-    [getColor, tr]
+    [getColor, onGetData, tr]
   );
   return {
     getItems,

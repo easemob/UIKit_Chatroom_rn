@@ -20,7 +20,12 @@ export type BottomSheetMenuRef = SlideModalRef & {
   /**
    * While displaying the component, the menu items will also be dynamically changed.
    */
-  startShowWithInit: (initItems: React.ReactElement[]) => void;
+  startShowWithInit: (initItems: React.ReactElement[], others?: any) => void;
+
+  /**
+   * Get the data of the component.
+   */
+  getData: () => any;
 };
 /**
  * Properties of the `BottomSheetMenu` component.
@@ -74,6 +79,7 @@ export const BottomSheetMenu = React.forwardRef<
   const { colors } = usePaletteContext();
   const { bottom } = useSafeAreaInsets();
   const modalRef = React.useRef<SlideModalRef>({} as any);
+  const othersRef = React.useRef();
   const { items, updateItems } = useGetItems(initItems);
   const { getColor } = useColors({
     bg1: {
@@ -103,7 +109,8 @@ export const BottomSheetMenu = React.forwardRef<
           isShow.current = true;
           modalRef?.current?.startShow?.();
         },
-        startShowWithInit: (initItems: React.ReactElement[]) => {
+        startShowWithInit: (initItems: React.ReactElement[], others?: any) => {
+          othersRef.current = others;
           if (initItems !== items) {
             isShow.current = true;
             updateItems(initItems);
@@ -111,6 +118,9 @@ export const BottomSheetMenu = React.forwardRef<
             isShow.current = true;
             modalRef?.current?.startShow?.();
           }
+        },
+        getData: () => {
+          return othersRef.current;
         },
       };
     },

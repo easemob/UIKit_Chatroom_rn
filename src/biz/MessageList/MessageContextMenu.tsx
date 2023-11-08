@@ -62,8 +62,11 @@ export const MessageContextMenu = React.forwardRef<
         startHide: (onFinished?) => {
           menuRef?.current?.startHide?.(onFinished);
         },
-        startShowWithInit: (initItems?) => {
-          menuRef?.current?.startShowWithInit?.(initItems);
+        startShowWithInit: (initItems?, others?: any) => {
+          menuRef?.current?.startShowWithInit?.(initItems, others);
+        },
+        getData: () => {
+          return menuRef?.current?.getData?.();
         },
       };
     },

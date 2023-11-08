@@ -6,6 +6,7 @@ import { Alert, AlertRef } from '../../ui/Alert';
 import {
   BottomSheetNameMenu,
   BottomSheetNameMenuRef,
+  InitMenuItemsType,
 } from '../BottomSheetMenu';
 import type { PropsWithError, PropsWithTest } from '../types';
 import type { MemberListType } from './types';
@@ -21,14 +22,22 @@ export const MemberContextMenu = (
       memberType: MemberListType;
       muteMember: (memberId: string, isMuted: boolean) => void;
       removeMember: (memberId: string) => void;
+      onGetMenuItems: () => InitMenuItemsType[];
+      onGetMenuRef: (
+        menuRef: React.MutableRefObject<BottomSheetNameMenuRef>
+      ) => void;
     }
 ) => {
-  const { muteMember, removeMember, memberType } = props;
+  const { muteMember, removeMember, memberType, onGetMenuItems, onGetMenuRef } =
+    props;
   const menuRef = React.useRef<BottomSheetNameMenuRef>({} as any);
   const alertRef = React.useRef<AlertRef>({} as any);
   const [userName, setUserName] = React.useState('');
   const im = useIMContext();
   const userIdRef = React.useRef('');
+  React.useEffect(() => {
+    onGetMenuRef(menuRef);
+  }, [onGetMenuRef]);
   const listener = React.useRef(
     (
       _memberType: MemberListType, // current mute list
@@ -40,7 +49,7 @@ export const MemberContextMenu = (
         if (_memberType === 'member') {
           if (memberType === _memberType) {
             setUserName(im.getUserInfo(userId)?.nickName ?? userId);
-            menuRef?.current?.startShowWithInit([
+            let items: InitMenuItemsType[] = [
               {
                 name: 'Mute',
                 isHigh: false,
@@ -61,7 +70,23 @@ export const MemberContextMenu = (
                   menuRef?.current?.startHide?.();
                 },
               },
-            ]);
+            ];
+            if (onGetMenuItems) {
+              const propsItems = onGetMenuItems();
+              for (const propsItem of propsItems) {
+                // !!! example:
+                // const s = propsItem;
+                // items.push({
+                //   name: s.name,
+                //   isHigh: s.isHigh,
+                //   onClicked: () => {
+                //     s.onClicked?.(s.name, userId);
+                //   },
+                // });
+                items.push(propsItem);
+              }
+            }
+            menuRef?.current?.startShowWithInit(items, userId);
           }
         } else if (_memberType === 'muted') {
           if (memberType === _memberType) {

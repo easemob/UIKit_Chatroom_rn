@@ -9,7 +9,7 @@ import { SimulativeModal, SimulativeModalRef } from '../../ui/Modal';
 import { TabPage } from '../../ui/TabPage';
 import { gBottomSheetHeaderHeight } from '../const';
 import type { PropsWithError, PropsWithTest } from '../types';
-import { MemberList } from './MemberList';
+import { MemberList, MemberListRef } from './MemberList';
 import { useIsOwner } from './MemberList.hooks';
 import type { MemberListItemProps } from './MemberList.item';
 import type { MemberListType } from './types';
@@ -22,6 +22,13 @@ export type BottomSheetMemberListRef = SimulativeModalRef & {
    * Show the component.
    */
   startShowWithInit: () => void;
+
+  /**
+   * Get member list reference.
+   * @param memberType the member type. {@link MemberListType}
+   * @returns the member list reference.
+   */
+  getMemberListRef: (memberType: MemberListType) => MemberListRef;
 };
 
 /**
@@ -73,6 +80,8 @@ export const BottomSheetMemberList = React.forwardRef<
     MemberItemComponent,
   } = props;
   const modalRef = React.useRef<SimulativeModalRef>({} as any);
+  const memberListRef = React.useRef<MemberListRef>({} as any);
+  const muterListRef = React.useRef<MemberListRef>({} as any);
   const { height: winHeight } = useWindowDimensions();
   const height = (winHeight * 3) / 5;
   const isUsePanResponder = React.useRef(true);
@@ -103,6 +112,13 @@ export const BottomSheetMemberList = React.forwardRef<
         startShowWithInit: () => {
           modalRef.current.startShow();
         },
+        getMemberListRef: (memberType: MemberListType) => {
+          if (memberType === 'member') {
+            return memberListRef.current;
+          } else {
+            return muterListRef.current;
+          }
+        },
       };
     },
     []
@@ -132,6 +148,7 @@ export const BottomSheetMemberList = React.forwardRef<
             onSearch?.('member');
           }}
           onNoMoreMember={onNoMoreMember}
+          propsRef={memberListRef}
         />,
         <MemberList
           key={'2'}
@@ -145,6 +162,7 @@ export const BottomSheetMemberList = React.forwardRef<
             onSearch?.('muted');
           }}
           onNoMoreMember={onNoMoreMember}
+          propsRef={muterListRef}
         />,
       ];
     }
@@ -162,6 +180,7 @@ export const BottomSheetMemberList = React.forwardRef<
         }}
         onNoMoreMember={onNoMoreMember}
         MemberItemComponent={MemberItemComponent}
+        propsRef={memberListRef}
       />,
     ];
   };

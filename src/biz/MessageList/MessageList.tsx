@@ -18,6 +18,7 @@ import { seqId } from '../../utils';
 import {
   BottomSheetNameMenu,
   BottomSheetNameMenuRef,
+  InitMenuItemsType,
 } from '../BottomSheetMenu';
 import {
   BottomSheetReport,
@@ -48,6 +49,23 @@ export type MessageListRef = {
    * Scroll to the end of the list.
    */
   scrollToEnd: () => void;
+
+  /**
+   * Close menu.
+   */
+  closeMenu: (onFinished?: () => void) => void;
+
+  /**
+   * Translation message.
+   * @param msg Messages that need to be translated.
+   */
+  translateMessage: (msg?: ChatMessage | undefined) => void;
+
+  /**
+   * Recall the message and other devices will be affected and deleted.
+   * @param msg Message that need to be recalled.
+   */
+  deleteMessage: (msg?: ChatMessage | undefined) => void;
 };
 
 /**
@@ -91,6 +109,11 @@ export type MessageListProps = {
    * Range: (0,10000]
    */
   maxMessageCount?: number;
+
+  /**
+   * Message list menu items.
+   */
+  messageMenuItems?: InitMenuItemsType[];
 } & PropsWithTest &
   PropsWithError;
 
@@ -108,9 +131,10 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
       reportProps,
       MessageListItemComponent,
       maxMessageCount,
+      messageMenuItems,
     } = props;
     const _onLongPress = (item: MessageListItemModel) => {
-      menuRef?.current?.startShowWithInit?.([
+      const items = [
         {
           name: 'Translate',
           isHigh: false,
@@ -136,7 +160,14 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
             });
           },
         },
-      ]);
+      ] as InitMenuItemsType[];
+      if (messageMenuItems && messageMenuItems.length > 0) {
+        for (const propsItem of messageMenuItems) {
+          items.push(propsItem);
+        }
+      }
+
+      menuRef?.current?.startShowWithInit?.(items, item.msg);
     };
     const {
       data,
@@ -175,9 +206,18 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
           scrollToEnd: () => {
             scrollToEnd();
           },
+          closeMenu: (onFinished?: () => void) => {
+            menuRef?.current?.startHide?.(onFinished);
+          },
+          translateMessage: (msg) => {
+            translateMessage(msg);
+          },
+          deleteMessage: (msg) => {
+            deleteMessage(msg);
+          },
         };
       },
-      [addSendedMessage, scrollToEnd]
+      [addSendedMessage, deleteMessage, scrollToEnd, translateMessage]
     );
 
     const getReportData = React.useMemo(() => {
