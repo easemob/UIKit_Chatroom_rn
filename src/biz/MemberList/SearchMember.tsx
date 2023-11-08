@@ -8,6 +8,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { useColors } from '../../hook';
+import type { UserServiceData } from '../../im';
 import { usePaletteContext } from '../../theme';
 import { Image } from '../../ui/Image';
 import type { PropsWithError, PropsWithTest } from '../types';
@@ -28,6 +29,10 @@ export type SearchMemberProps = {
    * Callback function when cancel button is clicked.
    */
   onRequestClose: () => void;
+  /**
+   * Search type.
+   */
+  searchType?: keyof UserServiceData;
 } & PropsWithTest &
   PropsWithError;
 
@@ -37,7 +42,7 @@ export type SearchMemberProps = {
  * @returns JSX.Element
  */
 export function SearchMember(props: SearchMemberProps) {
-  const { onRequestClose, memberType } = props;
+  const { onRequestClose, memberType, searchType } = props;
   const [value, setValue] = React.useState('');
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
@@ -52,6 +57,7 @@ export function SearchMember(props: SearchMemberProps) {
   });
   const { _data, deferSearch } = useSearchMemberListAPI({
     memberType,
+    searchType,
   });
 
   return (

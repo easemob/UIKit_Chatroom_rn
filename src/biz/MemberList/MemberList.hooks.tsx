@@ -527,8 +527,11 @@ export function useMemberListAPI(
   };
 }
 
-export function useSearchMemberListAPI(props: { memberType: MemberListType }) {
-  const { memberType } = props;
+export function useSearchMemberListAPI(props: {
+  memberType: MemberListType;
+  searchType?: keyof UserServiceData;
+}) {
+  const { memberType, searchType = 'nickName' } = props;
   // const ds = React.useRef<NodeJS.Timeout | undefined>();
   const im = useIMContext();
 
@@ -542,7 +545,7 @@ export function useSearchMemberListAPI(props: { memberType: MemberListType }) {
   };
 
   const _execSearch = (key: string) => {
-    const r = im.getIncludes(key, 'nickName');
+    const r = im.getIncludes(key, searchType);
     const rr = r.map((v) => {
       return {
         id: v.userId,
