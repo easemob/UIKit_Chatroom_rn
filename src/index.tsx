@@ -53,4 +53,5 @@ export * from './ui/Switch';
 export * from './ui/TabPage';
 export * from './ui/Text';
 export * from './ui/TextInput';
+export * from './ui/Toast';
 export * from './utils';
