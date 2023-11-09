@@ -146,7 +146,7 @@ export abstract class IMServiceImpl implements IMService {
         await this.client.login(userId, userToken, false);
       }
 
-      // !!! hot-reload no pass
+      // !!! hot-reload no pass, into catch codes
       this._user = {
         nickName: userNickname,
         avatarURL: userAvatarURL,
@@ -165,6 +165,15 @@ export abstract class IMServiceImpl implements IMService {
       result?.({ isOk: true });
     } catch (error: any) {
       if (error?.code === 200) {
+        // !!! for dev hot-reload
+        this._user = {
+          nickName: userNickname,
+          avatarURL: userAvatarURL,
+          userId: userId,
+          gender: gender,
+          identify: identify,
+        } as UserServiceData;
+
         this._updateMember({
           nickName: userNickname,
           avatarURL: userAvatarURL,
@@ -227,6 +236,9 @@ export abstract class IMServiceImpl implements IMService {
   }
   getUserInfo(id?: string): UserServiceData | undefined {
     if (id === undefined) return undefined;
+    if (id === this._user?.userId) {
+      return this._user;
+    }
     return this._userMap.get(id);
   }
   getUserInfos(ids: string[]): UserServiceData[] {
