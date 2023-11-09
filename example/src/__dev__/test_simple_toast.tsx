@@ -23,11 +23,13 @@ export function TestSimpleComponent(): JSX.Element {
           backgroundColor: 'yellow',
         }}
         onTouchEnd={() => {
-          propsRef.current.pushTask(
-            count % 2 === 0
-              ? 'hello world'
-              : 'yellow hello world hello world hello world hello world'
-          );
+          propsRef.current.show({
+            message:
+              count % 2 === 0
+                ? 'hello world'
+                : 'yellow hello world hello world hello world hello world',
+            timeout: 1000,
+          });
           ++count;
         }}
       />

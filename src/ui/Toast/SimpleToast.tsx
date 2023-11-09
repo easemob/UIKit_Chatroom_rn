@@ -4,8 +4,13 @@ import { StyleSheet, Text, View } from 'react-native';
 import { usePaletteContext } from '../../theme';
 import { Queue, timeoutTask } from '../../utils';
 
+export type SimpleToastTask = {
+  message: string;
+  timeout?: number;
+};
+
 export type SimpleToastRef = {
-  show: (message: string) => void;
+  show: (task: SimpleToastTask) => void;
 };
 export type SimpleToastProps = {
   propsRef: React.RefObject<SimpleToastRef>;
@@ -13,9 +18,11 @@ export type SimpleToastProps = {
 };
 export function SimpleToast(props: SimpleToastProps) {
   const { propsRef, timeout = 3000 } = props;
-  const tasks: Queue<string> = React.useRef(new Queue<string>()).current;
-  const preTask = React.useRef<string | undefined>(undefined);
-  const curTask = React.useRef<string | undefined>(undefined);
+  const tasks: Queue<SimpleToastTask> = React.useRef(
+    new Queue<SimpleToastTask>()
+  ).current;
+  const preTask = React.useRef<SimpleToastTask | undefined>(undefined);
+  const curTask = React.useRef<SimpleToastTask | undefined>(undefined);
   const { colors } = usePaletteContext();
 
   const [text, setText] = React.useState<string | undefined>(undefined);
@@ -37,8 +44,8 @@ export function SimpleToast(props: SimpleToastProps) {
 
   const execAnimation = (onFinished?: () => void) => {
     setIsShow(true);
-    setText(curTask.current ?? '');
-    timeoutTask(timeout, () => {
+    setText(curTask.current?.message ?? '');
+    timeoutTask(curTask.current?.timeout ?? timeout, () => {
       preTask.current = curTask.current;
       curTask.current = undefined;
       onFinished?.();
@@ -46,8 +53,8 @@ export function SimpleToast(props: SimpleToastProps) {
   };
 
   if (propsRef.current) {
-    propsRef.current.show = (message: string) => {
-      tasks.enqueue(message);
+    propsRef.current.show = (task: SimpleToastTask) => {
+      tasks.enqueue(task);
       execTask();
     };
   }
