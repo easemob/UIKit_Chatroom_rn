@@ -244,6 +244,9 @@ export abstract class IMServiceImpl implements IMService {
   getUserInfos(ids: string[]): UserServiceData[] {
     return ids
       .map((id) => {
+        if (id === this._user?.userId) {
+          return this._user;
+        }
         return this._userMap.get(id);
       })
       .filter((v) => {
