@@ -5,7 +5,7 @@ import { usePaletteContext } from '../../theme';
 import { Queue, timeoutTask } from '../../utils';
 
 export type SimpleToastRef = {
-  pushTask: (message: string) => void;
+  show: (message: string) => void;
 };
 export type SimpleToastProps = {
   propsRef: React.RefObject<SimpleToastRef>;
@@ -46,7 +46,7 @@ export function SimpleToast(props: SimpleToastProps) {
   };
 
   if (propsRef.current) {
-    propsRef.current.pushTask = (message: string) => {
+    propsRef.current.show = (message: string) => {
       tasks.enqueue(message);
       execTask();
     };
