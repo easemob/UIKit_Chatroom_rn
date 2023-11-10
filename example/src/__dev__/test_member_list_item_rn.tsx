@@ -2,14 +2,13 @@ import * as React from 'react';
 import { View } from 'react-native';
 import {
   Avatar,
+  Container,
   createDarkTheme,
   createLightTheme,
   createPresetPalette,
   Icon,
   IconButton,
-  PaletteContextProvider,
   Text,
-  ThemeContextProvider,
 } from 'react-native-chat-room';
 
 export function MemberListItem(): JSX.Element {
@@ -29,7 +28,13 @@ export function MemberListItem(): JSX.Element {
         />
 
         <View style={{ width: 12 }} />
-        <Avatar url={'https://note?'} size={40} borderRadius={40} />
+        <Avatar
+          url={
+            'https://img9.51tietu.net/pic/20190919/0fbrf4a0afy0fbrf4a0afy.jpg'
+          }
+          size={40}
+          borderRadius={40}
+        />
         <View style={{ width: 12 }} />
         <View style={{ marginVertical: 10 }}>
           <Text textType={'medium'} paletteType={'title'}>
@@ -55,20 +60,18 @@ export default function test_button() {
   const dark = createDarkTheme(palette);
   const theme = light ? light : dark;
   return (
-    <ThemeContextProvider value={theme}>
-      <PaletteContextProvider value={palette}>
-        <View
-          style={{
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-            paddingTop: 100,
-            backgroundColor: 'green',
-          }}
-        >
-          <MemberListItem />
-        </View>
-      </PaletteContextProvider>
-    </ThemeContextProvider>
+    <Container appKey={'sdf'} palette={palette} theme={theme}>
+      <View
+        style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+          paddingTop: 100,
+          backgroundColor: 'green',
+        }}
+      >
+        <MemberListItem />
+      </View>
+    </Container>
   );
 }

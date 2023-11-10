@@ -166,7 +166,7 @@ export function MessageListItem(props: MessageListItemProps) {
                   marginRight: 4,
                 }}
               >
-                <Avatar url={basic.avatar} size={18} borderRadius={18} />
+                <Avatar url={basic.avatar} size={18} />
               </View>
             ) : null}
 

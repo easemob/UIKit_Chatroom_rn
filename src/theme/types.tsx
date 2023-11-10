@@ -116,6 +116,13 @@ export type CornerRadiusPalette = {
   extraSmall: number;
   small: number;
   medium: number;
+  /**
+   * The large corner radius.
+   *
+   * It is dynamic. It is calculated by the following formula:
+   *
+   * Half the minimum width or height.
+   */
   large: number;
 };
 

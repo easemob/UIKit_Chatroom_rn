@@ -1,4 +1,5 @@
 import type { LanguageCode } from '../i18n';
+import type { CornerRadiusPaletteType } from '../theme';
 
 /**
  * Config types
@@ -24,6 +25,15 @@ export type Config = {
    * This language code is used to translate message.
    */
   languageCode: LanguageCode;
+
+  /**
+   * Avatar option.
+   *
+   * Invalid for `GiftBarrage`.
+   */
+  avatar: {
+    borderRadiusStyle: CornerRadiusPaletteType;
+  };
 };
 /**
  * Room option types

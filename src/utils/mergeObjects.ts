@@ -14,10 +14,10 @@ export function mergeObjects<T extends Object>(
         full.hasOwnProperty(key) &&
         typeof full[k] === 'object'
       ) {
-        // 如果属性值是对象，则递归合并
+        // If the property value is an object, merge recursively
         mergedObj[k] = mergeObjects(part[key] as any, full[k]);
       } else {
-        // 否则直接使用 A 中的属性
+        // Otherwise, use the attributes in part directly.
         mergedObj[k] = part[key] as any;
       }
     }

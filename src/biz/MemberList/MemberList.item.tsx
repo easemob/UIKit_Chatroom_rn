@@ -67,7 +67,7 @@ export function MemberListItem(props: MemberListItemProps) {
           </>
         ) : null}
 
-        <Avatar url={userInfo.avatarURL} size={40} borderRadius={40} />
+        <Avatar url={userInfo.avatarURL} size={40} />
         <View style={{ width: 12 }} />
         <View style={{ marginVertical: 10 }}>
           <Text

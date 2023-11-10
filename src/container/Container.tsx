@@ -7,6 +7,7 @@ import { CreateStringSet, I18nContextProvider, LanguageCode } from '../i18n';
 import { createStringSet } from '../i18n/StringSet';
 import { IMContextProvider } from '../im';
 import {
+  CornerRadiusPaletteType,
   Palette,
   PaletteContextProvider,
   Theme,
@@ -53,6 +54,14 @@ export type ContainerProps = React.PropsWithChildren<{
    */
   roomOption?: PartialRoomOption;
   /**
+   * Avatar option.
+   *
+   * Invalid for `GiftBarrage`.
+   */
+  avatar?: {
+    borderRadiusStyle?: CornerRadiusPaletteType;
+  };
+  /**
    * IM initialization is completed.
    */
   onInitialized?: () => void;
@@ -76,6 +85,7 @@ export function Container(props: ContainerProps) {
     palette,
     theme,
     roomOption,
+    avatar,
     onInitialized,
   } = props;
   const _palette = usePresetPalette();
@@ -123,6 +133,13 @@ export function Container(props: ContainerProps) {
                     } as RoomOption
                   ),
                   languageCode: getTranslateLanguage(language),
+                  avatar: mergeObjects(
+                    avatar ??
+                      ({} as { borderRadiusStyle: CornerRadiusPaletteType }),
+                    {
+                      borderRadiusStyle: 'large',
+                    }
+                  ),
                 }}
               >
                 <SafeAreaProvider>{children}</SafeAreaProvider>

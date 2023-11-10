@@ -9,7 +9,7 @@ export type DefaultIconImageProps = {
   url?: string | undefined;
   localIcon?: number;
   size: number;
-  borderRadius: number;
+  borderRadius?: number;
   style?: StyleProp<ImageStyle>;
 };
 
