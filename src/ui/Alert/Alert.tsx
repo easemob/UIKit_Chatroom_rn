@@ -10,7 +10,7 @@ import { TextInput } from '../TextInput';
 
 export type AlertRef = {
   alert: () => void;
-  close: () => void;
+  close: (onFinished?: () => void) => void;
 };
 export type AlertProps = {
   title: string;
@@ -119,8 +119,8 @@ export const Alert = React.forwardRef<AlertRef, AlertProps>(
           alert: () => {
             modalRef?.current?.startShow?.();
           },
-          close: () => {
-            modalRef?.current?.startHide?.();
+          close: (onFinished) => {
+            modalRef?.current?.startHide?.(onFinished);
           },
         };
       },

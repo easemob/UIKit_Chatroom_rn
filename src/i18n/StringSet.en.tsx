@@ -30,6 +30,8 @@ export function createStringSetEn(): StringSet {
     "Sent '@${0}'": (a: string) => `Sent '@${a}'`,
     '${0} Joined': (_: string) => `Joined`,
 
+    'Confirm': 'Confirm',
+
     'delete_button_click_popups_title': 'Delete Message',
     'delete_button_click_popups_content':
       'The message will be deleted and cannot been seen by others.',
