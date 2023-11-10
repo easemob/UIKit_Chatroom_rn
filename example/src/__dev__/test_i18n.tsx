@@ -57,7 +57,7 @@ export default function test_i18n() {
       palette={pal}
       theme={light ? light : dark}
       language={'fr'}
-      languageFactory={createLanguage}
+      languageBuiltInFactory={createLanguage}
     >
       <I18nComponent3 />
     </Container>

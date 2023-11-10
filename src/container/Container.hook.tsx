@@ -16,14 +16,14 @@ const getDefaultLanguage = (): LanguageCode => {
 
 export const getI18nLanguage = (
   language?: LanguageCode,
-  languageFactory?: CreateStringSet
+  languageBuiltInFactory?: CreateStringSet
 ): LanguageCode => {
   let ret = language;
   if (language) {
     const isExisted = languageCodes.includes(language);
     if (isExisted === true) {
       ret = language;
-    } else if (isExisted === false && languageFactory) {
+    } else if (isExisted === false && languageBuiltInFactory) {
       ret = language;
     } else {
       ret = require('../config.local').language as LanguageCode;

@@ -38,9 +38,17 @@ export type ContainerProps = React.PropsWithChildren<{
    */
   language?: LanguageCode;
   /**
-   * The language factory.
+   * The language built-in factory.
+   *
+   * If set, replace the data inside uikit.
    */
-  languageFactory?: CreateStringSet;
+  languageBuiltInFactory?: CreateStringSet;
+  /**
+   * The language extension factory.
+   *
+   * If set, it can also be used in the application.
+   */
+  languageExtensionFactory?: CreateStringSet;
   /**
    * The palette.
    */
@@ -80,7 +88,8 @@ export function Container(props: ContainerProps) {
     appKey,
     children,
     language,
-    languageFactory,
+    languageBuiltInFactory,
+    languageExtensionFactory,
     isDevMode = false,
     palette,
     theme,
@@ -91,7 +100,8 @@ export function Container(props: ContainerProps) {
   const _palette = usePresetPalette();
   const light = useLightTheme(palette ?? _palette);
 
-  const _languageFactory = languageFactory ?? createStringSet;
+  const _languageBuiltInFactory = languageBuiltInFactory ?? createStringSet;
+  const _guessLanguage = getI18nLanguage(language, languageBuiltInFactory);
 
   return (
     <DispatchContextProvider>
@@ -99,8 +109,9 @@ export function Container(props: ContainerProps) {
         <ThemeContextProvider value={theme ?? light}>
           <I18nContextProvider
             value={{
-              languageCode: getI18nLanguage(language, languageFactory),
-              factory: _languageFactory,
+              languageCode: _guessLanguage,
+              factory: _languageBuiltInFactory,
+              stringSet: languageExtensionFactory?.(language ?? _guessLanguage),
             }}
           >
             <IMContextProvider
