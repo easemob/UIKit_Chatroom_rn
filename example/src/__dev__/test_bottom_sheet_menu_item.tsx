@@ -79,18 +79,23 @@ export function BottomSheetMenuItem(props: BottomSheetMenuItemProps) {
   const getBackgroundColor = () => {
     return {
       disabled:
-        style === 'light' ? colors.neutral[98] : colors.barrage.light[1],
-      enabled: style === 'light' ? colors.neutral[98] : colors.barrage.light[1],
-      pressed: style === 'light' ? colors.neutral[95] : colors.barrage.light[1],
+        style === 'light' ? colors.neutral[98] : colors.barrage.onLight[1],
+      enabled:
+        style === 'light' ? colors.neutral[98] : colors.barrage.onLight[1],
+      pressed:
+        style === 'light' ? colors.neutral[95] : colors.barrage.onLight[1],
     };
   };
 
   const getColor = (state: ButtonState) => {
     const c = {
-      disabled: style === 'light' ? colors.neutral[7] : colors.barrage.light[1],
-      enabled: style === 'light' ? colors.primary[5] : colors.barrage.light[1],
-      pressed: style === 'light' ? colors.primary[4] : colors.barrage.light[1],
-      warned: style === 'light' ? colors.error[5] : colors.barrage.light[1],
+      disabled:
+        style === 'light' ? colors.neutral[7] : colors.barrage.onLight[1],
+      enabled:
+        style === 'light' ? colors.primary[5] : colors.barrage.onLight[1],
+      pressed:
+        style === 'light' ? colors.primary[4] : colors.barrage.onLight[1],
+      warned: style === 'light' ? colors.error[5] : colors.barrage.onLight[1],
     };
     switch (state) {
       case 'warned':

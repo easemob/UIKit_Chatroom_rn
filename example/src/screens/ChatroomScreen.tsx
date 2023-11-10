@@ -45,12 +45,12 @@ export function ChatroomScreen(props: Props) {
       dark: colors.neutral[1],
     },
     bg2: {
-      light: colors.barrage.light[2],
-      dark: colors.barrage.dark[2],
+      light: colors.barrage.onLight[2],
+      dark: colors.barrage.onDark[2],
     },
     tintColor: {
-      light: colors.barrage.light[8],
-      dark: colors.barrage.dark[8],
+      light: colors.neutral[98],
+      dark: colors.neutral[98],
     },
   });
 

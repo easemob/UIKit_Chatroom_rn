@@ -80,8 +80,8 @@ export function createPalette(params: createPaletteParams): Palette {
       neutral: generateNeutralColor(colors.neutral),
       neutralSpecial: generateNeutralSpecialColor(colors.neutralSpecial),
       barrage: {
-        light: generateBarrageColor('light'),
-        dark: generateBarrageColor('dark'),
+        onLight: generateBarrageColor('light'),
+        onDark: generateBarrageColor('dark'),
       },
     } as ColorsPalette,
     fonts: {

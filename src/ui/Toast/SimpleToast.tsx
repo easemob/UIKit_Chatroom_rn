@@ -27,12 +27,12 @@ export function SimpleToast(props: SimpleToastProps) {
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     bg: {
-      light: colors.barrage.light[3],
-      dark: colors.barrage.dark[3],
+      light: colors.barrage.onLight[3],
+      dark: colors.barrage.onDark[3],
     },
     text: {
       light: colors.neutral[98],
-      dark: colors.neutral[98],
+      dark: colors.barrage.onDark[8],
     },
   });
 

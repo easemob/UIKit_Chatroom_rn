@@ -30,8 +30,8 @@ export function ChatroomFC() {
                 borderRadius: 38,
                 backgroundColor:
                   style === 'light'
-                    ? colors.barrage.light[2]
-                    : colors.barrage.dark[2],
+                    ? colors.barrage.onLight[2]
+                    : colors.barrage.onDark[2],
                 width: 38,
                 height: 38,
                 justifyContent: 'center',
@@ -46,8 +46,8 @@ export function ChatroomFC() {
                   height: 30,
                   tintColor:
                     style === 'light'
-                      ? colors.barrage.light[8]
-                      : colors.barrage.dark[8],
+                      ? colors.barrage.onLight[8]
+                      : colors.barrage.onDark[8],
                 }}
                 onPress={() => {
                   console.log('test:zuoyu:press');
@@ -59,8 +59,8 @@ export function ChatroomFC() {
                 borderRadius: 38,
                 backgroundColor:
                   style === 'light'
-                    ? colors.barrage.light[2]
-                    : colors.barrage.dark[2],
+                    ? colors.barrage.onLight[2]
+                    : colors.barrage.onDark[2],
                 width: 38,
                 height: 38,
                 justifyContent: 'center',

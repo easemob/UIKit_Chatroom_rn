@@ -19,8 +19,8 @@ export function GiftEffectItemFC(props: GiftEffectItemFCProps) {
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     bg: {
-      light: colors.barrage.light[1],
-      dark: colors.barrage.dark[1],
+      light: colors.barrage.onLight[1],
+      dark: colors.barrage.onDark[1],
     },
   });
 

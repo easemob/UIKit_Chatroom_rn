@@ -31,8 +31,8 @@ export type ColorsPalette = {
   neutral: Colors;
   neutralSpecial: Colors;
   barrage: {
-    light: Colors;
-    dark: Colors;
+    onLight: Colors;
+    onDark: Colors;
   };
 };
 

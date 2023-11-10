@@ -30,10 +30,10 @@ export function MemberListItem(): JSX.Element {
         <View style={{ width: 12 }} />
         <Avatar
           url={
-            'https://img9.51tietu.net/pic/20190919/0fbrf4a0afy0fbrf4a0afy.jpg'
+            'https://i.natgeofe.com/n/548467d8-c5f1-4551-9f58-6817a8d2c45e/NationalGeographic_2572187_square.jpg?w=272&h=272'
           }
           size={40}
-          borderRadius={40}
+          // borderRadius={4}
         />
         <View style={{ width: 12 }} />
         <View style={{ marginVertical: 10 }}>

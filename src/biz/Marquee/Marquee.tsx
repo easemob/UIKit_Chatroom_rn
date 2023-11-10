@@ -107,8 +107,8 @@ export const Marquee = React.forwardRef<MarqueeRef, MarqueeProps>(function (
   const { colors, lineGradient } = usePaletteContext();
   const { getColor, getColors } = useColors({
     color: {
-      light: colors.barrage.light[100],
-      dark: colors.barrage.dark[100],
+      light: colors.barrage.onLight[100],
+      dark: colors.barrage.onDark[100],
     },
     backgroundColor: {
       light: bg ?? colors.error[7],
