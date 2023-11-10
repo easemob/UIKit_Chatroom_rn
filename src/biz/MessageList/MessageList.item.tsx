@@ -22,8 +22,8 @@ export function MessageListItem(props: MessageListItemProps) {
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     backgroundColor: {
-      light: colors.barrage[2],
-      dark: colors.barrage[2],
+      light: colors.barrage.light[2],
+      dark: colors.barrage.dark[2],
     },
     time: {
       light: colors.secondary[8],

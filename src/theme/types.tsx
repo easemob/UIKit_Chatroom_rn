@@ -30,7 +30,10 @@ export type ColorsPalette = {
   error: Colors;
   neutral: Colors;
   neutralSpecial: Colors;
-  barrage: Colors;
+  barrage: {
+    light: Colors;
+    dark: Colors;
+  };
 };
 
 /**

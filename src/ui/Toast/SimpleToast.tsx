@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
+import { useColors } from '../../hook';
 import { usePaletteContext } from '../../theme';
 import { Queue, timeoutTask } from '../../utils';
 
@@ -24,6 +25,16 @@ export function SimpleToast(props: SimpleToastProps) {
   const preTask = React.useRef<SimpleToastTask | undefined>(undefined);
   const curTask = React.useRef<SimpleToastTask | undefined>(undefined);
   const { colors } = usePaletteContext();
+  const { getColor } = useColors({
+    bg: {
+      light: colors.barrage.light[3],
+      dark: colors.barrage.dark[3],
+    },
+    text: {
+      light: colors.neutral[98],
+      dark: colors.neutral[98],
+    },
+  });
 
   const [text, setText] = React.useState<string | undefined>(undefined);
   const [isShow, setIsShow] = React.useState(false);
@@ -76,13 +87,13 @@ export function SimpleToast(props: SimpleToastProps) {
           paddingHorizontal: 20,
           paddingVertical: 8,
           borderRadius: 20,
-          backgroundColor: 'hsla(0, 0%, 0%, 0.35)',
+          backgroundColor: getColor('bg'),
         }}
       >
         <Text
           style={{
             maxWidth: '50%',
-            color: colors.neutral[98],
+            color: getColor('text'),
             fontSize: 14,
             fontWeight: '500',
             lineHeight: 18,

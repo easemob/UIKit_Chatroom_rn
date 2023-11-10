@@ -79,7 +79,10 @@ export function createPalette(params: createPaletteParams): Palette {
       error: generatePrimaryColor(colors.error),
       neutral: generateNeutralColor(colors.neutral),
       neutralSpecial: generateNeutralSpecialColor(colors.neutralSpecial),
-      barrage: generateBarrageColor(),
+      barrage: {
+        light: generateBarrageColor('light'),
+        dark: generateBarrageColor('dark'),
+      },
     } as ColorsPalette,
     fonts: {
       headline: generateHeadlineFont(),

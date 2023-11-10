@@ -48,12 +48,12 @@ export function InputBarStyle(props: InputBarStyleProps) {
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     backgroundColor: {
-      light: colors.barrage[2],
-      dark: colors.barrage[1],
+      light: colors.barrage.light[2],
+      dark: colors.barrage.dark[1],
     },
     tintColor: {
-      light: colors.barrage[8],
-      dark: colors.barrage[8],
+      light: colors.barrage.light[8],
+      dark: colors.barrage.dark[8],
     },
   });
   const { tr } = useI18nContext();
