@@ -52,7 +52,7 @@
 - Container：为 `UIKit` 的入口组件。集成了所有其他内部提供的服务和组件，使用者需要首先使用该组件进行初始化等操作。
 - use 开头的：hook 工具，Function 组件使用，Class 组件不能使用。本 `UIKit` 主要以 `Function` 组件为主。
 - 后缀 Props：为 UI 组件的参数类型
-- 后缀 Memo：为 UI 组件的带缓存的类型
+- 后缀 Memo：为 UI 带缓存的组件的类型
 - 后缀 Ref：为 UI 组件的引用，可以控制组件行为。例如：获取焦点、显示模态窗口。
 - 后缀 Model：为 UI 组件的参数里面的数据类型。
 - 后缀 Service：为非 UI 组件。提供一定服务。例如：IMService。
@@ -229,6 +229,7 @@ ref?.current?.addSendedMessage?.(message);
 | MessageListItemComponent | 可选     | 消息列表项的渲染器                                              |
 | reportProps              | 可选     | 消息上报的属性                                                  |
 | maxMessageCount          | 可选     | 组件可以显示的最大消息数，默认 1000，超过限制后将回收最早消息。 |
+| messageMenuItems         | 可选     | 自定义消息菜单项，追加到内置菜单后面                            |
 
 `MessageList`提供的方法概览
 
@@ -239,6 +240,52 @@ ref?.current?.addSendedMessage?.(message);
 
 ![message_context_menu](../message_context_menu.png)
 ![message_report](../message_report.png)
+
+### MemberList
+
+该组件前提供普通成员管理和禁言成员管理。
+
+房间拥有者可以管理普通成员和禁言成员。
+
+简单使用示例：
+
+```tsx
+// ...
+// 创建组件引用对象
+const ref = React.useRef<BottomSheetMemberListRef>({} as any);
+// 添加成员列表组件到渲染树
+<BottomSheetMemberList ref={this.ref} />;
+// ...
+// 用户实现现实具体动作，例如：添加按钮，点击按钮显示成员列表组件。
+ref?.current?.startShow?.();
+```
+
+`BottomSheetMemberList`提供的属性概览
+
+| 属性                | 是否可选 | 介绍                                                 |
+| ------------------- | -------- | ---------------------------------------------------- |
+| onSearch            | 可选     | 点击搜索样式的回调通知                               |
+| onNoMoreMember      | 可选     | 下滑加载更多成员时，没有更多成员的回调通知           |
+| containerStyle      | 可选     | 设置组件容器样式。支持背景、位置、大小、边框等的设置 |
+| maskStyle           | 可选     | 设置组件容器以外区域样式。                           |
+| MemberItemComponent | 可选     | 成员列表项的渲染器                                   |
+
+`BottomSheetMemberList`提供的方法概览
+
+| 方法             | 介绍                               |
+| ---------------- | ---------------------------------- |
+| getMemberListRef | 获取成员列表或者禁言列表组件的引用 |
+
+``提供的方法概览
+
+| 方法         | 介绍                                           |
+| ------------ | ---------------------------------------------- |
+| initMenu     | 初始化自定义成员列表菜单，追加到内置菜单的后面 |
+| removeMember | 删除成员                                       |
+| muteMember   | 禁言或者解除禁言成员                           |
+| closeMenu    | 关闭菜单                                       |
+
+![member_list](../member_list.png)
 
 ### GiftBarrage
 
