@@ -1,20 +1,22 @@
 import React from 'react';
 
 import { once2 } from '../utils';
-import { getIMService as _getIMService } from './im.impl';
-import type { IMService, IMServiceInit } from './types';
+import { getRoomService as _getRoomService } from './room.impl';
+import type { RoomService, RoomServiceInit } from './types';
 
 /**
  * Context of the IM.
  */
-export const IMContext = React.createContext<IMService | undefined>(undefined);
-IMContext.displayName = 'UIKitIMContext';
+export const RoomContext = React.createContext<RoomService | undefined>(
+  undefined
+);
+RoomContext.displayName = 'UIKitIMContext';
 
 /**
  * Properties of the IM context.
  */
-type IMContextProps = React.PropsWithChildren<{
-  value: IMServiceInit & { im?: IMService };
+type RoomContextProps = React.PropsWithChildren<{
+  value: RoomServiceInit & { im?: RoomService };
 }>;
 
 /**
@@ -26,10 +28,10 @@ type IMContextProps = React.PropsWithChildren<{
  *
  * It can only be initialized once. Even if it is initialized multiple times, parameters modified in time will not take effect again. The reason is that `CHAT SDK` uses the native platform.
  */
-export function IMContextProvider({ value, children }: IMContextProps) {
+export function RoomContextProvider({ value, children }: RoomContextProps) {
   const { appKey, debugMode, im, onInitialized } = value;
-  const _im = im ?? _getIMService();
-  initIM(_im, appKey, debugMode, onInitialized);
+  const _im = im ?? _getRoomService();
+  initRoom(_im, appKey, debugMode, onInitialized);
   // _im.init({
   //   appKey: appKey,
   //   debugMode: debugMode,
@@ -43,16 +45,16 @@ export function IMContextProvider({ value, children }: IMContextProps) {
   //     }
   //   },
   // });
-  return <IMContext.Provider value={_im}>{children}</IMContext.Provider>;
+  return <RoomContext.Provider value={_im}>{children}</RoomContext.Provider>;
 }
 
 /**
  * Get the IM context's value.
  * @returns The IM context's value.
  */
-export function useIMContext(): IMService {
-  const im = React.useContext(IMContext);
-  if (!im) throw Error(`${IMContext.displayName} is not provided`);
+export function useRoomContext(): RoomService {
+  const im = React.useContext(RoomContext);
+  if (!im) throw Error(`${RoomContext.displayName} is not provided`);
   return im;
 }
 
@@ -60,13 +62,13 @@ export function useIMContext(): IMService {
  * Get the built-in single instance IM object.
  * @returns The IM service.
  */
-export function getIMService(): IMService {
-  return _getIMService();
+export function getRoomService(): RoomService {
+  return _getRoomService();
 }
 
-const initIM = once2(
+const initRoom = once2(
   (
-    im: IMService,
+    im: RoomService,
     appKey: string,
     debugMode: boolean,
     onInitialized?: () => void

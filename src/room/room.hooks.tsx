@@ -1,15 +1,15 @@
 import * as React from 'react';
 
 import { useLifecycle } from '../hook';
-import { useIMContext } from './im';
-import type { IMServiceListener } from './types';
+import { useRoomContext } from './room';
+import type { RoomServiceListener } from './types';
 
 /**
  * The life cycle of a listener should be as long as the component declaration and should not be added or deleted frequently. Therefore, it is recommended to use `useMemo` or `useRef` to wrap the listener and reduce dependencies.
  * @param listener The IM service object.
  */
-export function useIMListener(listener: IMServiceListener) {
-  const im = useIMContext();
+export function useRoomListener(listener: RoomServiceListener) {
+  const im = useRoomContext();
   useLifecycle(
     React.useCallback(
       (state: 'load' | 'unload') => {
@@ -21,6 +21,6 @@ export function useIMListener(listener: IMServiceListener) {
       },
       [im, listener]
     ),
-    useIMListener.name
+    useRoomListener.name
   );
 }

@@ -41,7 +41,7 @@ export * from './dispatch';
 export * from './error';
 export * from './hook';
 export * from './i18n';
-export * from './im';
+export * from './room';
 export * from './theme';
 export * from './ui/Alert';
 export * from './ui/Button';

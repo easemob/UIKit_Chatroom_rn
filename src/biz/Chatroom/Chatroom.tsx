@@ -11,7 +11,7 @@ import {
 import { Config, ConfigContext } from '../../config';
 import type { UIKitError } from '../../error';
 import { I18nContext, I18nTr } from '../../i18n';
-import { IMContext, IMService, IMServiceListener } from '../../im';
+import { RoomContext, RoomService, RoomServiceListener } from '../../room';
 import {
   GiftMessageList,
   GiftMessageListComponent,
@@ -126,7 +126,7 @@ let GGlobalBroadcast: GlobalBroadcastComponent;
  *
  * The ChatroomBase component defines properties and UI styles. The business logic part is separated into `Chatroom`.
  *
- * The Chatroom component is a first-level component, and there are sub-components below. Errors in the request network or caused by business problems will be notified through `IMServiceListener.onError`. If the request network ends, it will be notified through `IMServiceListener.onFinished`.
+ * The Chatroom component is a first-level component, and there are sub-components below. Errors in the request network or caused by business problems will be notified through `RoomServiceListener.onError`. If the request network ends, it will be notified through `RoomServiceListener.onFinished`.
  */
 export abstract class ChatroomBase extends React.PureComponent<
   ChatroomProps,
@@ -159,7 +159,7 @@ export abstract class ChatroomBase extends React.PureComponent<
   /**
    * IM service.
    */
-  im?: IMService;
+  im?: RoomService;
   /**
    * Global Configuration.
    */
@@ -171,7 +171,7 @@ export abstract class ChatroomBase extends React.PureComponent<
   /**
    * IM service listener.
    */
-  listener?: IMServiceListener;
+  listener?: RoomServiceListener;
   constructor(props: ChatroomProps) {
     super(props);
 
@@ -226,7 +226,7 @@ export abstract class ChatroomBase extends React.PureComponent<
   /**
    * Join chatroom.
    *
-   * Different from `IMService`, it will update the internal state of UI components. It is not recommended to use `IMService.joinRoom` directly
+   * Different from `RoomService`, it will update the internal state of UI components. It is not recommended to use `RoomService.joinRoom` directly
    *
    * @params
    * - roomId: Room ID.
@@ -276,7 +276,7 @@ export abstract class ChatroomBase extends React.PureComponent<
 
   render() {
     return (
-      <IMContext.Consumer>
+      <RoomContext.Consumer>
         {(im) => {
           this.im = im;
           return (
@@ -295,7 +295,7 @@ export abstract class ChatroomBase extends React.PureComponent<
             </ConfigContext.Consumer>
           );
         }}
-      </IMContext.Consumer>
+      </RoomContext.Consumer>
     );
   }
 

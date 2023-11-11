@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { useDispatchListener } from '../../dispatch';
-import { useIMContext } from '../../im';
+import { useRoomContext } from '../../room';
 import { Alert, AlertRef } from '../../ui/Alert';
 import {
   BottomSheetNameMenu,
@@ -33,7 +33,7 @@ export const ParticipantContextMenu = (
   const menuRef = React.useRef<BottomSheetNameMenuRef>({} as any);
   const alertRef = React.useRef<AlertRef>({} as any);
   const [userName, setUserName] = React.useState('');
-  const im = useIMContext();
+  const im = useRoomContext();
   const userIdRef = React.useRef('');
   React.useEffect(() => {
     onGetMenuRef(menuRef);

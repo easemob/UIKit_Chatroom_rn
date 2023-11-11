@@ -5,7 +5,7 @@ import { ConfigContextProvider, RoomOption } from '../config';
 import { DispatchContextProvider } from '../dispatch';
 import { CreateStringSet, I18nContextProvider, LanguageCode } from '../i18n';
 import { createStringSet } from '../i18n/StringSet';
-import { IMContextProvider } from '../im';
+import { RoomContextProvider } from '../room';
 import {
   CornerRadiusPaletteType,
   Palette,
@@ -114,7 +114,7 @@ export function Container(props: ContainerProps) {
               stringSet: languageExtensionFactory?.(language ?? _guessLanguage),
             }}
           >
-            <IMContextProvider
+            <RoomContextProvider
               value={{
                 appKey,
                 debugMode: isDevMode,
@@ -155,7 +155,7 @@ export function Container(props: ContainerProps) {
               >
                 <SafeAreaProvider>{children}</SafeAreaProvider>
               </ConfigContextProvider>
-            </IMContextProvider>
+            </RoomContextProvider>
           </I18nContextProvider>
         </ThemeContextProvider>
       </PaletteContextProvider>

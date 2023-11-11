@@ -1,7 +1,7 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
-import { useIMContext } from 'react-native-chat-room';
+import { useRoomContext } from 'react-native-chat-room';
 
 import type { RootScreenParamsList } from '../routes';
 
@@ -9,7 +9,7 @@ type Props = NativeStackScreenProps<RootScreenParamsList>;
 export function LoginListScreen(props: Props) {
   const {} = props;
   const account = require('../env').account as { id: string; token: string }[];
-  const im = useIMContext();
+  const im = useRoomContext();
   const [s, setS] = React.useState<'' | 'success' | 'failed' | 'logouted'>('');
   const [reason, setReason] = React.useState<string>('');
   return (

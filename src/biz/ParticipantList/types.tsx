@@ -1,4 +1,4 @@
-import type { UserServiceData } from '../../im';
+import type { UserServiceData } from '../../room';
 
 export type ParticipantListIteModel = UserServiceData & {
   role?: 'owner' | 'member';

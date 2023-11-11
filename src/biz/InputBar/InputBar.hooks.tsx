@@ -3,7 +3,7 @@ import type { ChatMessage } from 'react-native-chat-sdk';
 import emoji from 'twemoji';
 
 import { ErrorCode, UIKitError } from '../../error';
-import { useIMContext } from '../../im';
+import { useRoomContext } from '../../room';
 import { emoji as convert, FACE_ASSETS_UTF16 } from '../EmojiList';
 
 export function useInputValue() {
@@ -102,7 +102,7 @@ export function useInputBarApi(params: {
   onSended: (msg: ChatMessage) => void;
 }) {
   const { onSended } = params;
-  const im = useIMContext();
+  const im = useRoomContext();
   const _sendText = (content: string) => {
     if (im.roomState === 'joined') {
       im.sendText({

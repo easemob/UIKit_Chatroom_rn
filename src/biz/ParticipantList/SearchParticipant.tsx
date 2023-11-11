@@ -8,7 +8,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { useColors } from '../../hook';
-import type { UserServiceData } from '../../im';
+import type { UserServiceData } from '../../room';
 import { usePaletteContext } from '../../theme';
 import { Image } from '../../ui/Image';
 import type { PropsWithError, PropsWithTest } from '../types';

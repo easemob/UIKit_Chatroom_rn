@@ -16,9 +16,9 @@ import {
   seqId,
   useColors,
   useDispatchContext,
-  useIMContext,
-  useIMListener,
   usePaletteContext,
+  useRoomContext,
+  useRoomListener,
 } from 'react-native-chat-room';
 import type { ChatRoom } from 'react-native-chat-sdk';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -36,7 +36,7 @@ export function ChatroomScreen(props: Props) {
   const menuRef = React.useRef<ChatroomTestMenuRef>({} as any);
   const chatroomRef = React.useRef<Chatroom>({} as any);
   const giftRef = React.useRef<BottomSheetGiftSimuRef>({} as any);
-  const im = useIMContext();
+  const im = useRoomContext();
   const count = React.useRef(0);
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
@@ -57,7 +57,7 @@ export function ChatroomScreen(props: Props) {
   const [pageY, setPageY] = React.useState(0);
   const { addListener, removeListener } = useDispatchContext();
 
-  useIMListener(
+  useRoomListener(
     React.useMemo(() => {
       return {
         onError: (params) => {

@@ -24,10 +24,10 @@ import {
   custom_msg_event_type_gift,
   custom_msg_event_type_join,
   GiftServiceData,
-  IMServiceListener,
-  useIMContext,
-  useIMListener,
-} from '../../im';
+  RoomServiceListener,
+  useRoomContext,
+  useRoomListener,
+} from '../../room';
 import { seqId, timeoutTask } from '../../utils';
 import { emoji as convert } from '../EmojiList';
 import type { ReportItemModel } from '../MessageReport';
@@ -129,7 +129,7 @@ export function useMessageListApi(params: {
   const needScrollRef = React.useRef(true);
   const userScrollGestureRef = React.useRef(false);
 
-  const im = useIMContext();
+  const im = useRoomContext();
   const { tr } = useI18nContext();
   const { roomOption, languageCode } = useConfigContext();
 
@@ -140,7 +140,7 @@ export function useMessageListApi(params: {
     propsOnLongPress?.(item);
   };
 
-  const msgListener = React.useRef<IMServiceListener>({
+  const msgListener = React.useRef<RoomServiceListener>({
     onMessageReceived: (roomId, message) => {
       if (im.roomState === 'joined') {
         if (im.roomId === roomId) {
@@ -161,7 +161,7 @@ export function useMessageListApi(params: {
     },
   });
 
-  useIMListener(msgListener.current);
+  useRoomListener(msgListener.current);
 
   const _setNeedScroll = (needScroll: boolean) => {
     needScrollRef.current = needScroll;

@@ -10,7 +10,7 @@ import {
   custom_msg_event_type_gift,
   DisconnectReasonType,
   GiftServiceData,
-} from '../../im';
+} from '../../room';
 import { seqId } from '../../utils';
 import { ChatroomBase, ChatroomProps } from './Chatroom';
 

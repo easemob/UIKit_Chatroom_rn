@@ -1,7 +1,7 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
 import { FlatList, Text, TouchableOpacity, View } from 'react-native';
-import { useIMContext, useLifecycle } from 'react-native-chat-room';
+import { useLifecycle, useRoomContext } from 'react-native-chat-room';
 import type { ChatRoom } from 'react-native-chat-sdk';
 
 import type { RootScreenParamsList } from '../routes';
@@ -12,7 +12,7 @@ export function ChatroomListScreen(props: Props) {
   const dataRef = React.useRef<{ id: string; room: ChatRoom }[]>([]);
   const [data, setData] = React.useState(dataRef.current);
   const [refreshing, setRefreshing] = React.useState(false);
-  const im = useIMContext();
+  const im = useRoomContext();
 
   const request = React.useCallback(
     async (finished?: () => void) => {

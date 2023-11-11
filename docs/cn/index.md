@@ -55,7 +55,7 @@
 - 后缀 Memo：为 UI 带缓存的组件的类型
 - 后缀 Ref：为 UI 组件的引用，可以控制组件行为。例如：获取焦点、显示模态窗口。
 - 后缀 Model：为 UI 组件的参数里面的数据类型。
-- 后缀 Service：为非 UI 组件。提供一定服务。例如：IMService。
+- 后缀 Service：为非 UI 组件。提供一定服务。例如：RoomService。
 
 ## 快速开始
 

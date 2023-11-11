@@ -11,12 +11,12 @@ import { useDispatchContext, useDispatchListener } from '../../dispatch';
 import { useDelayExecTask } from '../../hook';
 import {
   custom_msg_event_type_join,
-  IMService,
-  IMServiceListener,
-  useIMContext,
-  useIMListener,
+  RoomService,
+  RoomServiceListener,
+  useRoomContext,
+  useRoomListener,
   UserServiceData,
-} from '../../im';
+} from '../../room';
 import { wait } from '../../utils';
 import type { PropsWithError, PropsWithTest } from '../types';
 import { gMemberPerPageSize, gSearchTimeout } from './ParticipantList.const';
@@ -63,7 +63,7 @@ export function usePanHandlers(params: {
 }
 
 export function useIsOwner() {
-  const im = useIMContext();
+  const im = useRoomContext();
   const isOwner = () => im.userId === im.ownerId;
   return {
     isOwner: isOwner,
@@ -71,7 +71,7 @@ export function useIsOwner() {
 }
 
 export function useRoomState() {
-  const im = useIMContext();
+  const im = useRoomContext();
   return {
     roomState: im.roomState,
   };
@@ -85,7 +85,7 @@ export function useParticipantListAPI(
   }
 ) {
   const { memberType, onNoMoreMember } = props;
-  const im = useIMContext();
+  const im = useRoomContext();
   console.log(
     'test:useParticipantListAPI:',
     im.userId === im.ownerId,
@@ -540,7 +540,7 @@ export function useSearchParticipantListAPI(props: {
 }) {
   const { memberType, searchType = 'nickName' } = props;
   // const ds = React.useRef<NodeJS.Timeout | undefined>();
-  const im = useIMContext();
+  const im = useRoomContext();
 
   const [data, setData] = React.useState<ParticipantListItemProps[]>([]);
 
@@ -586,7 +586,7 @@ export function useSearchParticipantListAPI(props: {
 }
 
 type useParticipantListenerProps = {
-  im: IMService;
+  im: RoomService;
   onUpdateInfo?: (roomId: string, userInfo: UserServiceData) => void;
   onUserJoinedNotify?: (roomId: string, userInfo: UserServiceData) => void;
   onUserJoined?: (roomId: string, userId: string) => void;
@@ -608,7 +608,7 @@ export function useParticipantListener(props: useParticipantListenerProps) {
     onUserMuted,
     onUserUnmuted,
   } = props;
-  const msgListener = React.useRef<IMServiceListener>({
+  const msgListener = React.useRef<RoomServiceListener>({
     onMessageReceived: (roomId, message) => {
       const userInfo = im.userInfoFromMessage(message);
       if (userInfo) {
@@ -634,5 +634,5 @@ export function useParticipantListener(props: useParticipantListenerProps) {
       onUserUnmuted?.(roomId, userIds, operatorId);
     },
   });
-  useIMListener(msgListener.current);
+  useRoomListener(msgListener.current);
 }

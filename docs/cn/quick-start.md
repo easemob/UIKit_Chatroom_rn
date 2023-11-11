@@ -36,7 +36,7 @@ export function App() {
 ```tsx
 // ...
 // 获取 IM 服务对象
-const im = useIMContext();
+const im = useRoomContext();
 // ...
 // 登录服务
 // userId、userToken、userNickname 为必填项
@@ -66,7 +66,7 @@ im.login({
 const chatroomRef = React.useRef<Chatroom>({} as any);
 // ...
 // 关注组件状态变化
-useIMListener(
+useRoomListener(
   React.useMemo(() => {
     return {
       onError: (params) => {
@@ -74,7 +74,7 @@ useIMListener(
         // todo: 例如：被踢出房间，可以重新加入。chatroomRef.current?.joinRoom({roomId, ownerId}});
       },
       onFinished: (params) => {
-        // todo: 该通知会收到关键的完成结果。例如：加入聊天室之后收到通知。类型可以参考 IMEventType
+        // todo: 该通知会收到关键的完成结果。例如：加入聊天室之后收到通知。类型可以参考 RoomEventType
       },
     };
   }, [])

@@ -1,7 +1,11 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
 import { Switch, Text, TouchableOpacity, View } from 'react-native';
-import { TextInput, useIMContext, useIMListener } from 'react-native-chat-room';
+import {
+  TextInput,
+  useRoomContext,
+  useRoomListener,
+} from 'react-native-chat-room';
 
 import type { RootScreenParamsList } from '../routes';
 
@@ -9,8 +13,8 @@ type Props = NativeStackScreenProps<RootScreenParamsList>;
 export function LoginScreen(props: Props) {
   const {} = props;
   const account = require('../env').account as { id: string; token: string }[];
-  const im = useIMContext();
-  useIMListener(
+  const im = useRoomContext();
+  useRoomListener(
     React.useMemo(() => {
       return {
         onConnected: () => {

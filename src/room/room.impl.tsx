@@ -16,20 +16,20 @@ import {
   custom_msg_event_type_gift,
   custom_msg_event_type_join,
   gMaxMuterSize,
-} from './im.const';
+} from './room.const';
 import {
   DisconnectReasonType,
   GiftServiceData,
-  IMEventType,
-  IMService,
-  IMServiceListener,
+  RoomEventType,
   RoomMemberOperate,
+  RoomService,
+  RoomServiceListener,
   RoomState,
   UserServiceData,
 } from './types';
 
-export abstract class IMServiceImpl implements IMService {
-  _listeners: Set<IMServiceListener>;
+export abstract class RoomServiceImpl implements RoomService {
+  _listeners: Set<RoomServiceListener>;
   _userMap: Map<string, UserServiceData>;
   _muterMap: Map<string, number>;
   _currentRoomId?: string;
@@ -37,15 +37,15 @@ export abstract class IMServiceImpl implements IMService {
   _roomState: RoomState;
   _user?: UserServiceData;
 
-  // static _instance?: IMServiceImpl;
-  // public static getInstance(): IMService {
+  // static _instance?: RoomServiceImpl;
+  // public static getInstance(): RoomService {
   //   if (
-  //     IMServiceImpl._instance === null ||
-  //     IMServiceImpl._instance === undefined
+  //     RoomServiceImpl._instance === null ||
+  //     RoomServiceImpl._instance === undefined
   //   ) {
-  //     IMServiceImpl._instance = new IMServiceImpl();
+  //     RoomServiceImpl._instance = new RoomServiceImpl();
   //   }
-  //   return IMServiceImpl._instance;
+  //   return RoomServiceImpl._instance;
   // }
 
   constructor() {
@@ -82,10 +82,10 @@ export abstract class IMServiceImpl implements IMService {
   }
   unInit() {}
 
-  addListener(listener: IMServiceListener): void {
+  addListener(listener: RoomServiceListener): void {
     this._listeners.add(listener);
   }
-  removeListener(listener: IMServiceListener): void {
+  removeListener(listener: RoomServiceListener): void {
     this._listeners.delete(listener);
   }
   clearListener(): void {
@@ -694,7 +694,7 @@ export abstract class IMServiceImpl implements IMService {
       asyncTask(() => v.onError?.(params));
     });
   }
-  sendFinished(params: { event: IMEventType; extra?: any }): void {
+  sendFinished(params: { event: RoomEventType; extra?: any }): void {
     this._listeners.forEach((v) => {
       asyncTask(() => v.onFinished?.(params));
     });
@@ -714,7 +714,7 @@ export abstract class IMServiceImpl implements IMService {
   // destructor() {}
 }
 
-export class IMServicePrivateImpl extends IMServiceImpl {
+export class RoomServicePrivateImpl extends RoomServiceImpl {
   constructor() {
     super();
     this._initListener();
@@ -991,16 +991,16 @@ export class IMServicePrivateImpl extends IMServiceImpl {
   }
 }
 
-let gIMService: IMService;
+let gIMService: RoomService;
 
-export function getIMService(): IMService {
+export function getRoomService(): RoomService {
   if (gIMService === undefined) {
-    gIMService = new IMServicePrivateImpl();
+    gIMService = new RoomServicePrivateImpl();
   }
   return gIMService;
 }
 
-// export class IMServicePrivateImplTest extends IMServicePrivateImpl {
+// export class IMServicePrivateImplTest extends RoomServicePrivateImpl {
 //   constructor() {
 //     super();
 //   }

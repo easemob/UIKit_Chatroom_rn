@@ -44,7 +44,7 @@ export enum DisconnectReasonType {
 /**
  * The type of IM event.
  */
-export type IMEventType =
+export type RoomEventType =
   | 'init'
   | 'join'
   | 'leave'
@@ -163,7 +163,7 @@ export interface ChatroomServiceListener {
 /**
  * The type of client listener.
  */
-export interface ClientServiceListener {
+export interface ConnectServiceListener {
   /**
    * Notification of successful server connection.
    */
@@ -215,26 +215,26 @@ export interface ErrorServiceListener {
   onError?(params: { error: UIKitError; from?: string; extra?: any }): void;
 }
 export interface ResultServiceListener {
-  onFinished?(params: { event: IMEventType; extra?: any }): void;
+  onFinished?(params: { event: RoomEventType; extra?: any }): void;
 }
 
-export type IMServiceListener = ClientServiceListener &
+export type RoomServiceListener = ConnectServiceListener &
   ChatroomServiceListener &
   MessageServiceListener &
   ErrorServiceListener &
   ResultServiceListener;
 
-export interface IMService {
+export interface RoomService {
   /**
    * Add listener.
-   * @param listener {@link IMServiceListener}
+   * @param listener {@link RoomServiceListener}
    */
-  addListener(listener: IMServiceListener): void;
+  addListener(listener: RoomServiceListener): void;
   /**
    * Remove listener.
-   * @param listener {@link IMServiceListener}
+   * @param listener {@link RoomServiceListener}
    */
-  removeListener(listener: IMServiceListener): void;
+  removeListener(listener: RoomServiceListener): void;
   /**
    * Clear all listeners.
    */
@@ -248,7 +248,7 @@ export interface IMService {
   /**
    * Initialize the IM service.
    *
-   * The initialization operation is a necessary prerequisite for using `IMService`. Usually it won't fail. Usually an error is reported because `appKey` is not set or `appKey` is empty.
+   * The initialization operation is a necessary prerequisite for using `RoomService`. Usually it won't fail. Usually an error is reported because `appKey` is not set or `appKey` is empty.
    *
    * @params
    * - appKey: Agora appKey.
@@ -270,7 +270,7 @@ export interface IMService {
    *
    * The login result is returned through `result`. If you want to know whether you are logged in, you can call `loginState`.
    *
-   * After successful login, the listener will also receive notification `IMServiceListener.onConnected`.
+   * After successful login, the listener will also receive notification `RoomServiceListener.onConnected`.
    *
    * After successful login, the information set by the user will be synchronized to the server.
    *
@@ -572,13 +572,13 @@ export interface IMService {
    * - event: the event type.
    * - extra: the extra data.
    */
-  sendFinished(params: { event: IMEventType; extra?: any }): void;
+  sendFinished(params: { event: RoomEventType; extra?: any }): void;
 }
 
 /**
- * IMServiceInit is the initialization parameters of IMService.
+ * RoomServiceInit is the initialization parameters of RoomService.
  */
-export type IMServiceInit = {
+export type RoomServiceInit = {
   /**
    * Agora appKey.
    */
