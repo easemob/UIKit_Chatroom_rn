@@ -124,7 +124,7 @@ export const GlobalBroadcast = React.forwardRef<
       ],
       dark: [
         bg ?? colors.error[7],
-        bg ? changeOpacity(bg as string, 0) : 'hsla(350, 100%, 70%, 0)',
+        bg ? changeOpacity(bg as string, 0) : 'hsla(203, 100%, 60%, 0)',
       ],
     },
     backgroundColor3: {
@@ -133,7 +133,7 @@ export const GlobalBroadcast = React.forwardRef<
         bg ?? colors.error[7],
       ],
       dark: [
-        bg ? changeOpacity(bg as string, 0) : 'hsla(350, 100%, 70%, 0)',
+        bg ? changeOpacity(bg as string, 0) : 'hsla(203, 100%, 60%, 0)',
         bg ?? colors.error[7],
       ],
     },
