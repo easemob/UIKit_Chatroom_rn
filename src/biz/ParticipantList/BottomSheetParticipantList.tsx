@@ -7,7 +7,6 @@ import { useI18nContext } from '../../i18n';
 import { usePaletteContext } from '../../theme';
 import { SimulativeModal, SimulativeModalRef } from '../../ui/Modal';
 import { TabPage } from '../../ui/TabPage';
-import { gBottomSheetHeaderHeight } from '../const';
 import type { PropsWithError, PropsWithTest } from '../types';
 import { ParticipantList, ParticipantListRef } from './ParticipantList';
 import { useIsOwner } from './ParticipantList.hooks';
@@ -224,7 +223,7 @@ export const BottomSheetParticipantList = React.forwardRef<
           containerStyle,
         ]}
       >
-        <View
+        {/* <View
           style={{
             width: 36,
             height: gBottomSheetHeaderHeight - 6 * 2,
@@ -232,7 +231,7 @@ export const BottomSheetParticipantList = React.forwardRef<
             backgroundColor: getColor('backgroundColor2'),
             borderRadius: 2.5,
           }}
-        />
+        /> */}
         <TabPage
           header={{
             HeaderProps: {

@@ -2,22 +2,17 @@
 // When using Model in React Native, the inner FlatList cannot be scrolled. ref: https://zhuanlan.zhihu.com/p/630696822
 
 import * as React from 'react';
-import type { GestureResponderHandlers, ViewProps } from 'react-native';
 import {
   Animated,
   Modal as RNModal,
   StyleSheet,
   TouchableWithoutFeedback,
-  View,
 } from 'react-native';
 
 import { g_mask_color } from '../../const';
-import { useColors } from '../../hook';
-import { usePaletteContext } from '../../theme';
+import { DefaultSlide, SlideProps } from './DefaultSlide';
 import type { ModalProps, ModalRef } from './Modal';
 import { useModalAnimation, useModalPanResponder } from './Modal.hooks';
-
-export type SlideProps = ViewProps & GestureResponderHandlers;
 
 /**
  * Why not use properties to show and hide components? The method of using attributes has been tried, but this method requires more renderings (the function needs to be executed multiple times internally).
@@ -116,6 +111,7 @@ export function SlideModal(props: SlideModalProps) {
         pointerEvents={'box-none'}
       >
         <_Slide
+          modalType={'modal'}
           {...useModalPanResponder({
             type: modalAnimationType,
             translateY,
@@ -124,12 +120,13 @@ export function SlideModal(props: SlideModalProps) {
             onMoveShouldSetPanResponder,
           }).panHandlers}
         />
+
         {/* <View
           style={[
             {
-              height: 32,
+              height: 100,
               width: '100%',
-              backgroundColor: getColor('backgroundColor'),
+              backgroundColor: 'red',
               alignItems: 'center',
               borderTopRightRadius: 16,
               borderTopLeftRadius: 16,
@@ -149,11 +146,44 @@ export function SlideModal(props: SlideModalProps) {
               width: 36,
               height: 5,
               marginTop: 6,
-              backgroundColor: getColor('backgroundColor2'),
+              backgroundColor: 'red',
               borderRadius: 2.5,
             }}
           />
         </View> */}
+
+        {/* <Pressable>
+          <View
+            style={[
+              {
+                height: 100,
+                width: '100%',
+                backgroundColor: 'red',
+                alignItems: 'center',
+                borderTopRightRadius: 16,
+                borderTopLeftRadius: 16,
+                transform: [{ translateY: 15 }],
+              },
+            ]}
+            {...useModalPanResponder({
+              type: modalAnimationType,
+              translateY,
+              startShow,
+              onRequestModalClose,
+              onMoveShouldSetPanResponder,
+            }).panHandlers}
+          >
+            <View
+              style={{
+                width: 36,
+                height: 5,
+                marginTop: 6,
+                backgroundColor: 'red',
+                borderRadius: 2.5,
+              }}
+            />
+          </View>
+        </Pressable> */}
 
         {/*
           // NOTE: https://github.com/facebook/react-native/issues/14295
@@ -167,43 +197,3 @@ export function SlideModal(props: SlideModalProps) {
     </RNModal>
   );
 }
-
-const DefaultSlide = (props: SlideProps) => {
-  const { colors } = usePaletteContext();
-  const { getColor } = useColors({
-    backgroundColor: {
-      light: colors.neutral[98],
-      dark: colors.neutral[1],
-    },
-    backgroundColor2: {
-      light: colors.neutral[8],
-      dark: colors.neutral[3],
-    },
-  });
-  return (
-    <View
-      style={[
-        {
-          height: 32,
-          width: '100%',
-          backgroundColor: getColor('backgroundColor'),
-          alignItems: 'center',
-          borderTopRightRadius: 16,
-          borderTopLeftRadius: 16,
-          transform: [{ translateY: 15 }],
-        },
-      ]}
-      {...props}
-    >
-      <View
-        style={{
-          width: 36,
-          height: 5,
-          marginTop: 6,
-          backgroundColor: getColor('backgroundColor2'),
-          borderRadius: 2.5,
-        }}
-      />
-    </View>
-  );
-};

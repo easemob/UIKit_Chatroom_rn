@@ -14,6 +14,7 @@ import {
 } from 'react-native';
 
 import { g_mask_color } from '../../const';
+import { DefaultSlide, SlideProps } from './DefaultSlide';
 import {
   useSimulativeModalAnimation,
   useSimulativeModalPanResponder,
@@ -48,6 +49,7 @@ export type SimulativeModalProps = Omit<ViewProps, 'style'> & {
     | undefined;
   onFinished?: () => void;
   maskStyle?: StyleProp<ViewStyle> | undefined;
+  Slide?: React.ComponentType<SlideProps>;
 };
 
 /**
@@ -65,12 +67,14 @@ export function SimulativeModal(props: SimulativeModalProps) {
     onStartShouldSetPanResponder,
     onFinished,
     maskStyle,
+    Slide,
     ...others
   } = props;
   const { translateY, startShow, startHide, backgroundOpacity } =
     useSimulativeModalAnimation(modalAnimationType);
   const { width, height } = useWindowDimensions();
   const [modalVisible, setModalVisible] = React.useState(false);
+  const _Slide = Slide ?? DefaultSlide;
 
   if (propsRef) {
     if (propsRef.current) {
@@ -133,16 +137,27 @@ export function SimulativeModal(props: SimulativeModalProps) {
           modalStyle,
         ]}
         pointerEvents="box-none"
-        {...useSimulativeModalPanResponder({
-          type: modalAnimationType,
-          translateY,
-          startShow,
-          startHide,
-          setModalVisible,
-          onStartShouldSetPanResponder,
-        }).panHandlers}
+        // {...useSimulativeModalPanResponder({
+        //   type: modalAnimationType,
+        //   translateY,
+        //   startShow,
+        //   startHide,
+        //   setModalVisible,
+        //   onStartShouldSetPanResponder,
+        // }).panHandlers}
         {...others}
       >
+        <_Slide
+          modalType={'simu-modal'}
+          {...useSimulativeModalPanResponder({
+            type: modalAnimationType,
+            translateY,
+            startShow,
+            startHide,
+            setModalVisible,
+            onStartShouldSetPanResponder,
+          }).panHandlers}
+        />
         {children}
       </Animated.View>
     </View>

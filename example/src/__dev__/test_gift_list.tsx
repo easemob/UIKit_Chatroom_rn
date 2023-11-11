@@ -3,6 +3,7 @@
 import * as React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import {
+  BottomSheetGift,
   BottomSheetGift2,
   BottomSheetGiftSimuRef,
   Container,
@@ -97,8 +98,61 @@ export function TestGiftList2() {
   );
 }
 
+export function TestGiftList3() {
+  // const pal = createPresetPalette();
+  // const dark = createDarkTheme(pal);
+  // const light = createLightTheme(pal);
+  const pal = usePresetPalette();
+  const dark = useDarkTheme(pal);
+  const light = useLightTheme(pal);
+  useCompare(pal, { enabled: true });
+  useCompare(dark, { enabled: true });
+  useCompare(light, { enabled: true });
+
+  const ref = React.useRef<BottomSheetGiftSimuRef>({} as any);
+  const count = React.useRef(0);
+
+  return (
+    <Container appKey={'sdf'} palette={pal} theme={light ? light : dark}>
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: 'green',
+          paddingTop: 100,
+        }}
+      >
+        <TouchableOpacity
+          style={{ width: 200, height: 40, backgroundColor: 'red' }}
+          onPress={() => {
+            ref.current?.startShow();
+            // ref.current?.startShowWithInit(
+            //   count.current % 2 === 0
+            //     ? [{ title: 'gift1', gifts }]
+            //     : [
+            //         { title: 'gift1', gifts },
+            //         { title: 'gift2', gifts: gifts2 },
+            //       ]
+            // );
+            ++count.current;
+          }}
+        >
+          <Text>{'Start painting presents'}</Text>
+        </TouchableOpacity>
+        <View style={{ height: 100 }} />
+        <BottomSheetGift
+          ref={ref}
+          gifts={[
+            { title: 'gift1', gifts },
+            { title: 'gift2', gifts },
+          ]}
+        />
+      </View>
+    </Container>
+  );
+}
+
 export default function test_gift_list() {
-  return <TestGiftList2 />;
+  return <TestGiftList3 />;
 }
 
 export const gifts: GiftListModel[] = [

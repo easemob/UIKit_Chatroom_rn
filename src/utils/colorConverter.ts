@@ -502,7 +502,6 @@ export function getOpacity(color: string) {
 export function changeOpacityFromRGBA(rgba: string, opacity: number) {
   let sep = rgba.indexOf(',') > -1 ? ',' : ' ';
   const rgbaString = rgba.substring(5).split(')')[0]!.split(sep);
-  console.log('test:zuoyu:color:', rgbaString);
   rgbaString[3] = opacity.toString();
   return `rgba(${rgbaString.join(', ')})`;
 }

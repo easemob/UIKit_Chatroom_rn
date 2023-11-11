@@ -63,6 +63,12 @@ export const useModalPanResponder = (params: {
   );
   const r = React.useRef(
     PanResponder.create({
+      onStartShouldSetPanResponder: (e, g) => {
+        if (onMoveShouldSetPanResponder) {
+          return onMoveShouldSetPanResponder(e, g);
+        }
+        return g.dy >= 0;
+      },
       onMoveShouldSetPanResponder: (e, g) => {
         if (onMoveShouldSetPanResponder) {
           return onMoveShouldSetPanResponder(e, g);
