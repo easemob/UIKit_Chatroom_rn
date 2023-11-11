@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { FlatList, ListRenderItemInfo, Text, View } from 'react-native';
 
-type MemberListItemProps = { id: string };
+type ParticipantListItemProps = { id: string };
 
-export function MemberList() {
-  const dataRef = React.useRef<MemberListItemProps[]>([
+export function ParticipantList() {
+  const dataRef = React.useRef<ParticipantListItemProps[]>([
     { id: '1' },
     { id: '2' },
     { id: '3' },
@@ -23,7 +23,7 @@ export function MemberList() {
     { id: '16' },
     { id: '17' },
   ]);
-  const [data] = React.useState<MemberListItemProps[]>(dataRef.current);
+  const [data] = React.useState<ParticipantListItemProps[]>(dataRef.current);
 
   return (
     <View
@@ -33,7 +33,7 @@ export function MemberList() {
     >
       <FlatList
         data={data}
-        renderItem={(info: ListRenderItemInfo<MemberListItemProps>) => {
+        renderItem={(info: ListRenderItemInfo<ParticipantListItemProps>) => {
           const { item } = info;
           return (
             <View
@@ -47,7 +47,7 @@ export function MemberList() {
             </View>
           );
         }}
-        keyExtractor={(item: MemberListItemProps) => {
+        keyExtractor={(item: ParticipantListItemProps) => {
           return item.id;
         }}
       />
@@ -55,7 +55,7 @@ export function MemberList() {
   );
 }
 
-export function MemberListItem(): JSX.Element {
+export function ParticipantListItem(): JSX.Element {
   return (
     <View
       style={{
@@ -73,7 +73,7 @@ export function MemberListItem(): JSX.Element {
         }
       >
         <View style={{ position: 'absolute' }}>
-          <MemberList />
+          <ParticipantList />
         </View>
       </View>
     </View>
@@ -81,5 +81,5 @@ export function MemberListItem(): JSX.Element {
 }
 
 export default function test_flatlist() {
-  return <MemberListItem />;
+  return <ParticipantListItem />;
 }

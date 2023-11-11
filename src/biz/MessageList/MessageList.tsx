@@ -21,11 +21,11 @@ import {
   InitMenuItemsType,
 } from '../BottomSheetMenu';
 import {
-  BottomSheetReport,
+  BottomSheetMessageReport,
+  BottomSheetMessageReportProps,
+  BottomSheetMessageReportRef,
   ReportItemModel,
-  ReportProps,
-  ReportRef,
-} from '../Report';
+} from '../MessageReport';
 import type { PropsWithError, PropsWithTest } from '../types';
 import {
   gMessageListHeight,
@@ -100,7 +100,7 @@ export type MessageListProps = {
   /**
    * Properties of the `Report` component.
    */
-  reportProps?: ReportProps;
+  reportProps?: BottomSheetMessageReportProps;
   /**
    * Maximum number of messages displayed.
    *
@@ -192,7 +192,7 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
     });
 
     const menuRef = React.useRef<BottomSheetNameMenuRef>({} as any);
-    const reportRef = React.useRef<ReportRef>({} as any);
+    const reportRef = React.useRef<BottomSheetMessageReportRef>({} as any);
     const { tr } = useI18nContext();
     const defaultData = useGetReportDefaultData(tr);
 
@@ -286,7 +286,7 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
           }}
           initItems={[]}
         />
-        <BottomSheetReport
+        <BottomSheetMessageReport
           ref={reportRef}
           {...reportProps}
           onReport={getOnReport.onReport}

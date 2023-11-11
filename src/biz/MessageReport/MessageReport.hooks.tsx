@@ -1,20 +1,20 @@
 import * as React from 'react';
 import { PanResponder } from 'react-native';
 
-import type { ReportListItemProps } from './ReportList.item';
+import type { MessageReportItemProps } from './MessageReport.item';
 import type { ReportItemModel } from './types';
 
-export function useReportListApi(itemData: ReportItemModel[]) {
-  const dataRef = React.useRef<ReportListItemProps[]>(
+export function useMessageReportApi(itemData: ReportItemModel[]) {
+  const dataRef = React.useRef<MessageReportItemProps[]>(
     itemData.map((v) => {
       return { data: v };
     })
   );
-  const [data, setData] = React.useState<ReportListItemProps[]>(
+  const [data, setData] = React.useState<MessageReportItemProps[]>(
     dataRef.current
   );
 
-  const _onUpdate = (clickedItem: ReportListItemProps) => {
+  const _onUpdate = (clickedItem: MessageReportItemProps) => {
     let isNeedUpdate = false;
     for (const data of dataRef.current) {
       if (data.data.id === clickedItem.data.id) {

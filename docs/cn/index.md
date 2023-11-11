@@ -64,7 +64,7 @@
 ## 组件概览
 
 `Chatroom UIKit SDK` 的组件大体划分为 UI 组件和非 UI 组件。 UI 组件主要用来显示内容，非 UI 组件主要完成具体功能。
-从使用者的角度来说可以分为直接使用的组件和间接使用的组件，例如，`Chatroom`组件是直接使用的组件，`MemberList`组件是间接使用的组件。
+从使用者的角度来说可以分为直接使用的组件和间接使用的组件，例如，`Chatroom`组件是直接使用的组件，`ParticipantList`组件是间接使用的组件。
 从组件构成的角度上说，组件又可以分为顶级组件、业务组件和基础组件。例如，`Chatroom` 组件就顶级组件，`MessageList`是业务组件，`SlideModal`是基础组件。
 从组件的大小的角度又可以划分为页面级组件和非页面级组件。页面级组件会占用整个屏幕的大小。例如：`Chatroom`组件是页面级组件，其它为非页面级组件，
 还有一类特殊的组件，他们无法和其它同类组件共存，他们是 `Modal`组件。
@@ -91,17 +91,17 @@
 | Placeholder     | Function       | ✅       | ❌       | ❌       | ✅   | ✅   | ❌   | ❌   | ❌     | 占位组件                       |
 | EmojiList       | Function       | ✅       | ❌       | ❌       | ✅   | ✅   | ✅   | ❌   | ❌     | emoji 选择列表                 |
 | GiftList        | Function       | ✅       | ❌       | ⭕️      | ✅   | ✅   | ❌   | ❌   | ❌     | 礼物选择列表                   |
-| Marquee         | Function       | ✅       | ❌       | ❌       | ✅   | ✅   | ⭕️  | ✅   | ✅     | 消息广播组件                   |
+| GlobalBroadcast | Function       | ✅       | ❌       | ❌       | ✅   | ✅   | ⭕️  | ✅   | ✅     | 消息广播组件                   |
 | Report          | Function       | ✅       | ❌       | ⭕️      | ❌   | ❌   | ❌   | ✅   | ❌     | 消息上报组件                   |
-| GiftBarrage     | Function       | ✅       | ❌       | ❌       | ✅   | ❌   | ❌   | ✅   | ❌     | 礼物特效组件                   |
+| GiftMessageList | Function       | ✅       | ❌       | ❌       | ✅   | ❌   | ❌   | ✅   | ❌     | 礼物特效组件                   |
 
-| UI 业务组件   | Function/Class | 是否基础 | 是否页面 | 是否弹出 | 位置 | 大小 | 样式 | 控制 | 自定义 | 说明                       |
-| ------------- | -------------- | -------- | -------- | -------- | ---- | ---- | ---- | ---- | ------ | -------------------------- |
-| InputBar      | Function       | ❌       | ❌       | ❌       | ❌   | ❌   | ❌   | ✅   | ❌     | 输入框组件                 |
-| InputBarStyle | Function       | ❌       | ❌       | ❌       | ❌   | ❌   | ⭕️  | ✅   | ❌     | 输入框样式组件             |
-| MemberList    | Function       | ❌       | ❌       | ⭕️      | ❌   | ❌   | ⭕️  | ✅   | ✅     | 成员列表组件               |
-| MessageList   | Function       | ❌       | ❌       | ❌       | ✅   | ✅   | ⭕️  | ✅   | ✅     | 消息列表组件               |
-| Chatroom      | Class          | ❌       | ✅       | ❌       | ❌   | ❌   | ⭕️  | ✅   | ✅     | 聊天室组件：所有组件的入口 |
+| UI 业务组件     | Function/Class | 是否基础 | 是否页面 | 是否弹出 | 位置 | 大小 | 样式 | 控制 | 自定义 | 说明                       |
+| --------------- | -------------- | -------- | -------- | -------- | ---- | ---- | ---- | ---- | ------ | -------------------------- |
+| InputBar        | Function       | ❌       | ❌       | ❌       | ❌   | ❌   | ❌   | ✅   | ❌     | 输入框组件                 |
+| InputBarStyle   | Function       | ❌       | ❌       | ❌       | ❌   | ❌   | ⭕️  | ✅   | ❌     | 输入框样式组件             |
+| ParticipantList | Function       | ❌       | ❌       | ⭕️      | ❌   | ❌   | ⭕️  | ✅   | ✅     | 成员列表组件               |
+| MessageList     | Function       | ❌       | ❌       | ❌       | ✅   | ✅   | ⭕️  | ✅   | ✅     | 聊天室消息区组件域         |
+| Chatroom        | Class          | ❌       | ✅       | ❌       | ❌   | ❌   | ⭕️  | ✅   | ✅     | 聊天室组件：所有组件的入口 |
 
 说明：✅ 是 ❌ 否 ⭕️ 都可以
 
@@ -114,12 +114,12 @@
 - 控制：可以主动调用组件提供的方法。通常组件通过用户的点击、拖动手势触发响应，但是输入框的焦点通常需要组件提供的方法来改变焦点。
 - 自定义：通常使用调用者提供的自定义组件替换默认内置组件，实现最大化的自定义。
 
-| List UI 组件 | 大小 | 是否为空 | 支持搜索 | 自定义 Item | 下拉刷新 | 触底加载 | 点击事件 | 长按事件 | 侧滑事件 | 自定义 | 空页面 | 错误页面 | 说明           |
-| ------------ | ---- | -------- | -------- | ----------- | -------- | -------- | -------- | -------- | -------- | ------ | ------ | -------- | -------------- |
-| EmojiList    | ✅   | ❌       | ❌       | ❌          | ❌       | ❌       | ✅       | ❌       | ❌       | ✅     | ❌     | ❌       | emoji 列表组件 |
-| GiftList     | ✅   | ❌       | ❌       | ✅          | ❌       | ❌       | ✅       | ❌       | ❌       | ✅     | ❌     | ❌       | 礼物列表组件   |
-| MemberList   | ✅   | ✅       | ✅       | ✅          | ✅       | ✅       | ✅       | ❌       | ❌       | ✅     | ✅     | ✅       | 成员列表组件   |
-| MessageList  | ✅   | ✅       | ❌       | ✅          | ❌       | ❌       | ❌       | ✅       | ❌       | ✅     | ❌     | ❌       | 消息列表组件   |
+| List UI 组件    | 大小 | 是否为空 | 支持搜索 | 自定义 Item | 下拉刷新 | 触底加载 | 点击事件 | 长按事件 | 侧滑事件 | 自定义 | 空页面 | 错误页面 | 说明               |
+| --------------- | ---- | -------- | -------- | ----------- | -------- | -------- | -------- | -------- | -------- | ------ | ------ | -------- | ------------------ |
+| EmojiList       | ✅   | ❌       | ❌       | ❌          | ❌       | ❌       | ✅       | ❌       | ❌       | ✅     | ❌     | ❌       | emoji 列表组件     |
+| GiftList        | ✅   | ❌       | ❌       | ✅          | ❌       | ❌       | ✅       | ❌       | ❌       | ✅     | ❌     | ❌       | 礼物列表组件       |
+| ParticipantList | ✅   | ✅       | ✅       | ✅          | ✅       | ✅       | ✅       | ❌       | ❌       | ✅     | ✅     | ✅       | 成员列表组件       |
+| MessageList     | ✅   | ✅       | ❌       | ✅          | ❌       | ❌       | ❌       | ✅       | ❌       | ✅     | ❌     | ❌       | 聊天室消息区域组件 |
 
 说明：✅ 是 ❌ 否 ⭕️ 都可以
 
@@ -198,7 +198,7 @@ export function App() {
 
 ### MessageList
 
-消息列表组件`MessageList`提供消息的显示，聊天室接收到的文本消息、表情消息、礼物消息，发送成功的消息会显示在这里。
+聊天室消息区域组件`MessageList`提供消息的显示，聊天室接收到的文本消息、表情消息、礼物消息，发送成功的消息会显示在这里。
 
 消息列表可以对消息进行操作。例如：翻译文本消息为目标语言、撤销消息、消息上报等。 通过长按消息列表项弹出菜单进行相应操作。
 
@@ -241,7 +241,7 @@ ref?.current?.addSendedMessage?.(message);
 ![message_context_menu](../message_context_menu.png)
 ![message_report](../message_report.png)
 
-### MemberList
+### ParticipantList
 
 该组件前提供普通成员管理和禁言成员管理。
 
@@ -252,15 +252,15 @@ ref?.current?.addSendedMessage?.(message);
 ```tsx
 // ...
 // 创建组件引用对象
-const ref = React.useRef<BottomSheetMemberListRef>({} as any);
+const ref = React.useRef<BottomSheetParticipantListRef>({} as any);
 // 添加成员列表组件到渲染树
-<BottomSheetMemberList ref={this.ref} />;
+<BottomSheetParticipantList ref={this.ref} />;
 // ...
 // 用户实现现实具体动作，例如：添加按钮，点击按钮显示成员列表组件。
 ref?.current?.startShow?.();
 ```
 
-`BottomSheetMemberList`提供的属性概览
+`BottomSheetParticipantList`提供的属性概览
 
 | 属性                | 是否可选 | 介绍                                                 |
 | ------------------- | -------- | ---------------------------------------------------- |
@@ -270,11 +270,11 @@ ref?.current?.startShow?.();
 | maskStyle           | 可选     | 设置组件容器以外区域样式。                           |
 | MemberItemComponent | 可选     | 成员列表项的渲染器                                   |
 
-`BottomSheetMemberList`提供的方法概览
+`BottomSheetParticipantList`提供的方法概览
 
-| 方法             | 介绍                               |
-| ---------------- | ---------------------------------- |
-| getMemberListRef | 获取成员列表或者禁言列表组件的引用 |
+| 方法                  | 介绍                               |
+| --------------------- | ---------------------------------- |
+| getParticipantListRef | 获取成员列表或者禁言列表组件的引用 |
 
 ``提供的方法概览
 
@@ -287,7 +287,7 @@ ref?.current?.startShow?.();
 
 ![member_list](../member_list.png)
 
-### GiftBarrage
+### GiftMessageList
 
 礼物特效组件用来展示发送的礼物效果，礼物消息可以显示在消息列表，也可以显示在该组件。
 
@@ -296,9 +296,9 @@ ref?.current?.startShow?.();
 ```tsx
 // ...
 // 创建组件引用对象
-const ref = React.useRef<GiftEffectRef>({} as any);
+const ref = React.useRef<GiftMessageListRef>({} as any);
 // 添加组件到渲染树
-<GiftBarrage ref={ref} />;
+<GiftMessageList ref={ref} />;
 // ...
 // 添加礼物消息到组件消息队列中，排队显示。
 ref.current?.pushTask({
@@ -312,7 +312,7 @@ ref.current?.pushTask({
 });
 ```
 
-`GiftBarrage`提供的属性概览
+`GiftMessageList`提供的属性概览
 
 | 属性                    | 是否可选 | 介绍                                           |
 | ----------------------- | -------- | ---------------------------------------------- |
@@ -320,13 +320,13 @@ ref.current?.pushTask({
 | containerStyle          | 可选     | 设置组件容器样式。支持背景、位置、边框等的设置 |
 | GiftEffectItemComponent | 可选     | 礼物特效列表项的渲染器                         |
 
-`GiftBarrage`提供的方法概览
+`GiftMessageList`提供的方法概览
 
 | 方法     | 介绍                                 |
 | -------- | ------------------------------------ |
 | pushTask | 将礼物消息任务添加到队列中，排队加载 |
 
-### Marquee
+### GlobalBroadcast
 
 重要消息通知组件接收和现实全局重要消息。也是通过添加消息到队列排队显示。
 
@@ -335,10 +335,10 @@ ref.current?.pushTask({
 ```tsx
 // ...
 // 创建组件引用对象
-const ref = React.useRef<MarqueeRef>({} as any);
+const ref = React.useRef<GlobalBroadcastRef>({} as any);
 // ...
 // 添加组件到渲染树
-<Marquee ref={ref} />;
+<GlobalBroadcast ref={ref} />;
 // ...
 // 将消息添加到任务队列，排队显示。
 let count = 1;
@@ -350,7 +350,7 @@ ref.current?.pushTask?.({
 });
 ```
 
-`Marquee`提供的属性概览
+`GlobalBroadcast`提供的属性概览
 
 | 属性                    | 是否可选 | 介绍                                                 |
 | ----------------------- | -------- | ---------------------------------------------------- |
@@ -363,7 +363,7 @@ ref.current?.pushTask?.({
 | onFinished              | 可选     | 所有消息播放完成时的回调通知                         |
 | onLayout                | 可选     | 组件布局发生变化时的回调通知                         |
 
-`Marquee`提供的方法概览
+`GlobalBroadcast`提供的方法概览
 
 | 方法     | 介绍                         |
 | -------- | ---------------------------- |
@@ -418,7 +418,7 @@ ref?.current?.close?.();
 
 输入样式组件。和输入框组件组成了复合组件，可以动态进行切换。
 
-### BottomSheetMemberList
+### ParticipantList
 
 聊天室成员组件可以显示和管理聊天室成员，房间拥有者还有禁言列表以及管理权限。
 
@@ -431,16 +431,16 @@ ref?.current?.close?.();
 ```tsx
 // ...
 // 创建引用对象
-const ref = React.useRef<BottomSheetMemberListRef>({} as any);
+const ref = React.useRef<BottomSheetParticipantListRef>({} as any);
 // ...
 // 添加组件到渲染树
-<BottomSheetMemberList ref={ref} />;
+<BottomSheetParticipantList ref={ref} />;
 // ...
 // 显示聊天室成员列表
 ref?.current?.startShow?.();
 ```
 
-`BottomSheetMemberList`提供的属性概览
+`BottomSheetParticipantList`提供的属性概览
 
 | 属性                | 是否可选 | 介绍                                                 |
 | ------------------- | -------- | ---------------------------------------------------- |
@@ -450,7 +450,7 @@ ref?.current?.startShow?.();
 | onNoMoreMember      | 可选     | 上滑手势加载更多数据，没有更多数据时的回调通知       |
 | MemberItemComponent | 可选     | 成员列表项的渲染器                                   |
 
-`BottomSheetMemberList`提供的方法概览
+`BottomSheetParticipantList`提供的方法概览
 
 | 方法      | 介绍                                     |
 | --------- | ---------------------------------------- |
@@ -537,11 +537,11 @@ const ref = React.useRef<Chatroom>({} as any);
 ```tsx
 <Chatroom
   ref={chatroomRef}
-  memberList={{
+  participantList={{
     props: {
       onSearch: (memberType) => {
         // todo: 点击搜索按钮跳转到搜索页面
-        navigation.push('TestSearchMember', { params: { memberType } });
+        navigation.push('SearchParticipant', { params: { memberType } });
       },
     },
   }}
@@ -552,28 +552,28 @@ const ref = React.useRef<Chatroom>({} as any);
 
 `Chatroom`提供的属性概览
 
-| 属性           | 是否可选 | 介绍                                                 |
-| -------------- | -------- | ---------------------------------------------------- |
-| containerStyle | 可选     | 设置组件容器样式。支持背景、位置、大小、边框等的设置 |
-| GiftBarrage    | 可选     | 礼物特效组件的渲染器                                 |
-| Marquee        | 可选     | 重要消息组件的渲染器                                 |
-| input          | 可选     | 输入组件的属性                                       |
-| messageList    | 可选     | 消息列表的属性                                       |
-| marquee        | 可选     | 重要消息的属性                                       |
-| gift           | 可选     | 礼物特效的属性                                       |
-| memberList     | 可选     | 成员列表的属性                                       |
-| backgroundView | 可选     | 背景组件                                             |
+| 属性            | 是否可选 | 介绍                                                 |
+| --------------- | -------- | ---------------------------------------------------- |
+| containerStyle  | 可选     | 设置组件容器样式。支持背景、位置、大小、边框等的设置 |
+| GiftMessageList | 可选     | 礼物特效组件的渲染器                                 |
+| GlobalBroadcast | 可选     | 重要消息组件的渲染器                                 |
+| input           | 可选     | 输入组件的属性                                       |
+| messageList     | 可选     | 消息列表的属性                                       |
+| globalBroadcast | 可选     | 聊天室全局广播                                       |
+| gift            | 可选     | 礼物特效的属性                                       |
+| participantList | 可选     | 成员列表的属性                                       |
+| backgroundView  | 可选     | 背景组件                                             |
 
 `Chatroom`提供的方法概览
 
-| 方法              | 介绍                           |
-| ----------------- | ------------------------------ |
-| getMarqueeRef     | 获取`Marquee`的组件引用        |
-| getGiftEffectRef  | 获取`getGiftEffect`的组件引用  |
-| getMemberListRef  | 获取`getMemberList`的组件引用  |
-| getMessageListRef | 获取`getMessageList`的组件引用 |
-| joinRoom          | 加入聊天室                     |
-| leaveRoom         | 退出聊天室                     |
+| 方法                  | 介绍                               |
+| --------------------- | ---------------------------------- |
+| getGlobalBroadcastRef | 获取`GlobalBroadcast`的组件引用    |
+| getGiftEffectRef      | 获取`getGiftEffect`的组件引用      |
+| getParticipantListRef | 获取`getParticipantList`的组件引用 |
+| getMessageListRef     | 获取`getMessageList`的组件引用     |
+| joinRoom              | 加入聊天室                         |
+| leaveRoom             | 退出聊天室                         |
 
 ![chatroom](../chatroom.png)
 

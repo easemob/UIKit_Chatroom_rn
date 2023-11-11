@@ -17,24 +17,24 @@ import { usePaletteContext } from '../../theme';
 import { Icon } from '../../ui/Image';
 import { PresetCalcTextWidth, Text } from '../../ui/Text';
 import { Queue } from '../../utils';
-import { gMarqueeHeight } from './Marquee.const';
-import { createCompose } from './Marquee.hooks';
-import type { MarqueeTask } from './types';
+import { gGlobalBroadcastHeight } from './GlobalBroadcast.const';
+import { createCompose } from './GlobalBroadcast.hooks';
+import type { GlobalBroadcastTask } from './types';
 
 /**
- * Referencing value of the `Marquee` component.
+ * Referencing value of the `GlobalBroadcast` component.
  */
-export type MarqueeRef = {
+export type GlobalBroadcastRef = {
   /**
    * Push a task to the queue.
    */
-  pushTask: (task: MarqueeTask) => void;
+  pushTask: (task: GlobalBroadcastTask) => void;
 };
 
 /**
- * Properties of the `Marquee` component.
+ * Properties of the `GlobalBroadcast` component.
  */
-export type MarqueeProps = {
+export type GlobalBroadcastProps = {
   /**
    * Whether to display the component.
    *
@@ -66,22 +66,22 @@ export type MarqueeProps = {
 };
 
 /**
- * The Marquee component provides a floating text animation.
+ * The GlobalBroadcast component provides a floating text animation.
  *
  * Messages can be displayed in sequence through a queue.
  *
- * @param props {@link MarqueeProps}
- * @param ref {@link MarqueeRef}
+ * @param props {@link GlobalBroadcastProps}
+ * @param ref {@link GlobalBroadcastRef}
  * @returns JSX.Element
  *
- * @test {@link https://github.com/AsteriskZuo/react-native-chat-room/blob/a9379f61a7b19be6b87b277f5669a6e7bcf3d45c/example/src/__dev__/test_marquee.tsx}
+ * @test {@link https://github.com/AsteriskZuo/react-native-chat-room/blob/a9379f61a7b19be6b87b277f5669a6e7bcf3d45c/example/src/__dev__/test_globalBroadcast.tsx}
  *
  * @example
  *
  * ```tsx
- * const ref = React.useRef<MarqueeRef>({} as any);
+ * const ref = React.useRef<GlobalBroadcastRef>({} as any);
  * // ...
- * <Marquee ref={ref} />
+ * <GlobalBroadcast ref={ref} />
  * // ...
  * ref.current?.pushTask?.({
  *   model: {
@@ -91,9 +91,12 @@ export type MarqueeProps = {
  * });
  * ```
  */
-export const Marquee = React.forwardRef<MarqueeRef, MarqueeProps>(function (
-  props: MarqueeProps,
-  ref?: React.ForwardedRef<MarqueeRef>
+export const GlobalBroadcast = React.forwardRef<
+  GlobalBroadcastRef,
+  GlobalBroadcastProps
+>(function (
+  props: GlobalBroadcastProps,
+  ref?: React.ForwardedRef<GlobalBroadcastRef>
 ) {
   const {
     visible = true,
@@ -137,7 +140,8 @@ export const Marquee = React.forwardRef<MarqueeRef, MarqueeProps>(function (
 
   const { width: winWidth } = useWindowDimensions();
   const containerWidth = (containerSize?.width ?? winWidth) as number;
-  const containerHeight = (containerSize?.height ?? gMarqueeHeight) as number;
+  const containerHeight = (containerSize?.height ??
+    gGlobalBroadcastHeight) as number;
 
   const [contentWidth, setContentWidth] = React.useState(0);
   const [content, setContent] = React.useState('1234567890');
@@ -145,11 +149,11 @@ export const Marquee = React.forwardRef<MarqueeRef, MarqueeProps>(function (
   const isSameContent = React.useRef(false);
 
   const x = React.useRef(new Animated.Value(0)).current;
-  const tasks: Queue<MarqueeTask> = React.useRef(
-    new Queue<MarqueeTask>()
+  const tasks: Queue<GlobalBroadcastTask> = React.useRef(
+    new Queue<GlobalBroadcastTask>()
   ).current;
-  const preTask = React.useRef<MarqueeTask | undefined>(undefined);
-  const curTask = React.useRef<MarqueeTask | undefined>(undefined);
+  const preTask = React.useRef<GlobalBroadcastTask | undefined>(undefined);
+  const curTask = React.useRef<GlobalBroadcastTask | undefined>(undefined);
 
   const execTask = () => {
     if (curTask.current === undefined) {
@@ -186,7 +190,7 @@ export const Marquee = React.forwardRef<MarqueeRef, MarqueeProps>(function (
     });
   };
 
-  const pushTask = (task: MarqueeTask) => {
+  const pushTask = (task: GlobalBroadcastTask) => {
     tasks.enqueue(task);
     execTask();
   };
@@ -195,7 +199,7 @@ export const Marquee = React.forwardRef<MarqueeRef, MarqueeProps>(function (
     ref,
     () => {
       return {
-        pushTask: (task: MarqueeTask) => {
+        pushTask: (task: GlobalBroadcastTask) => {
           pushTask(task);
         },
       };
@@ -266,7 +270,7 @@ export const Marquee = React.forwardRef<MarqueeRef, MarqueeProps>(function (
           {content}
         </Text>
       </Animated.View>
-      <MarqueeIcon
+      <GlobalBroadcastIcon
         getColor={getColor}
         containerHeight={containerHeight}
         {...props}
@@ -297,11 +301,11 @@ export const Marquee = React.forwardRef<MarqueeRef, MarqueeProps>(function (
   );
 });
 
-const MarqueeIcon = ({
+const GlobalBroadcastIcon = ({
   containerHeight,
   icon,
   getColor,
-}: MarqueeProps & {
+}: GlobalBroadcastProps & {
   containerHeight: number;
   getColor: (key: string) => ColorValue | undefined;
 }) => {
@@ -334,4 +338,4 @@ const MarqueeIcon = ({
   );
 };
 
-export type MarqueeComponent = typeof Marquee;
+export type GlobalBroadcastComponent = typeof GlobalBroadcast;

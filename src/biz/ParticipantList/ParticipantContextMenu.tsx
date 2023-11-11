@@ -9,17 +9,17 @@ import {
   InitMenuItemsType,
 } from '../BottomSheetMenu';
 import type { PropsWithError, PropsWithTest } from '../types';
-import type { MemberListType } from './types';
+import type { ParticipantListType } from './types';
 
 /**
  * Member list menu. Currently, it includes functions such as banning, unbanning, translation, and message reporting.
- * @param props {@link MemberListContextMenuProps}
+ * @param props {@link ParticipantListContextMenuProps}
  * @returns JSX.Element
  */
-export const MemberContextMenu = (
+export const ParticipantContextMenu = (
   props: PropsWithTest &
     PropsWithError & {
-      memberType: MemberListType;
+      memberType: ParticipantListType;
       muteMember: (memberId: string, isMuted: boolean) => void;
       removeMember: (memberId: string) => void;
       onGetMenuItems: () => InitMenuItemsType[];
@@ -40,7 +40,7 @@ export const MemberContextMenu = (
   }, [onGetMenuRef]);
   const listener = React.useRef(
     (
-      _memberType: MemberListType, // current mute list
+      _memberType: ParticipantListType, // current mute list
       isOwner: boolean, // current user role
       userId: string // current member id
       // isMuted: boolean // current member mute state
@@ -109,7 +109,7 @@ export const MemberContextMenu = (
     }
   );
   useDispatchListener(
-    `_$useMemberListAPI_memberListContextMenu`,
+    `_$useParticipantListAPI_participantListContextMenu`,
     listener.current
   );
   return (

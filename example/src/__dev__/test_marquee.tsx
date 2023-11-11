@@ -6,17 +6,17 @@ import {
   createDarkTheme,
   createPresetPalette,
   // Icon,
-  Marquee,
-  MarqueeRef,
+  GlobalBroadcast,
+  GlobalBroadcastRef,
   PaletteContextProvider,
   ThemeContextProvider,
 } from 'react-native-chat-room';
 
 let count = 1;
 
-export function TestMarquee() {
-  console.log('test:TestMarquee');
-  const ref = React.useRef<MarqueeRef>({} as any);
+export function TestGlobalBroadcast() {
+  console.log('test:TestGlobalBroadcast');
+  const ref = React.useRef<GlobalBroadcastRef>({} as any);
   const pal = createPresetPalette();
   const light = createDarkTheme(pal);
   // const content =
@@ -49,10 +49,10 @@ export function TestMarquee() {
               ++count;
             }}
           >
-            <Text>{'add marquee task'}</Text>
+            <Text>{'add globalBroadcast task'}</Text>
           </TouchableOpacity>
           <View style={{ height: 100 }} />
-          <Marquee
+          <GlobalBroadcast
             ref={ref}
             containerStyle={
               {
@@ -100,6 +100,6 @@ export function TestMarquee() {
   );
 }
 
-export default function test_marquee() {
-  return <TestMarquee />;
+export default function test_globalBroadcast() {
+  return <TestGlobalBroadcast />;
 }

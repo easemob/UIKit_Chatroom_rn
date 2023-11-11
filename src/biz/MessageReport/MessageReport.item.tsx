@@ -6,15 +6,15 @@ import { useI18nContext } from '../../i18n';
 import { usePaletteContext } from '../../theme';
 import { IconButton } from '../../ui/Button';
 import { Text } from '../../ui/Text';
-import { gReportListItemHeight } from './ReportList.const';
+import { gMessageReportItemHeight } from './MessageReport.const';
 import type { ReportItemModel } from './types';
 
-export type ReportListItemProps = {
+export type MessageReportItemProps = {
   data: ReportItemModel;
   onChecked?: (current: boolean) => void;
 };
 
-export function ReportListItem(props: ReportListItemProps) {
+export function MessageReportItem(props: MessageReportItemProps) {
   const { colors } = usePaletteContext();
   const { tr } = useI18nContext();
   const { getColor } = useColors({
@@ -44,7 +44,7 @@ export function ReportListItem(props: ReportListItemProps) {
         backgroundColor: getColor('backgroundColor'),
         paddingHorizontal: 16,
         width: '100%',
-        height: gReportListItemHeight,
+        height: gMessageReportItemHeight,
         justifyContent: 'center',
       }}
     >
@@ -79,4 +79,4 @@ export function ReportListItem(props: ReportListItemProps) {
   );
 }
 
-export const ReportListItemMemo = React.memo(ReportListItem);
+export const MessageReportItemMemo = React.memo(MessageReportItem);

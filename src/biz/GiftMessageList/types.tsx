@@ -1,4 +1,4 @@
-export type GiftEffectModel = {
+export type GiftMessageListItemData = {
   /**
    * suggestion: seqId('_gf').toString()
    */
@@ -12,6 +12,6 @@ export type GiftEffectModel = {
    */
   giftCount?: number;
 };
-export type GiftEffectTask = {
-  model: GiftEffectModel;
+export type GiftMessageListTask = {
+  model: GiftMessageListItemData;
 };

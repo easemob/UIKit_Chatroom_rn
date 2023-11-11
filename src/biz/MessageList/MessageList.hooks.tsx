@@ -30,7 +30,7 @@ import {
 } from '../../im';
 import { seqId, timeoutTask } from '../../utils';
 import { emoji as convert } from '../EmojiList';
-import type { ReportItemModel } from '../Report';
+import type { ReportItemModel } from '../MessageReport';
 import { gIdleTimeout, gMaxMessageCount } from './MessageList.const';
 import type {
   MessageListItemBasic,

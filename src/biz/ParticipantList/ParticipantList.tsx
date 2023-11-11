@@ -20,19 +20,22 @@ import {
   LoadingPlaceholder,
 } from '../Placeholder';
 import type { PropsWithError, PropsWithTest } from '../types';
-import { MemberContextMenu } from './MemberContextMenu';
-import { gAspectRatio, gTabHeaderHeight } from './MemberList.const';
-import { useMemberListAPI, usePanHandlers } from './MemberList.hooks';
-import { MemberListItemMemo, MemberListItemProps } from './MemberList.item';
+import { ParticipantContextMenu } from './ParticipantContextMenu';
+import { gAspectRatio, gTabHeaderHeight } from './ParticipantList.const';
+import { usePanHandlers, useParticipantListAPI } from './ParticipantList.hooks';
+import {
+  ParticipantListItemMemo,
+  ParticipantListItemProps,
+} from './ParticipantList.item';
 import { SearchStyle } from './SearchStyle';
-import type { MemberListType } from './types';
+import type { ParticipantListType } from './types';
 
-const FlatList = FlatListFactory<MemberListItemProps>();
+const FlatList = FlatListFactory<ParticipantListItemProps>();
 
 /**
- * Referencing value of the `MemberList` component.
+ * Referencing value of the `ParticipantList` component.
  */
-export type MemberListRef = {
+export type ParticipantListRef = {
   /**
    * Add custom menu item list.
    * @param memberMenuItems member menu item list.
@@ -57,23 +60,23 @@ export type MemberListRef = {
 };
 
 /**
- * Properties of the `MemberList` component.
+ * Properties of the `ParticipantList` component.
  */
-export type MemberListProps = {
-  propsRef?: React.RefObject<MemberListRef>;
+export type ParticipantListProps = {
+  propsRef?: React.RefObject<ParticipantListRef>;
   /**
    * Callback function when the gesture is used.
    * When used together with `Modal` or `SimuModal`, the pull-down gesture conflicts with the scrolling gift list gesture and cannot be resolved using bubbling events. Resolved by manually controlling usage rights.
    */
   requestUseScrollGesture?: (finished: boolean) => void;
   /**
-   * List type. {@link MemberListType}
+   * List type. {@link ParticipantListType}
    */
-  memberType: MemberListType;
+  memberType: ParticipantListType;
   /**
    * Callback function when search button is clicked.
    */
-  onSearch?: (memberType: MemberListType) => void;
+  onSearch?: (memberType: ParticipantListType) => void;
   /**
    * Callback function when there is no more member.
    */
@@ -81,17 +84,17 @@ export type MemberListProps = {
   /**
    * Custom component for each item in the list. Built-in components are used by default.
    */
-  MemberItemComponent?: React.ComponentType<MemberListItemProps>;
+  MemberItemComponent?: React.ComponentType<ParticipantListItemProps>;
 } & PropsWithTest &
   PropsWithError;
 
 /**
  * Member List Component.
  *
- * @param props {@link MemberListProps}
+ * @param props {@link ParticipantListProps}
  * @returns JSX.Element
  */
-export function MemberList(props: MemberListProps) {
+export function ParticipantList(props: ParticipantListProps) {
   const {
     requestUseScrollGesture,
     testMode,
@@ -116,13 +119,13 @@ export function MemberList(props: MemberListProps) {
     requestRefresh,
     onScrollBeginDrag,
     onScrollEndDrag,
-  } = useMemberListAPI({
+  } = useParticipantListAPI({
     testMode,
     onError,
     memberType,
     onNoMoreMember,
   });
-  const ref = React.useRef<FlatListRef<MemberListItemProps>>({} as any);
+  const ref = React.useRef<FlatListRef<ParticipantListItemProps>>({} as any);
   const memberMenuItemsRef = React.useRef<InitMenuItemsType[]>([]);
   let menuRef = React.useRef<BottomSheetNameMenuRef>({} as any);
   const { width: winWidth } = useWindowDimensions();
@@ -138,7 +141,7 @@ export function MemberList(props: MemberListProps) {
     requestUseScrollGesture,
   });
 
-  const _MemberItemComponent = MemberItemComponent ?? MemberListItemMemo;
+  const _MemberItemComponent = MemberItemComponent ?? ParticipantListItemMemo;
 
   if (propsRef?.current) {
     propsRef.current.initMenu = (memberMenuItems?: InitMenuItemsType[]) => {
@@ -181,11 +184,11 @@ export function MemberList(props: MemberListProps) {
           data={data}
           refreshing={refreshing}
           onRefresh={onRefresh}
-          renderItem={(info: ListRenderItemInfo<MemberListItemProps>) => {
+          renderItem={(info: ListRenderItemInfo<ParticipantListItemProps>) => {
             const { item } = info;
             return <_MemberItemComponent {...item} />;
           }}
-          keyExtractor={(item: MemberListItemProps) => {
+          keyExtractor={(item: ParticipantListItemProps) => {
             return item.id;
           }}
           onMomentumScrollEnd={() => {
@@ -216,7 +219,7 @@ export function MemberList(props: MemberListProps) {
           onScrollEndDrag={onScrollEndDrag}
         />
       </View>
-      <MemberContextMenu
+      <ParticipantContextMenu
         {...props}
         removeMember={removeMember}
         muteMember={muteMember}

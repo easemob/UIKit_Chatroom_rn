@@ -29,7 +29,7 @@ export type Config = {
   /**
    * Avatar option.
    *
-   * Invalid for `GiftBarrage`.
+   * Invalid for `GiftMessageList`.
    */
   avatar: {
     borderRadiusStyle: CornerRadiusPaletteType;
@@ -40,9 +40,9 @@ export type Config = {
  */
 export type RoomOption = {
   /**
-   * Marquee option.
+   * GlobalBroadcast option.
    */
-  marquee: {
+  globalBroadcast: {
     /**
      * Whether to load.
      */

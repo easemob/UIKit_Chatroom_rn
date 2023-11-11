@@ -7,13 +7,13 @@ import {
   createDarkTheme,
   createLightTheme,
   createPresetPalette,
-  GiftBarrage,
-  GiftEffectRef,
+  GiftMessageList,
+  GiftMessageListRef,
   seqId,
 } from 'react-native-chat-room';
 
 export function TestGiftEffect() {
-  const ref = React.useRef<GiftEffectRef>({} as any);
+  const ref = React.useRef<GiftMessageListRef>({} as any);
   const pal = createPresetPalette();
   const dark = createDarkTheme(pal);
   const light = createLightTheme(pal);
@@ -45,7 +45,7 @@ export function TestGiftEffect() {
           <Text>{'Start painting presents'}</Text>
         </TouchableOpacity>
         <View style={{ height: 100 }} />
-        <GiftBarrage
+        <GiftMessageList
           ref={ref}
           containerStyle={
             {

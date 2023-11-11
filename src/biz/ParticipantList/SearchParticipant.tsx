@@ -12,19 +12,22 @@ import type { UserServiceData } from '../../im';
 import { usePaletteContext } from '../../theme';
 import { Image } from '../../ui/Image';
 import type { PropsWithError, PropsWithTest } from '../types';
-import { useSearchMemberListAPI } from './MemberList.hooks';
-import { MemberListItemMemo, MemberListItemProps } from './MemberList.item';
+import { useSearchParticipantListAPI } from './ParticipantList.hooks';
+import {
+  ParticipantListItemMemo,
+  ParticipantListItemProps,
+} from './ParticipantList.item';
 import { Search } from './Search';
-import type { MemberListType } from './types';
+import type { ParticipantListType } from './types';
 
 /**
- * Properties of the `MemberList` component.
+ * Properties of the `ParticipantList` component.
  */
-export type SearchMemberProps = {
+export type SearchParticipantProps = {
   /**
-   * List type. {@link MemberListType}
+   * List type. {@link ParticipantListType}
    */
-  memberType: MemberListType;
+  memberType: ParticipantListType;
   /**
    * Callback function when cancel button is clicked.
    */
@@ -38,10 +41,10 @@ export type SearchMemberProps = {
 
 /**
  * Search member components.
- * @param props {@link SearchMemberProps}
+ * @param props {@link SearchParticipantProps}
  * @returns JSX.Element
  */
-export function SearchMember(props: SearchMemberProps) {
+export function SearchParticipant(props: SearchParticipantProps) {
   const { onRequestClose, memberType, searchType } = props;
   const [value, setValue] = React.useState('');
   const { colors } = usePaletteContext();
@@ -55,7 +58,7 @@ export function SearchMember(props: SearchMemberProps) {
       dark: colors.neutral[3],
     },
   });
-  const { _data, deferSearch } = useSearchMemberListAPI({
+  const { _data, deferSearch } = useSearchParticipantListAPI({
     memberType,
     searchType,
   });
@@ -79,11 +82,11 @@ export function SearchMember(props: SearchMemberProps) {
       />
       <FlatList
         data={_data}
-        renderItem={(info: ListRenderItemInfo<MemberListItemProps>) => {
+        renderItem={(info: ListRenderItemInfo<ParticipantListItemProps>) => {
           const { item } = info;
-          return <MemberListItemMemo {...item} />;
+          return <ParticipantListItemMemo {...item} />;
         }}
-        keyExtractor={(item: MemberListItemProps) => {
+        keyExtractor={(item: ParticipantListItemProps) => {
           return item.id;
         }}
         ListEmptyComponent={EmptyBlank}

@@ -9,15 +9,15 @@ import { SimulativeModal, SimulativeModalRef } from '../../ui/Modal';
 import { TabPage } from '../../ui/TabPage';
 import { gBottomSheetHeaderHeight } from '../const';
 import type { PropsWithError, PropsWithTest } from '../types';
-import { MemberList, MemberListRef } from './MemberList';
-import { useIsOwner } from './MemberList.hooks';
-import type { MemberListItemProps } from './MemberList.item';
-import type { MemberListType } from './types';
+import { ParticipantList, ParticipantListRef } from './ParticipantList';
+import { useIsOwner } from './ParticipantList.hooks';
+import type { ParticipantListItemProps } from './ParticipantList.item';
+import type { ParticipantListType } from './types';
 
 /**
- * Referencing value of the `MemberList` component.
+ * Referencing value of the `ParticipantList` component.
  */
-export type BottomSheetMemberListRef = SimulativeModalRef & {
+export type BottomSheetParticipantListRef = SimulativeModalRef & {
   /**
    * Show the component.
    */
@@ -25,16 +25,18 @@ export type BottomSheetMemberListRef = SimulativeModalRef & {
 
   /**
    * Get member list reference.
-   * @param memberType the member type. {@link MemberListType}
+   * @param memberType the member type. {@link ParticipantListType}
    * @returns the member list reference.
    */
-  getMemberListRef: (memberType: MemberListType) => MemberListRef;
+  getParticipantListRef: (
+    memberType: ParticipantListType
+  ) => ParticipantListRef;
 };
 
 /**
- * Properties of the `MemberList` component.
+ * Properties of the `ParticipantList` component.
  */
-export type BottomSheetMemberListProps = {
+export type BottomSheetParticipantListProps = {
   /**
    * The external style of the component's content can be set from opaque to transparent, as well as color and other properties.
    */
@@ -42,7 +44,7 @@ export type BottomSheetMemberListProps = {
   /**
    * Callback function when the search button is clicked.
    */
-  onSearch?: (memberType: MemberListType) => void;
+  onSearch?: (memberType: ParticipantListType) => void;
   /**
    * Callback function when there is no more member.
    */
@@ -54,21 +56,21 @@ export type BottomSheetMemberListProps = {
   /**
    * Custom component for each item in the list. Built-in components are used by default.
    */
-  MemberItemComponent?: React.ComponentType<MemberListItemProps>;
+  MemberItemComponent?: React.ComponentType<ParticipantListItemProps>;
 } & PropsWithTest &
   PropsWithError;
 
 /**
  * Component for displaying the list of members.
  *
- * It is composed of `MemberList` and `SimulativeModal`.
+ * It is composed of `ParticipantList` and `SimulativeModal`.
  */
-export const BottomSheetMemberList = React.forwardRef<
-  BottomSheetMemberListRef,
-  BottomSheetMemberListProps
+export const BottomSheetParticipantList = React.forwardRef<
+  BottomSheetParticipantListRef,
+  BottomSheetParticipantListProps
 >(function (
-  props: BottomSheetMemberListProps,
-  ref?: React.ForwardedRef<BottomSheetMemberListRef>
+  props: BottomSheetParticipantListProps,
+  ref?: React.ForwardedRef<BottomSheetParticipantListRef>
 ) {
   const {
     maskStyle,
@@ -80,8 +82,8 @@ export const BottomSheetMemberList = React.forwardRef<
     MemberItemComponent,
   } = props;
   const modalRef = React.useRef<SimulativeModalRef>({} as any);
-  const memberListRef = React.useRef<MemberListRef>({} as any);
-  const muterListRef = React.useRef<MemberListRef>({} as any);
+  const participantListRef = React.useRef<ParticipantListRef>({} as any);
+  const muterListRef = React.useRef<ParticipantListRef>({} as any);
   const { height: winHeight } = useWindowDimensions();
   const height = (winHeight * 3) / 5;
   const isUsePanResponder = React.useRef(true);
@@ -112,9 +114,9 @@ export const BottomSheetMemberList = React.forwardRef<
         startShowWithInit: () => {
           modalRef.current.startShow();
         },
-        getMemberListRef: (memberType: MemberListType) => {
+        getParticipantListRef: (memberType: ParticipantListType) => {
           if (memberType === 'member') {
-            return memberListRef.current;
+            return participantListRef.current;
           } else {
             return muterListRef.current;
           }
@@ -136,7 +138,7 @@ export const BottomSheetMemberList = React.forwardRef<
     PropsWithError) => {
     if (isOwner === true) {
       return [
-        <MemberList
+        <ParticipantList
           key={'1'}
           memberType={'member'}
           requestUseScrollGesture={(finished) => {
@@ -148,9 +150,9 @@ export const BottomSheetMemberList = React.forwardRef<
             onSearch?.('member');
           }}
           onNoMoreMember={onNoMoreMember}
-          propsRef={memberListRef}
+          propsRef={participantListRef}
         />,
-        <MemberList
+        <ParticipantList
           key={'2'}
           memberType={'muted'}
           requestUseScrollGesture={(finished) => {
@@ -167,7 +169,7 @@ export const BottomSheetMemberList = React.forwardRef<
       ];
     }
     return [
-      <MemberList
+      <ParticipantList
         key={'1'}
         memberType={'member'}
         requestUseScrollGesture={(finished) => {
@@ -180,7 +182,7 @@ export const BottomSheetMemberList = React.forwardRef<
         }}
         onNoMoreMember={onNoMoreMember}
         MemberItemComponent={MemberItemComponent}
-        propsRef={memberListRef}
+        propsRef={participantListRef}
       />,
     ];
   };
@@ -255,14 +257,14 @@ export const BottomSheetMemberList = React.forwardRef<
   );
 });
 
-const BottomSheetMemberListCompare = (
-  prevProps: BottomSheetMemberListProps,
-  nextProps: BottomSheetMemberListProps
+const BottomSheetParticipantListCompare = (
+  prevProps: BottomSheetParticipantListProps,
+  nextProps: BottomSheetParticipantListProps
 ) => {
   return prevProps === nextProps;
 };
 
-export const MemberListMemo = React.memo(
-  BottomSheetMemberList,
-  BottomSheetMemberListCompare
+export const ParticipantListMemo = React.memo(
+  BottomSheetParticipantList,
+  BottomSheetParticipantListCompare
 );

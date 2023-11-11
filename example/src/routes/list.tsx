@@ -23,7 +23,7 @@ export type RootParamsList = {
     option?: {} | undefined;
     params?: {} | undefined;
   };
-  TestSearchMember: {
+  TestSearchParticipant: {
     option?: {} | undefined;
     params?: {} | undefined;
   };
@@ -66,7 +66,7 @@ export const SCREEN_LIST: RootParamsList = {
     option: undefined,
     params: undefined,
   },
-  TestSearchMember: {
+  TestSearchParticipant: {
     option: undefined,
     params: undefined,
   },

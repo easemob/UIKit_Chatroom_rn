@@ -1,15 +1,15 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
 import { View } from 'react-native';
-import { MemberListType, SearchMember } from 'react-native-chat-room';
+import { ParticipantListType, SearchParticipant } from 'react-native-chat-room';
 
 import type { RootScreenParamsList } from '../routes';
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;
-export function SearchMemberScreen(props: Props) {
+export function SearchParticipantScreen(props: Props) {
   const { navigation, route } = props;
   const { memberType } = (route.params as any).params as {
-    memberType: MemberListType;
+    memberType: ParticipantListType;
   };
 
   return (
@@ -21,7 +21,7 @@ export function SearchMemberScreen(props: Props) {
         width: '100%',
       }}
     >
-      <SearchMember
+      <SearchParticipant
         memberType={memberType}
         onRequestClose={() => {
           navigation.goBack();

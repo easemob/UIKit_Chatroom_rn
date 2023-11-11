@@ -1,8 +1,8 @@
-export * from './BottomSheetMemberList';
-export * from './MemberContextMenu';
-export * from './MemberList';
-export * from './MemberList.item';
-export * from './SearchMember';
+export * from './BottomSheetParticipantList';
+export * from './ParticipantContextMenu';
+export * from './ParticipantList';
+export * from './ParticipantList.item';
+export * from './SearchParticipant';
 export * from './types';
 
 /**
@@ -17,9 +17,9 @@ export * from './types';
  * You can perform a local search for members or banned members in the search list.
  *
  *
- * Chat room member list and mute list `MemberList.tsx`.
+ * Chat room member list and mute list `ParticipantList.tsx`.
  *
- * Chat room member and mute search `SearchMember.tsx`.
+ * Chat room member and mute search `SearchParticipant.tsx`.
  *
  * Member list update strategy:
  * 1. The member list is divided into id and details.
@@ -39,4 +39,4 @@ export * from './types';
  * 15. Being kicked out of the chat room by the host.
  * 16. No more members, give callback notification. The user can pop up a toast to prompt.
  */
-export const MemberListPreface = 'Preface';
+export const ParticipantListPreface = 'ParticipantListPreface';

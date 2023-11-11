@@ -22,7 +22,7 @@ export function TopMenuScreen(props: Props) {
           if (
             v === 'TopMenu' ||
             v === 'TestChatroom' ||
-            v === 'TestSearchMember'
+            v === 'TestSearchParticipant'
           ) {
             return null;
           }

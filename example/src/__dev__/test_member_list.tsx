@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { Platform, Pressable, TouchableOpacity, View } from 'react-native';
 import {
-  BottomSheetMemberList,
-  BottomSheetMemberListRef,
+  BottomSheetParticipantList,
+  BottomSheetParticipantListRef,
   Container,
   createDarkTheme,
   createLightTheme,
@@ -13,11 +13,11 @@ import {
 /**
  * for test member list.
  */
-export function MemberListItem(): JSX.Element {
-  const ref = React.useRef<BottomSheetMemberListRef>({} as any);
+export function ParticipantListItem(): JSX.Element {
+  const ref = React.useRef<BottomSheetParticipantListRef>({} as any);
   return (
     <View style={{ flex: 1 }}>
-      <BottomSheetMemberList ref={ref} />
+      <BottomSheetParticipantList ref={ref} />
       <View
         style={{
           position: 'absolute', // !!! must
@@ -44,8 +44,8 @@ export function MemberListItem(): JSX.Element {
 /**
  * Verify absolute layout.
  */
-export function MemberListItem2(): JSX.Element {
-  const ref = React.useRef<BottomSheetMemberListRef>({} as any);
+export function ParticipantListItem2(): JSX.Element {
+  const ref = React.useRef<BottomSheetParticipantListRef>({} as any);
   return (
     <View style={{ flex: 1, top: 100 }}>
       <TouchableOpacity
@@ -59,10 +59,10 @@ export function MemberListItem2(): JSX.Element {
 
       {Platform.OS === 'ios' ? (
         <View style={{ position: 'absolute' }}>
-          <BottomSheetMemberList ref={ref} />
+          <BottomSheetParticipantList ref={ref} />
         </View>
       ) : (
-        <BottomSheetMemberList ref={ref} />
+        <BottomSheetParticipantList ref={ref} />
       )}
     </View>
   );
@@ -82,7 +82,7 @@ export default function test_button() {
           backgroundColor: 'green',
         }}
       >
-        <MemberListItem />
+        <ParticipantListItem />
       </View>
     </Container>
   );

@@ -6,14 +6,14 @@ import {
   gGiftEffectListWidth,
   gItemHeight,
   gScrollingTimeout,
-} from './GiftBarrage.const';
-import type { GiftEffectItem } from './GiftBarrage.item.hooks';
-import type { GiftEffectTask } from './types';
+} from './GiftMessageList.const';
+import type { GiftMessageListItemModel } from './GiftMessageList.item.hooks';
+import type { GiftMessageListTask } from './types';
 
 export const useAddData = (params: {
-  dataRef: React.MutableRefObject<GiftEffectItem[]>;
-  setData: React.Dispatch<React.SetStateAction<GiftEffectItem[]>>;
-  ref?: React.RefObject<FlatList<GiftEffectItem>>;
+  dataRef: React.MutableRefObject<GiftMessageListItemModel[]>;
+  setData: React.Dispatch<React.SetStateAction<GiftMessageListItemModel[]>>;
+  ref?: React.RefObject<FlatList<GiftMessageListItemModel>>;
 }) => {
   const { dataRef, setData, ref } = params;
   const preTaskTs = React.useRef(0);
@@ -45,7 +45,7 @@ export const useAddData = (params: {
 
   return {
     scrollToEnd: scrollToEnd,
-    addData: (task: GiftEffectTask) => {
+    addData: (task: GiftMessageListTask) => {
       let isUseAnimation = true;
       if (preTaskTs.current === 0) {
         preTaskTs.current = getCurTs();

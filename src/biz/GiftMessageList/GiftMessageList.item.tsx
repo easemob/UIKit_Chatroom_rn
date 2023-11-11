@@ -6,14 +6,17 @@ import { usePaletteContext } from '../../theme';
 import { Text } from '../../ui/Text';
 import { Avatar } from '../Avatar';
 import { GiftIcon } from '../GiftIcon';
-import { gItemBorderRadius } from './GiftBarrage.const';
-import { GiftEffectItem, useAnimation } from './GiftBarrage.item.hooks';
+import { gItemBorderRadius } from './GiftMessageList.const';
+import {
+  GiftMessageListItemModel,
+  useAnimation,
+} from './GiftMessageList.item.hooks';
 
-export type GiftEffectItemFCProps = {
-  item: GiftEffectItem;
+export type GiftMessageListItemProps = {
+  item: GiftMessageListItemModel;
 };
 
-export function GiftEffectItemFC(props: GiftEffectItemFCProps) {
+export function GiftMessageListItem(props: GiftMessageListItemProps) {
   const { item } = props;
 
   const { colors } = usePaletteContext();
@@ -129,4 +132,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export const GiftEffectItemFCMemo = React.memo(GiftEffectItemFC);
+export const GiftMessageListItemMemo = React.memo(GiftMessageListItem);

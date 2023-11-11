@@ -13,27 +13,27 @@ import type { UIKitError } from '../../error';
 import { I18nContext, I18nTr } from '../../i18n';
 import { IMContext, IMService, IMServiceListener } from '../../im';
 import {
-  GiftBarrage,
-  GiftEffectComponent,
-  GiftEffectProps,
-  GiftEffectRef,
-} from '../GiftBarrage';
-import { gGiftEffectListHeight } from '../GiftBarrage/GiftBarrage.const'; // for test
+  GiftMessageList,
+  GiftMessageListComponent,
+  GiftMessageListProps,
+  GiftMessageListRef,
+} from '../GiftMessageList';
+import { gGiftEffectListHeight } from '../GiftMessageList/GiftMessageList.const'; // for test
+import {
+  GlobalBroadcast,
+  GlobalBroadcastComponent,
+  GlobalBroadcastProps,
+  GlobalBroadcastRef,
+} from '../GlobalBroadcast';
 import { InputBar, InputBarProps, InputBarRef } from '../InputBar';
 import { gInputBarStyleHeight } from '../InputBar/InputBar.const';
-import {
-  Marquee,
-  MarqueeComponent,
-  MarqueeProps,
-  MarqueeRef,
-} from '../Marquee';
-import {
-  BottomSheetMemberList,
-  BottomSheetMemberListProps,
-  BottomSheetMemberListRef,
-} from '../MemberList';
 import { MessageList, MessageListProps, MessageListRef } from '../MessageList';
 import { gMessageListHeight } from '../MessageList/MessageList.const'; // for test
+import {
+  BottomSheetParticipantList,
+  BottomSheetParticipantListProps,
+  BottomSheetParticipantListRef,
+} from '../ParticipantList';
 import type { PropsWithError, PropsWithTest } from '../types';
 
 /**
@@ -53,17 +53,17 @@ export type ChatroomProps = React.PropsWithChildren<
      */
     containerStyle?: StyleProp<ViewStyle>;
     /**
-     * Renderer for the GiftBarrage component. If not set, the built-in one is used.
+     * Renderer for the GiftMessageList component. If not set, the built-in one is used.
      *
      * You can set whether to load through `RoomOption.gift`.
      */
-    GiftBarrage?: GiftEffectComponent;
+    GiftMessageList?: GiftMessageListComponent;
     /**
-     * Renderer for the Marquee component. If not set, the built-in one is used.
+     * Renderer for the GlobalBroadcast component. If not set, the built-in one is used.
      *
-     * You can set whether to load through `RoomOption.marquee`.
+     * You can set whether to load through `RoomOption.globalBroadcast`.
      */
-    Marquee?: MarqueeComponent;
+    GlobalBroadcast?: GlobalBroadcastComponent;
     /**
      * Properties of the InputBar component. If not set, the default value is used.
      */
@@ -83,22 +83,22 @@ export type ChatroomProps = React.PropsWithChildren<
       >;
     };
     /**
-     * Properties of the Marquee component. If not set, the default value is used.
+     * Properties of the GlobalBroadcast component. If not set, the default value is used.
      */
-    marquee?: {
-      props?: MarqueeProps;
+    globalBroadcast?: {
+      props?: GlobalBroadcastProps;
     };
     /**
-     * Properties of the GiftBarrage component. If not set, the default value is used.
+     * Properties of the GiftMessageList component. If not set, the default value is used.
      */
     gift?: {
-      props?: GiftEffectProps;
+      props?: GiftMessageListProps;
     };
     /**
-     * Properties of the MemberList component. If not set, the default value is used.
+     * Properties of the ParticipantList component. If not set, the default value is used.
      */
-    memberList?: {
-      props?: BottomSheetMemberListProps;
+    participantList?: {
+      props?: BottomSheetParticipantListProps;
     };
     /**
      * Renderer for the background view.
@@ -118,8 +118,8 @@ type ChatroomState = {
   pageY: number;
 };
 
-let GGiftEffect: GiftEffectComponent;
-let GMarquee: MarqueeComponent;
+let GGiftEffect: GiftMessageListComponent;
+let GGlobalBroadcast: GlobalBroadcastComponent;
 
 /**
  * Component for chat room.
@@ -141,17 +141,17 @@ export abstract class ChatroomBase extends React.PureComponent<
    */
   messageRef?: React.RefObject<MessageListRef>;
   /**
-   * Reference to the Marquee component.
+   * Reference to the GlobalBroadcast component.
    */
-  marqueeRef?: React.RefObject<MarqueeRef>;
+  globalBroadcastRef?: React.RefObject<GlobalBroadcastRef>;
   /**
-   * Reference to the GiftBarrage component.
+   * Reference to the GiftMessageList component.
    */
-  giftRef?: React.RefObject<GiftEffectRef>;
+  giftRef?: React.RefObject<GiftMessageListRef>;
   /**
-   * Reference to the MemberList component.
+   * Reference to the ParticipantList component.
    */
-  memberRef?: React.RefObject<BottomSheetMemberListRef>;
+  memberRef?: React.RefObject<BottomSheetParticipantListRef>;
   /**
    * Reference to the container.
    */
@@ -177,13 +177,13 @@ export abstract class ChatroomBase extends React.PureComponent<
 
     this.inputBarRef = React.createRef();
     this.messageRef = React.createRef();
-    this.marqueeRef = React.createRef();
+    this.globalBroadcastRef = React.createRef();
     this.giftRef = React.createRef();
     this.memberRef = React.createRef();
     this.containerRef = React.createRef();
 
-    GGiftEffect = props.GiftBarrage ?? GiftBarrage;
-    GMarquee = props.Marquee ?? Marquee;
+    GGiftEffect = props.GiftMessageList ?? GiftMessageList;
+    GGlobalBroadcast = props.GlobalBroadcast ?? GlobalBroadcast;
 
     this.state = {
       isInputBarShow: false,
@@ -193,15 +193,15 @@ export abstract class ChatroomBase extends React.PureComponent<
 
   /**
    * Get the reference of the InputBar component.
-   * @returns MarqueeRef | null.
+   * @returns GlobalBroadcastRef | null.
    */
-  getMarqueeRef() {
-    return this.marqueeRef?.current;
+  getGlobalBroadcastRef() {
+    return this.globalBroadcastRef?.current;
   }
 
   /**
    * Get the reference of the InputBar component.
-   * @returns GiftEffectRef | null.
+   * @returns GiftMessageListRef | null.
    */
   getGiftEffectRef() {
     return this.giftRef?.current;
@@ -209,9 +209,9 @@ export abstract class ChatroomBase extends React.PureComponent<
 
   /**
    * Get the reference of the InputBar component.
-   * @returns BottomSheetMemberListRef | null.
+   * @returns BottomSheetParticipantListRef | null.
    */
-  getMemberListRef() {
+  getParticipantListRef() {
     return this.memberRef?.current;
   }
 
@@ -303,12 +303,12 @@ export abstract class ChatroomBase extends React.PureComponent<
     const {
       containerStyle,
       messageList,
-      marquee,
+      globalBroadcast,
       input,
       gift,
       children,
       backgroundView,
-      memberList,
+      participantList,
     } = this.props;
     return (
       <View
@@ -372,16 +372,16 @@ export abstract class ChatroomBase extends React.PureComponent<
             />
           ) : null}
 
-          {this.config?.roomOption.marquee.isVisible === true ? (
-            <GMarquee
-              ref={this.marqueeRef}
+          {this.config?.roomOption.globalBroadcast.isVisible === true ? (
+            <GGlobalBroadcast
+              ref={this.globalBroadcastRef}
               containerStyle={{
                 position: 'absolute',
                 marginTop: 8,
                 marginHorizontal: 8,
                 width: Dimensions.get('window').width - 16,
               }}
-              {...marquee?.props}
+              {...globalBroadcast?.props}
             />
           ) : null}
 
@@ -397,10 +397,10 @@ export abstract class ChatroomBase extends React.PureComponent<
           {...input?.props}
         />
 
-        <BottomSheetMemberList
+        <BottomSheetParticipantList
           ref={this.memberRef}
           maskStyle={{ transform: [{ translateY: -this.state.pageY }] }}
-          {...memberList?.props}
+          {...participantList?.props}
         />
       </View>
     );

@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { Animated, Button, ScrollView, Text, View } from 'react-native';
 
-export function TestMarquee2() {
+export function TestGlobalBroadcast2() {
   const scrollX = React.useRef(new Animated.Value(0)).current;
   const content =
     'jskdfjsdkjfksdjflsdfkjsldfkjsldfkjsdlfkjsdlfkjsdflksdjflksdjflskdfjlsdkfjsldkfjsldfkjsdlfkj';
@@ -58,7 +58,7 @@ export function TestMarquee2() {
   );
 }
 
-export function TestMarquee() {
+export function TestGlobalBroadcast() {
   const content =
     'jskdfjsdkjfksdjflsdfkjsldfkjsldfkjsdlfkjsdlfkjsdflksdjflksdjflskdfjlsdkfjsldkfjsldfkjsdlfkj';
   const scrollX = React.useRef(new Animated.Value(0)).current;
@@ -112,6 +112,6 @@ export function TestMarquee() {
   );
 }
 
-export default function test_marquee_prototype() {
-  return <TestMarquee2 />;
+export default function test_globalBroadcast_prototype() {
+  return <TestGlobalBroadcast2 />;
 }

@@ -11,7 +11,7 @@ import {
   Text,
 } from 'react-native-chat-room';
 
-export function MemberListItem(): JSX.Element {
+export function ParticipantListItem(): JSX.Element {
   return (
     <View
       style={{ backgroundColor: 'white', paddingHorizontal: 10, width: '100%' }}
@@ -70,7 +70,7 @@ export default function test_button() {
           backgroundColor: 'green',
         }}
       >
-        <MemberListItem />
+        <ParticipantListItem />
       </View>
     </Container>
   );

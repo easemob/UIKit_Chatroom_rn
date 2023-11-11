@@ -2,7 +2,7 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
 import { Platform, Pressable, Text, View } from 'react-native';
 import {
-  BottomSheetReport,
+  BottomSheetMessageReport,
   ReportItemModel,
   seqId,
   SimulativeModalRef,
@@ -49,7 +49,7 @@ export function ReportScreen(props: Props) {
         );
       }}
     >
-      <BottomSheetReport
+      <BottomSheetMessageReport
         ref={ref}
         data={data}
         maskStyle={{ transform: [{ translateY: -pageY }] }} // !!! Correct the offset.

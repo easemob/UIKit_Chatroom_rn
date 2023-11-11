@@ -19,9 +19,9 @@ import {
 } from '../../im';
 import { wait } from '../../utils';
 import type { PropsWithError, PropsWithTest } from '../types';
-import { gMemberPerPageSize, gSearchTimeout } from './MemberList.const';
-import type { MemberListItemProps } from './MemberList.item';
-import type { MemberListType } from './types';
+import { gMemberPerPageSize, gSearchTimeout } from './ParticipantList.const';
+import type { ParticipantListItemProps } from './ParticipantList.item';
+import type { ParticipantListType } from './types';
 
 export function usePanHandlers(params: {
   /**
@@ -77,23 +77,27 @@ export function useRoomState() {
   };
 }
 
-type useMemberListAPIProps = PropsWithTest & PropsWithError;
-export function useMemberListAPI(
-  props: useMemberListAPIProps & {
-    memberType: MemberListType;
+type useParticipantListAPIProps = PropsWithTest & PropsWithError;
+export function useParticipantListAPI(
+  props: useParticipantListAPIProps & {
+    memberType: ParticipantListType;
     onNoMoreMember?: () => void;
   }
 ) {
   const { memberType, onNoMoreMember } = props;
   const im = useIMContext();
-  console.log('test:useMemberListAPI:', im.userId === im.ownerId, memberType);
+  console.log(
+    'test:useParticipantListAPI:',
+    im.userId === im.ownerId,
+    memberType
+  );
 
   const { isOwner } = useIsOwner();
   const memberCursor = React.useRef('');
 
-  const dataRef = React.useRef<MemberListItemProps[]>([]);
-  // const dataRef = React.useRef(new Map<string, MemberListItemProps>());
-  const [data, setData] = React.useState<MemberListItemProps[]>([]);
+  const dataRef = React.useRef<ParticipantListItemProps[]>([]);
+  // const dataRef = React.useRef(new Map<string, ParticipantListItemProps>());
+  const [data, setData] = React.useState<ParticipantListItemProps[]>([]);
 
   const muterRef = React.useRef<string[]>([]);
 
@@ -107,7 +111,7 @@ export function useMemberListAPI(
 
   const { emit } = useDispatchContext();
   useDispatchListener(
-    `_$${useMemberListAPI.name}_${memberType}_fetchMemberInfo`,
+    `_$${useParticipantListAPI.name}_${memberType}_fetchMemberInfo`,
     (ids: string[]) => {
       _fetchMemberInfo(ids);
     }
@@ -128,9 +132,12 @@ export function useMemberListAPI(
         changed: Array<ViewToken>;
       }) => {
         const ids = info.viewableItems.map((v) => {
-          return (v.item as MemberListItemProps).userInfo.userId;
+          return (v.item as ParticipantListItemProps).userInfo.userId;
         });
-        emit(`_$${useMemberListAPI.name}_${memberType}_fetchMemberInfo`, ids);
+        emit(
+          `_$${useParticipantListAPI.name}_${memberType}_fetchMemberInfo`,
+          ids
+        );
       },
       [emit, memberType]
     )
@@ -151,7 +158,7 @@ export function useMemberListAPI(
         onClicked: () => {
           const isMuted = _isMuter(userId);
           emit(
-            `_$${useMemberListAPI.name}_memberListContextMenu`,
+            `_$${useParticipantListAPI.name}_participantListContextMenu`,
             memberType, // current mute list
             isOwner(), // current user role
             userId, // current member id
@@ -235,7 +242,7 @@ export function useMemberListAPI(
     }
   };
 
-  useMemberListener({
+  useParticipantListener({
     im: im,
     onUpdateInfo: (roomId, userInfo) => {
       if (roomId === im.roomId) {
@@ -338,7 +345,7 @@ export function useMemberListAPI(
             onFinished?.();
             im.sendError({
               error: e,
-              from: useMemberListAPI?.caller?.name,
+              from: useParticipantListAPI?.caller?.name,
             });
             _onPageState('error');
           });
@@ -364,7 +371,7 @@ export function useMemberListAPI(
             onFinished?.();
             im.sendError({
               error: e,
-              from: useMemberListAPI?.caller?.name,
+              from: useParticipantListAPI?.caller?.name,
             });
             _onPageState('error');
           });
@@ -392,7 +399,7 @@ export function useMemberListAPI(
         .catch((e) => {
           im.sendError({
             error: e,
-            from: useMemberListAPI?.caller?.name,
+            from: useParticipantListAPI?.caller?.name,
           });
         });
     }
@@ -408,7 +415,7 @@ export function useMemberListAPI(
         .catch((e) => {
           im.sendError({
             error: e,
-            from: useMemberListAPI?.caller?.name,
+            from: useParticipantListAPI?.caller?.name,
           });
         });
     }
@@ -433,7 +440,7 @@ export function useMemberListAPI(
   //             code: ErrorCode.room_fetch_mute_member_list_error,
   //             extra: e.toString(),
   //           }),
-  //           from: useMemberListAPI?.caller?.name,
+  //           from: useParticipantListAPI?.caller?.name,
   //         });
   //       });
   //   } else {
@@ -476,7 +483,7 @@ export function useMemberListAPI(
         .catch((e) => {
           im.sendError({
             error: e,
-            from: useMemberListAPI?.caller?.name,
+            from: useParticipantListAPI?.caller?.name,
           });
         });
     }
@@ -491,7 +498,7 @@ export function useMemberListAPI(
         .catch((e) => {
           im.sendError({
             error: e,
-            from: useMemberListAPI?.caller?.name,
+            from: useParticipantListAPI?.caller?.name,
           });
         });
     }
@@ -527,15 +534,15 @@ export function useMemberListAPI(
   };
 }
 
-export function useSearchMemberListAPI(props: {
-  memberType: MemberListType;
+export function useSearchParticipantListAPI(props: {
+  memberType: ParticipantListType;
   searchType?: keyof UserServiceData;
 }) {
   const { memberType, searchType = 'nickName' } = props;
   // const ds = React.useRef<NodeJS.Timeout | undefined>();
   const im = useIMContext();
 
-  const [data, setData] = React.useState<MemberListItemProps[]>([]);
+  const [data, setData] = React.useState<ParticipantListItemProps[]>([]);
 
   const { isOwner } = useIsOwner();
   const { emit } = useDispatchContext();
@@ -554,7 +561,7 @@ export function useSearchMemberListAPI(props: {
           onClicked: () => {
             const isMuted = _isMuter(v.userId);
             emit(
-              `_$${useMemberListAPI.name}_memberListContextMenu`,
+              `_$${useParticipantListAPI.name}_participantListContextMenu`,
               memberType, // current mute list
               isOwner(), // current user role
               v.userId, // current member id
@@ -562,7 +569,7 @@ export function useSearchMemberListAPI(props: {
             );
           },
         },
-      } as MemberListItemProps;
+      } as ParticipantListItemProps;
     });
     setData([...rr]);
   };
@@ -578,7 +585,7 @@ export function useSearchMemberListAPI(props: {
   };
 }
 
-type useMemberListenerProps = {
+type useParticipantListenerProps = {
   im: IMService;
   onUpdateInfo?: (roomId: string, userInfo: UserServiceData) => void;
   onUserJoinedNotify?: (roomId: string, userInfo: UserServiceData) => void;
@@ -591,7 +598,7 @@ type useMemberListenerProps = {
     operatorId: string
   ) => void;
 };
-export function useMemberListener(props: useMemberListenerProps) {
+export function useParticipantListener(props: useParticipantListenerProps) {
   const {
     im,
     onUpdateInfo,

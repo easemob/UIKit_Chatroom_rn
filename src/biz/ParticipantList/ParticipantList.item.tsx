@@ -8,19 +8,19 @@ import { IconButton } from '../../ui/Button';
 import { Image } from '../../ui/Image';
 import { Text } from '../../ui/Text';
 import { Avatar } from '../Avatar';
-import { gMemberListItemHeight } from './MemberList.const';
-import type { MemberListIteModel } from './types';
+import { gParticipantListItemHeight } from './ParticipantList.const';
+import type { ParticipantListIteModel } from './types';
 
-export type MemberListItemActions = {
+export type ParticipantListItemActions = {
   onClicked?: () => void;
 };
-export type MemberListItemProps = {
+export type ParticipantListItemProps = {
   id: string;
-  userInfo: MemberListIteModel;
-  actions?: MemberListItemActions;
+  userInfo: ParticipantListIteModel;
+  actions?: ParticipantListItemActions;
 };
 
-export function MemberListItem(props: MemberListItemProps) {
+export function ParticipantListItem(props: ParticipantListItemProps) {
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     backgroundColor: {
@@ -48,7 +48,7 @@ export function MemberListItem(props: MemberListItemProps) {
         backgroundColor: getColor('backgroundColor'),
         paddingHorizontal: 10,
         width: '100%',
-        height: gMemberListItemHeight,
+        height: gParticipantListItemHeight,
       }}
     >
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -115,4 +115,4 @@ export function MemberListItem(props: MemberListItemProps) {
   );
 }
 
-export const MemberListItemMemo = React.memo(MemberListItem);
+export const ParticipantListItemMemo = React.memo(ParticipantListItem);

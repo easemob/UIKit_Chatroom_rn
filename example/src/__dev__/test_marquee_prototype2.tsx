@@ -10,14 +10,14 @@ export type Task = {
   id: string;
 };
 
-export type MarqueeRef = {
+export type GlobalBroadcastRef = {
   startScrolling: () => void;
   pushTask: (task: Task) => void;
 };
-export type MarqueeProps = {
-  propsRef: React.RefObject<MarqueeRef>;
+export type GlobalBroadcastProps = {
+  propsRef: React.RefObject<GlobalBroadcastRef>;
 };
-export function Marquee(props: MarqueeProps) {
+export function GlobalBroadcast(props: GlobalBroadcastProps) {
   const { propsRef } = props;
 
   const x = React.useRef(new Animated.Value(0)).current;
@@ -124,8 +124,8 @@ export function Marquee(props: MarqueeProps) {
   );
 }
 
-export function TestMarquee() {
-  const ref = React.useRef<MarqueeRef>({} as any);
+export function TestGlobalBroadcast() {
+  const ref = React.useRef<GlobalBroadcastRef>({} as any);
 
   return (
     <View style={{ flex: 1, backgroundColor: 'green', paddingTop: 100 }}>
@@ -140,12 +140,12 @@ export function TestMarquee() {
       <Button title="reset rolling" onPress={() => {}} />
       <View style={{ height: 100 }} />
       <View style={{ flex: 0, alignItems: 'center' }}>
-        <Marquee propsRef={ref} />
+        <GlobalBroadcast propsRef={ref} />
       </View>
     </View>
   );
 }
 
-export default function test_marquee_prototype() {
-  return <TestMarquee />;
+export default function test_globalBroadcast_prototype() {
+  return <TestGlobalBroadcast />;
 }

@@ -64,7 +64,7 @@ export type ContainerProps = React.PropsWithChildren<{
   /**
    * Avatar option.
    *
-   * Invalid for `GiftBarrage`.
+   * Invalid for `GiftMessageList`.
    */
   avatar?: {
     borderRadiusStyle?: CornerRadiusPaletteType;
@@ -129,7 +129,7 @@ export function Container(props: ContainerProps) {
                   roomOption: mergeObjects<RoomOption>(
                     roomOption ?? ({} as PartialDeep<RoomOption>),
                     {
-                      marquee: {
+                      globalBroadcast: {
                         isVisible: true,
                       },
                       gift: {

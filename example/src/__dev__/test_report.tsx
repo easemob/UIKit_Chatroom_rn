@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { Platform, Pressable, TouchableOpacity, View } from 'react-native';
 import {
-  BottomSheetMemberListRef,
-  BottomSheetReport,
+  BottomSheetMessageReport,
+  BottomSheetParticipantListRef,
   Container,
   createDarkTheme,
   createLightTheme,
@@ -62,7 +62,7 @@ export function TestReport() {
   const ref = React.useRef<SimulativeModalRef>({} as any);
   return (
     <View style={{ flex: 1 }}>
-      <BottomSheetReport ref={ref} data={data} onReport={() => {}} />
+      <BottomSheetMessageReport ref={ref} data={data} onReport={() => {}} />
       <View
         style={{
           position: 'absolute', // !!! must
@@ -90,7 +90,7 @@ export function TestReport() {
  * Verify absolute layout.
  */
 export function TestReport2(): JSX.Element {
-  const ref = React.useRef<BottomSheetMemberListRef>({} as any);
+  const ref = React.useRef<BottomSheetParticipantListRef>({} as any);
   return (
     <View style={{ flex: 1, top: 100 }}>
       <TouchableOpacity
@@ -104,10 +104,10 @@ export function TestReport2(): JSX.Element {
 
       {Platform.OS === 'ios' ? (
         <View style={{ position: 'absolute' }}>
-          <BottomSheetReport ref={ref} data={data} onReport={() => {}} />
+          <BottomSheetMessageReport ref={ref} data={data} onReport={() => {}} />
         </View>
       ) : (
-        <BottomSheetReport ref={ref} data={data} onReport={() => {}} />
+        <BottomSheetMessageReport ref={ref} data={data} onReport={() => {}} />
       )}
     </View>
   );

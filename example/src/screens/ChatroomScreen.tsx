@@ -69,7 +69,7 @@ export function ChatroomScreen(props: Props) {
             } catch (error) {
               content = params.toString();
             }
-            chatroomRef?.current?.getMarqueeRef()?.pushTask?.({
+            chatroomRef?.current?.getGlobalBroadcastRef()?.pushTask?.({
               model: {
                 id: seqId('_mq').toString(),
                 content: content,
@@ -88,7 +88,7 @@ export function ChatroomScreen(props: Props) {
             } catch (error) {
               content = params.toString();
             }
-            chatroomRef?.current?.getMarqueeRef()?.pushTask?.({
+            chatroomRef?.current?.getGlobalBroadcastRef()?.pushTask?.({
               model: {
                 id: seqId('_mq').toString(),
                 content: content,
@@ -135,11 +135,11 @@ export function ChatroomScreen(props: Props) {
       },
     });
   };
-  const addMarqueeTask = () => {
+  const addGlobalBroadcastTask = () => {
     const content =
       'For several generations, stories from Africa have traditionally been passed down by word of mouth. ';
     const content2 = "I'm fine.";
-    chatroomRef?.current?.getMarqueeRef()?.pushTask?.({
+    chatroomRef?.current?.getGlobalBroadcastRef()?.pushTask?.({
       model: {
         id: count.current.toString(),
         content: count.current % 2 === 0 ? content : content2,
@@ -148,16 +148,16 @@ export function ChatroomScreen(props: Props) {
     ++count.current;
   };
 
-  const showMemberList = () => {
+  const showParticipantList = () => {
     menuRef?.current?.startHide?.(() => {
-      chatroomRef?.current?.getMemberListRef()?.startShow();
+      chatroomRef?.current?.getParticipantListRef()?.startShow();
     });
   };
 
   const testMemberMenu = () => {
     const member = chatroomRef?.current
-      ?.getMemberListRef()
-      ?.getMemberListRef('member');
+      ?.getParticipantListRef()
+      ?.getParticipantListRef('member');
     member?.initMenu?.([
       {
         name: 'my',
@@ -207,7 +207,7 @@ export function ChatroomScreen(props: Props) {
       {/* <Chatroom ref={chatroomRef} roomId={room.roomId} ownerId={room.owner} /> */}
       <Chatroom
         ref={chatroomRef}
-        // Marquee={Marquee}
+        // GlobalBroadcast={GlobalBroadcast}
         // containerStyle={{ transform: [{ translateY: -pageY }] }}
         // messageList={{
         //   props: {
@@ -243,7 +243,7 @@ export function ChatroomScreen(props: Props) {
         // }}
         backgroundView={<BackgroundImageMemo />}
         // backgroundView={<View style={{ flex: 1, backgroundColor: 'blue' }} />}
-        // marquee={{
+        // globalBroadcast={{
         //   props: {
         //     visible: true,
         //     containerStyle: {
@@ -297,12 +297,14 @@ export function ChatroomScreen(props: Props) {
             ],
           },
         }}
-        memberList={{
+        participantList={{
           props: {
             onSearch: (memberType) => {
-              navigation.push('TestSearchMember', { params: { memberType } });
+              navigation.push('TestSearchParticipant', {
+                params: { memberType },
+              });
             },
-            // MemberItemComponent: MemberListItemMemo,
+            // MemberItemComponent: ParticipantListItemMemo,
           },
         }}
         roomId={room.roomId}
@@ -332,7 +334,7 @@ export function ChatroomScreen(props: Props) {
               alignItems: 'center',
             }}
             onPress={() => {
-              addMarqueeTask();
+              addGlobalBroadcastTask();
             }}
           >
             <Text>{'add import message'}</Text>
@@ -428,8 +430,8 @@ export function ChatroomScreen(props: Props) {
           menuRef?.current?.startHide?.();
         }}
         addGiftEffectTask={addGiftEffectTask}
-        addMarqueeTask={addMarqueeTask}
-        showMemberList={showMemberList}
+        addGlobalBroadcastTask={addGlobalBroadcastTask}
+        showParticipantList={showParticipantList}
       />
     </View>
   );

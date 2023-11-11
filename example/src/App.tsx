@@ -24,7 +24,7 @@ import {
   LoginListScreen,
   LoginScreen,
   ReportScreen,
-  SearchMemberScreen,
+  SearchParticipantScreen,
   TopMenuScreen,
 } from './screens';
 
@@ -94,7 +94,7 @@ export function App() {
         isDevMode={env.isDevMode}
         palette={palette}
         theme={theme}
-        roomOption={{ marquee: { isVisible: true } }}
+        roomOption={{ globalBroadcast: { isVisible: true } }}
         language={'fr'}
         onInitialized={() => {
           console.log('dev:onInitialized:');
@@ -179,12 +179,12 @@ export function App() {
               component={ReportScreen}
             />
             <Root.Screen
-              name={'TestSearchMember'}
+              name={'TestSearchParticipant'}
               options={{
                 headerShown: false,
                 presentation: 'modal',
               }}
-              component={SearchMemberScreen}
+              component={SearchParticipantScreen}
             />
             <Root.Screen
               name={'Config'}

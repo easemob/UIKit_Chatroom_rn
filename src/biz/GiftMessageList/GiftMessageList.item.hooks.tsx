@@ -8,10 +8,10 @@ import {
   gItemSmallHeight,
   gItemSmallWidth,
   gScaleFactor,
-} from './GiftBarrage.const';
-import type { GiftEffectModel } from './types';
+} from './GiftMessageList.const';
+import type { GiftMessageListItemData } from './types';
 
-export type GiftEffectItem = {
+export type GiftMessageListItemModel = {
   id: string;
   height: number;
   width: number;
@@ -24,11 +24,11 @@ export type GiftEffectItem = {
     | '2-3' //
     | '3-2' //
     | '3-3'; //
-  gift: GiftEffectModel;
+  gift: GiftMessageListItemData;
 };
 
 export type useAnimationProps = {
-  item: GiftEffectItem;
+  item: GiftMessageListItemModel;
   iHeight: Animated.Value;
   iWidth: Animated.Value;
   ix: Animated.Value;

@@ -12,15 +12,18 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useI18nContext } from '../../i18n';
 import { BorderButton, CmnButton } from '../../ui/Button';
 import { gBottomSheetHeaderHeight } from '../const';
-import { gTabHeaderHeight } from './ReportList.const';
-import { useReportListApi, useScrollGesture } from './ReportList.hooks';
-import { ReportListItemMemo, ReportListItemProps } from './ReportList.item';
+import { gTabHeaderHeight } from './MessageReport.const';
+import { useMessageReportApi, useScrollGesture } from './MessageReport.hooks';
+import {
+  MessageReportItemMemo,
+  MessageReportItemProps,
+} from './MessageReport.item';
 import type { ReportItemModel } from './types';
 
 /**
- * Properties of the `ReportList` component.
+ * Properties of the `MessageReport` component.
  */
-export type ReportListProps = {
+export type MessageReportProps = {
   /**
    * Callback function when the gesture is used.
    * When used together with `Modal` or `SimuModal`, the pull-down gesture conflicts with the scrolling gift list gesture and cannot be resolved using bubbling events. Resolved by manually controlling usage rights.
@@ -49,11 +52,11 @@ export type ReportListProps = {
  *
  * This component is mainly used for reporting illegal messages.
  *
- * @param props {@link ReportListProps}
+ * @param props {@link MessageReportProps}
  * @returns JSX.Element
  *
  */
-export function ReportList(props: ReportListProps) {
+export function MessageReport(props: MessageReportProps) {
   const {
     requestUseScrollGesture,
     onCancel,
@@ -61,9 +64,9 @@ export function ReportList(props: ReportListProps) {
     onReport,
     height: propsHeight,
   } = props;
-  const { data, onUpdate } = useReportListApi(propData);
+  const { data, onUpdate } = useMessageReportApi(propData);
   const { isScrollingRef, handles } = useScrollGesture(requestUseScrollGesture);
-  const ref = React.useRef<FlatList<ReportListItemProps>>({} as any);
+  const ref = React.useRef<FlatList<MessageReportItemProps>>({} as any);
   const { height: winHeight } = useWindowDimensions();
   const { bottom } = useSafeAreaInsets();
   const { tr } = useI18nContext();
@@ -85,10 +88,10 @@ export function ReportList(props: ReportListProps) {
       <FlatList
         ref={ref}
         data={data}
-        renderItem={(info: ListRenderItemInfo<ReportListItemProps>) => {
+        renderItem={(info: ListRenderItemInfo<MessageReportItemProps>) => {
           const { item } = info;
           return (
-            <ReportListItemMemo
+            <MessageReportItemMemo
               data={item.data}
               onChecked={() => {
                 onUpdate(item);
@@ -96,7 +99,7 @@ export function ReportList(props: ReportListProps) {
             />
           );
         }}
-        keyExtractor={(item: ReportListItemProps) => {
+        keyExtractor={(item: MessageReportItemProps) => {
           return item.data.id;
         }}
         onMomentumScrollEnd={() => {

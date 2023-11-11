@@ -14,9 +14,9 @@ export type ChatroomTestMenuProps = Omit<
   BottomSheetMenuProps,
   'title' | 'initItems'
 > & {
-  addMarqueeTask: () => void;
+  addGlobalBroadcastTask: () => void;
   addGiftEffectTask: () => void;
-  showMemberList: () => void;
+  showParticipantList: () => void;
 };
 
 export const ChatroomTestMenu = React.forwardRef<
@@ -29,8 +29,8 @@ export const ChatroomTestMenu = React.forwardRef<
   const {
     onRequestModalClose,
     addGiftEffectTask,
-    showMemberList,
-    addMarqueeTask,
+    showParticipantList,
+    addGlobalBroadcastTask,
     ...others
   } = props;
   const { colors } = usePaletteContext();
@@ -69,8 +69,8 @@ export const ChatroomTestMenu = React.forwardRef<
         key={0}
         id={'1'}
         initState={'enabled'}
-        text={'add marquee task'}
-        onPress={addMarqueeTask}
+        text={'add globalBroadcast task'}
+        onPress={addGlobalBroadcastTask}
       />,
       <BottomSheetMenuItem
         key={1}
@@ -84,7 +84,7 @@ export const ChatroomTestMenu = React.forwardRef<
         id={'3'}
         initState={'enabled'}
         text={'show member list'}
-        onPress={showMemberList}
+        onPress={showParticipantList}
       />,
       <View
         key={6}
@@ -106,10 +106,10 @@ export const ChatroomTestMenu = React.forwardRef<
     ],
     [
       addGiftEffectTask,
-      addMarqueeTask,
+      addGlobalBroadcastTask,
       getColor,
       onRequestModalClose,
-      showMemberList,
+      showParticipantList,
     ]
   );
   return (

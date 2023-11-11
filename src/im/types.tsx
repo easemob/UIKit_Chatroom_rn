@@ -187,7 +187,7 @@ export interface MessageServiceListener {
    *
    * The message will carry user information to facilitate updating the message status.
    *
-   * The gift message will be paid attention to by the `MessageList` component and the `GiftBarrage` component. When a user joins a chat room, `UIKit` will automatically send a join command message, and `UIKit` will automatically process it on the receiving end. Emoji messages will be treated as text messages and displayed after special processing.
+   * The gift message will be paid attention to by the `MessageList` component and the `GiftMessageList` component. When a user joins a chat room, `UIKit` will automatically send a join command message, and `UIKit` will automatically process it on the receiving end. Emoji messages will be treated as text messages and displayed after special processing.
    *
    * @param roomId The chat room ID.
    * @param message The message object.
@@ -203,7 +203,7 @@ export interface MessageServiceListener {
   /**
    * This notification will be received when the backend pushes a globally important message.
    *
-   * The Marquee component will pay attention to it.
+   * The GlobalBroadcast component will pay attention to it.
    *
    * @param roomId the chat room ID.
    * @param notifyMessage the message object.

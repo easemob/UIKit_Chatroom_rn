@@ -12,10 +12,10 @@ import {
   ThemeContextProvider,
 } from 'react-native-chat-room';
 
-type MemberListItemProps = { id: string };
+type ParticipantListItemProps = { id: string };
 
-export function MemberList() {
-  const dataRef = React.useRef<MemberListItemProps[]>([
+export function ParticipantList() {
+  const dataRef = React.useRef<ParticipantListItemProps[]>([
     { id: '1' },
     { id: '2' },
     { id: '3' },
@@ -26,13 +26,13 @@ export function MemberList() {
     { id: '8' },
     { id: '9' },
   ]);
-  const [data] = React.useState<MemberListItemProps[]>(dataRef.current);
+  const [data] = React.useState<ParticipantListItemProps[]>(dataRef.current);
 
   return (
     <View style={{ height: 300 }}>
       <FlatList
         data={data}
-        renderItem={(info: ListRenderItemInfo<MemberListItemProps>) => {
+        renderItem={(info: ListRenderItemInfo<ParticipantListItemProps>) => {
           const { item } = info;
           return (
             <View
@@ -80,7 +80,7 @@ export function MemberList() {
             </View>
           );
         }}
-        keyExtractor={(item: MemberListItemProps) => {
+        keyExtractor={(item: ParticipantListItemProps) => {
           return item.id;
         }}
         onResponderEnd={() => {
@@ -100,7 +100,7 @@ export function MemberList() {
   );
 }
 
-export function MemberListItem(): JSX.Element {
+export function ParticipantListItem(): JSX.Element {
   return (
     <View
       style={{
@@ -111,7 +111,7 @@ export function MemberListItem(): JSX.Element {
     >
       <View style={{ position: 'absolute' }}>
         <View style={{ height: 320, width: 300, flexGrow: 1 }}>
-          <MemberList />
+          <ParticipantList />
         </View>
       </View>
     </View>
@@ -134,7 +134,7 @@ export default function test_flatlist() {
             width: '100%',
           }}
         >
-          <MemberListItem />
+          <ParticipantListItem />
         </View>
       </PaletteContextProvider>
     </ThemeContextProvider>
