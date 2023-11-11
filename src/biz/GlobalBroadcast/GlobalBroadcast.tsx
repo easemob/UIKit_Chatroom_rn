@@ -16,7 +16,7 @@ import { useCheckType, useColors, useGetStyleSize } from '../../hook';
 import { usePaletteContext } from '../../theme';
 import { Icon } from '../../ui/Image';
 import { PresetCalcTextWidth, Text } from '../../ui/Text';
-import { Queue } from '../../utils';
+import { changeOpacity, Queue } from '../../utils';
 import { gGlobalBroadcastHeight } from './GlobalBroadcast.const';
 import { createCompose } from './GlobalBroadcast.hooks';
 import type { GlobalBroadcastTask } from './types';
@@ -117,9 +117,25 @@ export const GlobalBroadcast = React.forwardRef<
       light: bg ?? colors.error[7],
       dark: bg ?? colors.error[7],
     },
+    backgroundColor2: {
+      light: [
+        bg ?? colors.error[7],
+        bg ? changeOpacity(bg as string, 0) : 'hsla(350, 100%, 70%, 0)',
+      ],
+      dark: [
+        bg ?? colors.error[7],
+        bg ? changeOpacity(bg as string, 0) : 'hsla(350, 100%, 70%, 0)',
+      ],
+    },
     backgroundColor3: {
-      light: [bg ?? 'hsla(350, 100%, 70%, 0)', bg ?? colors.error[7]],
-      dark: [bg ?? 'hsla(350, 100%, 70%, 0)', bg ?? colors.error[7]],
+      light: [
+        bg ? changeOpacity(bg as string, 0) : 'hsla(350, 100%, 70%, 0)',
+        bg ?? colors.error[7],
+      ],
+      dark: [
+        bg ? changeOpacity(bg as string, 0) : 'hsla(350, 100%, 70%, 0)',
+        bg ?? colors.error[7],
+      ],
     },
     tintColor: {
       light: colors.neutral[98],
@@ -179,7 +195,7 @@ export const GlobalBroadcast = React.forwardRef<
     createCompose({
       x: x,
       startX: 0,
-      endX: containerWidth - w,
+      endX: containerWidth - w - containerHeight * 1.5,
       contentWidth: w,
       width: containerWidth,
       speed: playSpeed,
@@ -213,17 +229,16 @@ export const GlobalBroadcast = React.forwardRef<
     <View
       style={[
         {
-          width: containerWidth,
+          maxWidth: containerWidth,
           height: containerHeight,
           justifyContent: 'center',
           alignItems: 'flex-start',
           overflow: 'scroll',
-          // paddingLeft: containerHeight,
+          paddingLeft: containerHeight,
+          paddingRight: containerHeight / 2,
           borderRadius: 10,
-          paddingHorizontal: 10,
           display: visible === true && isShow === true ? 'flex' : 'none',
           backgroundColor: getColor('backgroundColor'),
-          // backgroundColor: '#ffd700',
         },
         containerStyle,
       ]}
@@ -236,7 +251,7 @@ export const GlobalBroadcast = React.forwardRef<
           style: textStyle,
         }}
         onWidth={(w: number) => {
-          setContentWidth(w);
+          setContentWidth(w + 1);
           if (curTask.current === undefined) {
             return;
           }
@@ -249,13 +264,7 @@ export const GlobalBroadcast = React.forwardRef<
       <Animated.View
         style={[
           {
-            // height: containerHeight,
             width: contentWidth,
-            // justifyContent: 'center',
-            // borderTopRightRadius: 10,
-            // borderBottomRightRadius: 10,
-            // paddingHorizontal: 4,
-            marginLeft: containerHeight,
             backgroundColor: getColor('backgroundColor'),
             transform: [{ translateX: x }],
           },
@@ -277,6 +286,7 @@ export const GlobalBroadcast = React.forwardRef<
       />
       <LinearGradient
         colors={getColors('backgroundColor3') as (string | number)[]}
+        // colors={['hsla(350, 100%, 70%, 0)', 'red']}
         start={end}
         end={start}
         style={{
@@ -287,14 +297,24 @@ export const GlobalBroadcast = React.forwardRef<
         }}
       />
       <LinearGradient
-        colors={getColors('backgroundColor3') as (string | number)[]}
-        start={start}
-        end={end}
+        colors={getColors('backgroundColor2') as (string | number)[]}
+        // colors={['red', 'hsla(350, 100%, 70%, 0)']}
+        start={end}
+        end={start}
         style={{
           position: 'absolute',
           height: containerHeight,
-          width: containerHeight / 2,
+          width: containerHeight / 4,
+          right: containerHeight / 2,
+        }}
+      />
+      <View
+        style={{
+          position: 'absolute',
           right: 0,
+          height: containerHeight,
+          width: containerHeight / 2,
+          backgroundColor: getColor('backgroundColor'),
         }}
       />
     </View>
@@ -326,7 +346,6 @@ const GlobalBroadcastIcon = ({
         name={'spkeaker_n_vertical_bar'}
         style={[
           {
-            marginLeft: 4,
             tintColor: getColor('tintColor'),
             height: 16,
             width: 16,

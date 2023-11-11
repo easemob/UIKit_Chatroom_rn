@@ -457,7 +457,7 @@ export function HSLAToHexA(hsla: string, isUpper?: boolean) {
 
 export function getOpacityFromRGBA(rgba: string) {
   let sep = rgba.indexOf(',') > -1 ? ',' : ' ';
-  const rgbaString = rgba.substring(4).split(')')[0]!.split(sep);
+  const rgbaString = rgba.substring(5).split(')')[0]!.split(sep);
   const rgbaNumber = [0, 0, 0, 0];
   for (let index = 0; index < rgbaString.length; index++) {
     const r = rgbaString[index]!;
@@ -477,7 +477,7 @@ export function getOpacityFromRGBA(rgba: string) {
 
 export function getOpacityFromHSLA(hsla: string) {
   let sep = hsla.indexOf(',') > -1 ? ',' : ' ';
-  const hslString = hsla.substring(4).split(')')[0]!.split(sep);
+  const hslString = hsla.substring(5).split(')')[0]!.split(sep);
   return +hslString[3]!;
 }
 
@@ -496,6 +496,46 @@ export function getOpacity(color: string) {
   } else if (ex_hsla.test(color) === true) {
     return getOpacityFromHSLA(color);
   } else {
-    throw new Error('Invalid input color');
+    return undefined;
+  }
+}
+export function changeOpacityFromRGBA(rgba: string, opacity: number) {
+  let sep = rgba.indexOf(',') > -1 ? ',' : ' ';
+  const rgbaString = rgba.substring(5).split(')')[0]!.split(sep);
+  console.log('test:zuoyu:color:', rgbaString);
+  rgbaString[3] = opacity.toString();
+  return `rgba(${rgbaString.join(', ')})`;
+}
+export function changeOpacityFromHexA(hex: string, opacity: number) {
+  let r = hex[1]! + hex[2]!,
+    g = hex[3]! + hex[4]!,
+    b = hex[5]! + hex[6]!,
+    a = Math.round(opacity * 255).toString(16);
+  return `#${r}${g}${b}${a}`;
+}
+export function changeOpacityFromHSLA(hsla: string, opacity: number) {
+  let sep = hsla.indexOf(',') > -1 ? ',' : ' ';
+  const hslString = hsla.substring(5).split(')')[0]!.split(sep);
+  hslString[3] = opacity.toString();
+  return `hsla(${hslString.join(', ')})`;
+}
+/**
+ *
+ * @param color the color. For example: #ffffffff, rgba(255, 255, 255, 1), hsla(0, 0%, 100%, 1)
+ * @param opacity [0, 1]
+ * @returns the changed opacity color. If failed, return the original color.
+ */
+export function changeOpacity(color: string, opacity: number) {
+  if (opacity > 1 || opacity < 0) {
+    throw new Error('Invalid input opacity');
+  }
+  if (ex_rgba.test(color) === true) {
+    return changeOpacityFromRGBA(color, opacity);
+  } else if (ex_hexa.test(color) === true) {
+    return changeOpacityFromHexA(color, opacity);
+  } else if (ex_hsla.test(color) === true) {
+    return changeOpacityFromHSLA(color, opacity);
+  } else {
+    return color;
   }
 }

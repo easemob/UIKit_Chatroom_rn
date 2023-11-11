@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { ScrollView, Text, View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 
-import type { TextProps } from './Text';
+import { Text, TextProps } from './Text';
 
 export type PresetCalcTextWidthProps = {
   content: string;
