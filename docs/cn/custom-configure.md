@@ -24,6 +24,7 @@
   - [InputBar 组件](#inputbar-组件)
   - [InputBarStyle 组件](#inputbarstyle-组件)
   - [BottomSheetGift 组件](#bottomsheetgift-组件)
+  - [ReportMessage 组件](#reportmessage-组件)
   - [更多](#更多)
 
 # 组件概述
@@ -199,8 +200,8 @@ export type RoomOption = {
 
 - isDevMode: 如果设置为 `true`，则激活日志打印等工具。
 - language: 设置当前的语言，如果没有设置，则获取系统当前的语言作为默认值。
-- languageBuiltInFactory: 如果没有设置则使用内置的语言资源。通常可以修改内置的UI内容。
-- languageExtensionFactory: 如果设置将扩展语言资源。通常应用的UI也需要国际化。
+- languageBuiltInFactory: 如果没有设置则使用内置的语言资源。通常可以修改内置的 UI 内容。
+- languageExtensionFactory: 如果设置将扩展语言资源。通常应用的 UI 也需要国际化。
 - palette: 设置当前的调色板，主题服务的重要依赖。
 - theme: 如果没有设置主题，将使用 `light` 为默认主题。
 - roomOption: 聊天室选项。具体参见 全局配置服务。
@@ -626,6 +627,48 @@ ref?.current?.startShow?.();
 | startHide         | 隐藏成员列表组件，隐藏动画完成后返回通知 |
 
 ![gift_list](../gift_list.png)
+
+## ReportMessage 组件
+
+消息上报组件，可以设置上报内容。
+
+简单使用示例：
+
+```tsx
+// ...
+// 创建引用对象
+const ref = React.useRef<BottomSheetMessageReport>({} as any);
+// ...
+// 添加组件到渲染树
+<BottomSheetMessageReport
+  ref={ref}
+  onReport={getOnReport.onReport}
+  data={getReportData}
+/>;
+// ...
+// 显示组件
+ref?.current?.startShow?.();
+// ...
+// 选择列表项，确认上报。
+```
+
+`BottomSheetMessageReport`提供的属性概览
+
+| 属性           | 是否可选 | 介绍                                                 |
+| -------------- | -------- | ---------------------------------------------------- |
+| data           | 可选     | 上报内容列表数组                                     |
+| maskStyle      | 可选     | 设置组件容器以外区域样式。                           |
+| containerStyle | 可选     | 设置组件容器样式。支持背景、位置、大小、边框等的设置 |
+| onReport       | 可选     | 点击上报按钮时的回调通知                             |
+
+`BottomSheetMessageReport`提供的方法概览
+
+| 方法      | 介绍                                     |
+| --------- | ---------------------------------------- |
+| startShow | 显示成员列表组件                         |
+| startHide | 隐藏成员列表组件，隐藏动画完成后返回通知 |
+
+![message_report](../message_report.png)
 
 ## 更多
 
