@@ -1,16 +1,23 @@
 import * as React from 'react';
 
-import { ICON_ASSETS, IconNameType } from '../../assets';
+import type { IconNameType } from '../../assets';
 import { Image, type ImageProps } from './Image';
+import { getIconSource } from './Image.hooks';
+import type { IconResolutionType } from './types';
 
-export type IconResolutionType = '' | '2x' | '3x';
 export type IconProps = Omit<ImageProps, 'source' | 'failedSource'> & {
-  name: IconNameType;
+  name: IconNameType | number;
   resolution?: IconResolutionType;
 };
 
 export function Icon(props: IconProps) {
   const { name, resolution, style, ...others } = props;
-  const s = ICON_ASSETS[name](resolution ?? '3x');
-  return <Image source={s} style={[style]} {...others} />;
+
+  return (
+    <Image
+      source={getIconSource(name, resolution)}
+      style={[style]}
+      {...others}
+    />
+  );
 }

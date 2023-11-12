@@ -4,3 +4,4 @@ export * from './Icon';
 export * from './Image';
 export * from './Image.class';
 export * from './LoadingIcon';
+export * from './types';
