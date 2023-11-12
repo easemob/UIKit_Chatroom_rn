@@ -1,3 +1,5 @@
+_English | [中文](./README.zh.md)_
+
 <p align="center">
   <a href="https://github.com/AsteriskZuo/react-native-chat-room/blob/main/LICENSE">
     <img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="react-native-chat-room is released under the MIT license." />
