@@ -53,8 +53,18 @@ export type InputBarProps = Omit<
    * Callback function when the input box component is hidden.
    */
   onSended?: (content: string, message: ChatMessage) => void;
+  /**
+   * The offset of the keyboard.
+   */
   keyboardVerticalOffset?: number;
+  /**
+   * Callback function when the input box component is layout. Default is `false`.
+   */
   closeAfterSend?: boolean;
+  /**
+   * The number of max lines of the input box component. Default is `4`.
+   */
+  numberOfLines?: number;
 };
 
 /**
@@ -93,6 +103,7 @@ export const InputBar = React.forwardRef<InputBarRef, InputBarProps>(function (
     keyboardVerticalOffset = 0,
     onLayout,
     closeAfterSend = false,
+    numberOfLines = 4,
     ...others
   } = props;
   const { bottom } = useSafeAreaInsets();
@@ -250,7 +261,7 @@ export const InputBar = React.forwardRef<InputBarRef, InputBarProps>(function (
               >
                 <TextInput
                   ref={inputRef}
-                  numberOfLines={4}
+                  numberOfLines={numberOfLines}
                   multiline={true}
                   unitHeight={Platform.OS === 'ios' ? 22 : 22}
                   style={{
