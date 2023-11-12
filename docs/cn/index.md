@@ -168,21 +168,47 @@ export type ContainerProps = React.PropsWithChildren<{
   appKey: string;
   isDevMode?: boolean;
   language?: StringSetType;
-  languageFactory?: CreateStringSet;
+  languageBuiltInFactory?: CreateStringSet;
+  languageExtensionFactory?: CreateStringSet;
   palette?: Palette;
   theme?: Theme;
   roomOption?: PartialRoomOption;
+  avatar?: {
+    borderRadiusStyle?: CornerRadiusPaletteType;
+  };
+  onInitialized?: () => void;
 }>;
+```
+
+```tsx
+// 主要控制聊天室组件里面的组件是否加载。
+export type RoomOption = {
+  globalBroadcast: {
+    isVisible: boolean;
+  };
+  gift: {
+    isVisible: boolean;
+  };
+  messageList: {
+    isVisibleGift: boolean;
+    isVisibleTime: boolean;
+    isVisibleTag: boolean;
+    isVisibleAvatar: boolean;
+  };
+};
 ```
 
 除了 `appKey` 之外都是可选参数。
 
 - isDevMode: 如果设置为 `true`，则激活日志打印等工具。
 - language: 设置当前的语言，如果没有设置，则获取系统当前的语言作为默认值。
-- languageFactory: 如果没有设置则使用内置的语言资源。
+- languageBuiltInFactory: 如果没有设置则使用内置的语言资源。通常可以修改内置的 UI 内容。
+- languageExtensionFactory: 如果设置将扩展语言资源。通常应用的 UI 也需要国际化。
 - palette: 设置当前的调色板，主题服务的重要依赖。
 - theme: 如果没有设置主题，将使用 `light` 为默认主题。
 - roomOption: 聊天室选项。具体参见 全局配置服务。
+- avatar: 设置全局头像的圆角样式
+- onInitialized：初始化完成的回调通知
 
 通常 `Container` 会处于应用的底层，一般为根组件，或者是根组件同一级别。例如：
 
@@ -566,14 +592,14 @@ const ref = React.useRef<Chatroom>({} as any);
 
 `Chatroom`提供的方法概览
 
-| 方法                  | 介绍                               |
-| --------------------- | ---------------------------------- |
-| getGlobalBroadcastRef | 获取`GlobalBroadcast`的组件引用    |
-| getGiftEffectRef      | 获取`getGiftEffect`的组件引用      |
-| getParticipantListRef | 获取`getParticipantList`的组件引用 |
-| getMessageListRef     | 获取`getMessageList`的组件引用     |
-| joinRoom              | 加入聊天室                         |
-| leaveRoom             | 退出聊天室                         |
+| 方法                  | 介绍                                       |
+| --------------------- | ------------------------------------------ |
+| getGlobalBroadcastRef | 获取`GlobalBroadcast`的组件引用            |
+| getGiftMessageListRef | 获取`GiftMessageList`的组件引用            |
+| getParticipantListRef | 获取`BottomSheetParticipantList`的组件引用 |
+| getMessageListRef     | 获取`MessageList`的组件引用                |
+| joinRoom              | 加入聊天室                                 |
+| leaveRoom             | 退出聊天室                                 |
 
 ![chatroom](../chatroom.png)
 

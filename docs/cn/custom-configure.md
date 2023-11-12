@@ -1,3 +1,31 @@
+- [组件概述](#组件概述)
+  - [主题介绍](#主题介绍)
+  - [国际化介绍](#国际化介绍)
+  - [初始化介绍](#初始化介绍)
+  - [Chatroom 组件](#chatroom-组件)
+    - [属性详细介绍](#属性详细介绍)
+      - [containerStyle](#containerstyle)
+      - [GiftMessageList](#giftmessagelist)
+      - [GlobalBroadcast](#globalbroadcast)
+      - [MessageList](#messagelist)
+      - [InputBar](#inputbar)
+      - [BottomSheetParticipantList](#bottomsheetparticipantlist)
+    - [方法详细介绍](#方法详细介绍)
+      - [getGlobalBroadcastRef](#getglobalbroadcastref)
+      - [getGiftMessageListRef](#getgiftmessagelistref)
+      - [getParticipantListRef](#getparticipantlistref)
+      - [getMessageListRef](#getmessagelistref)
+      - [joinRoom](#joinroom)
+      - [leaveRoom](#leaveroom)
+  - [MessageList 组件](#messagelist-组件)
+  - [ParticipantList 组件](#participantlist-组件)
+  - [GiftMessageList 组件](#giftmessagelist-组件)
+  - [GlobalBroadcast 组件](#globalbroadcast-组件)
+  - [InputBar 组件](#inputbar-组件)
+  - [InputBarStyle 组件](#inputbarstyle-组件)
+  - [BottomSheetGift 组件](#bottomsheetgift-组件)
+  - [更多](#更多)
+
 # 组件概述
 
 `room uikit sdk` 主要包括如下组件：
@@ -128,9 +156,68 @@ export function createUIKitLanguage(type: LanguageCode): StringSet {
 />;
 ```
 
-## Chatroom
+## 初始化介绍
 
-聊天室组件是包括成员列表组件、输入组件、消息列表组件、礼物特效组件、重要消息通知组件、菜单组件等的集合。它是一个页面级组件，基本占据了这个屏幕。如果想要添加组件，建议成为它的子组件或者背景组件。
+`Chatroom UIKit SDK` 的入口就是 `Container` 组件，它主要负责集成其他组件和参数配置。
+
+```tsx
+export type ContainerProps = React.PropsWithChildren<{
+  appKey: string;
+  isDevMode?: boolean;
+  language?: StringSetType;
+  languageBuiltInFactory?: CreateStringSet;
+  languageExtensionFactory?: CreateStringSet;
+  palette?: Palette;
+  theme?: Theme;
+  roomOption?: PartialRoomOption;
+  avatar?: {
+    borderRadiusStyle?: CornerRadiusPaletteType;
+  };
+  onInitialized?: () => void;
+}>;
+```
+
+```tsx
+// 主要控制聊天室组件里面的组件是否加载。
+export type RoomOption = {
+  globalBroadcast: {
+    isVisible: boolean;
+  };
+  gift: {
+    isVisible: boolean;
+  };
+  messageList: {
+    isVisibleGift: boolean;
+    isVisibleTime: boolean;
+    isVisibleTag: boolean;
+    isVisibleAvatar: boolean;
+  };
+};
+```
+
+除了 `appKey` 之外都是可选参数。
+
+- isDevMode: 如果设置为 `true`，则激活日志打印等工具。
+- language: 设置当前的语言，如果没有设置，则获取系统当前的语言作为默认值。
+- languageBuiltInFactory: 如果没有设置则使用内置的语言资源。通常可以修改内置的UI内容。
+- languageExtensionFactory: 如果设置将扩展语言资源。通常应用的UI也需要国际化。
+- palette: 设置当前的调色板，主题服务的重要依赖。
+- theme: 如果没有设置主题，将使用 `light` 为默认主题。
+- roomOption: 聊天室选项。具体参见 全局配置服务。
+- avatar: 设置全局头像的圆角样式
+- onInitialized：初始化完成的回调通知
+
+通常 `Container` 会处于应用的底层，一般为根组件，或者是根组件同一级别。例如：
+
+```tsx
+export function App() {
+  return <Container appKey={'your app key'}>{children}</Container>;
+}
+```
+
+## Chatroom 组件
+
+聊天室组件是包括成员列表组件、输入组件、消息列表组件、打赏消息组件、全局广播通知组件、菜单组件等的集合。它是一个页面级组件，基本占据了这个屏幕。如果想要添加组件，建议成为它的子组件或者背景组件。
 
 简单示例如下：
 
@@ -163,32 +250,96 @@ const ref = React.useRef<Chatroom>({} as any);
 
 `Chatroom`提供的属性概览
 
-| 属性            | 是否可选 | 介绍                                                 |
-| --------------- | -------- | ---------------------------------------------------- |
-| containerStyle  | 可选     | 设置组件容器样式。支持背景、位置、大小、边框等的设置 |
-| GiftMessageList | 可选     | 礼物特效组件的渲染器                                 |
-| GlobalBroadcast | 可选     | 重要消息组件的渲染器                                 |
-| input           | 可选     | 输入组件的属性                                       |
-| messageList     | 可选     | 消息列表的属性                                       |
-| globalBroadcast | 可选     | 聊天室全局广播                                       |
-| gift            | 可选     | 礼物特效的属性                                       |
-| participantList | 可选     | 成员列表的属性                                       |
-| backgroundView  | 可选     | 背景组件                                             |
+| 属性                       | 是否可选 | 介绍                                                 |
+| -------------------------- | -------- | ---------------------------------------------------- |
+| containerStyle             | 可选     | 设置组件容器样式。支持背景、位置、大小、边框等的设置 |
+| GiftMessageList            | 可选     | 打赏消息组件的渲染器                                 |
+| GlobalBroadcast            | 可选     | 全局广播组件的渲染器                                 |
+| MessageList                | 可选     | 消息列表组件的渲染器                                 |
+| InputBar                   | 可选     | 输入组件的渲染器                                     |
+| BottomSheetParticipantList | 可选     | 成员列表组件的渲染器                                 |
+| input                      | 可选     | 输入组件的属性                                       |
+| messageList                | 可选     | 消息列表的属性                                       |
+| globalBroadcast            | 可选     | 聊天室全局广播                                       |
+| gift                       | 可选     | 打赏消息的属性                                       |
+| participantList            | 可选     | 成员列表的属性                                       |
+| backgroundView             | 可选     | 背景组件                                             |
 
 `Chatroom`提供的方法概览
 
-| 方法                  | 介绍                               |
-| --------------------- | ---------------------------------- |
-| getGlobalBroadcastRef | 获取`GlobalBroadcast`的组件引用    |
-| getGiftEffectRef      | 获取`getGiftEffect`的组件引用      |
-| getParticipantListRef | 获取`getParticipantList`的组件引用 |
-| getMessageListRef     | 获取`getMessageList`的组件引用     |
-| joinRoom              | 加入聊天室                         |
-| leaveRoom             | 退出聊天室                         |
+| 方法                  | 介绍                                       |
+| --------------------- | ------------------------------------------ |
+| getGlobalBroadcastRef | 获取`GlobalBroadcast`的组件引用            |
+| getGiftMessageListRef | 获取`GiftMessageList`的组件引用            |
+| getParticipantListRef | 获取`BottomSheetParticipantList`的组件引用 |
+| getMessageListRef     | 获取`MessageList`的组件引用                |
+| joinRoom              | 加入聊天室                                 |
+| leaveRoom             | 退出聊天室                                 |
 
 ![chatroom](../chatroom.png)
 
-## MessageList
+### 属性详细介绍
+
+#### containerStyle
+
+该属性可以控制 `Chatroom` 组件的背景、位置、大小、边框等样式。
+
+#### GiftMessageList
+
+默认使用内部组件 `GiftMessageList`。
+可以设置类型为 `GiftMessageListComponent` 的自定义组件。替换之后的行为完全由开发者控制，如果在 `GiftMessageList` 组件的基础上进行扩展或者修改将事半功倍的效果。
+
+#### GlobalBroadcast
+
+默认使用内部组件 `GlobalBroadcast`.
+可以设置类型为 `GlobalBroadcastComponent` 的自定义组件。
+
+#### MessageList
+
+默认使用内部组件 `MessageList`.
+可以设置类型为 `MessageListComponent` 的自定义组件。
+
+#### InputBar
+
+默认使用内部组件 `InputBar`.
+可以设置类型为 `InputBarComponent` 的自定义组件。
+这个组件包括了 `InputBarStyle` 组件。 如果自定义可能需要注意。
+
+#### BottomSheetParticipantList
+
+默认使用内部组件 `BottomSheetParticipantList`.
+可以设置类型为 `BottomSheetParticipantListComponent` 的自定义组件。
+
+### 方法详细介绍
+
+#### getGlobalBroadcastRef
+
+该方法可以获取 `GlobalBroadcast` 组件的引用，
+默认是通过收到后台的消息广播进行显示，这里开发者可以插入自定义的全局广播消息。
+
+#### getGiftMessageListRef
+
+该方法可以获取 `GiftMessageList` 组件的引用。
+
+#### getParticipantListRef
+
+该方法可以获取 `BottomSheetParticipantList` 组件的引用。
+这里开发者可以自定义成员管理相关内容。
+
+#### getMessageListRef
+
+该方法可以获取`MessageList`的组件引用。
+默认通过发送消息或者接收消息显示消息，这里开发者可以手动插入自定义消息、删除消息、滚动到最下面等操作。
+
+#### joinRoom
+
+当加载 `Chatroom` 组件，自动加入房间，有时候由于网络等问题，加入失败，开发者可以通过该方法重新尝试加入房间。
+
+#### leaveRoom
+
+开发者可以通过该方法退出房间，而不用卸载组件。
+
+## MessageList 组件
 
 聊天室消息区域组件`MessageList`提供消息的显示，聊天室接收到的文本消息、表情消息、礼物消息，发送成功的消息会显示在这里。
 
@@ -233,7 +384,7 @@ ref?.current?.addSendedMessage?.(message);
 ![message_context_menu](../message_context_menu.png)
 ![message_report](../message_report.png)
 
-## ParticipantList
+## ParticipantList 组件
 
 聊天室成员组件可以显示和管理聊天室成员，房间拥有者还有禁言列表以及管理权限。
 
@@ -286,9 +437,9 @@ ref?.current?.startShow?.();
 ![member_list](../member_list.png)
 ![member_context_menu](../member_context_menu.png)
 
-## GiftMessageList
+## GiftMessageList 组件
 
-礼物特效组件用来展示发送的礼物效果，礼物消息可以显示在消息列表，也可以显示在该组件。
+打赏消息组件用来展示发送的礼物效果，礼物消息可以显示在消息列表，也可以显示在该组件。
 
 简单使用示例：
 
@@ -317,7 +468,7 @@ ref.current?.pushTask({
 | ----------------------- | -------- | ---------------------------------------------- |
 | visible                 | 可选     | 设置组件是否可见                               |
 | containerStyle          | 可选     | 设置组件容器样式。支持背景、位置、边框等的设置 |
-| GiftEffectItemComponent | 可选     | 礼物特效列表项的渲染器                         |
+| GiftEffectItemComponent | 可选     | 打赏消息列表项的渲染器                         |
 
 `GiftMessageList`提供的方法概览
 
@@ -325,9 +476,9 @@ ref.current?.pushTask({
 | -------- | ------------------------------------ |
 | pushTask | 将礼物消息任务添加到队列中，排队加载 |
 
-## GlobalBroadcast
+## GlobalBroadcast 组件
 
-重要消息通知组件接收和现实全局重要消息。也是通过添加消息到队列排队显示。
+全局广播通知组件接收和现实全局全局广播。也是通过添加消息到队列排队显示。
 
 简单示例如下：
 
@@ -358,7 +509,7 @@ ref.current?.pushTask?.({
 | containerStyle          | 可选     | 设置组件容器样式。支持背景、位置、大小、边框等的设置 |
 | textStyle               | 可选     | 设置组件文本样式                                     |
 | icon                    | 可选     | 设置组件上的图标样式                                 |
-| GiftEffectItemComponent | 可选     | 礼物特效列表项的渲染器                               |
+| GiftEffectItemComponent | 可选     | 打赏消息列表项的渲染器                               |
 | onFinished              | 可选     | 所有消息播放完成时的回调通知                         |
 | onLayout                | 可选     | 组件布局发生变化时的回调通知                         |
 
@@ -368,7 +519,7 @@ ref.current?.pushTask?.({
 | -------- | ---------------------------- |
 | pushTask | 将消息添加到队列中，排队加载 |
 
-## InputBar
+## InputBar 组件
 
 输入框组件可以发送文本、表情消息。 同时和 输入框组件组合为可以动态切换的组件。当点击输入框样式组件时切换到输入状态，发送消息或者关闭输入框时切换为输入框样式组件。
 
@@ -413,11 +564,11 @@ ref?.current?.close?.();
 ![input_bar](../input_bar.png)
 ![emoji_list.png](../emoji_list.png)
 
-## InputBarStyle
+## InputBarStyle 组件
 
 输入样式组件。和输入框组件组成了复合组件，可以动态进行切换。
 
-## BottomSheetGift
+## BottomSheetGift 组件
 
 礼物列表组件提供自定义礼物列表，点击礼物项的发送按钮发送到聊天室。
 

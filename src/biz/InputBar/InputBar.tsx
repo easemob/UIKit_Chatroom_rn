@@ -356,3 +356,5 @@ export const InputBar = React.forwardRef<InputBarRef, InputBarProps>(function (
     </>
   );
 });
+
+export type InputBarComponent = typeof InputBar;

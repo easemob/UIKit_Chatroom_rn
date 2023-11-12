@@ -25,12 +25,23 @@ import {
   GlobalBroadcastProps,
   GlobalBroadcastRef,
 } from '../GlobalBroadcast';
-import { InputBar, InputBarProps, InputBarRef } from '../InputBar';
+import {
+  InputBar,
+  InputBarComponent,
+  InputBarProps,
+  InputBarRef,
+} from '../InputBar';
 import { gInputBarStyleHeight } from '../InputBar/InputBar.const';
-import { MessageList, MessageListProps, MessageListRef } from '../MessageList';
+import {
+  MessageList,
+  MessageListComponent,
+  MessageListProps,
+  MessageListRef,
+} from '../MessageList';
 import { gMessageListHeight } from '../MessageList/MessageList.const'; // for test
 import {
   BottomSheetParticipantList,
+  BottomSheetParticipantListComponent,
   BottomSheetParticipantListProps,
   BottomSheetParticipantListRef,
 } from '../ParticipantList';
@@ -64,6 +75,18 @@ export type ChatroomProps = React.PropsWithChildren<
      * You can set whether to load through `RoomOption.globalBroadcast`.
      */
     GlobalBroadcast?: GlobalBroadcastComponent;
+    /**
+     * Renderer for the MessageList component. If not set, the built-in one is used.
+     */
+    MessageList?: MessageListComponent;
+    /**
+     * Renderer for the InputBar component. If not set, the built-in one is used.
+     */
+    InputBar?: InputBarComponent;
+    /**
+     * Properties of the BottomSheetParticipantList component. If not set, the default value is used.
+     */
+    BottomSheetParticipantList?: BottomSheetParticipantListComponent;
     /**
      * Properties of the InputBar component. If not set, the default value is used.
      */
@@ -120,6 +143,9 @@ type ChatroomState = {
 
 let GGiftEffect: GiftMessageListComponent;
 let GGlobalBroadcast: GlobalBroadcastComponent;
+let GMessageList: MessageListComponent;
+let GInputBar: InputBarComponent;
+let GBottomSheetParticipantList: BottomSheetParticipantListComponent;
 
 /**
  * Component for chat room.
@@ -184,6 +210,10 @@ export abstract class ChatroomBase extends React.PureComponent<
 
     GGiftEffect = props.GiftMessageList ?? GiftMessageList;
     GGlobalBroadcast = props.GlobalBroadcast ?? GlobalBroadcast;
+    GMessageList = props.MessageList ?? MessageList;
+    GInputBar = props.InputBar ?? InputBar;
+    GBottomSheetParticipantList =
+      props.BottomSheetParticipantList ?? BottomSheetParticipantList;
 
     this.state = {
       isInputBarShow: false,
@@ -203,7 +233,7 @@ export abstract class ChatroomBase extends React.PureComponent<
    * Get the reference of the InputBar component.
    * @returns GiftMessageListRef | null.
    */
-  getGiftEffectRef() {
+  getGiftMessageListRef() {
     return this.giftRef?.current;
   }
 
@@ -347,7 +377,7 @@ export abstract class ChatroomBase extends React.PureComponent<
         >
           {backgroundView}
 
-          <MessageList
+          <GMessageList
             ref={this.messageRef}
             containerStyle={[
               {
@@ -388,7 +418,7 @@ export abstract class ChatroomBase extends React.PureComponent<
           {children}
         </View>
 
-        <InputBar
+        <GInputBar
           ref={this.inputBarRef}
           onSended={(_content, message) => {
             this.messageRef?.current?.addSendedMessage?.(message);
@@ -397,7 +427,7 @@ export abstract class ChatroomBase extends React.PureComponent<
           {...input?.props}
         />
 
-        <BottomSheetParticipantList
+        <GBottomSheetParticipantList
           ref={this.memberRef}
           maskStyle={{ transform: [{ translateY: -this.state.pageY }] }}
           {...participantList?.props}

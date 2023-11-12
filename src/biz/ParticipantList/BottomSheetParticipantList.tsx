@@ -267,3 +267,6 @@ export const ParticipantListMemo = React.memo(
   BottomSheetParticipantList,
   BottomSheetParticipantListCompare
 );
+
+export type BottomSheetParticipantListComponent =
+  typeof BottomSheetParticipantList;

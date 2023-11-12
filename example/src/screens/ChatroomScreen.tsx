@@ -125,7 +125,7 @@ export function ChatroomScreen(props: Props) {
   }, [addListener, removeListener]);
 
   const addGiftEffectTask = () => {
-    chatroomRef?.current?.getGiftEffectRef()?.pushTask({
+    chatroomRef?.current?.getGiftMessageListRef()?.pushTask({
       model: {
         id: seqId('_gf').toString(),
         nickName: 'NickName',
@@ -401,7 +401,7 @@ export function ChatroomScreen(props: Props) {
                       chatroomRef?.current
                         ?.getMessageListRef()
                         ?.addSendedMessage(message);
-                      chatroomRef?.current?.getGiftEffectRef()?.pushTask({
+                      chatroomRef?.current?.getGiftMessageListRef()?.pushTask({
                         model: {
                           id: seqId('_gf').toString(),
                           nickName:

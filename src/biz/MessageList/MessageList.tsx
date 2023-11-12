@@ -392,3 +392,5 @@ function useGetReportDefaultData(_tr: (key: string, ...args: any[]) => string) {
   }, []);
   return ret;
 }
+
+export type MessageListComponent = typeof MessageList;
