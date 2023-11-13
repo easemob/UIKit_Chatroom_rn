@@ -67,6 +67,7 @@ export function EmojiList(props: EmojiListProps) {
   const { getViewStyleSize } = useGetStyleSize();
   const { width: propsWidth } = getViewStyleSize(containerStyle);
   const { checkType } = useCheckType();
+  const { fontFamily } = useConfigContext();
   if (propsWidth) {
     checkType(propsWidth, 'number');
   }
@@ -112,7 +113,12 @@ export function EmojiList(props: EmojiListProps) {
                       onFace?.(v);
                     }}
                   >
-                    <Text style={{ fontSize: Platform.OS === 'ios' ? 32 : 26 }}>
+                    <Text
+                      style={{
+                        fontSize: Platform.OS === 'ios' ? 32 : 26,
+                        fontFamily: fontFamily,
+                      }}
+                    >
                       {r}
                     </Text>
                   </TouchableOpacity>

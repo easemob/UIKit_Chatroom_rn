@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Animated } from 'react-native';
 
+import { useConfigContext } from '../../config';
 import { useDispatchContext } from '../../dispatch';
 import { useColors } from '../../hook';
 import { usePaletteContext } from '../../theme';
@@ -15,6 +16,7 @@ export function MessageListTextItem(props: MessageListItemProps) {
   const contentWidth = React.useRef(0);
   const unitSpaceWidth = React.useRef(3.5);
   const [space, setSpace] = React.useState('');
+  const { fontFamily } = useConfigContext();
   const translateX = React.useRef(new Animated.Value(0)).current;
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
@@ -55,14 +57,14 @@ export function MessageListTextItem(props: MessageListItemProps) {
     <>
       <PresetCalcTextWidth
         content={' '}
-        textProps={{ style: fonts.body.medium }}
+        textProps={{ style: { ...fonts.body.medium, fontFamily } }}
         onWidth={(width: number) => {
           unitSpaceWidth.current = width;
         }}
       />
       <PresetCalcTextWidth
         content={c.text.trim()}
-        textProps={{ style: fonts.body.medium }}
+        textProps={{ style: { ...fonts.body.medium, fontFamily } }}
         onWidth={(width: number) => {
           contentWidth.current = width;
         }}
@@ -76,6 +78,7 @@ export function MessageListTextItem(props: MessageListItemProps) {
           },
           {
             ...fonts.body.medium,
+            fontFamily,
             color: getColor('text'),
           },
         ]}

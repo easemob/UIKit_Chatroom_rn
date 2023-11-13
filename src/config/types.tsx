@@ -34,6 +34,10 @@ export type Config = {
   avatar: {
     borderRadiusStyle: CornerRadiusPaletteType;
   };
+  /**
+   * The font family name.
+   */
+  fontFamily?: string;
 };
 /**
  * Room option types

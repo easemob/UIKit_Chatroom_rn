@@ -70,6 +70,10 @@ export type ContainerProps = React.PropsWithChildren<{
     borderRadiusStyle?: CornerRadiusPaletteType;
   };
   /**
+   * The font family name.
+   */
+  fontFamily?: string;
+  /**
    * IM initialization is completed.
    */
   onInitialized?: () => void;
@@ -95,6 +99,7 @@ export function Container(props: ContainerProps) {
     theme,
     roomOption,
     avatar,
+    fontFamily,
     onInitialized,
   } = props;
   const _palette = usePresetPalette();
@@ -151,6 +156,7 @@ export function Container(props: ContainerProps) {
                       borderRadiusStyle: 'large',
                     }
                   ),
+                  fontFamily: fontFamily,
                 }}
               >
                 <SafeAreaProvider>{children}</SafeAreaProvider>

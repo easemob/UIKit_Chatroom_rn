@@ -5,3 +5,4 @@
 [yoga layout helper](https://yogalayout.com/)
 [icon resource](https://www.iconfinder.com/)
 [translate language code](https://learn.microsoft.com/en-us/azure/ai-services/translator/language-support)
+[Twemoji Mozilla helper](https://github.com/mozilla/twemoji-colr)

@@ -10,6 +10,7 @@ import type { ChatMessage } from 'react-native-chat-sdk';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import type { IconNameType } from '../../assets';
+import { useConfigContext } from '../../config';
 import { useColors, useKeyboardHeight } from '../../hook';
 import { usePaletteContext, useThemeContext } from '../../theme';
 import { IconButtonMemo } from '../../ui/Button';
@@ -136,6 +137,7 @@ export const InputBar = React.forwardRef<InputBarRef, InputBarProps>(function (
   const isClosedEmoji = React.useRef(true);
   const isClosedKeyboard = React.useRef(true);
   const [emojiHeight, _setEmojiHeight] = React.useState(0);
+  const { fontFamily } = useConfigContext();
 
   const [iconName, setIconName] = React.useState<IconNameType>('face');
 
@@ -269,6 +271,7 @@ export const InputBar = React.forwardRef<InputBarRef, InputBarProps>(function (
                     fontStyle: 'normal',
                     fontWeight: '400',
                     lineHeight: 22,
+                    fontFamily: fontFamily,
                   }}
                   containerStyle={{
                     width: '100%',

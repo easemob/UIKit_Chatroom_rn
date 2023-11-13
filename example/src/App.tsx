@@ -4,6 +4,7 @@ import {
   NavigationState,
 } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import * as React from 'react';
 import { DeviceEventEmitter, View } from 'react-native';
@@ -42,6 +43,12 @@ export function App() {
   const [theme, setTheme] = React.useState(light);
   const isNavigationReadyRef = React.useRef(false);
   const isContainerReadyRef = React.useRef(false);
+  const isFontReadyRef = React.useRef(false);
+  const isReadyRef = React.useRef(false);
+  const fontFamily = 'Twemoji-Mozilla';
+  const [fontsLoaded] = useFonts({
+    [fontFamily]: require('../assets/twemoji.ttf'),
+  });
 
   const formatNavigationState = (
     state: NavigationState | undefined,
@@ -84,8 +91,23 @@ export function App() {
     // setTimeout(async () => {
     //   await SplashScreen.hideAsync();
     // }, 2000);
+    if (isReadyRef.current === true) {
+      return;
+    }
+    isReadyRef.current = true;
     await SplashScreen.hideAsync();
   };
+
+  if (fontsLoaded) {
+    isFontReadyRef.current = true;
+    if (
+      isFontReadyRef.current === true &&
+      isNavigationReadyRef.current === true &&
+      isContainerReadyRef.current === true
+    ) {
+      onReady(true);
+    }
+  }
 
   return (
     <React.StrictMode>
@@ -96,10 +118,12 @@ export function App() {
         theme={theme}
         roomOption={{ globalBroadcast: { isVisible: true } }}
         language={'fr'}
+        fontFamily={fontFamily}
         onInitialized={() => {
           console.log('dev:onInitialized:');
           isContainerReadyRef.current = true;
           if (
+            isFontReadyRef.current === true &&
             isNavigationReadyRef.current === true &&
             isContainerReadyRef.current === true
           ) {
@@ -124,6 +148,7 @@ export function App() {
             console.log('dev:onReady:');
             isNavigationReadyRef.current = true;
             if (
+              isFontReadyRef.current === true &&
               isNavigationReadyRef.current === true &&
               isContainerReadyRef.current === true
             ) {
