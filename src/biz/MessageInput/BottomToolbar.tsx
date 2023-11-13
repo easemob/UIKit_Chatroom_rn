@@ -10,12 +10,12 @@ import { Text } from '../../ui/Text';
 import {
   gInputBarStyleHeight,
   gInputBarStyleItemHeight,
-} from './InputBar.const';
+} from './MessageInput.const';
 
 /**
- * Properties of the `InputBarStyle` component.
+ * Properties of the `BottomToolbar` component.
  */
-export type InputBarStyleProps = {
+export type BottomToolbarProps = {
   /**
    * Callback function when the input box is clicked.
    */
@@ -40,10 +40,10 @@ export type InputBarStyleProps = {
 
 /**
  * Input style components. Custom buttons can be added to implement custom events. For example: add a gift button and display the gift list when the gift button is clicked.
- * @param props {@link InputBarStyleProps}
+ * @param props {@link BottomToolbarProps}
  * @returns JSX.Element
  */
-export function InputBarStyle(props: InputBarStyleProps) {
+export function BottomToolbar(props: BottomToolbarProps) {
   const { onClickInput, first, after, onLayout, isShow } = props;
   const { colors } = usePaletteContext();
   const { getColor } = useColors({

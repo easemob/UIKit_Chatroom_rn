@@ -26,12 +26,12 @@ import {
   GlobalBroadcastRef,
 } from '../GlobalBroadcast';
 import {
-  InputBar,
-  InputBarComponent,
-  InputBarProps,
-  InputBarRef,
-} from '../InputBar';
-import { gInputBarStyleHeight } from '../InputBar/InputBar.const';
+  MessageInput,
+  MessageInputComponent,
+  MessageInputProps,
+  MessageInputRef,
+} from '../MessageInput';
+import { gInputBarStyleHeight } from '../MessageInput/MessageInput.const';
 import {
   MessageList,
   MessageListComponent,
@@ -80,19 +80,19 @@ export type ChatroomProps = React.PropsWithChildren<
      */
     MessageList?: MessageListComponent;
     /**
-     * Renderer for the InputBar component. If not set, the built-in one is used.
+     * Renderer for the MessageInput component. If not set, the built-in one is used.
      */
-    InputBar?: InputBarComponent;
+    MessageInput?: MessageInputComponent;
     /**
      * Properties of the BottomSheetParticipantList component. If not set, the default value is used.
      */
     BottomSheetParticipantList?: BottomSheetParticipantListComponent;
     /**
-     * Properties of the InputBar component. If not set, the default value is used.
+     * Properties of the MessageInput component. If not set, the default value is used.
      */
     input?: {
       props?: Omit<
-        InputBarProps,
+        MessageInputProps,
         'onInputBarWillShow' | 'onInputBarWillHide' | 'onSend'
       >;
     };
@@ -144,7 +144,7 @@ type ChatroomState = {
 let GGiftEffect: GiftMessageListComponent;
 let GGlobalBroadcast: GlobalBroadcastComponent;
 let GMessageList: MessageListComponent;
-let GInputBar: InputBarComponent;
+let GMessageInput: MessageInputComponent;
 let GBottomSheetParticipantList: BottomSheetParticipantListComponent;
 
 /**
@@ -159,9 +159,9 @@ export abstract class ChatroomBase extends React.PureComponent<
   ChatroomState
 > {
   /**
-   * Reference to the InputBar component.
+   * Reference to the MessageInput component.
    */
-  inputBarRef?: React.RefObject<InputBarRef>;
+  inputBarRef?: React.RefObject<MessageInputRef>;
   /**
    * Reference to the MessageList component.
    */
@@ -211,7 +211,7 @@ export abstract class ChatroomBase extends React.PureComponent<
     GGiftEffect = props.GiftMessageList ?? GiftMessageList;
     GGlobalBroadcast = props.GlobalBroadcast ?? GlobalBroadcast;
     GMessageList = props.MessageList ?? MessageList;
-    GInputBar = props.InputBar ?? InputBar;
+    GMessageInput = props.MessageInput ?? MessageInput;
     GBottomSheetParticipantList =
       props.BottomSheetParticipantList ?? BottomSheetParticipantList;
 
@@ -222,7 +222,7 @@ export abstract class ChatroomBase extends React.PureComponent<
   }
 
   /**
-   * Get the reference of the InputBar component.
+   * Get the reference of the MessageInput component.
    * @returns GlobalBroadcastRef | null.
    */
   getGlobalBroadcastRef() {
@@ -230,7 +230,7 @@ export abstract class ChatroomBase extends React.PureComponent<
   }
 
   /**
-   * Get the reference of the InputBar component.
+   * Get the reference of the MessageInput component.
    * @returns GiftMessageListRef | null.
    */
   getGiftMessageListRef() {
@@ -238,7 +238,7 @@ export abstract class ChatroomBase extends React.PureComponent<
   }
 
   /**
-   * Get the reference of the InputBar component.
+   * Get the reference of the MessageInput component.
    * @returns BottomSheetParticipantListRef | null.
    */
   getParticipantListRef() {
@@ -246,7 +246,7 @@ export abstract class ChatroomBase extends React.PureComponent<
   }
 
   /**
-   * Get the reference of the InputBar component.
+   * Get the reference of the MessageInput component.
    * @returns MessageListRef | null.
    */
   getMessageListRef() {
@@ -418,7 +418,7 @@ export abstract class ChatroomBase extends React.PureComponent<
           {children}
         </View>
 
-        <GInputBar
+        <GMessageInput
           ref={this.inputBarRef}
           onSended={(_content, message) => {
             this.messageRef?.current?.addSendedMessage?.(message);

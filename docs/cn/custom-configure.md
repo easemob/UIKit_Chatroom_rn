@@ -8,7 +8,7 @@
       - [GiftMessageList](#giftmessagelist)
       - [GlobalBroadcast](#globalbroadcast)
       - [MessageList](#messagelist)
-      - [InputBar](#inputbar)
+      - [MessageInput](#messageinput)
       - [BottomSheetParticipantList](#bottomsheetparticipantlist)
     - [方法详细介绍](#方法详细介绍)
       - [getGlobalBroadcastRef](#getglobalbroadcastref)
@@ -21,8 +21,8 @@
   - [ParticipantList 组件](#participantlist-组件)
   - [GiftMessageList 组件](#giftmessagelist-组件)
   - [GlobalBroadcast 组件](#globalbroadcast-组件)
-  - [InputBar 组件](#inputbar-组件)
-  - [InputBarStyle 组件](#inputbarstyle-组件)
+  - [MessageInput 组件](#messageinput-组件)
+  - [BottomToolbar 组件](#bottomtoolbar-组件)
   - [BottomSheetGift 组件](#bottomsheetgift-组件)
   - [ReportMessage 组件](#reportmessage-组件)
   - [更多](#更多)
@@ -40,8 +40,8 @@
 | ParticipantList | 聊天室的成员列表组件，包括聊天室成员和禁言成员的管理。               | [ParticipantList](#ParticipantList) |
 | GiftMessageList | 打赏消息列表组件，用来显示打赏的礼物。                               | [GiftMessageList](#GiftMessageList) |
 | GlobalBroadcast | 聊天室全局广播组件，所有的聊天室都会收到。                           | [GlobalBroadcast](#GlobalBroadcast) |
-| InputBar        | 消息输入组件，用来发送各类消息。                                     | [InputBar](#InputBar)               |
-| InputBarStyle   | 底部功能区域组件，可以切换消息输入组件，可以添加自定义按钮。         | [InputBarStyle](#InputBarStyle)     |
+| MessageInput    | 消息输入组件，用来发送各类消息。                                     | [MessageInput](#MessageInput)       |
+| BottomToolbar   | 底部功能区域组件，可以切换消息输入组件，可以添加自定义按钮。         | [BottomToolbar](#BottomToolbar)     |
 | BottomSheetGift | 发送礼物组件，可以发送礼物，礼物来源由开发者指定。                   | [BottomSheetGift](#BottomSheetGift) |
 | BottomSheetGift | 发送礼物组件，可以发送礼物，礼物来源由开发者指定。                   | [BottomSheetGift](#BottomSheetGift) |
 
@@ -258,7 +258,7 @@ const ref = React.useRef<Chatroom>({} as any);
 | GiftMessageList            | 可选     | 打赏消息组件的渲染器                                 |
 | GlobalBroadcast            | 可选     | 全局广播组件的渲染器                                 |
 | MessageList                | 可选     | 消息列表组件的渲染器                                 |
-| InputBar                   | 可选     | 输入组件的渲染器                                     |
+| MessageInput               | 可选     | 输入组件的渲染器                                     |
 | BottomSheetParticipantList | 可选     | 成员列表组件的渲染器                                 |
 | input                      | 可选     | 输入组件的属性                                       |
 | messageList                | 可选     | 消息列表的属性                                       |
@@ -301,11 +301,11 @@ const ref = React.useRef<Chatroom>({} as any);
 默认使用内部组件 `MessageList`.
 可以设置类型为 `MessageListComponent` 的自定义组件。
 
-#### InputBar
+#### MessageInput
 
-默认使用内部组件 `InputBar`.
-可以设置类型为 `InputBarComponent` 的自定义组件。
-这个组件包括了 `InputBarStyle` 组件。 如果自定义可能需要注意。
+默认使用内部组件 `MessageInput`.
+可以设置类型为 `MessageInputComponent` 的自定义组件。
+这个组件包括了 `BottomToolbar` 组件。 如果自定义可能需要注意。
 
 #### BottomSheetParticipantList
 
@@ -521,7 +521,7 @@ ref.current?.pushTask?.({
 | -------- | ---------------------------- |
 | pushTask | 将消息添加到队列中，排队加载 |
 
-## InputBar 组件
+## MessageInput 组件
 
 输入框组件可以发送文本、表情消息。 同时和 输入框组件组合为可以动态切换的组件。当点击输入框样式组件时切换到输入状态，发送消息或者关闭输入框时切换为输入框样式组件。
 
@@ -530,10 +530,10 @@ ref.current?.pushTask?.({
 ```tsx
 // ...
 // 创建引用对象
-const ref = React.useRef<InputBarRef>({} as any);
+const ref = React.useRef<MessageInputRef>({} as any);
 // ...
 // 添加组件到渲染树
-<InputBar
+<MessageInput
   ref={ref}
   onSended={(_content, message) => {
     // todo: 调用消息列表引用对象添加消息到消息列表
@@ -544,7 +544,7 @@ const ref = React.useRef<InputBarRef>({} as any);
 ref?.current?.close?.();
 ```
 
-`InputBar`提供的属性概览
+`MessageInput`提供的属性概览
 
 | 属性                   | 是否可选 | 介绍                                          |
 | ---------------------- | -------- | --------------------------------------------- |
@@ -557,7 +557,7 @@ ref?.current?.close?.();
 | after                  | 可选     | 输入样式组件的后面的自定义组件列表，最多 3 个 |
 | onLayout               | 可选     | 输入样式组件布局发生变化时的回调通知          |
 
-`InputBar`提供的方法概览
+`MessageInput`提供的方法概览
 
 | 方法  | 介绍                                 |
 | ----- | ------------------------------------ |
@@ -566,7 +566,7 @@ ref?.current?.close?.();
 ![input_bar](../input_bar.png)
 ![emoji_list.png](../emoji_list.png)
 
-## InputBarStyle 组件
+## BottomToolbar 组件
 
 输入样式组件。和输入框组件组成了复合组件，可以动态进行切换。
 

@@ -18,24 +18,24 @@ import { KeyboardAvoidingView } from '../../ui/Keyboard';
 import { TextInput } from '../../ui/TextInput';
 import { timeoutTask } from '../../utils';
 import { EmojiListMemo } from '../EmojiList';
+import { BottomToolbar, BottomToolbarProps } from './BottomToolbar';
 import { DelButtonMemo } from './DelButton';
-import { useInputBarApi, useInputValue } from './InputBar.hooks';
-import { InputBarStyle, InputBarStyleProps } from './InputBarStyle';
+import { useInputBarApi, useInputValue } from './MessageInput.hooks';
 
 /**
- * Referencing Values of the `InputBar` component.
+ * Referencing Values of the `MessageInput` component.
  */
-export type InputBarRef = {
+export type MessageInputRef = {
   /**
    * Close the input box component and switch to the input style component.
    */
   close: () => void;
 };
 /**
- * Properties of the `InputBar` component.
+ * Properties of the `MessageInput` component.
  */
-export type InputBarProps = Omit<
-  InputBarStyleProps,
+export type MessageInputProps = Omit<
+  BottomToolbarProps,
   'onClickInput' | 'isShow'
 > & {
   /**
@@ -69,19 +69,19 @@ export type InputBarProps = Omit<
 };
 
 /**
- * The InputBar component provides input box functionality.
+ * The MessageInput component provides input box functionality.
  *
- * It is composed of `TextInput` and `InputBarStyle`, and switches the input state through events.
+ * It is composed of `TextInput` and `BottomToolbar`, and switches the input state through events.
  *
- * @param props {@link InputBarProps}
- * @param ref {@link InputBarRef}
+ * @param props {@link MessageInputProps}
+ * @param ref {@link MessageInputRef}
  * @returns JSX.Element
  *
  * @example
  * ```tsx
- * inputBarRef?: React.RefObject<InputBarRef>;
+ * inputBarRef?: React.RefObject<MessageInputRef>;
  * // ...
- * <InputBar
+ * <MessageInput
  *    ref={this.inputBarRef}
  *    onSended={(_content, message) => {
  *      this.messageRef?.current?.addSendedMessage?.(message);
@@ -93,9 +93,12 @@ export type InputBarProps = Omit<
  *  this.inputBarRef.current.close();
  * ```
  */
-export const InputBar = React.forwardRef<InputBarRef, InputBarProps>(function (
-  props: React.PropsWithChildren<InputBarProps>,
-  ref?: React.ForwardedRef<InputBarRef>
+export const MessageInput = React.forwardRef<
+  MessageInputRef,
+  MessageInputProps
+>(function (
+  props: React.PropsWithChildren<MessageInputProps>,
+  ref?: React.ForwardedRef<MessageInputRef>
 ) {
   const {
     onInputBarWillHide,
@@ -214,7 +217,7 @@ export const InputBar = React.forwardRef<InputBarRef, InputBarProps>(function (
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         keyboardVerticalOffset={keyboardVerticalOffset}
       >
-        <InputBarStyle
+        <BottomToolbar
           onClickInput={() => {
             isClosedEmoji.current = false;
             isClosedKeyboard.current = false;
@@ -371,4 +374,4 @@ export const InputBar = React.forwardRef<InputBarRef, InputBarProps>(function (
   );
 });
 
-export type InputBarComponent = typeof InputBar;
+export type MessageInputComponent = typeof MessageInput;

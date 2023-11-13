@@ -30,6 +30,7 @@ export * from './biz/GiftIcon';
 export * from './biz/GiftList';
 export * from './biz/GiftMessageList';
 export * from './biz/GlobalBroadcast';
+export * from './biz/MessageInput';
 export * from './biz/MessageList';
 export * from './biz/MessageReport';
 export * from './biz/ParticipantList';
