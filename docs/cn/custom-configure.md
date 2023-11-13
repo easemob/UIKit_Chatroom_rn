@@ -174,6 +174,7 @@ export type ContainerProps = React.PropsWithChildren<{
   avatar?: {
     borderRadiusStyle?: CornerRadiusPaletteType;
   };
+  fontFamily?: string;
   onInitialized?: () => void;
 }>;
 ```
