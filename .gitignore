@@ -74,3 +74,4 @@ env.ts
 *.log
 example/dist
 config.local.ts
+gen/typedoc

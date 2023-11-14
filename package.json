@@ -43,7 +43,8 @@
     "prepare": "yarn run version && yarn run config && yarn run prepack",
     "change-icons-name": "node scripts/change-icons-name.js",
     "gen-face-name": "node scripts/generate-faces-name.js",
-    "bundle-icons": "node scripts/bundle-icons.js"
+    "bundle-icons": "node scripts/bundle-icons.js",
+    "typedoc": "npx typedoc --out ./gen/typedoc --json ./gen/typedoc/typedoc.json --tsconfig ./tsconfig.json ./src/index.tsx ./src/types.tsx"
   },
   "keywords": [
     "react-native",
