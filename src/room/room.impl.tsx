@@ -801,18 +801,22 @@ export class RoomServicePrivateImpl extends RoomServiceImpl {
     this.client.chatManager.addMessageListener({
       onMessagesRecalled: (messages) => {
         this._listeners.forEach((v) => {
-          if (this._currentRoomId) {
+          if (this.roomId) {
             for (const message of messages) {
-              v.onMessageRecalled?.(this._currentRoomId, message);
+              v.onMessageRecalled?.(this.roomId, message);
             }
           }
         });
       },
       onMessagesReceived: (messages) => {
         this._listeners.forEach((v) => {
-          if (this._currentRoomId) {
+          if (this.roomId) {
             for (const message of messages) {
-              v.onMessageReceived?.(this._currentRoomId, message);
+              if (message.isBroadcast === true) {
+                v.onGlobalNotifyReceived?.(message);
+              } else {
+                v.onMessageReceived?.(this.roomId, message);
+              }
             }
           }
         });

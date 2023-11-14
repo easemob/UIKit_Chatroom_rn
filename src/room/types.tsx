@@ -205,10 +205,9 @@ export interface MessageServiceListener {
    *
    * The GlobalBroadcast component will pay attention to it.
    *
-   * @param roomId the chat room ID.
    * @param notifyMessage the message object.
    */
-  onGlobalNotifyReceived?(roomId: string, notifyMessage: ChatMessage): void;
+  onGlobalNotifyReceived?(notifyMessage: ChatMessage): void;
 }
 
 export interface ErrorServiceListener {

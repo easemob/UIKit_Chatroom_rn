@@ -1,3 +1,4 @@
+import { ChatTextMessageBody } from 'react-native-chat-sdk';
 import {
   ChatCustomMessageBody,
   ChatMessage,
@@ -68,8 +69,16 @@ export class Chatroom extends ChatroomBase {
           }
         }
       },
-      onGlobalNotifyReceived: (_roomId, _notifyMessage) => {
-        // todo:
+      onGlobalNotifyReceived: (notifyMessage) => {
+        if (this.im?.roomState === 'joined') {
+          const body = notifyMessage.body as ChatTextMessageBody;
+          this.getGlobalBroadcastRef?.()?.pushTask({
+            model: {
+              id: seqId('_mq').toString(),
+              content: body.content,
+            },
+          });
+        }
       },
       onUserBeKicked: (roomId) => {
         // Clean up resources. External notifications kicked. Typical: Re-entering the chat room, prompting that the room has been exited, etc.
