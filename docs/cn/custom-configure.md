@@ -43,7 +43,7 @@
 | MessageInput    | 消息输入组件，用来发送各类消息。                                     | [MessageInput](#MessageInput)       |
 | BottomToolbar   | 底部功能区域组件，可以切换消息输入组件，可以添加自定义按钮。         | [BottomToolbar](#BottomToolbar)     |
 | BottomSheetGift | 发送礼物组件，可以发送礼物，礼物来源由开发者指定。                   | [BottomSheetGift](#BottomSheetGift) |
-| BottomSheetGift | 发送礼物组件，可以发送礼物，礼物来源由开发者指定。                   | [BottomSheetGift](#BottomSheetGift) |
+| ReportMessage   | 消息上报组件。                                                       | [BottomSheetGift](#BottomSheetGift) |
 
 ## 主题介绍
 
@@ -207,7 +207,18 @@ export type RoomOption = {
 - theme: 如果没有设置主题，将使用 `light` 为默认主题。
 - roomOption: 聊天室选项。具体参见 全局配置服务。
 - avatar: 设置全局头像的圆角样式
+- fontFamily: 支持自定义字体。默认使用系统字体。
 - onInitialized：初始化完成的回调通知
+
+全局配置参数。
+
+- globalBroadcast: 全局广播组件配置，可以设置是否加载。
+- gift: 打赏消息列表组件，可以设置是否加载。
+- messageList: 消息列表组件配置
+  - isVisibleGift: 是否加载打赏消息组件。
+  - isVisibleTime: 是否显示时间标签。
+  - isVisibleTag: 是否显示 tag 标签。
+  - isVisibleAvatar: 是否显示头像标签。
 
 通常 `Container` 会处于应用的底层，一般为根组件，或者是根组件同一级别。例如：
 
