@@ -1,5 +1,6 @@
 export * from './MessageContextMenu';
 export * from './MessageList';
+export { gMessageListHeight } from './MessageList.const';
 export * from './MessageList.item';
 export * from './types';
 

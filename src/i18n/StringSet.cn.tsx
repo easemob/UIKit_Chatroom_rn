@@ -21,7 +21,7 @@ export function createStringSetCn(): StringSet {
 
     'Search': '搜素',
 
-    "Let's Chat!": '让我们聊天！',
+    "Let's Chat!": '发条弹幕吧~',
 
     'Send': '发送',
 
