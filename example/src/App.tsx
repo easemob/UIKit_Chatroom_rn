@@ -47,7 +47,8 @@ export function App() {
   const isReadyRef = React.useRef(false);
   const fontFamily = 'Twemoji-Mozilla';
   const [fontsLoaded] = useFonts({
-    [fontFamily]: require('../assets/twemoji.ttf'),
+    // [fontFamily]: require('../assets/twemoji.ttf'),
+    [fontFamily]: require('../assets/Twemoji.Mozilla.ttf'),
   });
 
   const formatNavigationState = (
