@@ -32,12 +32,12 @@ export function ParticipantListItem(props: ParticipantListItemProps) {
       dark: colors.neutral[98],
     },
     color2: {
-      light: colors.neutral[6],
-      dark: colors.neutral[5],
-    },
-    color3: {
       light: colors.neutral[9],
       dark: colors.neutral[2],
+    },
+    color3: {
+      light: colors.neutral[5],
+      dark: colors.neutral[6],
     },
   });
   const { id, userInfo, actions } = props;
@@ -46,12 +46,17 @@ export function ParticipantListItem(props: ParticipantListItemProps) {
       key={id}
       style={{
         backgroundColor: getColor('backgroundColor'),
-        paddingHorizontal: 10,
         width: '100%',
-        height: gParticipantListItemHeight,
       }}
     >
-      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          paddingHorizontal: 10,
+          height: gParticipantListItemHeight - g_flatlist_border_bottom_width,
+        }}
+      >
         {userInfo?.identify ? (
           <>
             <Image
@@ -93,22 +98,25 @@ export function ParticipantListItem(props: ParticipantListItemProps) {
           </Text> */}
         </View>
         <View style={{ flex: 1 }} />
-        <IconButton
-          iconName={'ellipsis_vertical'}
-          style={{
-            tintColor: getColor('color2'),
-            width: 24,
-            height: 24,
-            margin: 4,
-          }}
-          onPress={actions?.onClicked}
-        />
+        {userInfo.hasMenu === true ? (
+          <IconButton
+            iconName={'ellipsis_vertical'}
+            style={{
+              tintColor: getColor('color3'),
+              width: 24,
+              height: 24,
+              margin: 4,
+            }}
+            onPress={actions?.onClicked}
+          />
+        ) : null}
       </View>
       <View
         style={{
+          // width: '100%',
+          borderBottomWidth: g_flatlist_border_bottom_width,
           backgroundColor: getColor('color2'),
-          height: g_flatlist_border_bottom_width,
-          marginLeft: userInfo?.identify ? 90 : 50,
+          marginLeft: userInfo?.identify ? 102 : 63,
         }}
       />
     </View>

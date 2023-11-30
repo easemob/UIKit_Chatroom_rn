@@ -234,10 +234,7 @@ export function useMessageListApi(params: {
       if (user === undefined) {
         user = im.userInfoFromMessage(d.msg);
       }
-      const nickName =
-        im.userId === d.msg?.from
-          ? tr('self')
-          : user?.nickName ?? user?.userId ?? 'unknown';
+      const nickName = user?.nickName ?? user?.userId ?? 'unknown';
       return {
         timestamp: Date.now(),
         nickName: nickName,

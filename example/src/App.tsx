@@ -118,7 +118,7 @@ export function App() {
         palette={palette}
         theme={theme}
         roomOption={{ globalBroadcast: { isVisible: true } }}
-        language={'fr'}
+        language={'zh-Hans'}
         fontFamily={fontFamily}
         onInitialized={() => {
           console.log('dev:onInitialized:');

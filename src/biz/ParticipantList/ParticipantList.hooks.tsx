@@ -153,7 +153,15 @@ export function useParticipantListAPI(
     const user = im.getUserInfo(userId);
     dataRef.current.push({
       id: userId,
-      userInfo: { userId: userId, ...user },
+      userInfo: {
+        userId: userId,
+        ...user,
+        hasMenu: isOwner()
+          ? userId === im.userId || userId === im.ownerId
+            ? false
+            : true
+          : false,
+      },
       actions: {
         onClicked: () => {
           const isMuted = _isMuter(userId);

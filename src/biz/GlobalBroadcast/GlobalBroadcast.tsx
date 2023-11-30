@@ -234,7 +234,7 @@ export const GlobalBroadcast = React.forwardRef<
           justifyContent: 'center',
           alignItems: 'flex-start',
           overflow: 'scroll',
-          paddingLeft: containerHeight,
+          paddingLeft: containerHeight + 4,
           paddingRight: containerHeight / 2,
           borderRadius: 10,
           display: visible === true && isShow === true ? 'flex' : 'none',
