@@ -115,7 +115,7 @@ export function ParticipantListItem(props: ParticipantListItemProps) {
         style={{
           // width: '100%',
           borderBottomWidth: g_flatlist_border_bottom_width,
-          backgroundColor: getColor('color2'),
+          borderBottomColor: getColor('color2'),
           marginLeft: userInfo?.identify ? 102 : 63,
         }}
       />

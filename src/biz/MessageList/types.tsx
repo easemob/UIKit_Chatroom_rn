@@ -35,7 +35,7 @@ export type MessageListItemOp = {
 
 export type MessageListItemProps = {
   id: string;
-  type: 'voice' | 'text' | 'gift';
+  type: 'voice' | 'text' | 'gift' | 'tip';
   basic: MessageListItemBasic;
   content: MessageListItemContent;
   action?: MessageListItemOp;

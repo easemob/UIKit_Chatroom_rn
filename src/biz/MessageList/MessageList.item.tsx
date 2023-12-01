@@ -46,6 +46,7 @@ export function MessageListItem(props: MessageListItemProps) {
       case 'gift':
         return <MessageListGiftItem {...props} />;
       case 'text':
+      case 'tip':
         return <MessageListTextItem {...props} />;
       case 'voice':
         return <MessageListVoiceItem {...props} />;
@@ -61,7 +62,7 @@ export function MessageListItem(props: MessageListItemProps) {
       }}
       onLayout={(e) => {
         width.current = e.nativeEvent.layout.width;
-        if (type === 'text') {
+        if (type === 'text' || type === 'tip') {
           emitSync(
             `_$${MessageListTextItem.name}`,
             props.id,
@@ -109,7 +110,7 @@ export function MessageListItem(props: MessageListItemProps) {
             }}
             onLayout={(e) => {
               headerWidth.current = e.nativeEvent.layout.width;
-              if (type === 'text') {
+              if (type === 'text' || type === 'tip') {
                 emitSync(
                   `_$${MessageListTextItem.name}`,
                   props.id,

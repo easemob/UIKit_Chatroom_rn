@@ -185,7 +185,7 @@ export function useMessageListApi(params: {
       return user?.nickName ?? user?.userId ?? 'unknown';
     };
     const part = {
-      type: 'text',
+      type: 'tip',
       msg: message,
       content: {
         text: tr('${0} Joined', getNickName()),

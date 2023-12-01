@@ -167,7 +167,9 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
         }
       }
 
-      menuRef?.current?.startShowWithInit?.(items, item.msg);
+      if (item.type === 'text') {
+        menuRef?.current?.startShowWithInit?.(items, item.msg);
+      }
     };
     const {
       data,
