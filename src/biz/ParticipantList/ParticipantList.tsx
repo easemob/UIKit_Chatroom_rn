@@ -13,7 +13,6 @@ import type {
   BottomSheetNameMenuRef,
   InitMenuItemsType,
 } from '../BottomSheetMenu';
-import { gBottomSheetHeaderHeight } from '../const';
 import {
   EmptyPlaceholder,
   ErrorPlaceholder,
@@ -21,7 +20,7 @@ import {
 } from '../Placeholder';
 import type { PropsWithError, PropsWithTest } from '../types';
 import { ParticipantContextMenu } from './ParticipantContextMenu';
-import { gAspectRatio, gTabHeaderHeight } from './ParticipantList.const';
+import { gTabHeaderHeight } from './ParticipantList.const';
 import { usePanHandlers, useParticipantListAPI } from './ParticipantList.hooks';
 import {
   ParticipantListItemMemo,
@@ -128,12 +127,13 @@ export function ParticipantList(props: ParticipantListProps) {
   const ref = React.useRef<FlatListRef<ParticipantListItemProps>>({} as any);
   const memberMenuItemsRef = React.useRef<InitMenuItemsType[]>([]);
   let menuRef = React.useRef<BottomSheetNameMenuRef>({} as any);
-  const { width: winWidth } = useWindowDimensions();
+  const { height: winHeight } = useWindowDimensions();
   const { bottom } = useSafeAreaInsets();
   let height =
-    winWidth / gAspectRatio -
-    gBottomSheetHeaderHeight -
+    winHeight * 0.6 -
+    // gBottomSheetHeaderHeight -
     gTabHeaderHeight -
+    44 - // search style height
     bottom -
     (StatusBar.currentHeight ?? 0);
 
@@ -178,6 +178,9 @@ export function ParticipantList(props: ParticipantListProps) {
         />
         <FlatList
           ref={ref}
+          style={{
+            flexGrow: 1,
+          }}
           contentContainerStyle={{
             flexGrow: 1,
           }}

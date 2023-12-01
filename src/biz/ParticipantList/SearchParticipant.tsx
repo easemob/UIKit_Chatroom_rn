@@ -5,7 +5,6 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { useColors } from '../../hook';
 import type { UserServiceData } from '../../room';
@@ -64,7 +63,7 @@ export function SearchParticipant(props: SearchParticipantProps) {
   });
 
   return (
-    <SafeAreaView
+    <View
       style={{
         flex: 1,
         backgroundColor: getColor('backgroundColor'),
@@ -81,6 +80,8 @@ export function SearchParticipant(props: SearchParticipantProps) {
         }}
       />
       <FlatList
+        style={{ flexGrow: 1 }}
+        contentContainerStyle={{ flexGrow: 1 }}
         data={_data}
         renderItem={(info: ListRenderItemInfo<ParticipantListItemProps>) => {
           const { item } = info;
@@ -91,7 +92,7 @@ export function SearchParticipant(props: SearchParticipantProps) {
         }}
         ListEmptyComponent={EmptyBlank}
       />
-    </SafeAreaView>
+    </View>
   );
 }
 
