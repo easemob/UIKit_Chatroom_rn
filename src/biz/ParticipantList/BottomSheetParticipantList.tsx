@@ -97,7 +97,7 @@ export const BottomSheetParticipantList = React.forwardRef<
       dark: colors.neutral[3],
     },
   });
-  const { isOwner } = useIsOwner();
+  const { isOwnerState } = useIsOwner();
   const { tr } = useI18nContext();
 
   React.useImperativeHandle(
@@ -232,25 +232,27 @@ export const BottomSheetParticipantList = React.forwardRef<
             borderRadius: 2.5,
           }}
         /> */}
-        <TabPage
-          header={{
-            HeaderProps: {
-              titles: getTabItemTitles(isOwner()),
-            },
-          }}
-          body={{
-            type: 'TabPageBody',
-            BodyProps: {
-              children: getTabItemBodies({
-                isOwner: isOwner(),
-                isUsePanResponder,
-                testMode,
-                onError,
-              }),
-            },
-          }}
-          headerPosition="up"
-        />
+        {isOwnerState !== undefined ? (
+          <TabPage
+            header={{
+              HeaderProps: {
+                titles: getTabItemTitles(isOwnerState),
+              },
+            }}
+            body={{
+              type: 'TabPageBody',
+              BodyProps: {
+                children: getTabItemBodies({
+                  isOwner: isOwnerState,
+                  isUsePanResponder,
+                  testMode,
+                  onError,
+                }),
+              },
+            }}
+            headerPosition="up"
+          />
+        ) : null}
       </View>
     </SimulativeModal>
   );

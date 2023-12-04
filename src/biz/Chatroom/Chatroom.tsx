@@ -351,7 +351,7 @@ export abstract class ChatroomBase extends React.PureComponent<
           containerStyle,
         ]}
         onLayout={() => {
-          this.containerRef?.current?.measure(
+          this.containerRef?.current?.measure?.(
             (
               _x: number,
               _y: number,

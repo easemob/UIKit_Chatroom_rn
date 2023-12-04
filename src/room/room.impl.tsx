@@ -1,11 +1,14 @@
 import {
   ChatClient,
+  ChatConnectEventListener,
   ChatCursorResult,
   ChatMessage,
   ChatMessageChatType,
+  ChatMessageEventListener,
   ChatMessageStatusCallback,
   ChatOptions,
   ChatRoom,
+  ChatRoomEventListener,
 } from 'react-native-chat-sdk';
 
 import { ErrorCode, UIKitError } from '../error';
@@ -36,6 +39,9 @@ export abstract class RoomServiceImpl implements RoomService {
   _currentOwnerId?: string;
   _roomState: RoomState;
   _user?: UserServiceData;
+  _connectListener?: ChatConnectEventListener;
+  _messageListener?: ChatMessageEventListener;
+  _roomListener?: ChatRoomEventListener;
 
   // static _instance?: RoomServiceImpl;
   // public static getInstance(): RoomService {
@@ -53,6 +59,10 @@ export abstract class RoomServiceImpl implements RoomService {
     this._muterMap = new Map();
     this._listeners = new Set();
     this._roomState = 'leaved';
+  }
+
+  destructor() {
+    console.warn('dev:room:destructor');
   }
 
   async init(params: {
@@ -97,6 +107,7 @@ export abstract class RoomServiceImpl implements RoomService {
   abstract _clearMember(): void;
   abstract _clearMuter(): void;
   abstract _fromChatError(error: any): string | undefined;
+  abstract _clearSdkListener(): void;
 
   abstract _setRoomId(roomId: string | undefined): void;
   get roomId() {
@@ -437,9 +448,11 @@ export abstract class RoomServiceImpl implements RoomService {
   ): Promise<void> {
     if (op === 'mute') {
       try {
-        return await this.client.roomManager.muteChatRoomMembers(roomId, [
-          userId,
-        ]);
+        await this.client.roomManager.muteChatRoomMembers(roomId, [userId]);
+        this._roomListener?.onMuteListAdded?.({
+          roomId: roomId,
+          mutes: [userId],
+        });
       } catch (error) {
         throw new UIKitError({
           code: ErrorCode.room_mute_member_error,
@@ -450,9 +463,11 @@ export abstract class RoomServiceImpl implements RoomService {
       }
     } else if (op === 'unmute') {
       try {
-        return await this.client.roomManager.unMuteChatRoomMembers(roomId, [
-          userId,
-        ]);
+        await this.client.roomManager.unMuteChatRoomMembers(roomId, [userId]);
+        this._roomListener?.onMuteListRemoved?.({
+          roomId: roomId,
+          mutes: [userId],
+        });
       } catch (error) {
         throw new UIKitError({
           code: ErrorCode.room_unmute_member_error,
@@ -711,7 +726,6 @@ export abstract class RoomServiceImpl implements RoomService {
 
     return undefined;
   }
-  // destructor() {}
 }
 
 export class RoomServicePrivateImpl extends RoomServiceImpl {
@@ -719,15 +733,30 @@ export class RoomServicePrivateImpl extends RoomServiceImpl {
     super();
     this._initListener();
   }
+  destructor() {
+    super.destructor();
+    this._clearListener();
+  }
+
+  _clearSdkListener(): void {
+    this._clearListener();
+  }
 
   _initListener() {
     this._initConnectListener();
     this._initChatroomListener();
     this._initMessageListener();
   }
-  _initConnectListener() {
+  _clearListener() {
     this.client.removeAllConnectionListener();
-    this.client.addConnectionListener({
+    this.client.chatManager.removeAllMessageListener();
+    this.client.roomManager.removeAllRoomListener();
+    this._connectListener = undefined;
+    this._messageListener = undefined;
+    this._roomListener = undefined;
+  }
+  _initConnectListener() {
+    this._connectListener = {
       onConnected: () => {
         this._listeners.forEach((v) => {
           v.onConnected?.();
@@ -794,11 +823,11 @@ export class RoomServicePrivateImpl extends RoomServiceImpl {
           v.onDisconnected?.(DisconnectReasonType.user_authentication_failed);
         });
       },
-    });
+    };
+    this.client.addConnectionListener(this._connectListener);
   }
   _initMessageListener() {
-    this.client.chatManager.removeAllMessageListener();
-    this.client.chatManager.addMessageListener({
+    this._messageListener = {
       onMessagesRecalled: (messages) => {
         this._listeners.forEach((v) => {
           if (this.roomId) {
@@ -821,11 +850,11 @@ export class RoomServicePrivateImpl extends RoomServiceImpl {
           }
         });
       },
-    });
+    };
+    this.client.chatManager.addMessageListener(this._messageListener);
   }
   _initChatroomListener() {
-    this.client.roomManager.removeAllRoomListener();
-    this.client.roomManager.addRoomListener({
+    this._roomListener = {
       onDestroyed: (params: { roomId: string; roomName?: string }) => {
         this._listeners.forEach((v) => {
           v.onUserBeKicked?.(params.roomId, 1);
@@ -911,7 +940,8 @@ export class RoomServicePrivateImpl extends RoomServiceImpl {
       }) => {
         const {} = params;
       },
-    });
+    };
+    this.client.roomManager.addRoomListener(this._roomListener);
   }
 
   _updateMember(user: UserServiceData): UserServiceData {
@@ -1002,6 +1032,33 @@ export function getRoomService(): RoomService {
     gIMService = new RoomServicePrivateImpl();
   }
   return gIMService;
+}
+
+export class RoomServiceStatic {
+  /**
+   * In development mode, hot-reload is often performed, so the user needs to manually handle the listener. If there is no hot-reload in release mode, no operation is required.
+   *
+   * It is recommended to handle it in the app.
+   * For example:
+   * @example
+   * ```tsx
+   *   useEffect(() => {
+   *     return () => {
+   *       RoomService.clearSDKListener();
+   *     };
+   *   }, []);
+   * ```
+   */
+  static clearSDKListener(): void {
+    ChatClient.getInstance().removeAllConnectionListener();
+    ChatClient.getInstance().removeAllCustomListener();
+    ChatClient.getInstance().removeAllMultiDeviceListener();
+    ChatClient.getInstance().chatManager.removeAllMessageListener();
+    ChatClient.getInstance().groupManager.removeAllGroupListener();
+    ChatClient.getInstance().roomManager.removeAllRoomListener();
+    ChatClient.getInstance().contactManager.removeAllContactListener();
+    ChatClient.getInstance().presenceManager.removeAllPresenceListener();
+  }
 }
 
 // export class IMServicePrivateImplTest extends RoomServicePrivateImpl {

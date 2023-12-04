@@ -64,9 +64,30 @@ export function usePanHandlers(params: {
 
 export function useIsOwner() {
   const im = useRoomContext();
-  const isOwner = () => im.userId === im.ownerId;
+  const isOwnerCallback = () => im.userId === im.ownerId;
+  const [isOwnerState, setIsOwner] = React.useState<boolean | undefined>(
+    undefined
+  );
+  useParticipantListener({
+    im: im,
+    onUserJoined: (roomId, userId) => {
+      if (roomId === im.roomId) {
+        if (im.userId === userId) {
+          setIsOwner(im.userId === im.ownerId);
+        }
+      }
+    },
+    onUserLeave: (roomId, userId) => {
+      if (roomId === im.roomId) {
+        if (userId === im.userId) {
+          setIsOwner(undefined);
+        }
+      }
+    },
+  });
   return {
-    isOwner: isOwner,
+    isOwner: isOwnerCallback,
+    isOwnerState,
   };
 }
 
@@ -322,6 +343,16 @@ export function useParticipantListAPI(
       }
     },
   });
+
+  React.useEffect(() => {
+    _refreshMembers(() => {
+      const list10 = dataRef.current.slice(0, 19).map((v) => {
+        return v.userInfo.userId;
+      });
+      _fetchMemberInfo(list10);
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const _isMuter = (memberId: string) => {
     return im.getMuter(memberId) !== undefined;

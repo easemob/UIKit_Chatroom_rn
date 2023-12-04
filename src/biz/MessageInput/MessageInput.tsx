@@ -130,6 +130,10 @@ export const MessageInput = React.forwardRef<
       light: colors.primary[5],
       dark: colors.primary[6],
     },
+    input_text: {
+      light: colors.neutral[1],
+      dark: colors.neutral[98],
+    },
   });
 
   const keyboardHeight = useKeyboardHeight();
@@ -275,6 +279,7 @@ export const MessageInput = React.forwardRef<
                     fontWeight: '400',
                     lineHeight: 22,
                     fontFamily: fontFamily,
+                    color: getColor('input_text'),
                   }}
                   containerStyle={{
                     width: '100%',
