@@ -9,7 +9,7 @@ export function createStringSetCn(): StringSet {
 
     'Private Chat': '私信',
     'Translate': '翻译',
-    'Delete': '删除',
+    'Delete': '撤回',
     'Mute': '禁言',
     'Unmute': '解除',
     'Report': '举报',
@@ -28,7 +28,7 @@ export function createStringSetCn(): StringSet {
     'self': '自己',
 
     "Sent '@${0}'": (a: string) => `发送 '@${a}'`,
-    '${0} Joined': (_: string) => `已加入`,
+    '${0} Joined': (_: string) => `进入聊天室`,
 
     'Confirm': '确认',
 

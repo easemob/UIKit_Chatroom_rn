@@ -3,6 +3,7 @@ import { StyleProp, useWindowDimensions, View, ViewStyle } from 'react-native';
 
 import { g_mask_color } from '../../const';
 import { useColors } from '../../hook';
+import { useI18nContext } from '../../i18n';
 import { usePaletteContext } from '../../theme';
 import { SlideModal, SlideModalRef } from '../../ui/Modal';
 import { TabPage } from '../../ui/TabPage';
@@ -46,6 +47,7 @@ export const BottomSheetMessageReport = React.forwardRef<
   const height = (winHeight * 3) / 5;
   const isUsePanResponder = React.useRef(true);
   const { colors } = usePaletteContext();
+  const { tr } = useI18nContext();
   const { getColor } = useColors({
     backgroundColor: {
       light: colors.neutral[98],
@@ -115,7 +117,7 @@ export const BottomSheetMessageReport = React.forwardRef<
         <TabPage
           header={{
             HeaderProps: {
-              titles: ['Report'],
+              titles: [tr('Report')],
             },
           }}
           body={{

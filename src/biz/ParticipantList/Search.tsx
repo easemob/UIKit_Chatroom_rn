@@ -2,6 +2,7 @@ import * as React from 'react';
 import { View } from 'react-native';
 
 import { useColors } from '../../hook';
+import { useI18nContext } from '../../i18n';
 import { usePaletteContext, useThemeContext } from '../../theme';
 import { Text1Button } from '../../ui/Button';
 import { Icon } from '../../ui/Image';
@@ -15,6 +16,7 @@ export type SearchProps = {
 
 export function Search(props: SearchProps) {
   const { onCancel, onChangeText, value } = props;
+  const { tr } = useI18nContext();
   const { style } = useThemeContext();
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
@@ -86,7 +88,7 @@ export function Search(props: SearchProps) {
           sizesType={'middle'}
           radiusType={'large'}
           contentType={'only-text'}
-          text={'Cancel'}
+          text={tr('Cancel')}
           onPress={onCancel}
         />
       </View>
