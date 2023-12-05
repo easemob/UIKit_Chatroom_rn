@@ -883,7 +883,7 @@ export class RoomServicePrivateImpl extends RoomServiceImpl {
         reason?: string;
       }) => {
         this._listeners.forEach((v) => {
-          v.onUserLeave?.(params.roomId, params.participant ?? '');
+          v.onUserBeKicked?.(params.roomId, 2);
         });
       },
       onMuteListAdded: (params: {

@@ -29,6 +29,7 @@ export function createStringSetEn(): StringSet {
 
     "Sent '@${0}'": (a: string) => `Sent '@${a}'`,
     '${0} Joined': (_: string) => `Joined`,
+    '${0} new message(s)': (a: string) => `${a} new message(s)`,
 
     'Confirm': 'Confirm',
 

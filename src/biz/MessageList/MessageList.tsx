@@ -321,12 +321,13 @@ const UnreadButton = ({ onPress }: { onPress: () => void }) => {
     },
   });
   const [text, setText] = React.useState('');
+  const { tr } = useI18nContext();
 
   useDispatchListener(
     `_$useMessageListApi_updateUnreadCount`,
     (count: number) => {
       const n = count > 99 ? '99+' : count.toString();
-      const content = count === 0 ? '' : `${n} new message(s)`;
+      const content = count === 0 ? '' : tr('${0} new message(s)', n);
       setText(content);
     }
   );
@@ -335,7 +336,7 @@ const UnreadButton = ({ onPress }: { onPress: () => void }) => {
     <BorderButton
       style={{
         position: 'absolute',
-        width: 181,
+        minWidth: 26,
         height: 26,
         // borderRadius: 24,
         bottom: 0,

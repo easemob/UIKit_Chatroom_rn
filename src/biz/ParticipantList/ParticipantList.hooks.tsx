@@ -205,7 +205,7 @@ export function useParticipantListAPI(
     }
     for (const data of dataRef.current) {
       if (data.userInfo.userId === userInfo.userId) {
-        data.userInfo = userInfo;
+        data.userInfo = { ...data.userInfo, ...userInfo };
         return true;
       }
     }
@@ -276,7 +276,7 @@ export function useParticipantListAPI(
     onUpdateInfo: (roomId, userInfo) => {
       if (roomId === im.roomId) {
         im.updateUserInfos([userInfo]);
-        // _updateUI(_updateData(userInfo)); // !!! Save rendering.
+        _updateUI(_updateData(userInfo)); // !!! Save rendering.
       }
     },
     onUserJoinedNotify: (roomId, userInfo) => {

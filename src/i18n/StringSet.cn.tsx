@@ -29,6 +29,7 @@ export function createStringSetCn(): StringSet {
 
     "Sent '@${0}'": (a: string) => `发送 '@${a}'`,
     '${0} Joined': (_: string) => `进入聊天室`,
+    '${0} new message(s)': (a: string) => `${a}条未读数`,
 
     'Confirm': '确认',
 
