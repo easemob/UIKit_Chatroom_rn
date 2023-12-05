@@ -19,7 +19,7 @@ export function createStringSetCn(): StringSet {
     'Participants': '成员列表',
     'Muted': '禁言列表',
 
-    'Search': '搜素',
+    'Search': '搜索',
 
     "Let's Chat!": '发条弹幕吧~',
 
