@@ -281,6 +281,7 @@ export function useParticipantListAPI(
     },
     onUserJoinedNotify: (roomId, userInfo) => {
       if (roomId === im.roomId) {
+        im.updateUserInfos([userInfo]);
         if (memberType === 'member') {
           _updateUI(_addData(userInfo.userId));
         }
