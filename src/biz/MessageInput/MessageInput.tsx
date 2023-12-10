@@ -47,11 +47,11 @@ export type MessageInputProps = Omit<
    */
   onInputBarWillHide?: () => void;
   /**
-   * Callback function when the input box component is displayed.
+   * Callback function when the message will be send.
    */
   onSend?: (content: string) => void;
   /**
-   * Callback function when the input box component is hidden.
+   * Callback function when the message is sended.
    */
   onSended?: (content: string, message: ChatMessage) => void;
   /**

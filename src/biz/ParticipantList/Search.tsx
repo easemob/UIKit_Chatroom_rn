@@ -32,6 +32,10 @@ export function Search(props: SearchProps) {
       light: colors.neutral[5],
       dark: colors.neutral[5],
     },
+    text: {
+      light: colors.neutral[1],
+      dark: colors.neutral[98],
+    },
   });
   return (
     <View
@@ -67,7 +71,7 @@ export function Search(props: SearchProps) {
             }}
             style={{
               paddingLeft: 35,
-              color: getColor('color'),
+              color: getColor('text'),
             }}
             onChangeText={onChangeText}
             value={value}
