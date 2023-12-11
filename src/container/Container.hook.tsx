@@ -4,7 +4,7 @@ import { getSystemLanguage } from '../utils';
 const getDefaultLanguage = (): LanguageCode => {
   let ret: LanguageCode;
   const systemLanguage = getSystemLanguage();
-  if (systemLanguage?.includes('zh_CN')) {
+  if (systemLanguage?.includes('zh')) {
     ret = 'zh-Hans';
   } else if (systemLanguage?.includes('en')) {
     ret = 'en';
