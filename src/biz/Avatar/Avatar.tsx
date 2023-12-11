@@ -38,7 +38,7 @@ export function Avatar(props: AvatarProps) {
 
   return (
     <DefaultIconImage
-      localIcon={ICON_ASSETS.person_single_outline('3x')}
+      localIcon={avatar.localIcon ?? ICON_ASSETS.person_single_outline('3x')}
       size={size}
       style={style}
       borderRadius={getBorderRadius(size)}

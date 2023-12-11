@@ -68,6 +68,7 @@ export type ContainerProps = React.PropsWithChildren<{
    */
   avatar?: {
     borderRadiusStyle?: CornerRadiusPaletteType;
+    localIcon?: number | undefined;
   };
   /**
    * The font family name.
@@ -151,7 +152,10 @@ export function Container(props: ContainerProps) {
                   languageCode: getTranslateLanguage(language),
                   avatar: mergeObjects(
                     avatar ??
-                      ({} as { borderRadiusStyle: CornerRadiusPaletteType }),
+                      ({} as {
+                        borderRadiusStyle: CornerRadiusPaletteType;
+                        localIcon?: number | undefined;
+                      }),
                     {
                       borderRadiusStyle: 'large',
                     }

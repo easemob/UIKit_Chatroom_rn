@@ -29,8 +29,12 @@ import {
   useRoomListener,
 } from '../../room';
 import { seqId, timeoutTask } from '../../utils';
+import { BottomSheetNameMenuRef, InitMenuItemsType } from '../BottomSheetMenu';
 import { emoji as convert } from '../EmojiList';
-import type { ReportItemModel } from '../MessageReport';
+import type {
+  BottomSheetMessageReportRef,
+  ReportItemModel,
+} from '../MessageReport';
 import { gIdleTimeout, gMaxMessageCount } from './MessageList.const';
 import type {
   MessageListItemBasic,
@@ -98,12 +102,14 @@ export function useMessageListApi(params: {
   onUnreadCount?: (count: number) => void;
   onLayoutProps?: ((event: LayoutChangeEvent) => void) | undefined;
   maxMessageCount?: number;
+  messageMenuItems: InitMenuItemsType[] | undefined;
 }) {
   const {
     onLongPress: propsOnLongPress,
     onLayoutProps,
     onUnreadCount,
     maxMessageCount = gMaxMessageCount,
+    messageMenuItems,
   } = params;
   const listRef = React.useRef<FlatList>({} as any);
   const dataRef = React.useRef<MessageListItemProps[]>([]);
@@ -114,6 +120,9 @@ export function useMessageListApi(params: {
   const { emit } = useDispatchContext();
 
   const heightRef = React.useRef(0);
+
+  const menuRef = React.useRef<BottomSheetNameMenuRef>({} as any);
+  const reportRef = React.useRef<BottomSheetMessageReportRef>({} as any);
 
   // If idle for more than three seconds, the oldest messages will be cleared.
   const { delayExecTask: _startClearTask } = useDelayExecTask(
@@ -135,9 +144,13 @@ export function useMessageListApi(params: {
 
   const langPressItemRef = React.useRef<MessageListItemModel | undefined>();
 
-  const onLongPress = (item: MessageListItemModel) => {
+  const _onLongPress = (item: MessageListItemModel) => {
     langPressItemRef.current = item;
-    propsOnLongPress?.(item);
+    if (propsOnLongPress) {
+      propsOnLongPress?.(item);
+    } else {
+      onShowMenu(item);
+    }
   };
 
   const msgListener = React.useRef<RoomServiceListener>({
@@ -250,7 +263,7 @@ export function useMessageListApi(params: {
         onStartPress: () => {},
         onLongPress: (data: MessageListItemModel) => {
           _setNeedScroll(false);
-          onLongPress?.(data);
+          _onLongPress(data);
         },
       },
       ...d,
@@ -484,6 +497,70 @@ export function useMessageListApi(params: {
     }
   };
 
+  const onShowMenu = (item: MessageListItemModel) => {
+    const from = item.msg?.from;
+    let items: InitMenuItemsType[] = [];
+    if (from === im.userId) {
+      items = [
+        {
+          name: 'Translate',
+          isHigh: false,
+          onClicked: () => {
+            _translateMessage(item.msg);
+            menuRef?.current?.startHide?.();
+          },
+        },
+        {
+          name: 'Delete',
+          isHigh: false,
+          onClicked: () => {
+            _deleteMessage(item.msg);
+            menuRef?.current?.startHide?.();
+          },
+        },
+        {
+          name: 'Report',
+          isHigh: true,
+          onClicked: () => {
+            menuRef?.current?.startHide?.(() => {
+              reportRef?.current?.startShow?.();
+            });
+          },
+        },
+      ] as InitMenuItemsType[];
+    } else {
+      items = [
+        {
+          name: 'Translate',
+          isHigh: false,
+          onClicked: () => {
+            _translateMessage(item.msg);
+            menuRef?.current?.startHide?.();
+          },
+        },
+        {
+          name: 'Report',
+          isHigh: true,
+          onClicked: () => {
+            menuRef?.current?.startHide?.(() => {
+              reportRef?.current?.startShow?.();
+            });
+          },
+        },
+      ] as InitMenuItemsType[];
+    }
+
+    if (messageMenuItems && messageMenuItems.length > 0) {
+      for (const propsItem of messageMenuItems) {
+        items.push(propsItem);
+      }
+    }
+
+    if (item.type === 'text') {
+      menuRef?.current?.startShowWithInit?.(items, item.msg);
+    }
+  };
+
   return {
     data: data,
     listRef: listRef,
@@ -501,5 +578,7 @@ export function useMessageListApi(params: {
     translateMessage: _translateMessage,
     deleteMessage: _deleteMessage,
     reportMessage: _reportMessage,
+    menuRef,
+    reportRef,
   };
 }

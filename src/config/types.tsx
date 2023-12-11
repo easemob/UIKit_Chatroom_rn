@@ -33,6 +33,7 @@ export type Config = {
    */
   avatar: {
     borderRadiusStyle: CornerRadiusPaletteType;
+    localIcon?: number | undefined;
   };
   /**
    * The font family name.

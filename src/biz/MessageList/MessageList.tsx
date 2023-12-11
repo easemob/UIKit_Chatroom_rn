@@ -15,15 +15,10 @@ import { useI18nContext } from '../../i18n';
 import { usePaletteContext } from '../../theme';
 import { BorderButton } from '../../ui/Button';
 import { seqId } from '../../utils';
-import {
-  BottomSheetNameMenu,
-  BottomSheetNameMenuRef,
-  InitMenuItemsType,
-} from '../BottomSheetMenu';
+import { BottomSheetNameMenu, InitMenuItemsType } from '../BottomSheetMenu';
 import {
   BottomSheetMessageReport,
   BottomSheetMessageReportProps,
-  BottomSheetMessageReportRef,
   ReportItemModel,
 } from '../MessageReport';
 import type { PropsWithError, PropsWithTest } from '../types';
@@ -128,49 +123,11 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
       containerStyle,
       visible = true,
       onLayout: onLayoutProps,
-      reportProps,
+      reportProps = {} as BottomSheetMessageReportProps,
       MessageListItemComponent,
       maxMessageCount,
       messageMenuItems,
     } = props;
-    const _onLongPress = (item: MessageListItemModel) => {
-      const items = [
-        {
-          name: 'Translate',
-          isHigh: false,
-          onClicked: () => {
-            translateMessage(item.msg);
-            menuRef?.current?.startHide?.();
-          },
-        },
-        {
-          name: 'Delete',
-          isHigh: false,
-          onClicked: () => {
-            deleteMessage(item.msg);
-            menuRef?.current?.startHide?.();
-          },
-        },
-        {
-          name: 'Report',
-          isHigh: true,
-          onClicked: () => {
-            menuRef?.current?.startHide?.(() => {
-              reportRef?.current?.startShow?.();
-            });
-          },
-        },
-      ] as InitMenuItemsType[];
-      if (messageMenuItems && messageMenuItems.length > 0) {
-        for (const propsItem of messageMenuItems) {
-          items.push(propsItem);
-        }
-      }
-
-      if (item.type === 'text') {
-        menuRef?.current?.startShowWithInit?.(items, item.msg);
-      }
-    };
     const {
       data,
       addSendedMessage,
@@ -186,15 +143,16 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
       translateMessage,
       deleteMessage,
       reportMessage,
+      menuRef,
+      reportRef,
     } = useMessageListApi({
-      onLongPress: onLongPressItem ?? _onLongPress,
+      onLongPress: onLongPressItem,
       onUnreadCount,
       onLayoutProps,
       maxMessageCount,
+      messageMenuItems,
     });
 
-    const menuRef = React.useRef<BottomSheetNameMenuRef>({} as any);
-    const reportRef = React.useRef<BottomSheetMessageReportRef>({} as any);
     const { tr } = useI18nContext();
     const defaultData = useGetReportDefaultData(tr);
 
@@ -219,7 +177,7 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
           },
         };
       },
-      [addSendedMessage, deleteMessage, scrollToEnd, translateMessage]
+      [addSendedMessage, deleteMessage, menuRef, scrollToEnd, translateMessage]
     );
 
     const getReportData = React.useMemo(() => {
@@ -239,7 +197,7 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
           reportRef?.current?.startHide?.();
         },
       };
-    }, [reportMessage, reportProps?.onReport]);
+    }, [reportMessage, reportProps, reportRef]);
 
     const _MessageListItemComponent =
       MessageListItemComponent ?? MessageListItemMemo;
