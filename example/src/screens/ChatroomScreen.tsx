@@ -443,7 +443,7 @@ export const ChatroomHeaderRight = () => {
     <View>
       <TouchableOpacity
         onPress={() => {
-          emit(`_$${ChatroomHeaderRight.name}`, {});
+          emit(`_$ChatroomHeaderRight`, {});
         }}
         // style={{ backgroundColor: 'red' }}
       >

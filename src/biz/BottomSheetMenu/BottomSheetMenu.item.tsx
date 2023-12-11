@@ -85,19 +85,15 @@ export function BottomSheetMenuItem(props: BottomSheetMenuItemProps) {
     let buttonColors;
     if (state.pressed === true) {
       buttonColors = getColor('pressed');
-      emit(
-        `_$${ItemContent.name}`,
-        initState === 'warned' ? 'warned' : 'pressed',
-        id
-      );
+      emit(`_$ItemContent`, initState === 'warned' ? 'warned' : 'pressed', id);
     } else {
       if (disabled === true) {
         buttonColors = getColor('disabled');
-        emit(`_$${ItemContent.name}`, 'disabled', id);
+        emit(`_$ItemContent`, 'disabled', id);
       } else {
         buttonColors = getColor('enabled');
         emit(
-          `_$${ItemContent.name}`,
+          `_$ItemContent`,
           initState === 'warned' ? 'warned' : 'enabled',
           id
         );

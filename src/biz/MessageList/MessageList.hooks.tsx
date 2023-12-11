@@ -52,22 +52,14 @@ export const useKeyboardOnAndroid = (isInputBarShow: boolean) => {
       // !!! both ios and android
       if (Platform.OS !== 'ios') {
         keyboardHeight.current = e.endCoordinates.height;
-        emit(
-          `_$${useKeyboardOnAndroid.name}`,
-          isInputBarShow,
-          keyboardHeight.current
-        );
+        emit(`_$useKeyboardOnAndroid`, isInputBarShow, keyboardHeight.current);
       }
     });
     const s3 = Keyboard.addListener('keyboardDidHide', (e) => {
       // !!! both ios and android
       if (Platform.OS !== 'ios') {
         keyboardHeight.current = e.endCoordinates.height;
-        emit(
-          `_$${useKeyboardOnAndroid.name}`,
-          isInputBarShow,
-          keyboardHeight.current
-        );
+        emit(`_$useKeyboardOnAndroid`, isInputBarShow, keyboardHeight.current);
       }
     });
     return () => {
@@ -292,10 +284,7 @@ export function useMessageListApi(params: {
     _updateUI(_addTextData(message));
     if (_needScroll() === false) {
       _setUnreadCount(unreadCount.current + 1);
-      emit(
-        `_$${useMessageListApi.name}_updateUnreadCount`,
-        unreadCount.current
-      );
+      emit(`_$useMessageListApi_updateUnreadCount`, unreadCount.current);
     }
     _startClearTask();
     _scrollToEnd();
@@ -308,10 +297,7 @@ export function useMessageListApi(params: {
         _updateUI(_addGiftData(message));
         if (_needScroll() === false) {
           _setUnreadCount(unreadCount.current + 1);
-          emit(
-            `_$${useMessageListApi.name}_updateUnreadCount`,
-            unreadCount.current
-          );
+          emit(`_$useMessageListApi_updateUnreadCount`, unreadCount.current);
         }
         _startClearTask();
         _scrollToEnd();
@@ -325,7 +311,7 @@ export function useMessageListApi(params: {
     _updateUI(_addTextData(message!, content));
     _setNeedScroll(true);
     _setUnreadCount(0);
-    emit(`_$${useMessageListApi.name}_updateUnreadCount`, unreadCount.current);
+    emit(`_$useMessageListApi_updateUnreadCount`, unreadCount.current);
     _startClearTask();
     _scrollToEnd();
   };
@@ -334,7 +320,7 @@ export function useMessageListApi(params: {
     _updateUI(_addJoinData(message));
     _setNeedScroll(true);
     _setUnreadCount(0);
-    emit(`_$${useMessageListApi.name}_updateUnreadCount`, unreadCount.current);
+    emit(`_$useMessageListApi_updateUnreadCount`, unreadCount.current);
     _startClearTask();
     _scrollToEnd();
   };
@@ -364,7 +350,7 @@ export function useMessageListApi(params: {
     }
     _setNeedScroll(true);
     _setUnreadCount(0);
-    emit(`_$${useMessageListApi.name}_updateUnreadCount`, unreadCount.current);
+    emit(`_$useMessageListApi_updateUnreadCount`, unreadCount.current);
     _startClearTask();
     _scrollToEnd();
   };
@@ -378,7 +364,7 @@ export function useMessageListApi(params: {
   const _onEndReached = () => {
     _setNeedScroll(true);
     _setUnreadCount(0);
-    emit(`_$${useMessageListApi.name}_updateUnreadCount`, unreadCount.current);
+    emit(`_$useMessageListApi_updateUnreadCount`, unreadCount.current);
   };
 
   const { delayExecTask: _gestureHandler } = useDelayExecTask(
@@ -404,7 +390,7 @@ export function useMessageListApi(params: {
   const _scrollToLastMessage = () => {
     _setNeedScroll(true);
     _setUnreadCount(0);
-    emit(`_$${useMessageListApi.name}_updateUnreadCount`, unreadCount.current);
+    emit(`_$useMessageListApi_updateUnreadCount`, unreadCount.current);
     _scrollToEnd();
   };
 

@@ -157,10 +157,7 @@ export function useParticipantListAPI(
         const ids = info.viewableItems.map((v) => {
           return (v.item as ParticipantListItemProps).userInfo.userId;
         });
-        emit(
-          `_$${useParticipantListAPI.name}_${memberType}_fetchMemberInfo`,
-          ids
-        );
+        emit(`_$useParticipantListAPI_${memberType}_fetchMemberInfo`, ids);
       },
       [emit, memberType]
     )
