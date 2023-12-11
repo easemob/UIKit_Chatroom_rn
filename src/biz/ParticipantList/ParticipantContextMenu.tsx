@@ -11,23 +11,23 @@ import {
 import type { PropsWithError, PropsWithTest } from '../types';
 import type { ParticipantListType } from './types';
 
+export type ParticipantContextMenuProps = PropsWithTest &
+  PropsWithError & {
+    memberType: ParticipantListType;
+    muteMember: (memberId: string, isMuted: boolean) => void;
+    removeMember: (memberId: string) => void;
+    onGetMenuItems: () => InitMenuItemsType[];
+    onGetMenuRef: (
+      menuRef: React.MutableRefObject<BottomSheetNameMenuRef>
+    ) => void;
+  };
+
 /**
  * Member list menu. Currently, it includes functions such as banning, unbanning, translation, and message reporting.
- * @param props {@link ParticipantListContextMenuProps}
+ * @param props {@link ParticipantContextMenuProps}
  * @returns JSX.Element
  */
-export const ParticipantContextMenu = (
-  props: PropsWithTest &
-    PropsWithError & {
-      memberType: ParticipantListType;
-      muteMember: (memberId: string, isMuted: boolean) => void;
-      removeMember: (memberId: string) => void;
-      onGetMenuItems: () => InitMenuItemsType[];
-      onGetMenuRef: (
-        menuRef: React.MutableRefObject<BottomSheetNameMenuRef>
-      ) => void;
-    }
-) => {
+export const ParticipantContextMenu = (props: ParticipantContextMenuProps) => {
   const { muteMember, removeMember, memberType, onGetMenuItems, onGetMenuRef } =
     props;
   const menuRef = React.useRef<BottomSheetNameMenuRef>({} as any);

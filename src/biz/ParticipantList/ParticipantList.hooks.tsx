@@ -18,6 +18,7 @@ import {
   UserServiceData,
 } from '../../room';
 import { wait } from '../../utils';
+import { BottomSheetNameMenuRef, InitMenuItemsType } from '../BottomSheetMenu';
 import type { PropsWithError, PropsWithTest } from '../types';
 import { gMemberPerPageSize, gSearchTimeout } from './ParticipantList.const';
 import type { ParticipantListItemProps } from './ParticipantList.item';
@@ -125,6 +126,7 @@ export function useParticipantListAPI(
   const [refreshing, setRefreshing] = React.useState(false);
   const isRefreshGestureRef = React.useRef(false);
   const contentOffsetYRef = React.useRef(0);
+  let menuRef = React.useRef<BottomSheetNameMenuRef>({} as any);
 
   const [pageState, setPageState] = React.useState<
     'loading' | 'normal' | 'error'
@@ -185,14 +187,15 @@ export function useParticipantListAPI(
       },
       actions: {
         onClicked: () => {
-          const isMuted = _isMuter(userId);
-          emit(
-            `_$${useParticipantListAPI.name}_participantListContextMenu`,
-            memberType, // current mute list
-            isOwner(), // current user role
-            userId, // current member id
-            isMuted // current member mute state
-          );
+          // const isMuted = _isMuter(userId);
+          // emit(
+          //   `_$useParticipantListAPI_participantListContextMenu`,
+          //   memberType, // current mute list
+          //   isOwner(), // current user role
+          //   userId, // current member id
+          //   isMuted // current member mute state
+          // );
+          onShowMenu(memberType, isOwner(), userId);
         },
       },
     });
@@ -355,9 +358,9 @@ export function useParticipantListAPI(
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const _isMuter = (memberId: string) => {
-    return im.getMuter(memberId) !== undefined;
-  };
+  // const _isMuter = (memberId: string) => {
+  //   return im.getMuter(memberId) !== undefined;
+  // };
 
   const _refreshMembers = (onFinished?: () => void) => {
     if (memberType === 'member') {
@@ -557,6 +560,69 @@ export function useParticipantListAPI(
     }
   };
 
+  const onShowMenu = (
+    memberType: ParticipantListType,
+    isOwner: boolean,
+    userId: string
+  ) => {
+    if (isOwner === false || userId === undefined) {
+      return;
+    }
+    if (memberType === 'member') {
+      let items: InitMenuItemsType[] = [
+        {
+          name: 'Mute',
+          isHigh: false,
+          onClicked: () => {
+            if (userId !== im.userId) {
+              _muteMember(userId, true);
+            }
+            menuRef?.current?.startHide?.();
+          },
+        },
+        {
+          name: 'Remove',
+          isHigh: true,
+          onClicked: () => {
+            if (userId !== im.userId) {
+              _removeMember(userId);
+            }
+            menuRef?.current?.startHide?.();
+          },
+        },
+      ];
+      menuRef?.current?.startShowWithInit(items);
+    } else if (memberType === 'muted') {
+      menuRef?.current?.startShowWithInit([
+        {
+          name: 'Unmute',
+          isHigh: false,
+          onClicked: () => {
+            if (userId !== im.userId) {
+              _muteMember(userId, false);
+            }
+            menuRef?.current?.startHide?.();
+          },
+        },
+      ]);
+    }
+  };
+
+  const listener = React.useRef(
+    (
+      _memberType: ParticipantListType, // current mute list
+      isOwner: boolean, // current user role
+      userId: string // current member id
+      // isMuted: boolean // current member mute state
+    ) => {
+      onShowMenu(_memberType, isOwner, userId);
+    }
+  );
+  useDispatchListener(
+    `_$useParticipantListAPI_participantListContextMenu`,
+    listener.current
+  );
+
   return {
     data: data,
     pageState: pageState,
@@ -571,6 +637,7 @@ export function useParticipantListAPI(
     requestRefresh: _refreshMembers,
     onScrollBeginDrag: _onScrollBeginDrag,
     onScrollEndDrag: _onScrollEndDrag,
+    menuRef,
   };
 }
 
@@ -601,7 +668,7 @@ export function useSearchParticipantListAPI(props: {
           onClicked: () => {
             const isMuted = _isMuter(v.userId);
             emit(
-              `_$${useParticipantListAPI.name}_participantListContextMenu`,
+              `_$useParticipantListAPI_participantListContextMenu`,
               memberType, // current mute list
               isOwner(), // current user role
               v.userId, // current member id

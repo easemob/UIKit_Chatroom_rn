@@ -9,8 +9,9 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { FlatListFactory, FlatListRef } from '../../ui/FlatList';
-import type {
-  BottomSheetNameMenuRef,
+import {
+  BottomSheetNameMenu,
+  // BottomSheetNameMenuRef,
   InitMenuItemsType,
 } from '../BottomSheetMenu';
 import {
@@ -19,7 +20,7 @@ import {
   LoadingPlaceholder,
 } from '../Placeholder';
 import type { PropsWithError, PropsWithTest } from '../types';
-import { ParticipantContextMenu } from './ParticipantContextMenu';
+// import { ParticipantContextMenu } from './ParticipantContextMenu';
 import { gTabHeaderHeight } from './ParticipantList.const';
 import { usePanHandlers, useParticipantListAPI } from './ParticipantList.hooks';
 import {
@@ -118,6 +119,7 @@ export function ParticipantList(props: ParticipantListProps) {
     requestRefresh,
     onScrollBeginDrag,
     onScrollEndDrag,
+    menuRef,
   } = useParticipantListAPI({
     testMode,
     onError,
@@ -126,7 +128,7 @@ export function ParticipantList(props: ParticipantListProps) {
   });
   const ref = React.useRef<FlatListRef<ParticipantListItemProps>>({} as any);
   const memberMenuItemsRef = React.useRef<InitMenuItemsType[]>([]);
-  let menuRef = React.useRef<BottomSheetNameMenuRef>({} as any);
+  // let menuRef = React.useRef<BottomSheetNameMenuRef>({} as any);
   const { height: winHeight } = useWindowDimensions();
   const { bottom } = useSafeAreaInsets();
   let height =
@@ -158,9 +160,9 @@ export function ParticipantList(props: ParticipantListProps) {
     };
   }
 
-  const onGetMenuItems = () => {
-    return memberMenuItemsRef.current;
-  };
+  // const onGetMenuItems = () => {
+  //   return memberMenuItemsRef.current;
+  // };
 
   return (
     <>
@@ -222,7 +224,7 @@ export function ParticipantList(props: ParticipantListProps) {
           onScrollEndDrag={onScrollEndDrag}
         />
       </View>
-      <ParticipantContextMenu
+      {/* <ParticipantContextMenu
         {...props}
         removeMember={removeMember}
         muteMember={muteMember}
@@ -230,6 +232,13 @@ export function ParticipantList(props: ParticipantListProps) {
         onGetMenuRef={(m) => {
           menuRef = m;
         }}
+      /> */}
+      <BottomSheetNameMenu
+        ref={menuRef}
+        onRequestModalClose={() => {
+          menuRef?.current?.startHide?.();
+        }}
+        initItems={[]}
       />
     </>
   );
