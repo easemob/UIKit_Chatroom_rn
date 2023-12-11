@@ -425,11 +425,11 @@ ref?.current?.startShow?.();
 
 `BottomSheetParticipantList` provides the following method:
 
-| Method                | Description                                                                               |
-| --------------------- | ----------------------------------------------------------------------------------------- |
-| startShow             | Shows the participant list component.                                                     |
-| startHide             | Hides the participant list component. A callback is returned when the animation is hided. |
-| getParticipantListRef | Gets the reference of the participant list component or mute list component.              |
+| Method                | Description                                                                  |
+| --------------------- | ---------------------------------------------------------------------------- |
+| startShow             | Shows component.                                                             |
+| startHide             | Hides component. A callback is returned when the animation is hided.         |
+| getParticipantListRef | Gets the reference of the participant list component or mute list component. |
 
 `ParticipantList` provides the following methods:
 
@@ -619,11 +619,11 @@ ref?.current?.startShow?.();
 
 `BottomSheetGift` provides the following methods:
 
-| Method            | Description                                                                              |
-| ----------------- | ---------------------------------------------------------------------------------------- |
-| startShow         | Shows the participant list component.                                                    |
-| startShowWithInit | Shows the participant list component and initializes the list.                           |
-| startHide         | Hides the participant list component and returns a callback when the animation is hided. |
+| Method            | Description                                                         |
+| ----------------- | ------------------------------------------------------------------- |
+| startShow         | Shows component.                                                    |
+| startShowWithInit | Shows component and initializes the list.                           |
+| startHide         | Hides component and returns a callback when the animation is hided. |
 
 ![gift_list](../gift_list.png)
 
@@ -660,10 +660,10 @@ ref?.current?.startShow?.();
 
 `BottomSheetMessageReport` provides the following methods:
 
-| Method    | Description                                                                              |
-| --------- | ---------------------------------------------------------------------------------------- |
-| startShow | Shows the participant list component.                                                    |
-| startHide | Hides the participant list component and returns a callback when the animation is hided. |
+| Method    | Description                                                         |
+| --------- | ------------------------------------------------------------------- |
+| startShow | Shows component.                                                    |
+| startHide | Hides component and returns a callback when the animation is hided. |
 
 ![message_report](../message_report.png)
 

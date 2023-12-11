@@ -432,11 +432,11 @@ ref?.current?.startShow?.();
 
 `BottomSheetParticipantList`提供的方法概览
 
-| 方法                  | 介绍                                     |
-| --------------------- | ---------------------------------------- |
-| startShow             | 显示成员列表组件                         |
-| startHide             | 隐藏成员列表组件，隐藏动画完成后返回通知 |
-| getParticipantListRef | 获取成员列表或者禁言列表组件的引用       |
+| 方法                  | 介绍                             |
+| --------------------- | -------------------------------- |
+| startShow             | 显示组件                         |
+| startHide             | 隐藏组件，隐藏动画完成后返回通知 |
+| getParticipantListRef | 获取引用                         |
 
 `ParticipantList`提供的方法概览。
 
@@ -632,11 +632,11 @@ ref?.current?.startShow?.();
 
 `BottomSheetGift`提供的方法概览
 
-| 方法              | 介绍                                     |
-| ----------------- | ---------------------------------------- |
-| startShow         | 显示成员列表组件                         |
-| startShowWithInit | 显示成员列表组件，同时可以初始化列表     |
-| startHide         | 隐藏成员列表组件，隐藏动画完成后返回通知 |
+| 方法              | 介绍                             |
+| ----------------- | -------------------------------- |
+| startShow         | 显示组件                         |
+| startShowWithInit | 显示组件，同时可以初始化列表     |
+| startHide         | 隐藏组件，隐藏动画完成后返回通知 |
 
 ![gift_list](../gift_list.png)
 
@@ -675,10 +675,10 @@ ref?.current?.startShow?.();
 
 `BottomSheetMessageReport`提供的方法概览
 
-| 方法      | 介绍                                     |
-| --------- | ---------------------------------------- |
-| startShow | 显示成员列表组件                         |
-| startHide | 隐藏成员列表组件，隐藏动画完成后返回通知 |
+| 方法      | 介绍                             |
+| --------- | -------------------------------- |
+| startShow | 显示组件                         |
+| startHide | 隐藏组件，隐藏动画完成后返回通知 |
 
 ![message_report](../message_report.png)
 
