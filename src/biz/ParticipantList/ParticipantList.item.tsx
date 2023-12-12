@@ -41,6 +41,7 @@ export function ParticipantListItem(props: ParticipantListItemProps) {
     },
   });
   const { id, userInfo, actions } = props;
+  const identify = undefined;
   return (
     <View
       key={id}
@@ -57,7 +58,7 @@ export function ParticipantListItem(props: ParticipantListItemProps) {
           height: gParticipantListItemHeight - g_flatlist_border_bottom_width,
         }}
       >
-        {userInfo?.identify ? (
+        {identify ? (
           <>
             <Image
               style={{
@@ -116,7 +117,7 @@ export function ParticipantListItem(props: ParticipantListItemProps) {
           // width: '100%',
           borderBottomWidth: g_flatlist_border_bottom_width,
           borderBottomColor: getColor('color2'),
-          marginLeft: userInfo?.identify ? 102 : 63,
+          marginLeft: identify ? 102 : 63,
         }}
       />
     </View>
