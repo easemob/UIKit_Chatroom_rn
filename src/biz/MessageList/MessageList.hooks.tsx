@@ -236,7 +236,7 @@ export function useMessageListApi(params: {
   ) => {
     const getBasic = (): MessageListItemBasic => {
       let user = im.getUserInfo(d.msg?.from);
-      if (user === undefined) {
+      if (user === undefined || user.nickName === undefined) {
         user = im.userInfoFromMessage(d.msg);
       }
       const nickName =
