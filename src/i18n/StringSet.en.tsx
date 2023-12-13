@@ -52,8 +52,7 @@ export function createStringSetEn(): StringSet {
     'report_button_click_menu_button_cancel': 'Cancel',
     'report_button_click_menu_button_report': 'Report',
 
-    'Unwelcome commercial content or spam':
-      'Unwelcome commercial content or spam',
+    'Unwelcome commercial content': 'Unwelcome commercial content',
     'Pornographic or explicit content': 'Pornographic or explicit content',
     'Child abuse': 'Child abuse',
     'Hate speech or graphic violence': 'Hate speech or graphic violence',

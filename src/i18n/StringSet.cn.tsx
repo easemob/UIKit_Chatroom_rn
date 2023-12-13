@@ -50,7 +50,7 @@ export function createStringSetCn(): StringSet {
     'report_button_click_menu_button_cancel': '取消',
     'report_button_click_menu_button_report': '举报',
 
-    'Unwelcome commercial content or spam': '不受欢迎的商业内容或垃圾内容',
+    'Unwelcome commercial content': '不受欢迎的商业内容',
     'Pornographic or explicit content': '色情或露骨内容',
     'Child abuse': '虐待儿童',
     'Hate speech or graphic violence': '仇恨言论或过于写实的暴力内容',

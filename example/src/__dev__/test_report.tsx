@@ -15,7 +15,7 @@ import {
 const data = [
   {
     id: seqId('_rp').toString(),
-    title: 'Unwelcome commercial content or spam',
+    title: 'Unwelcome commercial content',
     checked: true,
   },
   {
