@@ -483,7 +483,6 @@ export abstract class RoomServiceImpl implements RoomService {
   sendText(params: {
     roomId: string;
     content: string;
-    mentionIds?: string[];
     result: (params: {
       isOk: boolean;
       message?: ChatMessage;
@@ -495,7 +494,6 @@ export abstract class RoomServiceImpl implements RoomService {
   sendGift(params: {
     roomId: string;
     gift: GiftServiceData;
-    mentionIds?: string[];
     result: (params: {
       isOk: boolean;
       message?: ChatMessage;
@@ -506,13 +504,11 @@ export abstract class RoomServiceImpl implements RoomService {
       roomId: params.roomId,
       eventType: custom_msg_event_type_gift,
       eventParams: { chatroom_uikit_gift: JSON.stringify(params.gift) },
-      mentionIds: params.mentionIds,
       result: params.result,
     });
   }
   sendJoinCmd(params: {
     roomId: string;
-    mentionIds?: string[];
     result: (params: {
       isOk: boolean;
       message?: ChatMessage;
@@ -523,7 +519,6 @@ export abstract class RoomServiceImpl implements RoomService {
       roomId: params.roomId,
       eventType: custom_msg_event_type_join,
       eventParams: {},
-      mentionIds: params.mentionIds,
       result: params.result,
     });
   }
@@ -531,14 +526,13 @@ export abstract class RoomServiceImpl implements RoomService {
   _sendTextMessage(params: {
     roomId: string;
     content: string;
-    mentionIds?: string[] | undefined;
     result: (params: {
       isOk: boolean;
       message?: ChatMessage;
       error?: UIKitError;
     }) => void;
   }): void {
-    const { roomId, content, mentionIds, result } = params;
+    const { roomId, content, result } = params;
     const curUserId = this.userId;
     if (curUserId === undefined) {
       result({
@@ -562,7 +556,6 @@ export abstract class RoomServiceImpl implements RoomService {
       content,
       ChatMessageChatType.ChatRoom
     );
-    msg.receiverList = mentionIds;
     msg.attributes = {
       chatroom_uikit_userInfo: user,
     };
@@ -595,14 +588,13 @@ export abstract class RoomServiceImpl implements RoomService {
     roomId: string;
     eventType: string;
     eventParams: Record<string, string>;
-    mentionIds?: string[] | undefined;
     result: (params: {
       isOk: boolean;
       message?: ChatMessage;
       error?: UIKitError;
     }) => void;
   }): void {
-    const { roomId, eventType, eventParams, mentionIds, result } = params;
+    const { roomId, eventType, eventParams, result } = params;
     const curUserId = this.userId;
     if (curUserId === undefined) {
       result({
@@ -627,7 +619,6 @@ export abstract class RoomServiceImpl implements RoomService {
         extra: `use is not existed. ${curUserId}`,
       });
     }
-    msg.receiverList = mentionIds;
     msg.attributes = {
       chatroom_uikit_userInfo: user,
     };

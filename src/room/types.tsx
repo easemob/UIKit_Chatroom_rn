@@ -468,14 +468,12 @@ export interface RoomService {
    * @params
    * - roomId: the chat room id.
    * - content: the text message content.
-   * - mentionIds: the mention user id list.
    * - result: The result after performing the operation. If failed, an error object is returned.
    * @noThrows {@link UIKitError}
    */
   sendText(params: {
     roomId: string;
     content: string;
-    mentionIds?: string[];
     result: (params: {
       isOk: boolean;
       message?: ChatMessage;
@@ -488,14 +486,12 @@ export interface RoomService {
    * @params
    * - roomId: the chat room id.
    * - gift: the gift message content.
-   * - mentionIds: the mention user id list.
    * - result: The result after performing the operation. If failed, an error object is returned.
    * @noThrows {@link UIKitError}
    */
   sendGift(params: {
     roomId: string;
     gift: GiftServiceData;
-    mentionIds?: string[];
     result: (params: {
       isOk: boolean;
       message?: ChatMessage;
@@ -506,13 +502,11 @@ export interface RoomService {
    * Send a join command to the chat room.
    * @params
    * - roomId: the chat room id.
-   * - mentionIds: the mention user id list.
    * - result: The result after performing the operation. If failed, an error object is returned.
    * @noThrows {@link UIKitError}
    */
   sendJoinCmd(params: {
     roomId: string;
-    mentionIds?: string[];
     result: (params: {
       isOk: boolean;
       message?: ChatMessage;
