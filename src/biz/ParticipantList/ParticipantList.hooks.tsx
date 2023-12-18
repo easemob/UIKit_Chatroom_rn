@@ -508,27 +508,53 @@ export function useParticipantListAPI(
   };
 
   const _muteMember = (memberId: string, isMuted: boolean) => {
-    if (im.roomState === 'joined') {
-      im.updateMemberState(
-        im.roomId!,
-        memberId,
-        isMuted === true ? 'mute' : 'unmute'
-      )
-        .then(() => {
-          if (memberType === 'muted') {
-            _updateUI(_removeData(memberId));
-          }
-          im.sendFinished({ event: isMuted === true ? 'mute' : 'unmute' });
-        })
-        .catch((e) => {
-          im.sendError({
-            error: e,
-            from: useParticipantListAPI?.caller?.name,
+    if (memberType === 'member') {
+      if (im.roomState === 'joined') {
+        im.updateMemberState(
+          im.roomId!,
+          memberId,
+          isMuted === true ? 'mute' : 'unmute'
+        )
+          .then(() => {
+            // const member = dataRef.current.find((v) => {
+            //   return v.userInfo.userId === memberId;
+            // });
+            // if (member) {
+            //   _updateUI(_updateData(member?.userInfo));
+            // }
+            im.sendFinished({ event: isMuted === true ? 'mute' : 'unmute' });
+          })
+          .catch((e) => {
+            im.sendError({
+              error: e,
+              from: useParticipantListAPI?.caller?.name,
+            });
           });
-        });
+      }
+    } else if (memberType === 'muted') {
+      if (im.roomState === 'joined') {
+        im.updateMemberState(
+          im.roomId!,
+          memberId,
+          isMuted === true ? 'mute' : 'unmute'
+        )
+          .then(() => {
+            _updateUI(_removeData(memberId));
+            im.sendFinished({ event: isMuted === true ? 'mute' : 'unmute' });
+          })
+          .catch((e) => {
+            im.sendError({
+              error: e,
+              from: useParticipantListAPI?.caller?.name,
+            });
+          });
+      }
     }
   };
   const _removeMember = (memberId: string) => {
+    if (memberType !== 'member') {
+      return;
+    }
     if (im.roomState === 'joined') {
       im.kickMember(im.roomId!, memberId)
         .then(() => {
