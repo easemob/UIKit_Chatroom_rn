@@ -10,6 +10,7 @@ import { useColors } from '../../hook';
 import type { UserServiceData } from '../../room';
 import { usePaletteContext } from '../../theme';
 import { Image } from '../../ui/Image';
+import { BottomSheetNameMenu } from '../BottomSheetMenu';
 import type { PropsWithError, PropsWithTest } from '../types';
 import { useSearchParticipantListAPI } from './ParticipantList.hooks';
 import {
@@ -45,7 +46,6 @@ export type SearchParticipantProps = {
  */
 export function SearchParticipant(props: SearchParticipantProps) {
   const { onRequestClose, memberType, searchType } = props;
-  const [value, setValue] = React.useState('');
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     backgroundColor: {
@@ -57,10 +57,11 @@ export function SearchParticipant(props: SearchParticipantProps) {
       dark: colors.neutral[3],
     },
   });
-  const { _data, deferSearch } = useSearchParticipantListAPI({
-    memberType,
-    searchType,
-  });
+  const { _data, deferSearch, menuRef, value, setValue } =
+    useSearchParticipantListAPI({
+      memberType,
+      searchType,
+    });
 
   return (
     <View
@@ -91,6 +92,13 @@ export function SearchParticipant(props: SearchParticipantProps) {
           return item.id;
         }}
         ListEmptyComponent={EmptyBlank}
+      />
+      <BottomSheetNameMenu
+        ref={menuRef}
+        onRequestModalClose={() => {
+          menuRef?.current?.startHide?.();
+        }}
+        initItems={[]}
       />
     </View>
   );

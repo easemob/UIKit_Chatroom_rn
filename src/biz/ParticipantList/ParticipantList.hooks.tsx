@@ -649,33 +649,41 @@ export function useSearchParticipantListAPI(props: {
   const [data, setData] = React.useState<ParticipantListItemProps[]>([]);
 
   const { isOwner } = useIsOwner();
-  const { emit } = useDispatchContext();
-
-  const _isMuter = (memberId: string) => {
-    return im.getMuter(memberId) !== undefined;
-  };
+  const menuRef = React.useRef<BottomSheetNameMenuRef>({} as any);
+  const keyRef = React.useRef('');
+  const removeList = React.useRef<string[]>([]);
+  const [value, setValue] = React.useState('');
 
   const _execSearch = (key: string) => {
+    keyRef.current = key;
     const r = im.getIncludes(key, searchType);
-    const rr = r.map((v) => {
-      return {
-        id: v.userId,
-        userInfo: v,
-        actions: {
-          onClicked: () => {
-            const isMuted = _isMuter(v.userId);
-            emit(
-              `_$useParticipantListAPI_participantListContextMenu`,
-              memberType, // current mute list
-              isOwner(), // current user role
-              v.userId, // current member id
-              isMuted // current member mute state
-            );
+    const rr = r
+      .map((v) => {
+        return {
+          id: v.userId,
+          userInfo: {
+            ...v,
+            hasMenu: isOwner()
+              ? v.userId === im.userId || v.userId === im.ownerId
+                ? false
+                : true
+              : false,
           },
-        },
-      } as ParticipantListItemProps;
-    });
-    setData([...rr]);
+          actions: {
+            onClicked: () => {
+              onShowMenu(memberType, isOwner(), v.userId);
+            },
+          },
+        } as ParticipantListItemProps;
+      })
+      .filter((v) => {
+        return removeList.current.includes(v.userInfo.userId) === false;
+      });
+    if (key.length === 0) {
+      setData([]);
+    } else {
+      setData([...rr]);
+    }
   };
 
   const { delayExecTask: _deferSearch } = useDelayExecTask(
@@ -683,9 +691,96 @@ export function useSearchParticipantListAPI(props: {
     _execSearch
   );
 
+  const _muteMember = (memberId: string, isMuted: boolean) => {
+    if (im.roomState === 'joined') {
+      im.updateMemberState(
+        im.roomId!,
+        memberId,
+        isMuted === true ? 'mute' : 'unmute'
+      )
+        .then(() => {
+          im.sendFinished({ event: isMuted === true ? 'mute' : 'unmute' });
+        })
+        .catch((e) => {
+          im.sendError({
+            error: e,
+            from: useParticipantListAPI?.caller?.name,
+          });
+        });
+    }
+  };
+
+  const _removeMember = (memberId: string) => {
+    if (im.roomState === 'joined') {
+      im.kickMember(im.roomId!, memberId)
+        .then(() => {
+          removeList.current.push(memberId);
+          im.sendFinished({ event: 'kick' });
+          _execSearch(keyRef.current);
+        })
+        .catch((e) => {
+          im.sendError({
+            error: e,
+            from: useParticipantListAPI?.caller?.name,
+          });
+        });
+    }
+  };
+
+  const onShowMenu = (
+    memberType: ParticipantListType,
+    isOwner: boolean,
+    userId: string
+  ) => {
+    if (isOwner === false || userId === undefined) {
+      return;
+    }
+    if (memberType === 'member') {
+      let items: InitMenuItemsType[] = [
+        {
+          name: 'Mute',
+          isHigh: false,
+          onClicked: () => {
+            if (userId !== im.userId) {
+              _muteMember(userId, true);
+            }
+            menuRef?.current?.startHide?.();
+          },
+        },
+        {
+          name: 'Remove',
+          isHigh: true,
+          onClicked: () => {
+            if (userId !== im.userId) {
+              _removeMember(userId);
+            }
+            menuRef?.current?.startHide?.();
+          },
+        },
+      ];
+      menuRef?.current?.startShowWithInit(items);
+    } else if (memberType === 'muted') {
+      menuRef?.current?.startShowWithInit([
+        {
+          name: 'Unmute',
+          isHigh: false,
+          onClicked: () => {
+            if (userId !== im.userId) {
+              _muteMember(userId, false);
+            }
+            menuRef?.current?.startHide?.();
+          },
+        },
+      ]);
+    }
+  };
+
   return {
     _data: data,
     deferSearch: _deferSearch,
+    menuRef,
+    value,
+    setValue,
   };
 }
 
