@@ -10,7 +10,7 @@ export type GiftMessageListItemData = {
   /**
    * The nickname of the sender.
    */
-  nickName: string;
+  nickname: string;
   /**
    * The content of the message.
    */

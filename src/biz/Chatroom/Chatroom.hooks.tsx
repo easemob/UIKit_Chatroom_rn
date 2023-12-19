@@ -203,12 +203,12 @@ export class Chatroom extends ChatroomBase {
     if (jsonGift) {
       const gift = JSON.parse(jsonGift) as GiftServiceData;
       const user = this.im?.userInfoFromMessage(message);
-      const nickName = user?.nickName ?? user?.userId ?? 'unknown';
+      const nickname = user?.nickname ?? user?.userId ?? 'unknown';
       this.giftRef?.current?.pushTask?.({
         model: {
           id: seqId('_gf').toString(),
           avatar: user?.avatarURL,
-          nickName: nickName,
+          nickname: nickname,
           giftCount: gift.giftCount,
           giftIcon: gift.giftIcon,
           content: this.i18n?.tr("Sent '@${0}'", gift.giftName) ?? '',

@@ -48,7 +48,7 @@ export const ParticipantContextMenu = (props: ParticipantContextMenuProps) => {
       if (isOwner === true) {
         if (_memberType === 'member') {
           if (memberType === _memberType) {
-            setUserName(im.getUserInfo(userId)?.nickName ?? userId);
+            setUserName(im.getUserInfo(userId)?.nickname ?? userId);
             let items: InitMenuItemsType[] = [
               {
                 name: 'Mute',
@@ -90,7 +90,7 @@ export const ParticipantContextMenu = (props: ParticipantContextMenuProps) => {
           }
         } else if (_memberType === 'muted') {
           if (memberType === _memberType) {
-            setUserName(im.getUserInfo(userId)?.nickName ?? userId);
+            setUserName(im.getUserInfo(userId)?.nickname ?? userId);
             menuRef?.current?.startShowWithInit([
               {
                 name: 'Unmute',

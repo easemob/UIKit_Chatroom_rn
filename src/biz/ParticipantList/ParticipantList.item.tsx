@@ -83,10 +83,10 @@ export function ParticipantListItem(props: ParticipantListItemProps) {
               color: getColor('color'),
             }}
           >
-            {userInfo.nickName === undefined ||
-            userInfo.nickName.trim().length === 0
+            {userInfo.nickname === undefined ||
+            userInfo.nickname.trim().length === 0
               ? userInfo.userId
-              : userInfo.nickName}
+              : userInfo.nickname}
           </Text>
           {/* <Text
             textType={'medium'}

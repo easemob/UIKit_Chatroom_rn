@@ -181,7 +181,7 @@ export function MessageListItem(props: MessageListItemProps) {
                 paletteType={'label'}
                 style={{ color: getColor('name') }}
               >
-                {basic.nickName}
+                {basic.nickname}
               </Text>
             </View>
           </View>

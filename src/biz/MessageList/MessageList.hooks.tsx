@@ -187,7 +187,7 @@ export function useMessageListApi(params: {
   const _addJoinData = (message: ChatMessage) => {
     const getNickName = () => {
       const user = im.userInfoFromMessage(message);
-      return user?.nickName ?? user?.userId ?? message.from ?? 'unknown';
+      return user?.nickname ?? user?.userId ?? message.from ?? 'unknown';
     };
     const part = {
       type: 'tip',
@@ -236,14 +236,14 @@ export function useMessageListApi(params: {
   ) => {
     const getBasic = (): MessageListItemBasic => {
       let user = im.getUserInfo(d.msg?.from);
-      if (user === undefined || user.nickName === undefined) {
+      if (user === undefined || user.nickname === undefined) {
         user = im.userInfoFromMessage(d.msg);
       }
-      const nickName =
-        user?.nickName ?? user?.userId ?? d.msg?.from ?? 'unknown';
+      const nickname =
+        user?.nickname ?? user?.userId ?? d.msg?.from ?? 'unknown';
       return {
         timestamp: Date.now(),
-        nickName: nickName,
+        nickname: nickname,
         avatar: user?.avatarURL,
         tag: user?.identify,
       };

@@ -87,7 +87,7 @@ export function GiftMessageListItem(props: GiftMessageListItemProps) {
               numberOfLines={1}
               style={{ color: 'white' }}
             >
-              {item.gift.nickName}
+              {item.gift.nickname}
             </Text>
             <Text
               textType={'extraSmall'}

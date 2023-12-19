@@ -72,7 +72,7 @@ export type GiftMessageListProps = {
  * ref.current?.pushTask({
  *       model: {
  *         id: seqId('_gf').toString(),
- *         nickName: 'NickName',
+ *         nickname: 'NickName',
  *         giftCount: 1,
  *         giftIcon: 'http://notext.png',
  *         content: 'send Agoraship too too too long',

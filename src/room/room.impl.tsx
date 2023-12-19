@@ -159,7 +159,7 @@ export abstract class RoomServiceImpl implements RoomService {
 
       // !!! hot-reload no pass, into catch codes
       this._user = {
-        nickName: userNickname,
+        nickname: userNickname,
         avatarURL: userAvatarURL,
         userId: userId,
         gender: gender,
@@ -178,7 +178,7 @@ export abstract class RoomServiceImpl implements RoomService {
       if (error?.code === 200) {
         // !!! for dev hot-reload
         this._user = {
-          nickName: userNickname,
+          nickname: userNickname,
           avatarURL: userAvatarURL,
           userId: userId,
           gender: gender,
@@ -186,7 +186,7 @@ export abstract class RoomServiceImpl implements RoomService {
         } as UserServiceData;
 
         this._updateMember({
-          nickName: userNickname,
+          nickname: userNickname,
           avatarURL: userAvatarURL,
           userId: userId,
         });
@@ -288,7 +288,7 @@ export abstract class RoomServiceImpl implements RoomService {
           }
           ret.push({
             userId: item[1].userId,
-            nickName: item[1].nickName ?? undefined,
+            nickname: item[1].nickName ?? undefined,
             avatarURL: item[1].avatarUrl ?? undefined,
             gender: item[1].gender ?? 0,
             identify: identify,
@@ -308,7 +308,7 @@ export abstract class RoomServiceImpl implements RoomService {
     try {
       const p = {
         userId: self.userId,
-        nickName: self.nickName,
+        nickname: self.nickname,
         avatarUrl: self.avatarURL,
         gender: self.gender,
         ext: JSON.stringify({ identify: self.identify }),
@@ -332,8 +332,8 @@ export abstract class RoomServiceImpl implements RoomService {
     }).filter((v) => {
       if (type === 'avatarURL') {
         return v.avatarURL?.includes(key);
-      } else if (type === 'nickName') {
-        return v.nickName?.includes(key);
+      } else if (type === 'nickname') {
+        return v.nickname?.includes(key);
       } else if (type === 'identify') {
         return v.identify?.includes(key);
       } else if (type === 'gender') {

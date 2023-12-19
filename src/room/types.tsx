@@ -70,7 +70,7 @@ export type UserServiceData = {
   /**
    * User nick name. It is very important to set.
    */
-  nickName?: string;
+  nickname?: string;
   /**
    * User avatar URL.
    */

@@ -668,7 +668,7 @@ export function useSearchParticipantListAPI(props: {
   memberType: ParticipantListType;
   searchType?: keyof UserServiceData;
 }) {
-  const { memberType, searchType = 'nickName' } = props;
+  const { memberType, searchType = 'nickname' } = props;
   // const ds = React.useRef<NodeJS.Timeout | undefined>();
   const im = useRoomContext();
 

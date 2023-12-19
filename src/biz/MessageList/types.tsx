@@ -20,7 +20,7 @@ export type MessageListItemBasic = {
   timestamp: number;
   avatar?: string;
   tag?: IconNameType | string;
-  nickName: string;
+  nickname: string;
 };
 
 export type MessageListItemOp = {
