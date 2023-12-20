@@ -36,6 +36,10 @@ export type SearchParticipantProps = {
    * Search type.
    */
   searchType?: keyof UserServiceData;
+  /**
+   * Callback function when mute operator is finished.
+   */
+  onMuteOperatorFinished?: () => void;
 } & PropsWithTest &
   PropsWithError;
 

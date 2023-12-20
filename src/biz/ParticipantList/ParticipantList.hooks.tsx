@@ -668,8 +668,9 @@ export function useParticipantListAPI(
 export function useSearchParticipantListAPI(props: {
   memberType: ParticipantListType;
   searchType?: keyof UserServiceData;
+  onMuteOperatorFinished?: () => void;
 }) {
-  const { memberType, searchType = 'nickname' } = props;
+  const { memberType, searchType = 'nickname', onMuteOperatorFinished } = props;
   // const ds = React.useRef<NodeJS.Timeout | undefined>();
   const im = useRoomContext();
 
@@ -772,7 +773,9 @@ export function useSearchParticipantListAPI(props: {
             if (userId !== im.userId) {
               _muteMember(userId, isMuted === undefined ? true : false);
             }
-            menuRef?.current?.startHide?.();
+            menuRef?.current?.startHide?.(() => {
+              onMuteOperatorFinished?.();
+            });
           },
         },
         {
