@@ -231,6 +231,9 @@ export abstract class RoomServiceImpl implements RoomService {
   getMuter(id: string): number | undefined {
     return this._muterMap.get(id);
   }
+  delMuter(id: string): void {
+    this._muterMap.delete(id);
+  }
   updateMuter(ids: string[]): void {
     for (const id of ids) {
       this._muterMap.set(id, -1);
@@ -440,6 +443,7 @@ export abstract class RoomServiceImpl implements RoomService {
     if (op === 'mute') {
       try {
         await this.client.roomManager.muteChatRoomMembers(roomId, [userId]);
+        this.updateMuter([userId]);
         this._roomListener?.onMuteListAdded?.({
           roomId: roomId,
           mutes: [userId],
@@ -455,6 +459,7 @@ export abstract class RoomServiceImpl implements RoomService {
     } else if (op === 'unmute') {
       try {
         await this.client.roomManager.unMuteChatRoomMembers(roomId, [userId]);
+        this.delMuter(userId);
         this._roomListener?.onMuteListRemoved?.({
           roomId: roomId,
           mutes: [userId],

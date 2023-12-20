@@ -592,13 +592,14 @@ export function useParticipantListAPI(
       return;
     }
     if (memberType === 'member') {
+      const isMuted = im.getMuter(userId);
       let items: InitMenuItemsType[] = [
         {
-          name: 'Mute',
+          name: isMuted === undefined ? 'Mute' : 'Unmute',
           isHigh: false,
           onClicked: () => {
             if (userId !== im.userId) {
-              _muteMember(userId, true);
+              _muteMember(userId, isMuted === undefined ? true : false);
             }
             menuRef?.current?.startHide?.();
           },
@@ -762,13 +763,14 @@ export function useSearchParticipantListAPI(props: {
       return;
     }
     if (memberType === 'member') {
+      const isMuted = im.getMuter(userId);
       let items: InitMenuItemsType[] = [
         {
-          name: 'Mute',
+          name: isMuted === undefined ? 'Mute' : 'Unmute',
           isHigh: false,
           onClicked: () => {
             if (userId !== im.userId) {
-              _muteMember(userId, true);
+              _muteMember(userId, isMuted === undefined ? true : false);
             }
             menuRef?.current?.startHide?.();
           },
