@@ -49,7 +49,8 @@ export type SearchParticipantProps = {
  * @returns JSX.Element
  */
 export function SearchParticipant(props: SearchParticipantProps) {
-  const { onRequestClose, memberType, searchType } = props;
+  const { onRequestClose, memberType, searchType, onMuteOperatorFinished } =
+    props;
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     backgroundColor: {
@@ -65,6 +66,7 @@ export function SearchParticipant(props: SearchParticipantProps) {
     useSearchParticipantListAPI({
       memberType,
       searchType,
+      onMuteOperatorFinished,
     });
 
   return (

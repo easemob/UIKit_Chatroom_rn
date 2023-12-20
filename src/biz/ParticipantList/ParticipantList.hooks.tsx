@@ -785,7 +785,9 @@ export function useSearchParticipantListAPI(props: {
             if (userId !== im.userId) {
               _removeMember(userId);
             }
-            menuRef?.current?.startHide?.();
+            menuRef?.current?.startHide?.(() => {
+              onMuteOperatorFinished?.();
+            });
           },
         },
       ];
@@ -799,7 +801,9 @@ export function useSearchParticipantListAPI(props: {
             if (userId !== im.userId) {
               _muteMember(userId, false);
             }
-            menuRef?.current?.startHide?.();
+            menuRef?.current?.startHide?.(() => {
+              onMuteOperatorFinished?.();
+            });
           },
         },
       ]);
