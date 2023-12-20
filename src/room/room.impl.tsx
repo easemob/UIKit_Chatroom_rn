@@ -167,11 +167,7 @@ export abstract class RoomServiceImpl implements RoomService {
       } as UserServiceData;
 
       this.client.getCurrentUsername();
-
-      const self = this._userMap.get(userId);
-      if (self) {
-        this.updateSelfInfo(self);
-      }
+      this.updateSelfInfo(this._user);
 
       result?.({ isOk: true });
     } catch (error: any) {
@@ -184,12 +180,7 @@ export abstract class RoomServiceImpl implements RoomService {
           gender: gender,
           identify: identify,
         } as UserServiceData;
-
-        this._updateMember({
-          nickname: userNickname,
-          avatarURL: userAvatarURL,
-          userId: userId,
-        });
+        this.updateSelfInfo(this._user);
         this.client.getCurrentUsername();
       }
       result?.({
