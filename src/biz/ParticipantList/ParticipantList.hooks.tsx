@@ -17,6 +17,7 @@ import {
   useRoomListener,
   UserServiceData,
 } from '../../room';
+import { AlertRef } from '../../ui/Alert';
 import { wait } from '../../utils';
 import { BottomSheetNameMenuRef, InitMenuItemsType } from '../BottomSheetMenu';
 import type { PropsWithError, PropsWithTest } from '../types';
@@ -127,6 +128,8 @@ export function useParticipantListAPI(
   const isRefreshGestureRef = React.useRef(false);
   const contentOffsetYRef = React.useRef(0);
   let menuRef = React.useRef<BottomSheetNameMenuRef>({} as any);
+  const alertRef = React.useRef<AlertRef>({} as any);
+  const [removedUser, setRemovedUser] = React.useState<UserServiceData>();
 
   const [pageState, setPageState] = React.useState<
     'loading' | 'normal' | 'error'
@@ -593,6 +596,8 @@ export function useParticipantListAPI(
     }
     if (memberType === 'member') {
       const isMuted = im.getMuter(userId);
+      const user = im.getUserInfo(userId);
+      setRemovedUser(user ?? { userId: userId });
       let items: InitMenuItemsType[] = [
         {
           name: isMuted === undefined ? 'Mute' : 'Unmute',
@@ -609,9 +614,13 @@ export function useParticipantListAPI(
           isHigh: true,
           onClicked: () => {
             if (userId !== im.userId) {
-              _removeMember(userId);
+              // _removeMember(userId);
+              menuRef?.current?.startHide?.(() => {
+                alertRef.current?.alert?.();
+              });
+            } else {
+              menuRef?.current?.startHide?.();
             }
-            menuRef?.current?.startHide?.();
           },
         },
       ];
@@ -647,6 +656,13 @@ export function useParticipantListAPI(
     listener.current
   );
 
+  const onRemoveMember = () => {
+    alertRef.current?.close?.();
+    if (removedUser?.userId) {
+      _removeMember(removedUser.userId);
+    }
+  };
+
   return {
     data: data,
     pageState: pageState,
@@ -662,6 +678,9 @@ export function useParticipantListAPI(
     onScrollBeginDrag: _onScrollBeginDrag,
     onScrollEndDrag: _onScrollEndDrag,
     menuRef,
+    alertRef,
+    removedUser: removedUser,
+    onRemoveMember,
   };
 }
 
@@ -678,9 +697,11 @@ export function useSearchParticipantListAPI(props: {
 
   const { isOwner } = useIsOwner();
   const menuRef = React.useRef<BottomSheetNameMenuRef>({} as any);
+  const alertRef = React.useRef<AlertRef>({} as any);
   const keyRef = React.useRef('');
   const removeList = React.useRef<string[]>([]);
   const [value, setValue] = React.useState('');
+  const [removedUser, setRemovedUser] = React.useState<UserServiceData>();
 
   const _execSearch = (key: string) => {
     keyRef.current = key;
@@ -765,6 +786,8 @@ export function useSearchParticipantListAPI(props: {
     }
     if (memberType === 'member') {
       const isMuted = im.getMuter(userId);
+      const user = im.getUserInfo(userId);
+      setRemovedUser(user ?? { userId: userId });
       let items: InitMenuItemsType[] = [
         {
           name: isMuted === undefined ? 'Mute' : 'Unmute',
@@ -783,11 +806,13 @@ export function useSearchParticipantListAPI(props: {
           isHigh: true,
           onClicked: () => {
             if (userId !== im.userId) {
-              _removeMember(userId);
+              // _removeMember(userId);
+              menuRef?.current?.startHide?.(() => {
+                alertRef.current?.alert?.();
+              });
+            } else {
+              menuRef?.current?.startHide?.();
             }
-            menuRef?.current?.startHide?.(() => {
-              onMuteOperatorFinished?.();
-            });
           },
         },
       ];
@@ -810,12 +835,22 @@ export function useSearchParticipantListAPI(props: {
     }
   };
 
+  const onRemoveMember = () => {
+    alertRef.current?.close?.();
+    if (removedUser?.userId) {
+      _removeMember(removedUser.userId);
+    }
+  };
+
   return {
     _data: data,
     deferSearch: _deferSearch,
     menuRef,
     value,
     setValue,
+    alertRef,
+    removedUser,
+    onRemoveMember,
   };
 }
 

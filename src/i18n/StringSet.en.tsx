@@ -84,5 +84,7 @@ export function createStringSetEn(): StringSet {
       "'@broadcaster' made an announcement",
     'global_broadcast_barrage_gifting':
       "'@username' gifts '@username' with a '@gift_name'",
+    'Want to remove ${0} from the chatroom?': (name: string) =>
+      `Want to remove ${name} from the chatroom?`,
   };
 }

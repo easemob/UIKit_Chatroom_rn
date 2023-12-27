@@ -7,8 +7,10 @@ import {
 } from 'react-native';
 
 import { useColors } from '../../hook';
+import { useI18nContext } from '../../i18n';
 import type { UserServiceData } from '../../room';
 import { usePaletteContext } from '../../theme';
+import { Alert } from '../../ui/Alert';
 import { Image } from '../../ui/Image';
 import { BottomSheetNameMenu } from '../BottomSheetMenu';
 import type { PropsWithError, PropsWithTest } from '../types';
@@ -51,6 +53,7 @@ export type SearchParticipantProps = {
 export function SearchParticipant(props: SearchParticipantProps) {
   const { onRequestClose, memberType, searchType, onMuteOperatorFinished } =
     props;
+  const { tr } = useI18nContext();
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     backgroundColor: {
@@ -62,12 +65,20 @@ export function SearchParticipant(props: SearchParticipantProps) {
       dark: colors.neutral[3],
     },
   });
-  const { _data, deferSearch, menuRef, value, setValue } =
-    useSearchParticipantListAPI({
-      memberType,
-      searchType,
-      onMuteOperatorFinished,
-    });
+  const {
+    _data,
+    deferSearch,
+    menuRef,
+    value,
+    setValue,
+    alertRef,
+    removedUser,
+    onRemoveMember,
+  } = useSearchParticipantListAPI({
+    memberType,
+    searchType,
+    onMuteOperatorFinished,
+  });
 
   return (
     <View
@@ -105,6 +116,25 @@ export function SearchParticipant(props: SearchParticipantProps) {
           menuRef?.current?.startHide?.();
         }}
         initItems={[]}
+      />
+      <Alert
+        ref={alertRef}
+        title={tr(
+          'Want to remove ${0} from the chatroom?',
+          removedUser?.nickname
+        )}
+        buttons={[
+          {
+            text: tr('Cancel'),
+            onPress: () => {
+              alertRef.current?.close?.();
+            },
+          },
+          {
+            text: tr('Confirm'),
+            onPress: onRemoveMember,
+          },
+        ]}
       />
     </View>
   );

@@ -54,7 +54,8 @@ export const Alert = React.forwardRef<AlertRef, AlertProps>(
                 text={v.text}
                 style={{
                   height: 48,
-                  width: count < 3 ? undefined : 308,
+                  // width: count < 3 ? undefined : 308,
+                  width: count === 2 ? '48%' : '100%',
                 }}
               />
             );
@@ -67,7 +68,10 @@ export const Alert = React.forwardRef<AlertRef, AlertProps>(
               contentType={'only-text'}
               onPress={() => v.onPress?.(v.text)}
               text={v.text}
-              style={{ height: 48 }}
+              style={{
+                height: 48,
+                width: count === 2 ? '48%' : '100%',
+              }}
             />
           );
         });
@@ -140,6 +144,7 @@ export const Alert = React.forwardRef<AlertRef, AlertProps>(
             paddingTop: 24,
             paddingBottom: 16,
             borderRadius: 16,
+            maxWidth: '80%',
           }}
         >
           <View style={{ alignItems: 'center' }}>

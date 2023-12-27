@@ -8,6 +8,8 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { useI18nContext } from '../../i18n';
+import { Alert } from '../../ui/Alert';
 import { FlatListFactory, FlatListRef } from '../../ui/FlatList';
 import {
   BottomSheetNameMenu,
@@ -120,6 +122,9 @@ export function ParticipantList(props: ParticipantListProps) {
     onScrollBeginDrag,
     onScrollEndDrag,
     menuRef,
+    alertRef,
+    removedUser,
+    onRemoveMember,
   } = useParticipantListAPI({
     testMode,
     onError,
@@ -131,6 +136,7 @@ export function ParticipantList(props: ParticipantListProps) {
   // let menuRef = React.useRef<BottomSheetNameMenuRef>({} as any);
   const { height: winHeight } = useWindowDimensions();
   const { bottom } = useSafeAreaInsets();
+  const { tr } = useI18nContext();
   let height =
     winHeight * 0.6 -
     // gBottomSheetHeaderHeight -
@@ -239,6 +245,25 @@ export function ParticipantList(props: ParticipantListProps) {
           menuRef?.current?.startHide?.();
         }}
         initItems={[]}
+      />
+      <Alert
+        ref={alertRef}
+        title={tr(
+          'Want to remove ${0} from the chatroom?',
+          removedUser?.nickname
+        )}
+        buttons={[
+          {
+            text: tr('Cancel'),
+            onPress: () => {
+              alertRef.current?.close?.();
+            },
+          },
+          {
+            text: tr('Confirm'),
+            onPress: onRemoveMember,
+          },
+        ]}
       />
     </>
   );

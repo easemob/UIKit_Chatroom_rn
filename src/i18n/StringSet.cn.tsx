@@ -80,5 +80,7 @@ export function createStringSetCn(): StringSet {
     'global_broadcast_barrage_announcement': "'@broadcaster' 发布了公告",
     'global_broadcast_barrage_gifting':
       "'@username' 赠送 '@username' 一个 '@gift_name'",
+    'Want to remove ${0} from the chatroom?': (name: string) =>
+      `确定要移除成员${name}？`,
   };
 }
