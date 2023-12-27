@@ -562,7 +562,13 @@ export function useParticipantListAPI(
       im.kickMember(im.roomId!, memberId)
         .then(() => {
           _updateUI(_removeData(memberId));
-          im.sendFinished({ event: 'kick' });
+          im.sendFinished({
+            event: 'kick',
+            extra: {
+              userId: memberId,
+              userName: im.getUserInfo(memberId)?.nickname,
+            },
+          });
         })
         .catch((e) => {
           im.sendError({
@@ -764,7 +770,13 @@ export function useSearchParticipantListAPI(props: {
       im.kickMember(im.roomId!, memberId)
         .then(() => {
           removeList.current.push(memberId);
-          im.sendFinished({ event: 'kick' });
+          im.sendFinished({
+            event: 'kick',
+            extra: {
+              userId: memberId,
+              userName: im.getUserInfo(memberId)?.nickname,
+            },
+          });
           _execSearch(keyRef.current);
         })
         .catch((e) => {
