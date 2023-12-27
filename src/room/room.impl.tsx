@@ -562,7 +562,7 @@ export abstract class RoomServiceImpl implements RoomService {
             isOk: false,
             error: new UIKitError({
               code: ErrorCode.msg_send_error,
-              extra: `${error.code}: ${error.description}`,
+              desc: JSON.stringify(error),
             }),
           });
         },
@@ -575,7 +575,7 @@ export abstract class RoomServiceImpl implements RoomService {
           isOk: false,
           error: new UIKitError({
             code: ErrorCode.msg_send_error,
-            extra: `${e.code}: ${e.description}`,
+            desc: JSON.stringify(e),
           }),
         });
       });
@@ -625,7 +625,7 @@ export abstract class RoomServiceImpl implements RoomService {
             isOk: false,
             error: new UIKitError({
               code: ErrorCode.msg_send_error,
-              extra: `${error.code}: ${error.description}`,
+              desc: `${error.code}: ${error.description}`,
             }),
           });
         },
@@ -638,7 +638,7 @@ export abstract class RoomServiceImpl implements RoomService {
           isOk: false,
           error: new UIKitError({
             code: ErrorCode.msg_send_error,
-            extra: `${e.code}: ${e.description}`,
+            desc: `${e.code}: ${e.description}`,
           }),
         });
       });

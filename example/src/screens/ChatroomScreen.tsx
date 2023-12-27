@@ -61,7 +61,11 @@ export function ChatroomScreen(props: Props) {
     React.useMemo(() => {
       return {
         onError: (params) => {
-          console.log('ChatroomScreen:onError:', JSON.stringify(params));
+          console.log(
+            'ChatroomScreen:onError:',
+            params,
+            params.error.toString()
+          );
           if (Platform.OS === 'ios') {
             let content;
             try {
