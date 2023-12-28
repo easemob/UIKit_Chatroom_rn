@@ -83,42 +83,56 @@ export function ReportScreen(props: Props) {
 const data = [
   {
     id: seqId('_rp').toString(),
+    tag: 'tag1',
     title: 'Unwelcome commercial content',
     checked: false,
   },
   {
     id: seqId('_rp').toString(),
+    tag: 'tag2',
     title: 'Pornographic or explicit content',
     checked: false,
   },
   {
     id: seqId('_rp').toString(),
+    tag: 'tag3',
     title: 'Child abuse',
     checked: false,
   },
   {
     id: seqId('_rp').toString(),
+    tag: 'tag4',
     title: 'Hate speech or graphic violence',
     checked: false,
   },
   {
     id: seqId('_rp').toString(),
+    tag: 'tag5',
     title: 'Promote terrorism',
     checked: false,
   },
   {
     id: seqId('_rp').toString(),
+    tag: 'tag6',
     title: 'Harassment or bullying',
     checked: false,
   },
   {
     id: seqId('_rp').toString(),
-    title: 'Harassment or bullying',
+    tag: 'tag7',
+    title: 'Suicide or self harm',
     checked: false,
   },
   {
     id: seqId('_rp').toString(),
-    title: 'Harassment or bullying',
+    tag: 'tag8',
+    title: 'False information',
+    checked: false,
+  },
+  {
+    id: seqId('_rp').toString(),
+    tag: 'tag9',
+    title: 'Others',
     checked: false,
   },
 ];

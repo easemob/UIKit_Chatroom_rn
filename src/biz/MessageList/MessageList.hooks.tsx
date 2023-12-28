@@ -468,7 +468,7 @@ export function useMessageListApi(params: {
       const msg = langPressItemRef.current.msg;
       im.reportMessage({
         messageId: msg.msgId,
-        tag: _result?.title ?? '',
+        tag: _result?.tag ?? '',
         reason: tr(_result?.title ?? ''),
       })
         .then(() => {

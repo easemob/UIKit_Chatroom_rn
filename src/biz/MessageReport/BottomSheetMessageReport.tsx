@@ -25,7 +25,7 @@ export type BottomSheetMessageReportProps = {
    * Style of the container. This property can mainly change the display or hiding, position, size, background color, style, etc.
    */
   containerStyle?: StyleProp<ViewStyle>;
-  onReport: (result?: ReportItemModel) => void;
+  onReport?: (result?: ReportItemModel) => void;
 } & PropsWithTest &
   PropsWithError;
 

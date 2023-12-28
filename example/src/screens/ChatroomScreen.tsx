@@ -13,6 +13,7 @@ import {
   Chatroom,
   GiftListModel,
   Icon,
+  ReportItemModel,
   seqId,
   useColors,
   useDispatchContext,
@@ -213,29 +214,32 @@ export function ChatroomScreen(props: Props) {
         ref={chatroomRef}
         // GlobalBroadcast={GlobalBroadcast}
         // containerStyle={{ transform: [{ translateY: -pageY }] }}
-        // messageList={{
-        //   props: {
-        //     visible: true,
-        //     containerStyle: {
-        //       position: 'absolute',
-        //       top: 100,
-        //       // height: 400,
-        //       // width: 150,
-        //       // backgroundColor: 'red',
-        //     },
-        //     // MessageListItemComponent: MessageListItemMemo,
-        //     messageMenuItems: [
-        //       {
-        //         name: 'my',
-        //         isHigh: false,
-        //         onClicked: (name, others) => {
-        //           console.log('onClicked:', name, others);
-        //           chatroomRef.current?.getMessageListRef()?.closeMenu?.();
-        //         },
-        //       },
-        //     ],
-        //   },
-        // }}
+        messageList={{
+          props: {
+            visible: true,
+            containerStyle: {
+              position: 'absolute',
+              top: 100,
+              // height: 400,
+              // width: 150,
+              // backgroundColor: 'red',
+            },
+            reportProps: {
+              data: [] as ReportItemModel[],
+            },
+            // MessageListItemComponent: MessageListItemMemo,
+            // messageMenuItems: [
+            //   {
+            //     name: 'my',
+            //     isHigh: false,
+            //     onClicked: (name, others) => {
+            //       console.log('onClicked:', name, others);
+            //       chatroomRef.current?.getMessageListRef()?.closeMenu?.();
+            //     },
+            //   },
+            // ],
+          },
+        }}
         // gift={{
         //   props: {
         //     visible: true,

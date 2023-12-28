@@ -36,7 +36,7 @@ export type MessageReportProps = {
   /**
    * Callback function when report button is clicked.
    */
-  onReport: (result?: ReportItemModel) => void;
+  onReport?: (result?: ReportItemModel) => void;
   /**
    * data source. {@link ReportItemModel}
    */
