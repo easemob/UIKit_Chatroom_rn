@@ -5807,9 +5807,9 @@ react-is@^17.0.1:
   integrity sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w==
 
 react-native-chat-sdk@1.3.0-beta.1:
-  version "1.3.0-beta.0"
-  resolved "https://registry.npmmirror.com/react-native-chat-sdk/-/react-native-chat-sdk-1.3.0-beta.0.tgz#2b99fe3ea6574d8eff2577fb0ae71142c7ac506f"
-  integrity sha512-soF8CM7WVo4cnX63KkxuJS4S9Yyy9hqWZUfUNwL7GlGh9+O9wvHPsnHlaVA8Qza2GUEAkl9W064dR5Ghlz4iNA==
+  version "1.3.0-beta.1"
+  resolved "https://registry.npmjs.org/react-native-chat-sdk/-/react-native-chat-sdk-1.3.0-beta.1.tgz#8c10061433156d20a245a64b486f28d4844c1de5"
+  integrity sha512-KBOrwNA6P8JlFdb4B+kVqxBVlSjjgitZU2953zmOx28B2OFv7plkYEAShtXC73TeuenIq8CN3AmcxKiwc/rIiQ==
 
 react-native-codegen@^0.71.5:
   version "0.71.5"
