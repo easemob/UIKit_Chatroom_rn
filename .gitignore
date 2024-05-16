@@ -75,3 +75,5 @@ env.ts
 example/dist
 config.local.ts
 gen/typedoc
+*.tgz
+*.zip
