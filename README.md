@@ -1,3 +1,6 @@
+**This repository has been archived. Please visit [here](https://github.com/easemob/easemob-uikit-reactnative/tree/dev)**
+
+
 - [Introduction to ChatroomUIKit](#introduction-to-chatroomuikit)
   - [Development environment requirements](#development-environment-requirements)
   - [ChatroomUIKit installation](#chatroomuikit-installation)
